@@ -1,0 +1,6 @@
+[submodule "xe"]
+	path = xe
+	url = https://github.com/xpressengine/xe-core.git
+[submodule "contribute/magic-min"]
+	path = contribute/magic-min
+	url = https://github.com/bennettstone/magic-min.git

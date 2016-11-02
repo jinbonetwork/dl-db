@@ -1,0 +1,50 @@
+{
+	"jquery": {
+		"js": [
+			"contribute/jquery/3.1.1/jquery-3.1.1.min.js"
+		],
+		"css": [],
+		"options": {
+			"position": "footer"
+		},
+		"priority": "-999999999",
+		"deps":[]
+	},
+	"es6-promise": {
+		"js": [
+			{
+				"uri": "contribute/es6-promise/es6-promise-modified.js",
+				"position": "footer"
+			}
+		],
+		"css" : [],
+		"priority":"-10",
+		"deps":[]
+	},
+	"app-gnu5-login": {
+		"js": [
+			{
+				"uri": "resources/script/app-gnu5-login.js",
+				"position": "footer"
+			}
+		],
+		"css": [
+			"resources/css/app-login.css"
+		],
+		"priority":"0",
+		"deps":["jquery"]
+	},
+	"app-xe-login": {
+		"js": [
+			{
+				"uri": "resources/script/app-xe-login.js",
+				"position": "footer"
+			}
+		],
+		"css": [
+			"resources/css/app-login.css"
+		],
+		"priority":"0",
+		"deps":["jquery"]
+	}
+}
