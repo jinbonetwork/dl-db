@@ -1,0 +1,14 @@
+*, *:after, *:before {
+	box-sizing: border-box;
+}
+body, html {
+	margin: 0;
+}
+.table {
+	.table__row:after {
+		content: ''; display: block; clear: both;
+	}
+	.table__col {
+		float: left;
+	}
+}

@@ -87,6 +87,7 @@ define( 'BITWISE_ADMINISTRATOR', 1 );
 define( 'BITWISE_WRITE', 3 );
 define( 'BITWISE_DOWNLOAD', 5 );
 define( 'BITWISE_VIEW', 7 );
+define( 'BITWISE_AUTHENTICATED', 16 );
 define( 'BITWISE_ANONYMOUS', 17 );
 
 global $AclPreDefinedRole;

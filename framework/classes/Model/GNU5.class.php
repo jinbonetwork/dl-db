@@ -18,12 +18,28 @@ class GNU5 extends \DLDB\Objects {
 				$row = $dbm->getFetchArray($que);
 				if($row['mb_no']) {
 					$_SESSION['user'] = array(
-						'uid' => $row['mb_no'],
-						'glevel' => (11 - $row['mb_level'])
+						'uid' => $row['mb_no']
 					);
 				}
 			}
 		}
+	}
+
+	public function getMember($mb_no) {
+		$dbm = \DLDB\DBM::instance();
+			        
+		$que = "SELECT * FROM `g5_member` WHERE `mb_no` = ".$mb_no;
+		$row = $dbm->getFetchArray($que);
+		if($row['mb_no']) {
+			$member = array(
+				'uid' => $row['mb_no'],
+				'user_id' => stripslashes($row['mb_id']),
+				'email' => stripslashes($row['mb_email']),
+				'user_name' => stripslashes($row['mb_name']),
+				'nick_name' => stripslashes($row['mb_nick'])
+			);
+		}
+		return $member;
 	}
 }
 ?>

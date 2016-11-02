@@ -5,4 +5,7 @@ config/settings.php
 install/install.sh
 files/*
 files/*/
+node_modules
+themes/*/node_modules
+themes/*/node_modules/*
 npm-debug.log

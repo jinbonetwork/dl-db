@@ -199,7 +199,7 @@ abstract class Controller {
 			}
 			$this->dirCssJsHtml("themes/".$this->themes,1000);
 			$this->dirCssJsHtml("themes/".$this->themes."/css",1000);
-			$this->dirCssJsHtml("themes/".$this->themes."/script",1000);
+			$this->dirCssJsHtml("themes/".$this->themes."/script",1000,'footer');
 			$this->themeCssLoad = true;
 		}
 	}
@@ -223,16 +223,16 @@ abstract class Controller {
 		return $urlscript;
 	}
 
-	public function dirCssJsHtml($dir,$priority) {
+	public function dirCssJsHtml($dir,$priority,$position='header') {
 		if(!@is_dir(DLDB_PATH."/".$dir)) return;
 		$dp = opendir(DLDB_PATH."/".$dir);
 		while($f = readdir()) {
 			if(substr($f,0,1) == ".") continue;
 			if(@is_dir(DLDB_PATH."/".$dir."/".$f)) continue;
 			if(preg_match("/(.+)\.css$/i",$f)) {
-				\DLDB\View\Resource::addCssURI(rtrim(DLDB_URI,"/")."/".$dir."/".$f,$priority,array('compress'=>true));
+				\DLDB\View\Resource::addCssURI(rtrim(DLDB_URI,"/")."/".$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
 			} else if(preg_match("/(.+)\.js$/i",$f)) {     
-				\DLDB\View\Resource::addJsURI(rtrim(DLDB_URI,"/")."/".$dir."/".$f,$priority,array('compress'=>true));
+				\DLDB\View\Resource::addJsURI(rtrim(DLDB_URI,"/")."/".$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
 			}
 		}
 		closedir($dp);
@@ -276,7 +276,7 @@ abstract class Controller {
 
 	private function themeCssJs($path) {
 		$_path = dirname("themes/".$this->themes."/".ltrim(substr($path,strlen(DLDB_APP_PATH)),"/"));
-		$this->dirCssJsHtml($_path,1010);
+		$this->dirCssJsHtml($_path,1010,'footer');
 	}
 
 	private function renderPath($path) {
