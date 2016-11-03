@@ -1,60 +1,32 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentForm from './DocumentForm';
-
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 
 class NewDocument extends Component {
-	render(){
-		return(
-			<div>new document</div>
+	componentWillMount(){
+		//console.log('will mount');
+		this.setState(
+			update(this.props.documentForm, {
+				id: {$set: Date.now() }
+			})
 		);
 	}
-}
-
-export default NewDocument;
-
-
-/*
-class NewDocument extends Component {
-	componentWillMount(){
-		this.setState({
-			id: Date.now(),
-			subject	: '',
-			content: '',
-			memo: '',
-			custom: {},
-			uid: 0,
-			created: 0,
-			f3: '',
-			f4: '',
-			f5: '',
-			f6: '',
-			f7: '',
-			f9: {}
-		});
+	/*
+	componentDidMount(){
+		console.log('did mount');
+		console.log(this.props.documentFormData.fields[0].fid);
 	}
-	setInitialState(){
-		if(this.props.documentFormData){
-			this.props.documentFormData.fields.forEach((field) => {
-				if(field.type == 'taxonomy'){
-					let minIdx = -1;
-					let firstTermId;
-					this.props.documentFormData.taxonomy_terms.forEach((term) => {
-						if(term.cid == field.cid){
-							if(minIdx < 0){
-								minIdx = term.idx; firstTermId = term.tid;
-							} else if(minIdx > 0 && term.idx < minIdx){
-								minIdx = term.idx; firstTermId = term.tid;
-							}
-						}
-					});
-					this.changeState(field, firstTermId);
-				}
-			});
-		}
+	componentWillReceiveProps(){
+		console.log('will receive props');
+		console.log(this.props.documentFormData.fields[0].fid);
 	}
-	changeState(field, value){
+	componentWillUpdate(){
+		console.log('will update');
+		console.log(this.props.documentFormData.fields[0].fid);
+	}
+	*/
+	handleChange(field, value){
 		if(field.iscolumn == 1){
 			this.setState({ ['f'+field.fid]: value });
 		} else {
@@ -63,9 +35,6 @@ class NewDocument extends Component {
 			});
 			this.setState({ custom: custom });
 		}
-	}
-	handleChange(field, value){
-		changeState(field, value);
 	}
 	render(){
 		return(
@@ -79,9 +48,9 @@ class NewDocument extends Component {
 	}
 }
 NewDocument.propTypes = {
-	user: PropTypes.object,
-	documentFormData: PropTypes.objectOf(PropTypes.array)
+	userData: PropTypes.object,
+	documentFormData: PropTypes.object,
+	documentForm: PropTypes.object
 };
 
 export default NewDocument;
-*/

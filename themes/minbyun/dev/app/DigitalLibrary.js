@@ -1,27 +1,39 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
-class DigitalLibrary extends Component {
-	render(){
-		let childProps;
-		if(this.props.children){
-			switch(this.props.children.props.route.path){
-				case '/document/new':
-					childProps = {
-						user: this.props.user,
-						documentFormData: this.props.documentFormData
-					};
-					break;
-				case '/user':
-					childProps = {
-						user: this.props.user,
-						role: this.props.role
-					};
-					break;
-			}
-		}
-		let child = this.props.children && React.cloneElement(this.props.children, childProps);
+const childPropList = {
+	'/user': {
+		required: ['userData'],
+		elective: []
+	},
+	'/document/new':{
+		required: ['userData', 'documentFormData', 'documentForm'],
+		elective: []
+	},
+	'/error': {
+		required: [],
+		elective: []
+	}
+}
 
+class DigitalLibrary extends Component {
+	cloneChild(children){
+		if(!children) return null;
+		let childProp = childPropList[children.props.route.path];
+		let props = {};
+		for(let i = 0, len = childProp.required.length; i < len; i++){
+			let p = childProp.required[i];
+			if(!this.props[p]) return null;
+			props[p] = this.props[p];
+		}
+		for(let i = 0, len = childProp.elective.length; i < len; i++){
+			let p = childProp.electiv[i];
+			props[p] = this.props[p];
+		}
+		return React.cloneElement(children, props);
+	}
+	render(){
+		let child = this.cloneChild(this.props.children);
 		return(
 			<div className="digital-library">
 				<div className="digital-library__menu">
@@ -33,12 +45,11 @@ class DigitalLibrary extends Component {
 		);
 	}
 }
-/*
 DigitalLibrary.propTypes = {
-	user: PropTypes.object,
-	role: PropTypes.array,
-	documentFormData: PropTypes.objectOf(PropTypes.array)
+	apiUrl: PropTypes.string,
+	userData: PropTypes.object,
+	documentFormData: PropTypes.object,
+	documentForm: PropTypes.object
 };
-*/
 
 export default DigitalLibrary;

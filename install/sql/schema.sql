@@ -1,26 +1,50 @@
-DROP TABLE IF EXISTS `dl_agreement`;
-CREATE TABLE `dl_documents` (
-	id     int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	subject char(255),
-	content text,
-	custom  text,
-	created int(10) NOT NULL DEFAULT 0
+set names utf8;
+
+DROP TABLE IF EXISTS dldb_bookmark;
+CREATE TABLE dldb_bookmark (
+	`id`		bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`uid`		int(10) NOT NULL DEFAULT 0,
+	`did`		bigint(11) NOT NULL DEFAULT 0,
+	`regdate`	int(10) NOT NULL DEFAULT 0,
+
+	KEY `UID`(`uid`,`regdate`),
+	KEY `DID`(`did`,`regdate`)
 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `dl_options`;
-CREATE TABLE `dl_options` (
+DROP TABLE IF EXISTS `dldb_documents`;
+CREATE TABLE `dldb_documents` (
+	`id`		bigint(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`subject`	char(255),
+	`content`	text,
+	`memo`		mediumtext,
+	`custom`	text,
+	`uid`		bigint(11) NOT NULl DEFAULT 0,
+	`created`	int(10) NOT NULL DEFAULT 0,
+	`f3`		char(255),
+	`f4`		char(255),
+	`f5`		char(255),
+	`f6`		char(255),
+	`f7`		char(255),
+	`f9`		text,
+
+	KEY `UID`(`uid`)
+
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `dldb_options`;
+CREATE TABLE `dldb_options` (
 	id		int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	name	char(128),
 	value	mediumtext,
 
 	KEY `NAME` (`name`)
+
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `dl_fields`;
-CREATE TABLE `dl_fields` (
-	`fid`		int(10) NOT NULL AUTO_INCREMENT,
-	`table`		char(128) NOT NULL DEFAULT '',
+DROP TABLE IF EXISTS `dldb_fields`;
+CREATE TABLE `dldb_fields` (
+	`fid`		int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`parent`	int(10) NOT NULL DEFAULT 0,
 	`idx`		smallint(5) NOT NULL DEFAULT 1,
 	`subject`	char(255),
@@ -29,17 +53,32 @@ CREATE TABLE `dl_fields` (
 	`multiple`	char(1) DEFAULT 0,
 	`required`	char(1) DEFAULT 0,
 	`cid`		int(10),
+	`form`		char(20),
 	`active`	char(1) DEFAULT '1',
 	`system`	char(1) DEFAULT '0',
-	`autocomplete` char(1) DEFAULT '0',
-	`indextype`	char(128) DEFAULT 'none',
 
-	PRIMARY KEY (`table`,`idx`,`fid`),
-	KEY `FID` (`table`,`fid`)
+	KEY `IDX` (`parent`,`idx`)
+
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `dl_log`;
-CREATE TABLE `dl_log` (
+DROP TABLE IF EXISTS `dldb_files`;
+CREATE TABLE `dldb_files` (
+	`fid`		bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`filepath`	char(255),
+	`filename`	char(255),
+	`mime_type`	char(128),
+	`uid`		bigint(11) NOT NULl DEFAULT 0,
+	`download`	bigint(128) NOT NULL DEFAULT 0,
+	`filesize`	bigint(128) NOT NULL DEFAULT 0,
+	`regdate`	int(10),
+
+	KEY `UID`(`uid`),
+	KEY `FILENAME`(`filename`)
+
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `dldb_log`;
+CREATE TABLE `dldb_log` (
 	`id`		bigint(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`action`	char(20) not null default '',
 	`nid`		int(10) default 0,
@@ -49,23 +88,35 @@ CREATE TABLE `dl_log` (
 	`ipaddress`	char(20),
 	`memo`		char(255),
 
-	KEY `Action` (`action`,`oid`,`fid`,`vid`),
+	KEY `Action` (`action`,`nid`),
 	KEY `Editor` (`editor`)
+
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS dl_privilege;
-CREATE TABLE dl_privilege (
+DROP TABLE IF EXISTS dldb_user_roles;
+CREATE TABLE dldb_user_roles (
 	`uid`		int(10) NOT NULL PRIMARY KEY,
-	`user_id`	char(255) NOT NULL DEFAULT '',
-	`oid`		int(10) NOT NULL DEFAULT 0,
-	`role`		smallint(5) NOT NULL DEFAULT 5,
+	`role`		text,
 
-	KEY `USER_ID` (`user_id`),
-	KEY `OID` (`oid`)
+	KEY  `UID` (`uid`)
+
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `dl_taxonomy`;
-CREATE TABLE `dl_taxonomy` (
+DROP TABLE IF EXISTS `dldb_searchlog`;
+CREATE TABLE `dldb_searchlog` (
+	`id`		bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`uid`		int(10) NOT NULL DEFAULT 0,
+	`keyword`	char(255) NOT NULL DEFAULT '',
+	`category`	text,
+	`period`	char NOT NULL DEFAULT '',
+	`sdate`		int(10) NOT NULL DEFAULT 0,
+
+	KEY `UID`(`uid`,`sdate`)
+
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `dldb_taxonomy`;
+CREATE TABLE `dldb_taxonomy` (
 	`cid`		int(5) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`subject`	char(255) NOT NULL DEFAULT '',
 	`skey`		char(1) DEFAULT 0,
@@ -74,10 +125,9 @@ CREATE TABLE `dl_taxonomy` (
 	KEY `SKEY` (`skey`,`cid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `dl_taxonomy_terms`;
-CREATE TABLE `dl_taxonomy_terms` (
-	`vid`		int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`tid`		int(10) NOT NULL DEFAULT 0,
+DROP TABLE IF EXISTS `dldb_taxonomy_terms`;
+CREATE TABLE `dldb_taxonomy_terms` (
+	`tid`		int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`cid`		int(10) NOT NULL DEFAULT 0,
 	`parent`	int(10) DEFAULT 0,
 	`idx`		smallint(5) NOT NULL DEFAULT 1,
@@ -85,20 +135,30 @@ CREATE TABLE `dl_taxonomy_terms` (
 	`name`		char(128) NOT NULL DEFAULT '',
 	`current`	char(1) DEFAULT 1,
 	`active`	char(1) DEFAULT 1,
-	`from`		int(10) DEFAULT 0,
-	`to`		int(10) DEFAULT 0,
 	`created`	int(10) NOT NULL DEFAULT 0,
 
-	KEY `TID` (`tid`,`vid`,`idx`)
+	KEY `TID` (`tid`,`idx`),
+	KEY `PID` (`parent`,`idx`)
+
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `dl_taxonomy_term_relative`;
-CREATE TABLE `dl_taxonomy_term_relative` (
+DROP TABLE IF EXISTS `dldb_taxonomy_term_relative`;
+CREATE TABLE `dldb_taxonomy_term_relative` (
 	`tid`		int(10) NOT NULL DEFAULT 0,
-	`table`		char(128) NOT NULL DEFAULT '',
-	`rid`		int(10) NOT NULL DEFAULT 0,
-	`fid`		smallint(5) NOT NULL DEFAULT 0,
+	`did`		int(10) NOT NULL DEFAULT 0,
 
-	PRIMARY KEY `TID` (`tid`,`table`,`rid`),
-	KEY `FID` (`table`,`rid`,`fid`)
+	PRIMARY KEY `TID` (`tid`,`did`)
+
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `dldb_members`;
+CREATE TABLE `dldb_members` (
+	`id`		int(10) PRIMARY KEY AUTO_INCREMENT,
+	`name`		char(128) NOT NULL DEFAULT '',
+	`class`		char(20) NOT NULL DEFAULT '',
+	`email`		char(255),
+	`phone`		char(15),
+
+	KEY `NAME` (`name`),
+	KEY `CLASS` (`class`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

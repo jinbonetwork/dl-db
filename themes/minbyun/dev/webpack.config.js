@@ -1,7 +1,5 @@
 var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
 var config = require('./config.js');
-var Basename = require('./basename.js');
 
 module.exports = {
 	devtool: 'eval-source-map',

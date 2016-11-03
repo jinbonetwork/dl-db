@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {Router, Route, Link, IndexRoute, browserHistory, useRouterHistory} from 'react-router';
+import {Router, Route, browserHistory} from 'react-router';
 import {createHistory} from 'history';
 
 import DigitalLibraryContainer from './DigitalLibraryContainer';
@@ -8,14 +8,6 @@ import DigitalLibrary from './DigitalLibrary';
 import User from './User';
 import NewDocument from './NewDocument';
 import ServerError from './ServerError';
-
-import './style/common.less';
-
-/*
-const history = useRouterHistory(createHistory)({
-	basename: '/'
-});
-*/
 
 render((
 	<Router history={browserHistory}>

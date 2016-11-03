@@ -18,31 +18,27 @@ class DocumentForm extends Component {
 				break;
 			case 'select':
 				let options = [];
-				this.props.documentFormData.taxonomy_terms.forEach((term) => {
-					if(term.cid == field.cid){
-						options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
-					}
+				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
+					options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
 				});
 				form = <select onChange={this.handleChange.bind(this, field)}>{options}</select>;
 				break;
 			case 'radio':
 				let radioButtons = [];
-				this.props.documentFormData.taxonomy_terms.forEach((term) => {
-					if(term.cid == field.cid){
-						radioButtons[term.idx] = (
-							<label key={term.tid}>
-								<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} />
-								{term.name}
-							</label>
-						);
-					}
+				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
+					radioButtons[term.idx] = (
+						<label key={term.tid}>
+							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} />
+							{term.name}
+						</label>
+					);
 				});
 				form = radioButtons;
 				break;
 			case 'fieldset':
 				let subFormFields = [];
 				this.props.documentFormData.fields.forEach((f) => {
-					if(f.parent == field.fid && f.active == 1){
+					if(f.parent == field.fid){
 						subFormFields[f.idx] = this.makeFormFields(f);
 					}
 				});
@@ -67,7 +63,7 @@ class DocumentForm extends Component {
 		let formFields = [];
 		if(this.props.documentFormData){
 			this.props.documentFormData.fields.forEach((field) => {
-				if(field.parent == 0 && field.active == 1){
+				if(field.parent == 0){
 					formFields[field.idx] = this.makeFormFields(field);
 				}
 			});
@@ -100,7 +96,7 @@ class DocumentForm extends Component {
 }
 DocumentForm.propTypes = {
 	submitLabel: PropTypes.string.isRequired,
-	documentFormData: PropTypes.objectOf(PropTypes.array),
+	documentFormData: PropTypes.object,
 	document: PropTypes.object.isRequired,
 	handleChange: PropTypes.func.isRequired
 };

@@ -2,17 +2,23 @@ import React, {Component, PropTypes} from 'react';
 
 class User extends Component {
 	render(){
-		return(
+		let user = this.props.userData && (
 			<div>
-				<p>{this.props.user.uid}</p>
-				<p>{this.props.role}</p>
+				<p>uid: {this.props.userData.user.uid}</p>
+				<p>nick_name: {this.props.userData.user.nick_name}</p>
+				<p>role: {this.props.userData.role.join()}</p>
+			</div>
+		);
+
+		return(
+			<div className="userinfo">
+				{user}
 			</div>
 		);
 	}
 }
 User.propTypes = {
-	user: PropTypes.object,
-	role: PropTypes.array
+	userData: PropTypes.object,
 };
 
 export default User;

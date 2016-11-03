@@ -1,19 +1,39 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import axios from 'axios';
+import update from 'react-addons-update';  // for update()
+import 'babel-polyfill'; // for update(), find() ...
 
-import DocumentForm from './DocumentForm';
+import './style/common.less';
+
+const apiUrl = '/api';
+const emptyDocument = {
+	id: 0,
+	subject	: '',
+	content: '',
+	memo: '',
+	custom: {},
+	uid: 0,
+	created: 0,
+	f3: '',
+	f4: '',
+	f5: '',
+	f6: '',
+	f7: '',
+	f9: {}
+}
 
 class DigitalLibraryContainer extends Component {
 	constructor(){
 		super();
 		this.state = {
-			user: undefined,
-			documentFormData: undefined
+			userData: undefined,
+			documentFormData: undefined,
+			documentForm: undefined
 		};
 	}
 	fetchData(path, prop){
-		axios.get('/api')
+		axios.get(apiUrl+path)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				return response.data;
@@ -22,30 +42,45 @@ class DigitalLibraryContainer extends Component {
 			}
 		})
 		.then((data) => {
-			if(prop == 'user'){
-				this.setState({
-					user: data.user,
-					role: data.role
-				});
-			} else {
-				this.setState({ [prop]: data });
-			}
+			this.setState({ [prop]: data });
+			if(prop == 'documentFormData') this.initializeDocumentForm(data);
 		})
 		.catch((error) => {
 			console.error(error);
 			this.props.router.push('/error');
 		});
+	}
+	initializeDocumentForm(formData){
+		let custom = {};
+		formData.fields.forEach((field) => {
+			if(field.type == 'taxonomy'){
+				let minIdx = -1;
+				let firstTermId;
+				formData.taxonomy[field.cid].forEach((term) => {
+					if(minIdx < 0){
+						minIdx = term.idx; firstTermId = term.tid;
+					} else if(minIdx > 0 && term.idx < minIdx){
+						minIdx = term.idx; firstTermId = term.tid;
+					}
+				});
+				custom[field.fid] = firstTermId;
+			}
+		});
+		this.setState({documentForm: update(emptyDocument, {
+			custom: {$set: custom} 
+		})});
 
 	}
 	componentDidMount(){
-		this.fetchData('/', 'user');
+		this.fetchData('/', 'userData');
 		this.fetchData('/fields', 'documentFormData');
 	}
 	render(){
-		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
-			user: this.state.user,
-			role: this.state.role,
-			documentFormData: this.state.documentFormData
+		let	digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
+			apiUrl: apiUrl,
+			userData: this.state.userData,
+			documentFormData: this.state.documentFormData,
+			documentForm: this.state.documentForm
 		});
 		return digitalLibrary;
 	}
