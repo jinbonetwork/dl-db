@@ -21,14 +21,18 @@ class DocumentForm extends Component {
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
 					options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
 				});
-				form = <select onChange={this.handleChange.bind(this, field)}>{options}</select>;
+				form = 
+					<select value={this.props.document.custom[field.fid]} onChange={this.handleChange.bind(this, field)}>
+						{options}
+					</select>;
 				break;
 			case 'radio':
 				let radioButtons = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
+					let checked = (this.props.document.custom[field.fid] == term.tid ? true : false);
 					radioButtons[term.idx] = (
 						<label key={term.tid}>
-							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} />
+							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} defaultChecked={checked} />
 							{term.name}
 						</label>
 					);
@@ -96,7 +100,7 @@ class DocumentForm extends Component {
 }
 DocumentForm.propTypes = {
 	submitLabel: PropTypes.string.isRequired,
-	documentFormData: PropTypes.object,
+	documentFormData: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	handleChange: PropTypes.func.isRequired
 };

@@ -4,3 +4,6 @@
 [submodule "contribute/magic-min"]
 	path = contribute/magic-min
 	url = https://github.com/bennettstone/magic-min.git
+[submodule "contribute/pdfparser"]
+	path = contribute/pdfparser
+	url = https://github.com/smalot/pdfparser.git

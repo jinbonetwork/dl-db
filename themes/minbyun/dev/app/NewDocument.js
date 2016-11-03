@@ -27,14 +27,11 @@ class NewDocument extends Component {
 	}
 	*/
 	handleChange(field, value){
-		if(field.iscolumn == 1){
-			this.setState({ ['f'+field.fid]: value });
-		} else {
-			let custom = update(this.state.custom, {
+		this.setState({
+			custom: update(this.state.custom, {
 				$set: { [field.fid]: value }
-			});
-			this.setState({ custom: custom });
-		}
+			})
+		});
 	}
 	render(){
 		return(
