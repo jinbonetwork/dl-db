@@ -64,15 +64,17 @@ CREATE TABLE `dldb_fields` (
 DROP TABLE IF EXISTS `dldb_files`;
 CREATE TABLE `dldb_files` (
 	`fid`		bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`did`		bigint(11) NOT NULL DEFAULT 0,
 	`filepath`	char(255),
 	`filename`	char(255),
-	`mime_type`	char(128),
+	`mimetype`	char(128),
 	`uid`		bigint(11) NOT NULl DEFAULT 0,
 	`download`	bigint(128) NOT NULL DEFAULT 0,
 	`filesize`	bigint(128) NOT NULL DEFAULT 0,
 	`regdate`	int(10),
 
 	KEY `UID`(`uid`),
+	KEY `DID`(`did`),
 	KEY `FILENAME`(`filename`)
 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

@@ -32,4 +32,18 @@
 5) React 코드 설정
 -----------------
 * react 소스는 각 테마안에 있습니다.
-* cd themes/minbyun
+* cd themes/minbyun/dev
+* 'npm install' 실행하여 필요한 nodejs package 설치
+* 'webpack' 실행.
+
+6) pdfparser 설치
+-----------------
+* pdf 철부파일 검색을 위한 pdfparser 설치
+```
+cd contribute/pdfparser
+php ~/bin/composer.phar install --dev
+```
+
+7) Elastic Search 설치
+---------------------
+* 검색엔진 설치
