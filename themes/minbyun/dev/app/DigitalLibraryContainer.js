@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import axios from 'axios';
 import update from 'react-addons-update';  // for update()
-import 'babel-polyfill'; // for update(), find() ...
+import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
 import './style/common.less';
 
@@ -21,7 +21,22 @@ const emptyDocument = {
 	f6: '',
 	f7: '',
 	f9: {}
-}
+};
+const subjectField = {fid: 0, parent: 0, subject: '제목', type: 'char', multiple: 0, required: 1, cid: 0, form: 'text'};
+const documentFormOptions = {
+	search: [
+		{
+			field: 13,
+			api: "member?name="
+		}
+	],
+	action_show: [
+		{
+			term: 1,
+			field: 2
+		}
+	]
+};
 
 class DigitalLibraryContainer extends Component {
 	constructor(){
@@ -29,7 +44,8 @@ class DigitalLibraryContainer extends Component {
 		this.state = {
 			userData: undefined,
 			documentFormData: undefined,
-			documentForm: undefined
+			documentForm: undefined,
+			documentFormOptions: undefined
 		};
 	}
 	fetchData(path, prop){
@@ -63,24 +79,29 @@ class DigitalLibraryContainer extends Component {
 						minIdx = term.idx; firstTermId = term.tid;
 					}
 				});
-				custom[field.fid] = firstTermId;
+				custom['f'+field.fid] = firstTermId;
 			}
 		});
 		this.setState({documentForm: update(emptyDocument, {
-			custom: {$set: custom} 
+			custom: {$set: custom}
 		})});
 
 	}
 	componentDidMount(){
 		this.fetchData('/', 'userData');
 		this.fetchData('/fields', 'documentFormData');
+		this.setState({
+			documentFormOptions: documentFormOptions
+		})
 	}
 	render(){
 		let	digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
 			apiUrl: apiUrl,
 			userData: this.state.userData,
 			documentFormData: this.state.documentFormData,
-			documentForm: this.state.documentForm
+			documentForm: this.state.documentForm,
+			documentFormOptions: this.state.documentFormOptions,
+			subjectField: subjectField
 		});
 		return digitalLibrary;
 	}

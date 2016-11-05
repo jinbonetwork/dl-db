@@ -1,7 +1,7 @@
 {
-  "name": "",
+  "name": "dldb-client",
   "version": "0.1.0",
-  "description": "",
+  "description": "dldb-client",
   "scripts": {
     "start": "webpack --watch",
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress"
@@ -38,6 +38,7 @@
     "react-addons-css-transition-group": "^15.3.1",
     "react-addons-update": "^15.3.1",
     "react-dom": "^15.0.1",
+    "react-fileupload-progress": "^0.4.0",
     "react-router": "^2.8.1"
   }
 }
