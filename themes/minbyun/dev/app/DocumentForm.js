@@ -1,28 +1,33 @@
 import React, {Component, PropTypes} from 'react';
-import axios from 'axios';
-import SearchKeyword from './SearchKeyword';
+import update from 'react-addons-update';  // for update()
+import 'babel-polyfill'; // for update(), find() ...
+import SearchBar from './SearchBar';
 
 class DocumentForm extends Component {
-	search(fid, api, keyword){
-		axios.get(this.props.apiUrl+'/'+api+keyword)
-		.then(({data}) => {
-
-		})
-		.catch((error) => {
-			console.error(error);
+	componentWillMount(){
+		this.setState({
+			document: this.props.document,
+			files: []
 		});
 	}
-	handleChange(field, event){
-		this.props.handleChange(field, event.target.value);
+	updateFields(fields){ if(!fields) return;
+		this.setState({
+			document: update(this.state.document, {
+				custom: { $merge: fields}
+			})
+		});
+
+		console.log(this.state.document);
 	}
-	handleKeyDown(field, event){
-		if(event.key === 'Enter'){
-			/*
-			if(field.form == 'search'){
-				let searchInfo = this.props.documentFormOptions.search.find((s) => s.field == field.fid);
-				this.search(field.fid, searchInfo.api, event.target.value);
-			}
-			*/
+	handleChange(fid, event){
+		if(fid == 0){
+			this.setState({
+				document: update(this.state.document, {
+					'subject': {$set: event.target.value}
+				})
+			});
+		} else {
+			this.updateFields({['f'+fid]: event.target.value});
 		}
 	}
 	handleSubmit(event){
@@ -30,16 +35,27 @@ class DocumentForm extends Component {
 	}
 	makeFormFields(field){
 		let form;
+		let  value = (field.fid != 0 ? this.state.document.custom['f'+field.fid] : this.state.document.subject);
 		switch(field.form){
 			case 'text':
-				form = <input type="text" onChange={this.handleChange.bind(this, field)} />;
+				form = <input type="text" value={value} onChange={this.handleChange.bind(this, field.fid)} />;
 				break;
 			case 'search':
-				//form = <SearchKeyword field={field} handleChange={this.handleChange.bind(this)} />
-				form = <input type="search" onKeyDown={this.handleKeyDown.bind(this, field)} />;
+				let searchInfo = this.props.documentFormOptions.search_in_docform.find((s) => s.field == field.fid);
+				form = (
+					<SearchBar value={value} field={field}
+						searchApiUrl={this.props.apiUrl+'/'+searchInfo.api}
+						resultMap = {searchInfo.resultmap}
+						updateFields={this.updateFields.bind(this)}
+					/>
+				);
 				break;
 			case 'file':
-				form = <input type="file" />;
+				if(field.multiple == 1){
+					form = value.map((v, i) => <input key={field.fid+'_'+i} type="file" />);
+				} else {
+					form = <input type="file" />;
+				}
 				break;
 			case 'select':
 				let options = [];
@@ -124,8 +140,7 @@ DocumentForm.propTypes = {
 	document: PropTypes.object.isRequired,
 	documentFormOptions: PropTypes.object.isRequired,
 	subjectField: PropTypes.object.isRequired,
-	apiUrl: PropTypes.string.isRequired,
-	handleChange: PropTypes.func.isRequired
+	apiUrl: PropTypes.string.isRequired
 };
 
 export default DocumentForm;

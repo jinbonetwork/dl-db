@@ -9,7 +9,7 @@ import './style/common.less';
 const apiUrl = '/api';
 const emptyDocument = {
 	id: 0,
-	subject	: '',
+	subject: '',
 	content: '',
 	memo: '',
 	custom: {},
@@ -24,10 +24,14 @@ const emptyDocument = {
 };
 const subjectField = {fid: 0, parent: 0, subject: '제목', type: 'char', multiple: 0, required: 1, cid: 0, form: 'text'};
 const documentFormOptions = {
-	search: [
+	search_in_docform: [
 		{
 			field: 13,
-			api: "member?name="
+			api: "member?name=",
+			resultmap: {
+				fname: ['name', 'class', 'email', 'phone'],
+				fid: [13, 14, 15, 16]
+			}
 		}
 	],
 	action_show: [
@@ -69,17 +73,35 @@ class DigitalLibraryContainer extends Component {
 	initializeDocumentForm(formData){
 		let custom = {};
 		formData.fields.forEach((field) => {
-			if(field.type == 'taxonomy'){
-				let minIdx = -1;
-				let firstTermId;
-				formData.taxonomy[field.cid].forEach((term) => {
-					if(minIdx < 0){
-						minIdx = term.idx; firstTermId = term.tid;
-					} else if(minIdx > 0 && term.idx < minIdx){
-						minIdx = term.idx; firstTermId = term.tid;
-					}
-				});
-				custom['f'+field.fid] = firstTermId;
+			let value;
+			switch(field.type){
+				case 'taxonomy':
+					let minIdx = -1;
+					let firstTermId;
+					formData.taxonomy[field.cid].forEach((term) => {
+						if(minIdx < 0){
+							minIdx = term.idx; firstTermId = term.tid;
+						} else if(minIdx > 0 && term.idx < minIdx){
+							minIdx = term.idx; firstTermId = term.tid;
+						}
+					});
+					value = firstTermId;
+					break;
+				case 'date':
+					value = 0;
+					break;
+				case 'char':
+					value = '';
+					break;
+				case 'image': case 'file':
+					value = '';
+					if(field.multiple == 1) value = [''];
+					break;
+				default:
+					value = undefined;
+			}
+			if(value !== undefined){
+				custom['f'+field.fid] = value;
 			}
 		});
 		this.setState({documentForm: update(emptyDocument, {
