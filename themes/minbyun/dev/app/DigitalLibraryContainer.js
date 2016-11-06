@@ -62,13 +62,27 @@ class DigitalLibraryContainer extends Component {
 			}
 		})
 		.then((data) => {
-			this.setState({ [prop]: data });
-			if(prop == 'documentFormData') this.initializeDocumentForm(data);
+			if(prop == 'documentFormData'){
+				this.correctDocumentFormData(data);
+				this.initializeDocumentForm(data);
+			} else {
+				this.setState({[prop]: data});
+			}
 		})
 		.catch((error) => {
 			console.error(error);
-			this.props.router.push('/error');
+			//this.props.router.push('/error');
 		});
+	}
+	correctDocumentFormData(formData){
+		formData.fields.forEach((field, i) => {
+			if(field.multiple == '1'){
+				if(field.parent != '0' || field.form == 'search' || field.form == 'fieldset'){
+					formData.fields[i].multiple = '0';
+				}
+			}
+		});
+		this.setState({documentFormData: formData});
 	}
 	initializeDocumentForm(formData){
 		let custom = {};
@@ -85,29 +99,16 @@ class DigitalLibraryContainer extends Component {
 							minIdx = term.idx; firstTermId = term.tid;
 						}
 					});
-					value = firstTermId;
-					break;
-				case 'date':
-					value = 0;
-					break;
-				case 'char':
-					value = '';
-					break;
-				case 'image': case 'file':
-					value = '';
-					if(field.multiple == 1) value = [''];
-					break;
+					value = firstTermId; break;
 				default:
-					value = undefined;
+					value = '';
 			}
-			if(value !== undefined){
-				custom['f'+field.fid] = value;
-			}
+			if(field.multiple == '1') value = [value];
+			if(field.type != 'group') custom['f'+field.fid] = value;
 		});
 		this.setState({documentForm: update(emptyDocument, {
 			custom: {$set: custom}
 		})});
-
 	}
 	componentDidMount(){
 		this.fetchData('/', 'userData');

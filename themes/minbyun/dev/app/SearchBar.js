@@ -8,7 +8,7 @@ class SearchBar extends Component {
 			results: undefined
 		}
 	}
-	handleChange(event){
+	handleChangeToUpdateFields(event){
 		this.props.updateFields({['f'+this.props.field.fid]: event.target.value});
 	}
 	handleKeyDown(event){ if(event.key == 'Enter' && event.target.value){
@@ -30,7 +30,7 @@ class SearchBar extends Component {
 			results: results
 		});
 	}}
-	handleListItemClick(result, event){
+	handleClickListItem(result, event){
 		let fields = {};
 		this.props.resultMap.fname.forEach((fname, i) => {
 			fields['f'+this.props.resultMap.fid[i]] = result[fname];
@@ -38,17 +38,17 @@ class SearchBar extends Component {
 		this.props.updateFields(fields);
 		this.setState({results: undefined});
 	}
-	handleCloseClick(){
+	handleClickClose(){
 		this.setState({results: undefined});
 	}
 	render(){
 		let	displayResults = (this.state.results !== undefined) && (
 			<div className="searchbar__result">
-				<span onClick={this.handleCloseClick.bind(this)} >닫기</span>
+				<span onClick={this.handleClickClose.bind(this)} >닫기</span>
 				<ul>{
 					this.state.results.length > 1 ?
 						this.state.results.map((result) => (
-							<li key={result.id} onClick={this.handleListItemClick.bind(this, result)}>
+							<li key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
 								<span>{result[this.props.resultMap.fname[0]]}</span>{' '}
 								<span>{result[this.props.resultMap.fname[1]]}</span>
 							</li>
@@ -61,7 +61,7 @@ class SearchBar extends Component {
 		return(
 			<div className="searchbar">
 				<input type="search" value={this.props.value}
-					onChange={this.handleChange.bind(this)}
+					onChange={this.props.handleChange.bind(this, this.props.field, this.props.index)}
 					onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 				{displayResults}
@@ -71,10 +71,13 @@ class SearchBar extends Component {
 }
 SearchBar.propTypes = {
 	value: PropTypes.string,
+	index: PropTypes.number,
 	field: PropTypes.object.isRequired,
 	searchApiUrl: PropTypes.string.isRequired,
 	resultMap: PropTypes.object.isRequired,
+	handleChange: PropTypes.func.isRequired,
 	updateFields: PropTypes.func.isRequired
+
 };
 
 export default SearchBar;
