@@ -38,18 +38,24 @@ class SearchBar extends Component {
 		this.props.updateFields(fields);
 		this.setState({results: undefined});
 	}
+	handleCloseClick(){
+		this.setState({results: undefined});
+	}
 	render(){
 		let	displayResults = (this.state.results !== undefined) && (
-			<ul className="searchbar__result">{
-				this.state.results.length > 1 ?
-					this.state.results.map((result) => (
-						<li key={result.id} onClick={this.handleListItemClick.bind(this, result)}>
-							<span>{result[this.props.resultMap.fname[0]]}</span>{' '}
-							<span>{result[this.props.resultMap.fname[1]]}</span>
-						</li>
-					))
-				: <span>검색결과없음</span>
-			}</ul>
+			<div className="searchbar__result">
+				<span onClick={this.handleCloseClick.bind(this)} >닫기</span>
+				<ul>{
+					this.state.results.length > 1 ?
+						this.state.results.map((result) => (
+							<li key={result.id} onClick={this.handleListItemClick.bind(this, result)}>
+								<span>{result[this.props.resultMap.fname[0]]}</span>{' '}
+								<span>{result[this.props.resultMap.fname[1]]}</span>
+							</li>
+						))
+					: <span>검색결과없음</span>
+				}</ul>
+			</div>
 		);
 
 		return(
