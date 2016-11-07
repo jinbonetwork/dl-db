@@ -102,7 +102,7 @@ class DigitalLibraryContainer extends Component {
 					});
 					value = firstTermId; break;
 				case 'date':
-					value = 0; break;
+					value = {year: '', month: ''}; break;
 				case 'image': case 'file':
 					value = {filename: ''}; break;
 				default:

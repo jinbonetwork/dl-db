@@ -27,8 +27,7 @@ class DocumentForm extends Component {
 		});
 		return firstTermId;
 	}
-	handleChange(field, index, event){
-		let value = (field.form != 'file' ? event.target.value : event.target.files[0]);
+	updateSingleField(field, index, value){
 		if(field.fid > 0){
 			if(index === undefined){
 				this.setState(update(this.state, { custom: {
@@ -46,6 +45,10 @@ class DocumentForm extends Component {
 				[field.fid]: {$set: value}
 			}));
 		}
+	}
+	handleChange(field, index, event){
+		let value = (field.form != 'file' ? event.target.value : event.target.files[0]);
+		this.updateSingleField(field, index, value);
 	}
 	handleSubmit(event){
 		event.preventDefault();
@@ -115,16 +118,7 @@ class DocumentForm extends Component {
 				});
 				return radioButtons;
 			case 'Ym':
-				/*
-				let year = parseInt(value / 100);
-				return (
-					<div>
-						<input type="text" placeholder="0000" onChange={this.handleChangeDate.bind(this, 'year')} />년{' '}
-						<input type="text" placeholder="00" onChange={this.handleChangeDate.bind(this, 'month')} />월
-					</div>
-				);
-				*/
-				return <DateForm field={field} value={value} index={index} updateFields={this.updateFields.bind(this)} />
+				return <DateForm field={field} value={value} index={index} updateSingleField={this.updateSingleField.bind(this)} />
 			case 'fieldset':
 				let subFormFields = [];
 				this.props.documentFormData.fields.forEach((f) => {
