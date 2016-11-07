@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
+import axios from 'axios';
 
 import SearchBar from './SearchBar';
 import Textarea from './Textarea';
@@ -52,7 +53,30 @@ class DocumentForm extends Component {
 	}
 	handleSubmit(event){
 		event.preventDefault();
-		console.log(this.state.custom);
+
+		let formData = new FormData();
+		this.props.documentFormData.fields.forEach((f) => {
+			if(f.form == 'file'){
+				if(f.multiple == '1'){
+					this.state.custom['f'+f.fid].forEach((file) => {
+						if(file.name){
+							formData.append('f'+f.fid+'[]', file);
+						}
+					});
+				} else {
+					let file = this.state.custom['f'+f.fid];
+					if(file.name){
+						formData.append('f'+f.fid, file);
+					}
+				}
+			}
+		});
+		formData.append('document', JSON.stringify(this.state));
+
+		axios.post(this.props.apiUrl+'/document/new', formData)
+		.then((response) => {
+			console.log(response.data);
+		});
 	}
 	handleClickToAddInputForm(field){
 		let value = '';
@@ -60,9 +84,9 @@ class DocumentForm extends Component {
 			case 'taxonomy':
 				value = this.defaultTaxonomyTerm(field.cid); break;
 			case 'date':
-				value = '0'; break;
+				value = {year: '', month: ''}; break;
 			case 'image': case 'file':
-				value = {}; break;
+				value = {filename: ''}; break;
 			default:
 				value = '';
 		}
