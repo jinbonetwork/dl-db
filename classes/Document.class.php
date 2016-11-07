@@ -50,6 +50,8 @@ class Document extends \DLDB\Objects {
 		$que2 .= ") VALUES (?,?,?,?,?";
 		$array1 = 'array("sssdd';
 		$array2 = '$'."args['subject'], ".'$'."args['content'], serialize(".'$'."custom), ".'$'."uid, time()";
+		$files = array();
+		$attach_exists = false;
 		foreach($args as $k => $v) {
 			if(substr($k,0,1) == 'f') {
 				$key = (int)substr($k,1);
@@ -81,6 +83,26 @@ class Document extends \DLDB\Objects {
 								);
 							}
 							break;
+						case "file":
+						case "image":
+							if(!is_array($v)) {
+								$v = array($v);
+							}
+							if(is_array($v)) {
+								foreach($v as $f) {
+									$file = \DLDB\Files::getFile($f);
+									$custom[$key][$f] = array(
+										'filepath' => $file['filepath'],
+										'filename' => $file['filename'],
+										'mimetype' => $file['mimetype']
+									);
+									$files[] = $file;
+									if($file['mimetype'] == 'application/pdf') {
+										$attach_exists = true;
+									}
+								}
+							}
+							break;
 						default:
 							$custom[$key] = $v;
 							break;
@@ -99,6 +121,17 @@ class Document extends \DLDB\Objects {
 		if($dbm->execute($que,$q_args) < 1) {
 			self::setErrorMsg($que." 가 DB에 반영되지 않았습니다.");
 			return -1;
+		}
+		$insert_id = $dbm->getLastInsertId();
+
+		if($attach_exists == true) {
+			$parser = new \Smalot\PdfParser\Parser();
+		}
+		if(is_array($files)) {
+			foreach($files as $file) {
+				$que = "UPDATE {files} SET `did` = ? WHERE `fid` = ?";
+				$dbm->execute($que,array("dd", $insert_id, $file['fid']));
+			}
 		}
 	}
 
