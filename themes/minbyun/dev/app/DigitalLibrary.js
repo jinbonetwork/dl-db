@@ -7,7 +7,7 @@ const childPropList = {
 		elective: []
 	},
 	'/document/new':{
-		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'subjectField', 'apiUrl'],
+		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'defaultFields', 'apiUrl'],
 		elective: ['openedDocuments']
 	},
 	'/error': {},
@@ -54,7 +54,7 @@ DigitalLibrary.propTypes = {
 	documentFormData: PropTypes.object,
 	documentForm: PropTypes.object,
 	documentFormOptions: PropTypes.object,
-	subjectField: PropTypes.object,
+	defaultFields: PropTypes.object,
 	openedDocuments: PropTypes.array
 };
 

@@ -44,7 +44,7 @@ class SearchBar extends Component {
 	render(){
 		let	displayResults = (this.state.results !== undefined) && (
 			<div className="searchbar__result">
-				<span onClick={this.handleClickClose.bind(this)} >닫기</span>
+				<span className="button" onClick={this.handleClickClose.bind(this)}>닫기</span>
 				<ul>{
 					this.state.results.length > 1 ?
 						this.state.results.map((result) => (

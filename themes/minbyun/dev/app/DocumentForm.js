@@ -1,7 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
+
 import SearchBar from './SearchBar';
+import Textarea from './Textarea';
+import DateForm from './DateForm';
 
 class DocumentForm extends Component {
 	componentWillMount(){
@@ -40,7 +43,7 @@ class DocumentForm extends Component {
 			}
 		} else {
 			this.setState(update(this.state, {
-				'subject': {$set: value}
+				[field.fid]: {$set: value}
 			}));
 		}
 	}
@@ -81,19 +84,18 @@ class DocumentForm extends Component {
 			case 'file':
 				let accept = (field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
 				return (
-					<div className="inputform__file">
-						<input type="text" value={value.name || value.filename} />
+					<div>
+						<input type="text" value={value.name || value.filename} placeholder={accept} />
 						<label className="button">
 							<span>찾기</span>
 							<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this, field, index)} />
 						</label>
-						<div>* 파일형식: {accept}</div>
 					</div>
 				);
 			case 'select':
 				let options = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
-					options[term.idx] = <option key={term.tid} value={term.name}>{term.name}</option>;
+					options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
 				});
 				return (
 					<select value={value} onChange={this.handleChange.bind(this, field, index)}>
@@ -103,15 +105,26 @@ class DocumentForm extends Component {
 			case 'radio':
 				let radioButtons = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
-					let checked = (value == term.name ? true : false);
+					let checked = (value == term.tid ? true : false);
 					radioButtons[term.idx] = (
 						<label key={term.tid}>
-							<input type="radio" name={'taxonomy_'+term.cid} value={term.name} defaultChecked={checked} onChange={this.handleChange.bind(this, field, index)} />
+							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} defaultChecked={checked} onChange={this.handleChange.bind(this, field, index)} />
 							{term.name}
 						</label>
 					);
 				});
 				return radioButtons;
+			case 'Ym':
+				/*
+				let year = parseInt(value / 100);
+				return (
+					<div>
+						<input type="text" placeholder="0000" onChange={this.handleChangeDate.bind(this, 'year')} />년{' '}
+						<input type="text" placeholder="00" onChange={this.handleChangeDate.bind(this, 'month')} />월
+					</div>
+				);
+				*/
+				return <DateForm field={field} value={value} index={index} updateFields={this.updateFields.bind(this)} />
 			case 'fieldset':
 				let subFormFields = [];
 				this.props.documentFormData.fields.forEach((f) => {
@@ -122,14 +135,13 @@ class DocumentForm extends Component {
 				return <div className="table">{subFormFields}</div>;
 			default:
 				if(parseInt(field.form) || field.form == 'textarea'){
-					let maxLength = (field.form > 0 ? field.form : null);
-					return <textarea maxLength={maxLength} />;
+					return <Textarea field={field} value={value} index={index} handleChange={this.handleChange.bind(this)} />
 				}
 		}
 	}
 	formRow(field){
 		let inputForms;
-		let value = (field.fid != 0 ? this.state.custom['f'+field.fid] : this.state.subject);
+		let value = (field.fid > 0 ? this.state.custom['f'+field.fid] : this.state[field.fid]);
 		if(field.multiple == '1'){
 			inputForms = value.map((v, i) =>
 				<div key={i} className="table__row">
@@ -155,6 +167,9 @@ class DocumentForm extends Component {
 	}
 	render(){
 		let formRows = [];
+		for(let field in this.props.defaultFields){
+			formRows[this.props.defaultFields[field].idx] = this.formRow(this.props.defaultFields[field]);
+		}
 		this.props.documentFormData.fields.forEach((field) => {
 			if(field.parent == 0){
 				formRows[field.idx] = this.formRow(field);
@@ -170,7 +185,6 @@ class DocumentForm extends Component {
 							<div className="table__col"></div>
 							<div className="table__col">필수입력사항</div>
 						</div>
-						{this.formRow(this.props.subjectField)}
 						{formRows}
 					</div>
 					<div className="document-form__elective">
@@ -186,7 +200,7 @@ DocumentForm.propTypes = {
 	documentFormData: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	documentFormOptions: PropTypes.object.isRequired,
-	subjectField: PropTypes.object.isRequired,
+	defaultFields: PropTypes.object.isRequired,
 	apiUrl: PropTypes.string.isRequired,
 	openedDocuments: PropTypes.array
 };
