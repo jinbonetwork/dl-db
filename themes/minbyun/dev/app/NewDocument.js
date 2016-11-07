@@ -33,6 +33,7 @@ class NewDocument extends Component {
 				documentFormOptions={this.props.documentFormOptions}
 				subjectField={this.props.subjectField}
 				apiUrl={this.props.apiUrl}
+				openedDocuments={this.props.openedDocuments}
 			/>
 		);
 	}
@@ -43,7 +44,8 @@ NewDocument.propTypes = {
 	documentForm: PropTypes.object,
 	documentFormOptions: PropTypes.object,
 	subjectField: PropTypes.object,
-	apiUrl: PropTypes.string
+	apiUrl: PropTypes.string,
+	openedDocuments: PropTypes.array
 };
 
 export default NewDocument;

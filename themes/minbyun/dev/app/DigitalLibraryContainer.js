@@ -49,7 +49,8 @@ class DigitalLibraryContainer extends Component {
 			userData: undefined,
 			documentFormData: undefined,
 			documentForm: undefined,
-			documentFormOptions: undefined
+			documentFormOptions: undefined,
+			openedDocuments: []
 		};
 	}
 	fetchData(path, prop){
@@ -58,6 +59,7 @@ class DigitalLibraryContainer extends Component {
 			if(response.statusText == 'OK'){
 				return response.data;
 			} else {
+				this.props.router.push('/error');
 				throw new Error('Server response was not OK');
 			}
 		})
@@ -68,10 +70,6 @@ class DigitalLibraryContainer extends Component {
 			} else {
 				this.setState({[prop]: data});
 			}
-		})
-		.catch((error) => {
-			console.error(error);
-			//this.props.router.push('/error');
 		});
 	}
 	correctDocumentFormData(formData){
@@ -91,15 +89,18 @@ class DigitalLibraryContainer extends Component {
 			switch(field.type){
 				case 'taxonomy':
 					let minIdx = -1;
-					let firstTermId;
+					let firstTermId, firstTerm;
 					formData.taxonomy[field.cid].forEach((term) => {
 						if(minIdx < 0){
-							minIdx = term.idx; firstTermId = term.tid;
+							minIdx = term.idx; firstTermId = term.tid; firstTerm = term.name;
 						} else if(minIdx > 0 && term.idx < minIdx){
-							minIdx = term.idx; firstTermId = term.tid;
+							minIdx = term.idx; firstTermId = term.tid; firstTerm = term.name;
 						}
 					});
-					value = firstTermId; break;
+					value = firstTerm; break;
+				case 'image': case 'file':
+					value = {filename: ''}
+					break;
 				default:
 					value = '';
 			}
@@ -124,7 +125,8 @@ class DigitalLibraryContainer extends Component {
 			documentFormData: this.state.documentFormData,
 			documentForm: this.state.documentForm,
 			documentFormOptions: this.state.documentFormOptions,
-			subjectField: subjectField
+			subjectField: subjectField,
+			openedDocuments: this.state.openedDocuments
 		});
 		return digitalLibrary;
 	}

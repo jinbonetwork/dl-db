@@ -5,17 +5,12 @@ import SearchBar from './SearchBar';
 
 class DocumentForm extends Component {
 	componentWillMount(){
-		this.setState({
-			document: this.props.document,
-			files: []
-		});
+		this.setState(this.props.document);
 	}
 	updateFields(fields){ if(!fields) return;
-		this.setState({
-			document: update(this.state.document, {
-				custom: { $merge: fields}
-			})
-		});
+		this.setState(update(this.state, {
+			custom: { $merge: fields}
+		}));
 	}
 	defaultTaxonomyTerm(cid){
 		let minIdx = -1;
@@ -33,25 +28,25 @@ class DocumentForm extends Component {
 		let value = (field.form != 'file' ? event.target.value : event.target.files[0]);
 		if(field.fid > 0){
 			if(index === undefined){
-				this.setState({ document: update(this.state.document, { custom: {
+				this.setState(update(this.state, { custom: {
 					['f'+field.fid]: {$set: value}
-				}})});
+				}}));
 			} else {
-				this.setState({ document: update(this.state.document, { custom: {
+				this.setState(update(this.state, { custom: {
 					['f'+field.fid]: {
 						[index]: {$set: value}
 					}
-				}})});
+				}}));
 			}
 		} else {
-			this.setState({ document: update(this.state.document, {
+			this.setState(update(this.state, {
 				'subject': {$set: value}
-			})});
+			}));
 		}
 	}
 	handleSubmit(event){
 		event.preventDefault();
-		console.log(this.state.document.custom);
+		console.log(this.state.custom);
 	}
 	handleClickToAddInputForm(field){
 		let value = '';
@@ -65,11 +60,9 @@ class DocumentForm extends Component {
 			default:
 				value = '';
 		}
-		this.setState({
-			document: update(this.state.document, {
-				custom: {['f'+field.fid]: {$push: [value]}}
-			})
-		});
+		this.setState(update(this.state, {
+			custom: {['f'+field.fid]: {$push: [value]}}
+		}));
 	}
 	inputForm(field, value, index){
 		switch(field.form){
@@ -86,11 +79,21 @@ class DocumentForm extends Component {
 					/>
 				);
 			case 'file':
-				return <input type="file" onChange={this.handleChange.bind(this, field, index)} />;
+				let accept = (field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
+				return (
+					<div className="inputform__file">
+						<input type="text" value={value.name || value.filename} />
+						<label className="button">
+							<span>찾기</span>
+							<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this, field, index)} />
+						</label>
+						<div>* 파일형식: {accept}</div>
+					</div>
+				);
 			case 'select':
 				let options = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
-					options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
+					options[term.idx] = <option key={term.tid} value={term.name}>{term.name}</option>;
 				});
 				return (
 					<select value={value} onChange={this.handleChange.bind(this, field, index)}>
@@ -100,10 +103,10 @@ class DocumentForm extends Component {
 			case 'radio':
 				let radioButtons = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
-					let checked = (this.props.document.custom[field.fid] == term.tid ? true : false);
+					let checked = (value == term.name ? true : false);
 					radioButtons[term.idx] = (
 						<label key={term.tid}>
-							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} defaultChecked={checked} />
+							<input type="radio" name={'taxonomy_'+term.cid} value={term.name} defaultChecked={checked} onChange={this.handleChange.bind(this, field, index)} />
 							{term.name}
 						</label>
 					);
@@ -126,16 +129,20 @@ class DocumentForm extends Component {
 	}
 	formRow(field){
 		let inputForms;
-		let value = (field.fid != 0 ? this.state.document.custom['f'+field.fid] : this.state.document.subject);
+		let value = (field.fid != 0 ? this.state.custom['f'+field.fid] : this.state.subject);
 		if(field.multiple == '1'){
 			inputForms = value.map((v, i) =>
-				<div key={i} className="inputform">
-					{this.inputForm(field, v, i)}{' '}
-					<span onClick={this.handleClickToAddInputForm.bind(this, field)}>추가</span>
+				<div key={i} className="table__row">
+					<div className="table__col">
+						{this.inputForm(field, v, i)}
+					</div>
+					<div className="table__col">
+						<span className="button" onClick={this.handleClickToAddInputForm.bind(this, field)}>추가</span>
+					</div>
 				</div>
 			);
 		} else {
-			inputForms = <div className="input-form">{this.inputForm(field, value)}</div>;
+			inputForms = this.inputForm(field, value);
 		}
 		return (
 			<div key={field.fid} className="table__row">
@@ -180,7 +187,8 @@ DocumentForm.propTypes = {
 	document: PropTypes.object.isRequired,
 	documentFormOptions: PropTypes.object.isRequired,
 	subjectField: PropTypes.object.isRequired,
-	apiUrl: PropTypes.string.isRequired
+	apiUrl: PropTypes.string.isRequired,
+	openedDocuments: PropTypes.array
 };
 
 export default DocumentForm;

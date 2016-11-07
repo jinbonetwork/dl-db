@@ -8,7 +8,7 @@ const childPropList = {
 	},
 	'/document/new':{
 		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'subjectField', 'apiUrl'],
-		elective: []
+		elective: ['openedDocuments']
 	},
 	'/error': {},
 	'/test': {}
@@ -28,7 +28,7 @@ class DigitalLibrary extends Component {
 		}
 		if(childProp.elective){
 			for(let i = 0, len = childProp.elective.length; i < len; i++){
-				let p = childProp.electiv[i];
+				let p = childProp.elective[i];
 				props[p] = this.props[p];
 			}
 		}
@@ -54,7 +54,8 @@ DigitalLibrary.propTypes = {
 	documentFormData: PropTypes.object,
 	documentForm: PropTypes.object,
 	documentFormOptions: PropTypes.object,
-	subjectField: PropTypes.object
+	subjectField: PropTypes.object,
+	openedDocuments: PropTypes.array
 };
 
 export default DigitalLibrary;
