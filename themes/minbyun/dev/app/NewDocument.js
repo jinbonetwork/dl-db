@@ -1,18 +1,13 @@
 import React, {Component, PropTypes} from 'react';
-import DocumentForm from './DocumentForm';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
+import DocumentForm from './DocumentForm';
 
 class NewDocument extends Component {
+	/*
 	componentWillMount(){
 		//console.log('will mount');
-		this.setState(
-			update(this.props.documentForm, {
-				id: {$set: Date.now() }
-			})
-		);
 	}
-	/*
 	componentDidMount(){
 		console.log('did mount');
 		console.log(this.props.documentFormData.fields[0].fid);
@@ -26,20 +21,19 @@ class NewDocument extends Component {
 		console.log(this.props.documentFormData.fields[0].fid);
 	}
 	*/
-	handleChange(field, value){
-		this.setState({
-			custom: update(this.state.custom, {
-				$set: { [field.fid]: value }
-			})
-		});
-	}
 	render(){
 		return(
 			<DocumentForm
 				submitLabel="등록"
+				document={update(this.props.documentForm, {
+					id: {$set: Date.now()},
+					uid: {$set: this.props.userData.user.uid}
+				})}
 				documentFormData={this.props.documentFormData}
-				document={this.state}
-				handleChange={this.handleChange.bind(this)}
+				documentFormOptions={this.props.documentFormOptions}
+				subjectField={this.props.subjectField}
+				apiUrl={this.props.apiUrl}
+				openedDocuments={this.props.openedDocuments}
 			/>
 		);
 	}
@@ -47,7 +41,11 @@ class NewDocument extends Component {
 NewDocument.propTypes = {
 	userData: PropTypes.object,
 	documentFormData: PropTypes.object,
-	documentForm: PropTypes.object
+	documentForm: PropTypes.object,
+	documentFormOptions: PropTypes.object,
+	subjectField: PropTypes.object,
+	apiUrl: PropTypes.string,
+	openedDocuments: PropTypes.array
 };
 
 export default NewDocument;

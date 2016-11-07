@@ -1,96 +1,179 @@
 import React, {Component, PropTypes} from 'react';
+import update from 'react-addons-update';  // for update()
+import 'babel-polyfill'; // for update(), find() ...
+import SearchBar from './SearchBar';
 
 class DocumentForm extends Component {
-	handleChange(field, event){
-		this.props.handleChange(field,  event.target.value);
+	componentWillMount(){
+		this.setState(this.props.document);
 	}
-	makeFormFields(field, fieldArrayIndex){
-		let form;
+	updateFields(fields){ if(!fields) return;
+		this.setState(update(this.state, {
+			custom: { $merge: fields}
+		}));
+	}
+	defaultTaxonomyTerm(cid){
+		let minIdx = -1;
+		let firstTermId;
+		this.props.documentFormData.taxonomy[cid].forEach((term) => {
+			if(minIdx < 0){
+				minIdx = term.idx; firstTermId = term.tid;
+			} else if(minIdx > 0 && term.idx < minIdx){
+				minIdx = term.idx; firstTermId = term.tid;
+			}
+		});
+		return firstTermId;
+	}
+	handleChange(field, index, event){
+		let value = (field.form != 'file' ? event.target.value : event.target.files[0]);
+		if(field.fid > 0){
+			if(index === undefined){
+				this.setState(update(this.state, { custom: {
+					['f'+field.fid]: {$set: value}
+				}}));
+			} else {
+				this.setState(update(this.state, { custom: {
+					['f'+field.fid]: {
+						[index]: {$set: value}
+					}
+				}}));
+			}
+		} else {
+			this.setState(update(this.state, {
+				'subject': {$set: value}
+			}));
+		}
+	}
+	handleSubmit(event){
+		event.preventDefault();
+		console.log(this.state.custom);
+	}
+	handleClickToAddInputForm(field){
+		let value = '';
+		switch(field.type){
+			case 'taxonomy':
+				value = this.defaultTaxonomyTerm(field.cid); break;
+			case 'date':
+				value = '0'; break;
+			case 'image': case 'file':
+				value = {}; break;
+			default:
+				value = '';
+		}
+		this.setState(update(this.state, {
+			custom: {['f'+field.fid]: {$push: [value]}}
+		}));
+	}
+	inputForm(field, value, index){
 		switch(field.form){
 			case 'text':
-				form = <input type="text" onChange={this.handleChange.bind(this, field)} />;
-				break;
-			case 'textarea':
-				form = <textarea />;
-				break;
+				return <input type="text" value={value} onChange={this.handleChange.bind(this, field, index)} />;
+			case 'search':
+				let searchInfo = this.props.documentFormOptions.search_in_docform.find((s) => s.field == field.fid);
+				return (
+					<SearchBar value={value} field={field} index={index}
+						searchApiUrl={this.props.apiUrl+'/'+searchInfo.api}
+						resultMap = {searchInfo.resultmap}
+						updateFields={this.updateFields.bind(this)}
+						handleChange={this.handleChange.bind(this)}
+					/>
+				);
 			case 'file':
-				form = <input type="file" />;
-				break;
+				let accept = (field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
+				return (
+					<div className="inputform__file">
+						<input type="text" value={value.name || value.filename} />
+						<label className="button">
+							<span>찾기</span>
+							<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this, field, index)} />
+						</label>
+						<div>* 파일형식: {accept}</div>
+					</div>
+				);
 			case 'select':
 				let options = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
-					options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
+					options[term.idx] = <option key={term.tid} value={term.name}>{term.name}</option>;
 				});
-				form = 
-					<select value={this.props.document.custom[field.fid]} onChange={this.handleChange.bind(this, field)}>
+				return (
+					<select value={value} onChange={this.handleChange.bind(this, field, index)}>
 						{options}
-					</select>;
-				break;
+					</select>
+				);
 			case 'radio':
 				let radioButtons = [];
 				this.props.documentFormData.taxonomy[field.cid].forEach((term) => {
-					let checked = (this.props.document.custom[field.fid] == term.tid ? true : false);
+					let checked = (value == term.name ? true : false);
 					radioButtons[term.idx] = (
 						<label key={term.tid}>
-							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} defaultChecked={checked} />
+							<input type="radio" name={'taxonomy_'+term.cid} value={term.name} defaultChecked={checked} onChange={this.handleChange.bind(this, field, index)} />
 							{term.name}
 						</label>
 					);
 				});
-				form = radioButtons;
-				break;
+				return radioButtons;
 			case 'fieldset':
 				let subFormFields = [];
 				this.props.documentFormData.fields.forEach((f) => {
 					if(f.parent == field.fid){
-						subFormFields[f.idx] = this.makeFormFields(f);
+						subFormFields[f.idx] = this.formRow(f);
 					}
 				});
-				form = <div className="table">{subFormFields}</div>;
-				break;
+				return <div className="table">{subFormFields}</div>;
 			default:
-				if(parseInt(field.form)){
+				if(parseInt(field.form) || field.form == 'textarea'){
 					let maxLength = (field.form > 0 ? field.form : null);
-					form = <textarea maxLength={maxLength} />;
+					return <textarea maxLength={maxLength} />;
 				}
+		}
+	}
+	formRow(field){
+		let inputForms;
+		let value = (field.fid != 0 ? this.state.custom['f'+field.fid] : this.state.subject);
+		if(field.multiple == '1'){
+			inputForms = value.map((v, i) =>
+				<div key={i} className="table__row">
+					<div className="table__col">
+						{this.inputForm(field, v, i)}
+					</div>
+					<div className="table__col">
+						<span className="button" onClick={this.handleClickToAddInputForm.bind(this, field)}>추가</span>
+					</div>
+				</div>
+			);
+		} else {
+			inputForms = this.inputForm(field, value);
 		}
 		return (
 			<div key={field.fid} className="table__row">
 				<div className="table__col">{field.subject}</div>
 				<div className="table__col">
-					{form}
+					{inputForms}
 				</div>
 			</div>
 		);
 	}
 	render(){
-		let formFields = [];
-		if(this.props.documentFormData){
-			this.props.documentFormData.fields.forEach((field) => {
-				if(field.parent == 0){
-					formFields[field.idx] = this.makeFormFields(field);
-				}
-			});
-		}
+		let formRows = [];
+		this.props.documentFormData.fields.forEach((field) => {
+			if(field.parent == 0){
+				formRows[field.idx] = this.formRow(field);
+			}
+		});
+
 		return (
 			<div className="document-form">
 				<h1>자료 입력하기</h1>
-				<form>
+				<form onSubmit={this.handleSubmit.bind(this)}>
 					<div className="table document-form__required">
 						<div className="table__row">
 							<div className="table__col"></div>
 							<div className="table__col">필수입력사항</div>
 						</div>
-						<div className="table__row">
-							<div className="table__col">제목</div>
-							<div className="table__col">
-								<input type="text" name="title" />
-							</div>
-						</div>
-						{formFields}
+						{this.formRow(this.props.subjectField)}
+						{formRows}
 					</div>
 					<div className="document-form__elective">
-
 					</div>
 					<button type="submit">{this.props.submitLabel}</button>
 				</form>
@@ -102,7 +185,10 @@ DocumentForm.propTypes = {
 	submitLabel: PropTypes.string.isRequired,
 	documentFormData: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
-	handleChange: PropTypes.func.isRequired
+	documentFormOptions: PropTypes.object.isRequired,
+	subjectField: PropTypes.object.isRequired,
+	apiUrl: PropTypes.string.isRequired,
+	openedDocuments: PropTypes.array
 };
 
 export default DocumentForm;

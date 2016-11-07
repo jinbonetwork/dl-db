@@ -9,12 +9,15 @@ import User from './User';
 import NewDocument from './NewDocument';
 import ServerError from './ServerError';
 
+import TestSomething from './TestSomething';
+
 render((
 	<Router history={browserHistory}>
 		<Route component={DigitalLibraryContainer}>
 			<Route path="/" component={DigitalLibrary}>
 				<Route path="/user" component={User} />
 				<Route path="/document/new" component={NewDocument} />
+				<Route path="/test" component={TestSomething} />
 				<Route path="/error" component={ServerError} />
 			</Route>
 		</Route>
