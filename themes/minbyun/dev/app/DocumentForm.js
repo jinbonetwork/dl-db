@@ -85,11 +85,12 @@ class DocumentForm extends Component {
 	valdationCheck(){
 		for(let i in this.props.documentFormData.fields){
 			let f = this.props.documentFormData.fields[i];
+
 			let value = (f.fid > 0 ? this.state.custom['f'+f.fid] : this.state[f.fid]);
 			if(f.required == '1' && f.type != 'group' && this.isEmpty(value) && !this.isFieldHidden(f) && !this.isFieldHidden(f.parent)){
 				return {fid: f.fid, message: f.subject+'를(을) 입력하세요.'};
 			}
-			if((f.type == 'email' && !this.isEmailValid(value)) || (f.type == 'phone' && !this.isPhoneValid(value)) || (f.type="date" && !this.isDateValid(value, f.form))){
+			if((f.type == 'email' && !this.isEmailValid(value)) || (f.type == 'phone' && !this.isPhoneValid(value)) || (f.type == "date" && !this.isDateValid(value, f.form))){
 				return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
 			}
 			if(f.type == 'taxonomy'){
@@ -310,7 +311,10 @@ class DocumentForm extends Component {
 }
 DocumentForm.propTypes = {
 	submitLabel: PropTypes.string.isRequired,
-	documentFormData: PropTypes.object.isRequired,
+	documentFormData: PropTypes.shape({
+		fields: PropTypes.array.isRequired,
+		taxonomy: PropTypes.objectOf(PropTypes.array).isRequired
+	}).isRequired,
 	document: PropTypes.object.isRequired,
 	documentFormOptions: PropTypes.object.isRequired,
 	apiUrl: PropTypes.string.isRequired,
