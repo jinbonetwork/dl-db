@@ -44,11 +44,11 @@ class SearchBar extends Component {
 	render(){
 		let	displayResults = (this.state.results !== undefined) && (
 			<div className="searchbar__result">
-				<span onClick={this.handleClickClose.bind(this)} >닫기</span>
+				<span className="button" onClick={this.handleClickClose.bind(this)}>닫기</span>
 				<ul>{
 					this.state.results.length > 1 ?
 						this.state.results.map((result) => (
-							<li key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
+							<li className="button" key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
 								<span>{result[this.props.resultMap.fname[0]]}</span>{' '}
 								<span>{result[this.props.resultMap.fname[1]]}</span>
 							</li>
@@ -57,7 +57,6 @@ class SearchBar extends Component {
 				}</ul>
 			</div>
 		);
-
 		return(
 			<div className="searchbar">
 				<input type="search" value={this.props.value}
