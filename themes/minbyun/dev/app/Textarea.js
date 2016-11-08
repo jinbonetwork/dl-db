@@ -12,12 +12,11 @@ class Textarea extends Component {
 		this.props.handleChange(this.props.field, this.props.index, event);
 	}
 	render(){
-		let maxLength = (this.props.field.form > 0 ? this.props.field.form : null);
 		return(
 			<div className="textarea">
-				<textarea value={this.props.value} maxLength={maxLength} onChange={this.handleChange.bind(this)} />
+				<textarea value={this.props.value} onChange={this.handleChange.bind(this)} />
 				<div className="textarea__footer">
-					{maxLength && <span>* {maxLength}자 내외로 작성해주세요.</span>}
+					{(this.props.field.form > 0) && <span>* {this.props.field.form}자 내외로 작성해주세요.</span>}
 					<span>{this.state.numOfWords}자</span>
 				</div>
 			</div>

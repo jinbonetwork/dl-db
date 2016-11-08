@@ -94,6 +94,13 @@ class DocumentForm extends Component {
 			custom: {['f'+field.fid]: {$push: [value]}}
 		}));
 	}
+	message(field){
+		switch(field.form){
+			case 'file':
+				let accept = (field.type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
+				return `* 파일형식: ${accept}`;
+		}
+	}
 	inputForm(field, value, index){
 		switch(field.form){
 			case 'text':
@@ -112,7 +119,7 @@ class DocumentForm extends Component {
 				let accept = (field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
 				return (
 					<div>
-						<input type="text" value={value.name || value.filename} placeholder={accept} />
+						<input type="text" value={value.name || value.filename} />
 						<label className="button">
 							<span>찾기</span>
 							<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this, field, index)} />
@@ -151,17 +158,18 @@ class DocumentForm extends Component {
 					}
 				});
 				return <div className="table">{subFormFields}</div>;
-			default:
-				if(parseInt(field.form) || field.form == 'textarea'){
-					return <Textarea field={field} value={value} index={index} handleChange={this.handleChange.bind(this)} />
-				}
 		}
+		switch(field.type){
+			case 'textarea':
+				return <Textarea field={field} value={value} index={index} handleChange={this.handleChange.bind(this)} />
+		}
+
 	}
 	formRow(field){
 		let inputForms;
 		let value = (field.fid > 0 ? this.state.custom['f'+field.fid] : this.state[field.fid]);
 		if(field.multiple == '1'){
-			inputForms = value.map((v, i) =>
+			inputForms = value.map((v, i) => (
 				<div key={i} className="table__row">
 					<div className="table__col">
 						{this.inputForm(field, v, i)}
@@ -170,9 +178,20 @@ class DocumentForm extends Component {
 						<span className="button" onClick={this.handleClickToAddInputForm.bind(this, field)}>추가</span>
 					</div>
 				</div>
+			));
+			inputForms = (
+				<div className="table">
+					{inputForms}
+					<div className="table__row">{this.message(field)}</div>
+				</div>
 			);
 		} else {
-			inputForms = this.inputForm(field, value);
+			inputForms = (
+				<div className="table">
+					{this.inputForm(field, value)}
+					<div className="table__row">{this.message(field)}</div>
+				</div>
+			);
 		}
 		return (
 			<div key={field.fid} className="table__row">
