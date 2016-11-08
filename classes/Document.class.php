@@ -321,7 +321,6 @@ class Document extends \DLDB\Objects {
 
 		$pages = $pdf->getPages();
 
-		if($
 		foreach( $pages as $page ) {
 			$text .= $page->getText()."\n";
 		}
