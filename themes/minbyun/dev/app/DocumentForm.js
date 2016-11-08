@@ -154,7 +154,7 @@ class DocumentForm extends Component {
 				let subFormFields = [];
 				this.props.documentFormData.fields.forEach((f) => {
 					if(f.parent == field.fid){
-						subFormFields[f.idx] = this.formRow(f);
+						subFormFields[f.idx] = this.documentField(f);
 					}
 				});
 				return <div className="table">{subFormFields}</div>;
@@ -165,7 +165,18 @@ class DocumentForm extends Component {
 		}
 
 	}
-	formRow(field){
+	documentField(field){
+		let actionShow = this.props.documentFormOptions.action_show.find((item) => item.field == field.fid);
+		if(actionShow){
+			let isHidden = true;
+			this.props.documentFormData.fields.forEach((f) => {
+				if(f.type == 'taxonomy' && this.state.custom['f'+f.fid] == actionShow.term){
+					isHidden = false; return false;
+				}
+			});
+			if(isHidden) return null;
+		}
+
 		let inputForms;
 		let value = (field.fid > 0 ? this.state.custom['f'+field.fid] : this.state[field.fid]);
 		if(field.multiple == '1'){
@@ -203,13 +214,13 @@ class DocumentForm extends Component {
 		);
 	}
 	render(){
-		let formRows = [];
+		let documentFields = [];
 		for(let field in this.props.defaultFields){
-			formRows[this.props.defaultFields[field].idx] = this.formRow(this.props.defaultFields[field]);
+			documentFields[this.props.defaultFields[field].idx] = this.documentField(this.props.defaultFields[field]);
 		}
 		this.props.documentFormData.fields.forEach((field) => {
 			if(field.parent == 0){
-				formRows[field.idx] = this.formRow(field);
+				documentFields[field.idx] = this.documentField(field);
 			}
 		});
 
@@ -222,7 +233,7 @@ class DocumentForm extends Component {
 							<div className="table__col"></div>
 							<div className="table__col">필수입력사항</div>
 						</div>
-						{formRows}
+						{documentFields}
 					</div>
 					<div className="document-form__elective">
 					</div>
