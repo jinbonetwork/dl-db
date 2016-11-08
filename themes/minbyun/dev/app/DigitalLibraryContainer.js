@@ -22,10 +22,10 @@ const emptyDocument = {
 	f7: '',
 	f9: {}
 };
-const defaultFields = {
-	subject: {fid: 'subject', parent: '0', idx: '0', subject: '제목', type: 'char', multiple: '0', required: '1', cid: '0', form: 'text'},
-	content: {fid: 'content', parent: '0', idx: '4', subject: '주요내용', type: 'textarea', multiple: '0', required: '1', cid: '0', form: '200'}
-}
+const defaultFields = [
+	{fid: 'subject', parent: '0', idx: '0', subject: '제목', type: 'char', multiple: '0', required: '1', cid: '0', form: 'text'},
+	{fid: 'content', parent: '0', idx: '4', subject: '주요내용', type: 'textarea', multiple: '0', required: '1', cid: '0', form: '200'}
+];
 const documentFormOptions = {
 	search_in_docform: [
 		{
@@ -76,6 +76,7 @@ class DigitalLibraryContainer extends Component {
 		});
 	}
 	correctDocumentFormData(formData){
+		formData.fields = formData.fields.concat(defaultFields);
 		formData.fields.forEach((field, i) => {
 			if(field.multiple == '1'){
 				if(field.parent != '0' || field.form == 'search' || field.form == 'fieldset'){
@@ -129,7 +130,6 @@ class DigitalLibraryContainer extends Component {
 			documentFormData: this.state.documentFormData,
 			documentForm: this.state.documentForm,
 			documentFormOptions: this.state.documentFormOptions,
-			defaultFields: defaultFields,
 			openedDocuments: this.state.openedDocuments
 		});
 		return digitalLibrary;

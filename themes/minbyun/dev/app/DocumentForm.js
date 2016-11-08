@@ -51,27 +51,40 @@ class DocumentForm extends Component {
 		let value = (field.form != 'file' ? event.target.value : event.target.files[0]);
 		this.updateSingleField(field, index, value);
 	}
-	handleSubmit(event){
-		event.preventDefault();
+	isEmailValid(email) {
+		let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(email);
+	}
+	isValuesValid(){
+		return true;
+	}
+	handleClickToSubmit(){
+		if(this.isValuesValid() === false){
+			console.log('Validation check fail!!');
+			return;
+		}
 
+		let modifiedState = update(this.state, {
+			created: {$set: Date.now()}
+		});
 		let formData = new FormData();
 		this.props.documentFormData.fields.forEach((f) => {
 			if(f.form == 'file'){
 				if(f.multiple == '1'){
-					this.state.custom['f'+f.fid].forEach((file) => {
+					modifiedState.custom['f'+f.fid].forEach((file) => {
 						if(file.name){
 							formData.append('f'+f.fid+'[]', file);
 						}
 					});
 				} else {
-					let file = this.state.custom['f'+f.fid];
+					let file = modifiedState.custom['f'+f.fid];
 					if(file.name){
 						formData.append('f'+f.fid, file);
 					}
 				}
 			}
 		});
-		formData.append('document', JSON.stringify(this.state));
+		formData.append('document', JSON.stringify(modifiedState));
 
 		axios.post(this.props.apiUrl+'/document/new', formData)
 		.then((response) => {
@@ -94,7 +107,7 @@ class DocumentForm extends Component {
 			custom: {['f'+field.fid]: {$push: [value]}}
 		}));
 	}
-	message(field){
+	fieldFooter(field){
 		switch(field.form){
 			case 'file':
 				let accept = (field.type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
@@ -193,14 +206,14 @@ class DocumentForm extends Component {
 			inputForms = (
 				<div className="table">
 					{inputForms}
-					<div className="table__row">{this.message(field)}</div>
+					<div className="table__row">{this.fieldFooter(field)}</div>
 				</div>
 			);
 		} else {
 			inputForms = (
 				<div className="table">
 					{this.inputForm(field, value)}
-					<div className="table__row">{this.message(field)}</div>
+					<div className="table__row">{this.fieldFooter(field)}</div>
 				</div>
 			);
 		}
@@ -214,31 +227,37 @@ class DocumentForm extends Component {
 		);
 	}
 	render(){
-		let documentFields = [];
-		for(let field in this.props.defaultFields){
-			documentFields[this.props.defaultFields[field].idx] = this.documentField(this.props.defaultFields[field]);
-		}
+		let requiredFields = [], electiveFields = [];
 		this.props.documentFormData.fields.forEach((field) => {
 			if(field.parent == 0){
-				documentFields[field.idx] = this.documentField(field);
+				if(field.required == '1'){
+					requiredFields[field.idx] = this.documentField(field);
+				} else {
+					electiveFields[field.idx] = this.documentField(field);
+				}
 			}
 		});
-
 		return (
 			<div className="document-form">
 				<h1>자료 입력하기</h1>
-				<form onSubmit={this.handleSubmit.bind(this)}>
-					<div className="table document-form__required">
-						<div className="table__row">
-							<div className="table__col"></div>
-							<div className="table__col">필수입력사항</div>
+				<div className="table">
+					<div className="table__row">
+						<div className="table__col"></div>
+						<div className="table__col">필수입력사항</div>
+					</div>
+					{requiredFields}
+					<div className="table__row">
+						<div className="table__col"></div>
+						<div className="table__col">선택입력사항</div>
+					</div>
+					{electiveFields}
+					<div className="table__row">
+						<div className="table__col"></div>
+						<div className="table__col">
+							<button type="button" onClick={this.handleClickToSubmit.bind(this)}>{this.props.submitLabel}</button>
 						</div>
-						{documentFields}
 					</div>
-					<div className="document-form__elective">
-					</div>
-					<button type="submit">{this.props.submitLabel}</button>
-				</form>
+				</div>
 			</div>
 		);
 	}
@@ -248,7 +267,6 @@ DocumentForm.propTypes = {
 	documentFormData: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	documentFormOptions: PropTypes.object.isRequired,
-	defaultFields: PropTypes.object.isRequired,
 	apiUrl: PropTypes.string.isRequired,
 	openedDocuments: PropTypes.array
 };
