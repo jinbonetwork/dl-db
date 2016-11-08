@@ -51,17 +51,58 @@ class DocumentForm extends Component {
 		let value = (field.form != 'file' ? event.target.value : event.target.files[0]);
 		this.updateSingleField(field, index, value);
 	}
-	isEmailValid(email) {
+	isEmailValid(email){
+		email = email.trim();
 		let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
 	}
-	isValuesValid(){
-		return true;
+	isPhoneValid(phone){
+		phone = phone.trim();
+		let re = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1}|)-?[0-9]{3,4}-?[0-9]{4}$/;
+		return re.test(phone);
+	}
+	isEmpty(value){
+		if(!value) return true;
+		if(typeof value === 'object'){
+			for(let k in value){
+				if(!value[k]) return true;
+			}
+		}
+		return false;
+	}
+	isDateValid(value, form){
+		let date = new Date();
+		if(form == 'Ym'){
+			if(1970 <= value.year && value.year <= date.getFullYear() && 1 <= value.month && value.month <= 12 ){
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+	valdationCheck(){
+		for(let i in this.props.documentFormData.fields){
+			let f = this.props.documentFormData.fields[i];
+			let value = (f.fid > 0 ? this.state.custom['f'+f.fid] : this.state[f.fid]);
+			if(f.required == '1' && f.type != 'group' && this.isEmpty(value) && !this.isFieldHidden(f) && !this.isFieldHidden(f.parent)){
+				return {fid: f.fid, message: f.subject+'를(을) 입력하세요.'};
+			}
+			if((f.type == 'email' && !this.isEmailValid(value)) || (f.type == 'phone' && !this.isPhoneValid(value)) || (f.type="date" && !this.isDateValid(value, f.form))){
+				return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
+			}
+			if(f.type == 'taxonomy'){
+				let term = this.props.documentFormData.taxonomy[f.cid].find((t) => t.tid == value);
+				if(!term) return {fid: f.fid, message: f.subject+'가 올바르지 않습니다.'};
+			}
+		}
 	}
 	handleClickToSubmit(){
-		if(this.isValuesValid() === false){
-			console.log('Validation check fail!!');
-			return;
+		let error = this.valdationCheck();
+		if(error){
+			alert(error.message);
+			return false;
 		}
 
 		let modifiedState = update(this.state, {
@@ -178,17 +219,22 @@ class DocumentForm extends Component {
 		}
 
 	}
-	documentField(field){
-		let actionShow = this.props.documentFormOptions.action_show.find((item) => item.field == field.fid);
+	isFieldHidden(fid){
+		let actionShow = this.props.documentFormOptions.action_show.find((item) => item.field == fid);
 		if(actionShow){
-			let isHidden = true;
-			this.props.documentFormData.fields.forEach((f) => {
+			for(let i in this.props.documentFormData.fields){
+				let f = this.props.documentFormData.fields[i];
 				if(f.type == 'taxonomy' && this.state.custom['f'+f.fid] == actionShow.term){
-					isHidden = false; return false;
+					return false;
 				}
-			});
-			if(isHidden) return null;
+			}
+			return true;
+		} else {
+			return false;
 		}
+	}
+	documentField(field){
+		if(this.isFieldHidden(field.fid)) return null;
 
 		let inputForms;
 		let value = (field.fid > 0 ? this.state.custom['f'+field.fid] : this.state[field.fid]);
