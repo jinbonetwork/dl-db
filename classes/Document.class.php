@@ -157,9 +157,19 @@ class Document extends \DLDB\Objects {
 				$que = "UPDATE {files} SET `did` = ? WHERE `fid` = ?";
 				$dbm->execute($que,array("dd", $insert_id, $file['fid']));
 			}
-			if($file['mimetype'] == 'application/pdf') {
-				$memo .= self::parsePDF($file);
+			switch($file['mimetype']) {
+				case 'application/pdf':
+					$memo .= self::parsePDF($file);
+					break;
+				case 'application/msword':
+				case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+					$memo .= self::parseDoc($file);
+					break;
 			}
+		}
+		if($memo) {
+			$que = "UPDATE {documents} SET memo = ? WHERE id = ?";
+			$dbm->execute($que,array("sd",$memo,$insert_id));
 		}
 		if( is_array($taxonomy_map) ) {
 			if( self::reBuildTaxonomy($taxonomy_map) < 0 ) {
@@ -258,14 +268,22 @@ class Document extends \DLDB\Objects {
 		}
 		$memo = '';
 		if(is_array($files)) {
-			if($file['mimetype'] == 'application/pdf') {
-				$memo .= self::parsePDF($file);
+			foreach($files as $file) {
+				switch($file['mimetype']) {
+					case 'application/pdf':
+						$memo .= self::parsePDF($file);
+						break;
+					case 'application/msword':
+					case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+						$memo .= self::parseDoc($file);
+						break;
+				}
 			}
 		}
 
-		$que .= " WHERE `id` = ?";
-		$array1 .= 'd",';
-		$array2 .= ", ".'$'."args['id'])";
+		$que .= ", `memo` = ? WHERE `id` = ?";
+		$array1 .= 'sd",';
+		$array2 .= ", ".'$'."memo, ".'$'."args['id'])";
 
 		$eval_str = '$'."q_args = ".$array1.$array2.";";
 		eval($eval_str);
@@ -354,6 +372,15 @@ class Document extends \DLDB\Objects {
 		foreach( $pages as $page ) {
 			$text .= $page->getText()."\n";
 		}
+		return $text;
+	}
+
+	public static function parseDoc($file_info) {
+		$filename = \DLDB\Files::getFilePath($file_info);
+		$docObj = new Filetotext($filename);
+
+		$text = $docObj->convertToText();
+
 		return $text;
 	}
 
