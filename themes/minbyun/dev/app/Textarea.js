@@ -9,7 +9,7 @@ class Textarea extends Component {
 	}
 	handleChange(event){
 		this.setState({numOfWords: event.target.value.length});
-		this.props.handleChange(this.props.field, this.props.index, event);
+		this.props.updateSingleField(this.props.field, this.props.index, event.target.value);
 	}
 	render(){
 		return(
@@ -27,7 +27,7 @@ Textarea.propTypes = {
 	field: PropTypes.object.isRequired,
 	value: PropTypes.string.isRequired,
 	index: PropTypes.number,
-	handleChange: PropTypes.func.isRequired
+	updateSingleField: PropTypes.func.isRequired
 };
 
 export default Textarea;

@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
-import DocumentForm from './DocumentForm';
+import DocumentFormContainer from './DocumentFormContainer';
 
 class NewDocument extends Component {
 	/*
@@ -23,7 +23,7 @@ class NewDocument extends Component {
 	*/
 	render(){
 		return(
-			<DocumentForm
+			<DocumentFormContainer
 				submitLabel="등록"
 				document={update(this.props.documentForm, {
 					uid: {$set: this.props.userData.user.uid}

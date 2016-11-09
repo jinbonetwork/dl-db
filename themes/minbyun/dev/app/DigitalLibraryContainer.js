@@ -29,18 +29,18 @@ const defaultFields = [
 const documentFormOptions = {
 	search_in_docform: [
 		{
-			field: 13,
+			field: '13',
 			api: "member?name=",
 			resultmap: {
 				fname: ['name', 'class', 'email', 'phone'],
-				fid: [13, 14, 15, 16]
+				fid: ['13', '14', '15', '16']
 			}
 		}
 	],
 	action_show: [
 		{
-			term: 1,
-			field: 2
+			term: '1',
+			field: '2'
 		}
 	]
 };
@@ -70,6 +70,7 @@ class DigitalLibraryContainer extends Component {
 			if(prop == 'documentFormData'){
 				this.correctDocumentFormData(data);
 				this.initializeDocumentForm(data);
+				this.setFormOptions(data);
 			} else {
 				this.setState({[prop]: data});
 			}
@@ -86,42 +87,76 @@ class DigitalLibraryContainer extends Component {
 		});
 		this.setState({documentFormData: formData});
 	}
+	defaultValue(field, formData){
+		switch(field.type){
+			case 'taxonomy':
+				let minIdx = -1;
+				let firstTermId;
+				formData.taxonomy[field.cid].forEach((term) => {
+					if(minIdx < 0){
+						minIdx = term.idx; firstTermId = term.tid;
+					} else if(minIdx > 0 && term.idx < minIdx){
+						minIdx = term.idx; firstTermId = term.tid;
+					}
+				});
+				return firstTermId;
+			case 'date':
+				return {year: '', month: ''};
+			case 'image': case 'file':
+				return {filename: ''};
+			default:
+				return '';
+		}
+	}
 	initializeDocumentForm(formData){
 		let custom = {};
 		formData.fields.forEach((field) => {
-			let value;
-			switch(field.type){
-				case 'taxonomy':
-					let minIdx = -1;
-					let firstTermId;
-					formData.taxonomy[field.cid].forEach((term) => {
-						if(minIdx < 0){
-							minIdx = term.idx; firstTermId = term.tid;
-						} else if(minIdx > 0 && term.idx < minIdx){
-							minIdx = term.idx; firstTermId = term.tid;
-						}
-					});
-					value = firstTermId; break;
-				case 'date':
-					value = {year: '', month: ''}; break;
-				case 'image': case 'file':
-					value = {filename: ''}; break;
-				default:
-					value = '';
-			}
+			let value = this.defaultValue(field, formData);
 			if(field.multiple == '1') value = [value];
-			if(field.type != 'group') custom['f'+field.fid] = value;
+			if(field.type != 'group' && field.fid > 0) custom['f'+field.fid] = value;
 		});
 		this.setState({documentForm: update(emptyDocument, {
 			custom: {$set: custom}
 		})});
 	}
+	setFormOptions(formData){
+		let searchInfo, actionShowInfo, defaultValues = {};
+		if(documentFormOptions && documentFormOptions.search_in_docform){
+			searchInfo = {};
+			documentFormOptions.search_in_docform.forEach((item) => {
+				searchInfo[item.field] = {api: item.api, resultMap: item.resultmap};
+			});
+		}
+		if(documentFormOptions && documentFormOptions.action_show){
+			actionShowInfo = {};
+			documentFormOptions.action_show.forEach((item) => {
+				let term;
+				for(let cid in formData.taxonomy){
+					term = formData.taxonomy[cid].find((t) => t.tid == item.term);
+					if(term) break;
+				}
+				if(term){
+					let field = formData.fields.find((f) => f.cid == term.cid);
+					actionShowInfo[field.fid] = {term: item.term, field: item.field}
+				}
+			});
+		}
+		formData.fields.forEach((field) => {
+			if(field.type != 'group' && field.fid > 0){
+				defaultValues[field.fid] = this.defaultValue(field, formData);
+			}
+		});
+		this.setState({
+			documentFormOptions: {
+				searchInfo: searchInfo,
+				actionShowInfo: actionShowInfo,
+				defaultValues: defaultValues
+			}
+		});
+	}
 	componentDidMount(){
 		this.fetchData('/', 'userData');
 		this.fetchData('/fields', 'documentFormData');
-		this.setState({
-			documentFormOptions: documentFormOptions
-		})
 	}
 	render(){
 		let	digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
