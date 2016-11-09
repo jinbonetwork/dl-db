@@ -6,6 +6,7 @@ import SearchBar from './SearchBar';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
 import DocumentField from './DocumentField';
+import func from './functions';
 
 class DocumentForm extends Component {
 	componentWillMount(){
@@ -38,46 +39,15 @@ class DocumentForm extends Component {
 		if(this.state.hiddenFields.indexOf(fid) >= 0) return true;
 		else return false;
 	}
-	isEmailValid(email){
-		email = email.trim();
-		let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		return re.test(email);
-	}
-	isPhoneValid(phone){
-		phone = phone.trim();
-		let re = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1}|)-?[0-9]{3,4}-?[0-9]{4}$/;
-		return re.test(phone);
-	}
-	isEmpty(value){
-		if(!value) return true;
-		if(typeof value === 'object'){
-			for(let k in value){
-				if(!value[k]) return true;
-			}
-		}
-		return false;
-	}
-	isDateValid(value, form){
-		let date = new Date();
-		if(form == 'Ym'){
-			if(1970 <= value.year && value.year <= date.getFullYear() && 1 <= value.month && value.month <= 12 ){
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
-	}
 	valdationCheck(){
 		for(let i in this.props.info.formData.fields){
 			let f = this.props.info.formData.fields[i];
 
 			let value = this.props.callBacks.fieldValue(f.fid);
-			if(f.required == '1' && f.type != 'group' && this.isEmpty(value) && !this.isFieldHidden(f) && !this.isFieldHidden(f.parent)){
+			if(f.required == '1' && f.type != 'group' && func.isEmpty(value) && !this.isHiddenField(f) && !this.isHiddenField(f.parent)){
 				return {fid: f.fid, message: f.subject+'를(을) 입력하세요.'};
 			}
-			if((f.type == 'email' && !this.isEmailValid(value)) || (f.type == 'phone' && !this.isPhoneValid(value)) || (f.type == "date" && !this.isDateValid(value, f.form))){
+			if((f.type == 'email' && !func.isEmailValid(value)) || (f.type == 'phone' && !func.isPhoneValid(value)) || (f.type == "date" && !func.isDateValid(value, f.form))){
 				return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
 			}
 			if(f.type == 'taxonomy'){
@@ -92,7 +62,6 @@ class DocumentForm extends Component {
 			alert(error.message);
 			return false;
 		}
-
 		let modifiedState = update(this.props.document, {
 			created: {$set: Date.now()}
 		});
@@ -115,7 +84,7 @@ class DocumentForm extends Component {
 		});
 		formData.append('document', JSON.stringify(modifiedState));
 
-		axios.post(this.props.apiUrl+'/document/new', formData)
+		axios.post(this.props.info.apiUrl+'', formData)
 		.then((response) => {
 			console.log(response.data);
 		});
