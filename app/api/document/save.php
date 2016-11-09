@@ -46,7 +46,12 @@ class save extends \DLDB\Controller {
 							$permit = 'jpg|jpeg|gif|bmp|png';
 						else
 							$permit = 'pdf|hwp';
-						$filename = \DLDB\Files::uploadFile($_FILES['f'.$fid],$permit);
+						if( $_FILES['f'.$fid]['name'] )
+							$__files = array($_FILES['f'.$fid]);
+						else
+							$__files = $_FILES['f'.$fid];
+						while($__files as $_file) {
+							$filename = \DLDB\Files::uploadFile($_file,$permit);
 						if(!$filename) {
 							\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].': '.\DLDB\Files::errMsg() ) );
 						}
