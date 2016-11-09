@@ -8,6 +8,9 @@ class SearchBar extends Component {
 			results: undefined
 		}
 	}
+	handleChange(event){
+		this.props.updateSingleField(this.props.field, this.props.index, event.target.value);
+	}
 	handleChangeToUpdateFields(event){
 		this.props.updateFields({['f'+this.props.field.fid]: event.target.value});
 	}
@@ -60,7 +63,7 @@ class SearchBar extends Component {
 		return(
 			<div className="searchbar">
 				<input type="search" value={this.props.value}
-					onChange={this.props.handleChange.bind(this, this.props.field, this.props.index)}
+					onChange={this.handleChange.bind(this)}
 					onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 				{displayResults}
@@ -74,7 +77,7 @@ SearchBar.propTypes = {
 	field: PropTypes.object.isRequired,
 	searchApiUrl: PropTypes.string.isRequired,
 	resultMap: PropTypes.object.isRequired,
-	handleChange: PropTypes.func.isRequired,
+	updateSingleField: PropTypes.func.isRequired,
 	updateFields: PropTypes.func.isRequired
 
 };
