@@ -45,11 +45,16 @@ class save extends \DLDB\Controller {
 						if($v['type'] == 'image')
 							$permit = 'jpg|jpeg|gif|bmp|png';
 						else
-							$permit = 'pdf|hwp';
-						if( $_FILES['f'.$fid]['name'] )
+							$permit = 'pdf|hwp|doc|docx';
+						if( is_array( $_FILES['f'.$fid]['name'] ) && @count( $_FILES['f'.$fid]['name'] ) ) {
+							foreach( $_FILES['f'.$fid]  as $k => $arr ) {
+								for($i=0; $i<@count($arr); $i++) {
+									$__files[$i][$k] = $arr[$i];
+								}
+							}
+						} else {
 							$__files = array($_FILES['f'.$fid]);
-						else
-							$__files = $_FILES['f'.$fid];
+						}
 						foreach($__files as $_file) {
 							$filename = \DLDB\Files::uploadFile($_file,$permit);
 							if(!$filename) {
