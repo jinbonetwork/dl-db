@@ -99,7 +99,8 @@ class DocumentForm extends Component {
 		formData.append('document', JSON.stringify(document));
 
 
-		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
+		//axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
+		axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			console.log(response.data);
 		});

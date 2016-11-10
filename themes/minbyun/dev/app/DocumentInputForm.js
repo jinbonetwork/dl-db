@@ -3,6 +3,7 @@ import DocumentField from './DocumentField';
 import SearchBar from './SearchBar';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
+import FileInput from './FileInput';
 import Table from './Table';
 
 class DocumentInputForm extends Component {
@@ -37,17 +38,11 @@ class DocumentInputForm extends Component {
 				);
 			case 'file':
 				let accept = (this.props.field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
-				let value = this.props.value.name || this.props.value.filename;
 				return (
-					<div>
-						<input type="text" value={value} />
-						<label className="button">
-							<span>찾기</span>
-							{/*<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this)} />*/}
-							<input type="file" accept={accept} onChange={this.handleChange.bind(this)} />
-						</label>
-					</div>
-				);
+					<FileInput value={this.props.value.name || this.props.value.filename}
+						accept={accept} handleChange={this.handleChange.bind(this)}
+					/>
+				)
 			case 'select':
 				let options = [];
 				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {

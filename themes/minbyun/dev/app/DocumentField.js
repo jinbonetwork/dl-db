@@ -15,7 +15,7 @@ class DocumentField extends Component {
 	handleClickToAddInputForm(){
 		this.props.callBacks.addValueToField(this.props.field.fid);
 	}
-	handleClickToRemoveInputForm(index){
+	handleClickToRemoveInputForm(index){ console.log(index);
 		this.props.callBacks.removeValueInField(this.props.field.fid, index);
 	}
 	documentInputForm(value, index){
@@ -50,7 +50,7 @@ class DocumentField extends Component {
 					<Row>
 						<Column>{this.documentInputForm(this.props.value)}</Column>
 						<Column>
-							<span className="button" onClick={this.props.callBacks.updateSingleField.bind(this, this.props.field)}>삭제</span>
+							<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, undefined)}>삭제</span>
 						</Column>
 					</Row>
 					<Row>{this.fieldFooter()}</Row>
