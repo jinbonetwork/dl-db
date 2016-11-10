@@ -5,6 +5,7 @@ import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
 import './style/common.less';
+//import './contrib/nanumbarungothic.css';
 
 const apiUrl = '/api';
 const emptyDocument = {

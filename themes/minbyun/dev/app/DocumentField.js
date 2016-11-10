@@ -1,5 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentInputForm from './DocumentInputForm';
+import Table from './Table';
+import Row from './Row';
+import Column from './Column';
 
 class DocumentField extends Component {
 	fieldFooter(){
@@ -11,6 +14,9 @@ class DocumentField extends Component {
 	}
 	handleClickToAddInputForm(){
 		this.props.callBacks.addValueToField(this.props.field.fid);
+	}
+	handleClickToRemoveInputForm(index){
+		this.props.callBacks.removeValueInField(this.props.field.fid, index);
 	}
 	documentInputForm(value, index){
 		return (
@@ -24,36 +30,47 @@ class DocumentField extends Component {
 		let inputForms;
 		if(this.props.field.multiple == '1'){
 			inputForms = this.props.value.map((v, i) => (
-				<div key={i} className="table__row">
-					<div className="table__col">
-						{this.documentInputForm(v, i)}
-					</div>
-					<div className="table__col">
-						<span className="button" onClick={this.handleClickToAddInputForm.bind(this, this.props.field)}>추가</span>
-					</div>
-				</div>
+				<Row key={i}>
+					<Column>{this.documentInputForm(v, i)}</Column>
+					<Column>
+						<span className="button" onClick={this.handleClickToAddInputForm.bind(this)}>추가</span>
+						<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>삭제</span>
+					</Column>
+				</Row>
 			));
 			inputForms = (
-				<div className="table">
+				<Table>
 					{inputForms}
-					<div className="table__row">{this.fieldFooter()}</div>
-				</div>
+					<Row>{this.fieldFooter()}</Row>
+				</Table>
+			);
+		} else if(this.props.field.form == 'file'){
+			inputForms = (
+				<Table>
+					<Row>
+						<Column>{this.documentInputForm(this.props.value)}</Column>
+						<Column>
+							<span className="button" onClick={this.props.callBacks.updateSingleField.bind(this, this.props.field)}>삭제</span>
+						</Column>
+					</Row>
+					<Row>{this.fieldFooter()}</Row>
+				</Table>
 			);
 		} else {
 			inputForms = (
-				<div className="table">
+				<Table>
 					{this.documentInputForm(this.props.value)}
-					<div className="table__row">{this.fieldFooter()}</div>
-				</div>
+					<Row>{this.fieldFooter()}</Row>
+				</Table>
 			);
 		}
 		return (
-			<div className="table__row">
-				<div className="table__col">{this.props.field.subject}</div>
-				<div className="table__col">
+			<Row>
+				<Column className="table__label">{this.props.field.subject}</Column>
+				<Column>
 					{inputForms}
-				</div>
-			</div>
+				</Column>
+			</Row>
 		);
 	}
 }

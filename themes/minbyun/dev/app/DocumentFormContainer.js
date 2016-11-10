@@ -36,13 +36,24 @@ class DocumentFormContainer extends Component {
 			custom: {['f'+fid]: {$push: [this.props.documentFormOptions.defaultValues[fid]]}}
 		}));
 	}
+	removeValueInField(fid, index){
+		if(this.state.custom['f'+fid].length > 1){
+			this.setState(update(this.state, {
+				custom: {['f'+fid]: {$splice: [[index, 1]]}}
+			}));
+		} else {
+			this.setState(update(this.state, {custom: {['f'+fid]: {
+				0: {$set: this.props.documentFormOptions.defaultValues[fid]}}
+			}}));
+		}
+	}
 	fieldValue(fid){
 		return (fid > 0 ? this.state.custom['f'+fid] : this.state[fid]);
 	}
 	render(){
 		return(
 			<DocumentForm
-				submitLabel={this.props.submitLabel}
+				label={this.props.label}
 				document={this.state}
 				info={{
 					apiUrl: this.props.apiUrl,
@@ -51,16 +62,17 @@ class DocumentFormContainer extends Component {
 				}}
 				callBacks={{
 					fieldValue: this.fieldValue.bind(this),
-					addValueToField: this.addValueToField.bind(this),
 					updateSingleField: this.updateSingleField.bind(this),
-					updateFields: this.updateFields.bind(this)
+					updateFields: this.updateFields.bind(this),
+					addValueToField: this.addValueToField.bind(this),
+					removeValueInField: this.removeValueInField.bind(this)
 				}}
 			/>
 		);
 	}
 }
 DocumentFormContainer.propTypes = {
-	submitLabel: PropTypes.string.isRequired,
+	label: PropTypes.object.isRequired,
 	documentFormData: PropTypes.shape({
 		fields: PropTypes.array.isRequired,
 		taxonomy: PropTypes.objectOf(PropTypes.array).isRequired

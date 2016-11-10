@@ -3,6 +3,7 @@ import DocumentField from './DocumentField';
 import SearchBar from './SearchBar';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
+import Table from './Table';
 
 class DocumentInputForm extends Component {
 	handleChange(event){
@@ -41,7 +42,8 @@ class DocumentInputForm extends Component {
 						<input type="text" value={this.props.value.name || this.props.value.filename} />
 						<label className="button">
 							<span>찾기</span>
-							<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this)} />
+							{/*<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this)} />*/}
+							<input type="file" accept={accept} onChange={this.handleChange.bind(this)} />
 						</label>
 					</div>
 				);
@@ -86,7 +88,7 @@ class DocumentInputForm extends Component {
 						)
 					}
 				});
-				return <div className="table">{subFormFields}</div>;
+				return <Table className={'field_'+this.props.field.fid}>{subFormFields}</Table>
 		}
 		switch(this.props.field.type){
 			case 'textarea':

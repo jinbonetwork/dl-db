@@ -24,7 +24,7 @@ class NewDocument extends Component {
 	render(){
 		return(
 			<DocumentFormContainer
-				submitLabel="등록"
+				label={{header: '자료입력하기', submit: '등록'}}
 				document={update(this.props.documentForm, {
 					uid: {$set: this.props.userData.user.uid}
 				})}

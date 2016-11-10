@@ -1,0 +1,18 @@
+.table {
+	.table__row {
+		&:after {
+			content: ''; display: block; clear: both;
+		}
+	}
+	.table__col {
+		float: left;
+	}
+	.table__col.table__label {
+		width: 180px;
+		text-align: right;
+	}
+	&.field_2 .table__col.table__label {
+		width: 80px;
+		text-align: center;
+	}
+}

@@ -6,6 +6,9 @@ import SearchBar from './SearchBar';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
 import DocumentField from './DocumentField';
+import Table from './Table';
+import Row from './Row';
+import Column from './Column';
 import func from './functions';
 
 class DocumentForm extends Component {
@@ -39,7 +42,7 @@ class DocumentForm extends Component {
 		if(this.state.hiddenFields.indexOf(fid) >= 0) return true;
 		else return false;
 	}
-	valdationCheck(){
+	validationCheck(){
 		for(let i in this.props.info.formData.fields){
 			let f = this.props.info.formData.fields[i];
 
@@ -57,7 +60,9 @@ class DocumentForm extends Component {
 		}
 	}
 	handleClickToSubmit(){
-		let error = this.valdationCheck();
+		console.log(this.props.document.custom);
+
+		let error = this.validationCheck();
 		if(error){
 			alert(error.message);
 			return false;
@@ -84,8 +89,8 @@ class DocumentForm extends Component {
 		});
 		formData.append('document', JSON.stringify(modifiedState));
 
-		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
-		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
+		//axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
+		axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			console.log(response.data);
 		});
@@ -114,31 +119,31 @@ class DocumentForm extends Component {
 		});
 		return (
 			<div className="document-form">
-				<h1>자료 입력하기</h1>
-				<div className="table">
-					<div className="table__row">
-						<div className="table__col"></div>
-						<div className="table__col">필수입력사항</div>
-					</div>
+				<h1>{this.props.label.header}</h1>
+				<Table>
+					<Row>
+						<Column className="table__label"> </Column>
+						<Column>필수입력사항</Column>
+					</Row>
 					{requiredFields}
-					<div className="table__row">
-						<div className="table__col"></div>
-						<div className="table__col">선택입력사항</div>
-					</div>
+					<Row>
+						<Column className="table__label"> </Column>
+						<Column>선택입력사항</Column>
+					</Row>
 					{electiveFields}
-					<div className="table__row">
-						<div className="table__col"></div>
-						<div className="table__col">
-							<button type="button" onClick={this.handleClickToSubmit.bind(this)}>{this.props.submitLabel}</button>
-						</div>
-					</div>
-				</div>
+					<Row>
+						<Column className="table__label"> </Column>
+						<Column>
+							<button type="button" onClick={this.handleClickToSubmit.bind(this)}>{this.props.label.submit}</button>
+						</Column>
+					</Row>
+				</Table>
 			</div>
 		);
 	}
 }
 DocumentForm.propTypes = {
-	submitLabel: PropTypes.string.isRequired,
+	label: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	info: PropTypes.object.isRequired,
 	callBacks: PropTypes.object.isRequired
