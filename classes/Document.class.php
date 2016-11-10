@@ -5,6 +5,7 @@ class Document extends \DLDB\Objects {
 	private static $fields;
 	private static $cids;
 	private static $taxonomy;
+	private static $errmsg;
 
 	public static function instance() {
 		return self::_instance(__CLASS__);
@@ -38,13 +39,21 @@ class Document extends \DLDB\Objects {
 		return self::$taxonomy;
 	}
 
-	public static function get($id) {
+	public static function get($id,$mode='') {
 		$dbm = \DLDB\DBM::instance();
 
 		$que = "SELECT * FROM {documents} WHERE `id` = ".$id;
 		$row = $dbm->getFetchArray($que);
 		if($row) {
 			$document = self::fetchDocument($row);
+		}
+		if($mode == 'view') {
+			unset($document['memo']);
+			foreach( self::$fields as $fid => $field ) {
+				if( $field['type'] == 'group' ) {
+					unset($document['f'.$fid]);
+				}
+			}
 		}
 		return $document;
 	}
@@ -73,6 +82,7 @@ class Document extends \DLDB\Objects {
 		$dbm = \DLDB\DBM::instance();
 
 		$fields = self::getFields();
+		$uid = $_SESSION['user']['uid'];
 
 		$que = "INSERT INTO {documents} (`subject`,`content`,`custom`,`uid`,`created`";
 		$que2 .= ") VALUES (?,?,?,?,?";
@@ -89,10 +99,10 @@ class Document extends \DLDB\Objects {
 					$que2 .= ",?";
 					switch($field['type']) {
 						case 'int':
-							$array1 .= ",d";
+							$array1 .= "d";
 							break;
 						default:
-							$array1 .= ",s";
+							$array1 .= "s";
 							break;
 					}
 					$array2 .= ", ".($args['f'.$key] ? '$'."args[f".$key."]" : "''");
@@ -115,7 +125,7 @@ class Document extends \DLDB\Objects {
 							break;
 						case "file":
 						case "image":
-							if(!is_array($v)) {
+							if($v && !is_array($v)) {
 								$v = array($v);
 							}
 							if(is_array($v)) {
@@ -138,7 +148,7 @@ class Document extends \DLDB\Objects {
 			}
 		}
 
-		$que = $que.$que2;
+		$que = $que.$que2.")";
 
 		$array1 .= '",';
 		$array2 .= ")";
@@ -172,11 +182,11 @@ class Document extends \DLDB\Objects {
 			$dbm->execute($que,array("sd",$memo,$insert_id));
 		}
 		if( is_array($taxonomy_map) ) {
-			if( self::reBuildTaxonomy($taxonomy_map) < 0 ) {
+			if( self::reBuildTaxonomy($insert_id, $taxonomy_map) < 0 ) {
 				return -1;
 			}
 		}
-		return 0;
+		return $insert_id;
 	}
 
 	public static function modify($document,$args) {
@@ -241,7 +251,7 @@ class Document extends \DLDB\Objects {
 							if( $document['f'.$key] && @count($document['f'.$key]) > 0 ) {
 								$old_files = $document['f'.$key];
 							}
-							if(!is_array($v)) {
+							if($v && !is_array($v)) {
 								$v = array($v);
 							}
 							if(is_array($v)) {
@@ -291,7 +301,7 @@ class Document extends \DLDB\Objects {
 		$dbm->execute($que,$q_args);
 
 		if( is_array($taxonomy_map) ) {
-			if( self::reBuildTaxonomy($taxonomy_map) < 0 ) {
+			if( self::reBuildTaxonomy($args['id'], $taxonomy_map) < 0 ) {
 				return -1;
 			}
 		}
@@ -325,7 +335,7 @@ class Document extends \DLDB\Objects {
 	}
 
 	public static function reBuildTaxonomy($id,$taxonomy_map) {
-		$dbm = \CADB\DBM::instance();
+		$dbm = \DLDB\DBM::instance();
 
 		if( is_array($taxonomy_map) ) {
 			foreach($taxonomy_map as $cid => $option_taxonomies) {
@@ -363,6 +373,7 @@ class Document extends \DLDB\Objects {
 	}
 
 	public static function parsePDF($file_info) {
+		include_once DLDB_CONTRIBUTE_PATH."/pdfparser/vendor/autoload.php";
 		$parser = new \Smalot\PdfParser\Parser();
 		$filename = \DLDB\Files::getFilePath($file_info);
 		$pdf = $parser->parseFile($filename);
@@ -384,6 +395,14 @@ class Document extends \DLDB\Objects {
 		return $text;
 	}
 
+	public static function getErrorMsg() {
+		return self::$errmsg;
+	}
+
+	private static function setErrorMsg($msg) {
+		self::$errmsg = $msg;
+	}
+
 	private static function fetchDocument($row) {
 		if(!$row) return null;
 		foreach($row as $k => $v) {
@@ -393,8 +412,15 @@ class Document extends \DLDB\Objects {
 		}
 		if( $document['custom'] && is_array($document['custom']) ) {
 			foreach($document['custom'] as $k => $v) {
-				$document[$k] = $v;
+				$document["f".$k] = $v;
 			}
+		}
+		if($document['uid'] == $_SESSION['user']['uid']) {
+			$document['owner'] = 1;
+		} else if( \DLDB\Acl::isMaster() ) {
+			$document['owner'] = 1;
+		} else {
+			$document['owner'] = 0;
 		}
 		return $document;
 	}

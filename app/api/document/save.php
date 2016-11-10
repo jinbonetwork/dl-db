@@ -8,39 +8,55 @@ class save extends \DLDB\Controller {
 		$this->params['output'] = 'json';
 		$context = \DLDB\Model\Context::instance();
 
-		$this->fields = \DLDB\Document::getFields();
+		$fields = \DLDB\Document::getFields();
+		$this->fields = array();
 		$this->taxonomy = \DLDB\Document::getTaxonomy();
 
 		/* check field type */
 		if($this->params['mode'] != 'add') {
-			if(!$this->params['id']) {
+			if(!$this->params['document']['id']) {
 				\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 입력하세요') );
 			}
 		}
 		if($this->params['mode'] != 'delete') {
-			if(!$this->params['subject']) {
+			if(!$this->params['document']['subject']) {
 				\DLDB\RespondJson::ResultPage( array( -4, '제목을 입력하세요') );
 			}
-			foreach($this->fields as $fid => $v) {
+			foreach($fields as $fid => $v) {
+				$this->fields[] = array(
+					'fid' => $v['fid'],
+					'parent' => $v['parent'],
+					'idx' => $v['idx'],
+					'subject' => $v['subject'],
+					'type' => $v['type'],
+					'multiple' => $v['multiple'],
+					'required' => $v['required'],
+					'cid' => $v['cid'],
+					'form' => $v['form']
+				);
+				if( $v['type'] == 'group') continue;
 				if( $v['required'] ) {
-					if(!$this->params['f'.$fid]) {
+					if(!$this->params['document']['f'.$fid]) {
 						\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].'를 입력하세요') );
 					}
 				}
 				if( $v['type'] == 'taxonomy' ) {
-					if( is_array($this->params['f'.$fid]) ) {
-						foreach( $this->params['f'.$fid] as $tx ) {
+					if( is_array($this->params['document']['f'.$fid]) ) {
+						foreach( $this->params['document']['f'.$fid] as $tx ) {
 							if(!$this->taxonomy[$v['cid']][$tx]) {
 								\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].'에 지정된 분류값은 존재하지 않습니다.') );
 							}
 						}
-					} else if( $this->params['f'.$fid] ) {
-						if(!$this->taxonomy[$v['cid']][$this->params['f'.$fid]]) {
+					} else if( $this->params['document']['f'.$fid] ) {
+						if(!$this->taxonomy[$v['cid']][$this->params['document']['f'.$fid]]) {
 							\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].'에 지정된 분류값은 존재하지 않습니다.') );
 						}
 					}
 				}
 				if( $v['type'] == 'image' || $v['type'] == 'file' ) {
+					if($this->params['mode'] == 'add') {
+						$this->params['document']['f'.$fid] = array();
+					}
 					if($_FILES['f'.$fid]) {
 						if($v['type'] == 'image')
 							$permit = 'jpg|jpeg|gif|bmp|png';
@@ -60,37 +76,40 @@ class save extends \DLDB\Controller {
 							if(!$filename) {
 								\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].': '.\DLDB\Files::errMsg() ) );
 							}
-							$fid = \DLDB\Files::insertFile( ( $this->params['id'] ? $this->params['id'] : 0 ), $filename);
-							if($fid) {
-								if(!$this->params['f'.$fid]) $this->params['f'.$fid] = array();
-								$this->params['f'.$fid][] = $fid;
+							$fd = \DLDB\Files::insertFile( ( $this->params['document']['id'] ? $this->params['document']['id'] : 0 ), $filename);
+							if($fd) {
+								if(!isset($this->params['document']['f'.$fid])) $this->params['document']['f'.$fid] = array();
+								$this->params['document']['f'.$fid][] = $fd;
 							}
 						}
 					}
 				}
 			}
 		}
-		if($this->params['id']) {
-			$this->document = \DLDB\Document::get($this->params['id']);
+		if($this->params['document']['id']) {
+			$this->document = \DLDB\Document::get($this->params['document']['id']);
 			if(!$this->document) {
 				\DLDB\RespondJson::ResultPage( array( -2, '존재하지 않는 문서입니다.') );
 			}
 			if($this->params['mode'] == 'delete') {
-				$ret = \DLDB\Document::delete($this->params['id']);
+				$ret = \DLDB\Document::delete($this->params['document']['id']);
 			} else {
-				$ret = \DLDB\Document::modify($this->document, $this->params);
+				$ret = \DLDB\Document::modify($this->document, $this->params['document']);
 			}
 			if($ret < 0) {
-				\DLDB\RespondJson::ResultPage( array( -3, '데이터베이스를 수정하는 도중 >장애가 발생했습니다.' ) );
+				\DLDB\RespondJson::ResultPage( array( -3, \DLDB\Document::getErrorMsg() ) );
 			}
-			$this->did = $this->params['id'];
+			$this->did = $this->params['document']['id'];
 		} else if($this->params['mode'] == 'add') {
-			$ret = \DLDB\Document::insert($this->params);
+			$ret = \DLDB\Document::insert($this->params['document']);
+			if($ret < 0) {
+				\DLDB\RespondJson::ResultPage( array( -3, \DLDB\Document::getErrorMsg() ) );
+			}
 			$this->did = $ret;
 		}
 
 		if($this->params['mode'] != 'delete') {
-			$this->document = \DLDB\Document::get($this->did);
+			$this->document = \DLDB\Document::get($this->did,'view');
 		}
 	}
 }
