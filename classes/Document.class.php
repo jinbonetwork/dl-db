@@ -73,7 +73,7 @@ class Document extends \DLDB\Objects {
 		$que = "SELECT * FROM {documents} ORDER BY id DESC LIMIT " .( ( $page-1 ) * $limit ) . ", ". $limit;
 		$documents = array();
 		while($row = $dbm->getFetchArray($que)) {
-			$documents[] = self::fetchDocument($row);
+			$documents[] = self::fetchDocument($row,'view');
 		}
 		return $documents;
 	}
@@ -403,10 +403,11 @@ class Document extends \DLDB\Objects {
 		self::$errmsg = $msg;
 	}
 
-	private static function fetchDocument($row) {
+	private static function fetchDocument($row,$mode='') {
 		if(!$row) return null;
 		foreach($row as $k => $v) {
 			if($k == 'custom') $v = unserialize($v);
+			if($mode == 'view' && $k == 'memo') continue;
 			else if(is_string($v)) $v = stripslashes($v);
 			$document[$k] = $v;
 		}
