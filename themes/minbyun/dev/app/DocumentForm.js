@@ -16,7 +16,8 @@ class DocumentForm extends Component {
 		let hiddenFields = [];
 		for(let fid in this.props.info.formOptions.actionShowInfo){
 			let info = this.props.info.formOptions.actionShowInfo[fid];
-			let value =this.props.document.custom['f'+fid];
+			//let value =this.props.document.custom['f'+fid];
+			let value =this.props.document['f'+fid];
 			if(value != info.term) hiddenFields.push(info.field);
 		}
 		this.setState({
@@ -60,7 +61,7 @@ class DocumentForm extends Component {
 		}
 	}
 	handleClickToSubmit(){
-		console.log(this.props.document);
+		console.log('document', this.props.document);
 
 		/*
 		console.log(this.props.document.custom);
@@ -72,30 +73,26 @@ class DocumentForm extends Component {
 		}
 		*/
 
-		let modifiedState = update(this.props.document, {
-			created: {$set: Date.now()}
-		});
 		let formData = new FormData();
 		this.props.info.formData.fields.forEach((f) => {
 			if(f.form == 'file'){
 				if(f.multiple == '1'){
-					modifiedState.custom['f'+f.fid].forEach((file) => {
+					this.props.document['f'+f.fid].forEach((file) => {
 						if(file.name){
 							formData.append('f'+f.fid+'[]', file);
 						}
 					});
 				} else {
-					let file = modifiedState.custom['f'+f.fid];
+					let file = this.props.document['f'+f.fid];
 					if(file.name){
 						formData.append('f'+f.fid, file);
 					}
 				}
 			}
 		});
-		formData.append('document', JSON.stringify(modifiedState));
+		formData.append('document', JSON.stringify(this.props.document));
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
-		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			console.log(response.data);
 		});

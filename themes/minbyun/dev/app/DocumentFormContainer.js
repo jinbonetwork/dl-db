@@ -8,22 +8,35 @@ class DocumentFormContainer extends Component {
 		this.setState(this.props.document);
 	}
 	updateFields(fields){ if(!fields) return;
+		/*
 		this.setState(update(this.state, {
 			custom: { $merge: fields}
 		}));
+		*/
+		this.setState(update(this.state, {$merge: fields}));
 	}
 	updateSingleField(field, index, value){
 		if(field.fid > 0){
 			if(index === undefined){
+				/*
 				this.setState(update(this.state, { custom: {
 					['f'+field.fid]: {$set: value}
 				}}));
+				*/
+				this.setState(update(this.state, {['f'+field.fid]: {$set: value}}));
 			} else {
+				/*
 				this.setState(update(this.state, { custom: {
 					['f'+field.fid]: {
 						[index]: {$set: value}
 					}
 				}}));
+				*/
+				this.setState(update(this.state, {
+					['f'+field.fid]: {
+						[index]: {$set: value}
+					}
+				}));
 			}
 		} else {
 			this.setState(update(this.state, {
@@ -32,11 +45,17 @@ class DocumentFormContainer extends Component {
 		}
 	}
 	addValueToField(fid){
+		/*
 		this.setState(update(this.state, {
 			custom: {['f'+fid]: {$push: [this.props.documentFormOptions.defaultValues[fid]]}}
 		}));
+		*/
+		this.setState(update(this.state,
+			{['f'+fid]: {$push: [this.props.documentFormOptions.defaultValues[fid]]}}
+		));
 	}
 	removeValueInField(fid, index){
+		/*
 		if(this.state.custom['f'+fid].length > 1){
 			this.setState(update(this.state, {
 				custom: {['f'+fid]: {$splice: [[index, 1]]}}
@@ -46,9 +65,20 @@ class DocumentFormContainer extends Component {
 				0: {$set: this.props.documentFormOptions.defaultValues[fid]}}
 			}}));
 		}
+		*/
+		if(this.state['f'+fid].length > 1){
+			this.setState(update(this.state,
+				{['f'+fid]: {$splice: [[index, 1]]}}
+			));
+		} else {
+			this.setState(update(this.state, {['f'+fid]: {
+				0: {$set: this.props.documentFormOptions.defaultValues[fid]}}
+			}));
+		}
 	}
 	fieldValue(fid){
-		return (fid > 0 ? this.state.custom['f'+fid] : this.state[fid]);
+		//return (fid > 0 ? this.state.custom['f'+fid] : this.state[fid]);
+		return (fid > 0 ? this.state['f'+fid] : this.state[fid]);
 	}
 	render(){
 		return(

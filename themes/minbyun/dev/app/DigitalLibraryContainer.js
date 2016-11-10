@@ -12,16 +12,8 @@ const emptyDocument = {
 	id: 0,
 	subject: '',
 	content: '',
-	memo: '',
-	custom: {},
 	uid: 0,
 	created: 0,
-	f3: '',
-	f4: '',
-	f5: '',
-	f6: '',
-	f7: '',
-	f9: {}
 };
 const defaultFields = [
 	{fid: 'subject', parent: '0', idx: '0', subject: '제목', type: 'char', multiple: '0', required: '1', cid: '0', form: 'text'},
@@ -110,15 +102,15 @@ class DigitalLibraryContainer extends Component {
 		}
 	}
 	initializeDocumentForm(formData){
-		let custom = {};
+		let customFields = {};
 		formData.fields.forEach((field) => {
 			let value = this.defaultValue(field, formData);
 			if(field.multiple == '1') value = [value];
-			if(field.type != 'group' && field.fid > 0) custom['f'+field.fid] = value;
+			if(field.type != 'group' && field.fid > 0) customFields['f'+field.fid] = value;
 		});
-		this.setState({documentForm: update(emptyDocument, {
-			custom: {$set: custom}
-		})});
+		this.setState({documentForm: update(
+			emptyDocument, {$merge: customFields}
+		)});
 	}
 	setFormOptions(formData){
 		let searchInfo, actionShowInfo, defaultValues = {};
