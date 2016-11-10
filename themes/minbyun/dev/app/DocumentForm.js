@@ -60,6 +60,9 @@ class DocumentForm extends Component {
 		}
 	}
 	handleClickToSubmit(){
+		console.log(this.props.document);
+
+		/*
 		console.log(this.props.document.custom);
 
 		let error = this.validationCheck();
@@ -67,6 +70,8 @@ class DocumentForm extends Component {
 			alert(error.message);
 			return false;
 		}
+		*/
+
 		let modifiedState = update(this.props.document, {
 			created: {$set: Date.now()}
 		});
@@ -89,8 +94,8 @@ class DocumentForm extends Component {
 		});
 		formData.append('document', JSON.stringify(modifiedState));
 
-		//axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
-		axios.post(this.props.info.apiUrl+'/__test_upload', formData)
+		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
+		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			console.log(response.data);
 		});
