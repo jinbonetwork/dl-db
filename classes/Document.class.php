@@ -41,12 +41,32 @@ class Document extends \DLDB\Objects {
 	public static function get($id) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "SELECT * FROM {document} WHERE `id` = ".$id;
-		$row = $dbm->getFetchArray();
+		$que = "SELECT * FROM {documents} WHERE `id` = ".$id;
+		$row = $dbm->getFetchArray($que);
 		if($row) {
 			$document = self::fetchDocument($row);
 		}
 		return $document;
+	}
+
+	public static function totalCnt() {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT count(*) AS cnt FROM {documents}";
+		$row = $dbm->getFetchArray($que);
+
+		return ($row['cnt'] ? $row['cnt'] : 0);
+	}
+
+	public static function getList($page,$limit) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT * FROM {documents} ORDER BY id DESC LIMIT " .( ( $page-1 ) * $limit ) . ", ". $limit;
+		$documents = array();
+		while($row = $dbm->getFetchArray($que)) {
+			$documents[] = self::fetchDocument($row);
+		}
+		return $documents;
 	}
 
 	public static function insert($args) {
@@ -54,7 +74,7 @@ class Document extends \DLDB\Objects {
 
 		$fields = self::getFields();
 
-		$que = "INSERT INTO {document} (`subject`,`content`,`custom`,`uid`,`created`";
+		$que = "INSERT INTO {documents} (`subject`,`content`,`custom`,`uid`,`created`";
 		$que2 .= ") VALUES (?,?,?,?,?";
 		$array1 = 'array("sssdd';
 		$array2 = '$'."args['subject'], ".'$'."args['content'], serialize(".'$'."custom), ".'$'."uid, time()";
@@ -137,9 +157,19 @@ class Document extends \DLDB\Objects {
 				$que = "UPDATE {files} SET `did` = ? WHERE `fid` = ?";
 				$dbm->execute($que,array("dd", $insert_id, $file['fid']));
 			}
-			if($file['mimetype'] == 'application/pdf') {
-				$memo .= self::parsePDF($file);
+			switch($file['mimetype']) {
+				case 'application/pdf':
+					$memo .= self::parsePDF($file);
+					break;
+				case 'application/msword':
+				case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+					$memo .= self::parseDoc($file);
+					break;
 			}
+		}
+		if($memo) {
+			$que = "UPDATE {documents} SET memo = ? WHERE id = ?";
+			$dbm->execute($que,array("sd",$memo,$insert_id));
 		}
 		if( is_array($taxonomy_map) ) {
 			if( self::reBuildTaxonomy($taxonomy_map) < 0 ) {
@@ -154,7 +184,7 @@ class Document extends \DLDB\Objects {
 
 		$fields = self::getFields();
 
-		$que = "UPDATE {document} SET `subject`=?, `content`=?, `custom`=?";
+		$que = "UPDATE {documents} SET `subject`=?, `content`=?, `custom`=?";
 		$array1 = 'array("sss';
 		$array2 = '$'."args['subject'], ".'$'."args['content'], serialize(".'$'."custom)";
 		$files = array();
@@ -238,10 +268,28 @@ class Document extends \DLDB\Objects {
 		}
 		$memo = '';
 		if(is_array($files)) {
-			if($file['mimetype'] == 'application/pdf') {
-				$memo .= self::parsePDF($file);
+			foreach($files as $file) {
+				switch($file['mimetype']) {
+					case 'application/pdf':
+						$memo .= self::parsePDF($file);
+						break;
+					case 'application/msword':
+					case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+						$memo .= self::parseDoc($file);
+						break;
+				}
 			}
 		}
+
+		$que .= ", `memo` = ? WHERE `id` = ?";
+		$array1 .= 'sd",';
+		$array2 .= ", ".'$'."memo, ".'$'."args['id'])";
+
+		$eval_str = '$'."q_args = ".$array1.$array2.";";
+		eval($eval_str);
+
+		$dbm->execute($que,$q_args);
+
 		if( is_array($taxonomy_map) ) {
 			if( self::reBuildTaxonomy($taxonomy_map) < 0 ) {
 				return -1;
@@ -324,6 +372,15 @@ class Document extends \DLDB\Objects {
 		foreach( $pages as $page ) {
 			$text .= $page->getText()."\n";
 		}
+		return $text;
+	}
+
+	public static function parseDoc($file_info) {
+		$filename = \DLDB\Files::getFilePath($file_info);
+		$docObj = new Filetotext($filename);
+
+		$text = $docObj->convertToText();
+
 		return $text;
 	}
 

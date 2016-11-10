@@ -1,0 +1,14 @@
+{
+	"Minifier":
+	[
+		"magic-min/class.magic-min.php"
+	],
+	"Smalot\PdfParser\Parser":
+	[
+		"pdfparser/vendor/autoload.php"
+	],
+	"Filetotext":
+	[
+		"class.filetotext.php"
+	]
+}
