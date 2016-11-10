@@ -61,8 +61,6 @@ class DocumentForm extends Component {
 		}
 	}
 	handleClickToSubmit(){
-		console.log('document', this.props.document);
-
 		/*
 		console.log(this.props.document.custom);
 
@@ -73,24 +71,33 @@ class DocumentForm extends Component {
 		}
 		*/
 
+		let document = {};
 		let formData = new FormData();
 		this.props.info.formData.fields.forEach((f) => {
+			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
 			if(f.form == 'file'){
 				if(f.multiple == '1'){
-					this.props.document['f'+f.fid].forEach((file) => {
+					this.props.document[fid].forEach((file, index) => {
 						if(file.name){
-							formData.append('f'+f.fid+'[]', file);
+							formData.append(fid+'[]', file);
+						} else if(file.filename){
+							document[fid][index] = file;
 						}
 					});
 				} else {
-					let file = this.props.document['f'+f.fid];
+					let file = this.props.document[fid];
 					if(file.name){
-						formData.append('f'+f.fid, file);
+						formData.append(fid, file);
+					} else if(file.filename){
+						document[fid] = file;
 					}
 				}
+			} else if(f.type != 'group'){
+				document[fid] = this.props.document[fid];
 			}
 		});
-		formData.append('document', JSON.stringify(this.props.document));
+		formData.append('document', JSON.stringify(document));
+
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
 		.then((response) => {

@@ -37,9 +37,10 @@ class DocumentInputForm extends Component {
 				);
 			case 'file':
 				let accept = (this.props.field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
+				let value = this.props.value.name || this.props.value.filename;
 				return (
 					<div>
-						<input type="text" value={this.props.value.name || this.props.value.filename} />
+						<input type="text" value={value} />
 						<label className="button">
 							<span>찾기</span>
 							{/*<input style={{display: 'none'}} type="file" accept={accept} onChange={this.handleChange.bind(this)} />*/}
