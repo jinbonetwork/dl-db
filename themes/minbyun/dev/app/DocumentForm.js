@@ -16,7 +16,6 @@ class DocumentForm extends Component {
 		let hiddenFields = [];
 		for(let fid in this.props.info.formOptions.actionShowInfo){
 			let info = this.props.info.formOptions.actionShowInfo[fid];
-			//let value =this.props.document.custom['f'+fid];
 			let value =this.props.document['f'+fid];
 			if(value != info.term) hiddenFields.push(info.field);
 		}
@@ -99,8 +98,8 @@ class DocumentForm extends Component {
 		formData.append('document', JSON.stringify(document));
 
 
-		//axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
-		axios.post(this.props.info.apiUrl+'/__test_upload', formData)
+		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
+		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			console.log(response.data);
 		});
