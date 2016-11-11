@@ -24,10 +24,16 @@ class Members extends \DLDB\Objects {
 		return $members;
 	}
 
+	public static function get($id) {
+		$dbm = \DLDB\DBM::instance();
+	}
+
 	private static function fetchMember($row) {
 		$member = array();
 		foreach($row as $k => $v) {
-			if(is_numeric($v)) {
+			if($k == 'committee') {
+				$member[$k] = unserialize($v);
+			}else if(is_numeric($v)) {
 				$member[$k] = $v;
 			} else {
 				$member[$k] = stripslashes($v);
