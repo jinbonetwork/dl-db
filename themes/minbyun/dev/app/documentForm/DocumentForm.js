@@ -3,8 +3,8 @@ import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 import axios from 'axios';
 import SearchBar from './SearchBar';
-import Textarea from './Textarea';
-import DateForm from './DateForm';
+import Textarea from '../inputs/Textarea';
+import DateForm from '../inputs/DateForm';
 import DocumentField from './DocumentField';
 import Table from '../table/Table';
 import Row from '../table/Row';
@@ -129,17 +129,19 @@ class DocumentForm extends Component {
 				<h1>{this.props.label.header}</h1>
 				<Table>
 					<Row>
-						<Column className="table__label"> </Column>
-						<Column>필수입력사항</Column>
+						<Column className="table__label"></Column>
+						<Column>
+							<h2 className="document-form__accented_title">필수입력사항</h2>
+						</Column>
 					</Row>
 					{requiredFields}
 					<Row>
-						<Column className="table__label"> </Column>
-						<Column>선택입력사항</Column>
+						<Column className="table__label"></Column>
+						<Column><h2>선택입력사항</h2></Column>
 					</Row>
 					{electiveFields}
 					<Row>
-						<Column className="table__label"> </Column>
+						<Column className="table__label"></Column>
 						<Column>
 							<button type="button" onClick={this.handleClickToSubmit.bind(this)}>{this.props.label.submit}</button>
 						</Column>

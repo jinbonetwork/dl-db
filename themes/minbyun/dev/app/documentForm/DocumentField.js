@@ -9,7 +9,7 @@ class DocumentField extends Component {
 		switch(this.props.field.form){
 			case 'file':
 				let accept = (this.props.field.type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
-				return `* 파일형식: ${accept}`;
+				return <div>{`* 파일형식: ${accept}`}</div>;
 		}
 	}
 	handleClickToAddInputForm(){
@@ -26,49 +26,41 @@ class DocumentField extends Component {
 			/>
 		);
 	}
-	render(){
-		let inputForms;
+	inputForms(){
+		let innerElement;
 		if(this.props.field.multiple == '1'){
-			inputForms = this.props.value.map((v, i) => (
-				<Row key={i}>
-					<Column>{this.documentInputForm(v, i)}</Column>
-					<Column>
-						<span className="button" onClick={this.handleClickToAddInputForm.bind(this)}>추가</span>
-						<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>삭제</span>
-					</Column>
-				</Row>
+			innerElement = this.props.value.map((v, i) => (
+				<div key={i}>
+					{this.documentInputForm(v, i)}
+					<span className="button" onClick={this.handleClickToAddInputForm.bind(this)}>추가</span>
+					<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>삭제</span>
+				</div>
 			));
-			inputForms = (
-				<Table>
-					{inputForms}
-					<Row>{this.fieldFooter()}</Row>
-				</Table>
-			);
 		} else if(this.props.field.form == 'file'){
-			inputForms = (
-				<Table>
-					<Row>
-						<Column>{this.documentInputForm(this.props.value)}</Column>
-						<Column>
-							<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, undefined)}>삭제</span>
-						</Column>
-					</Row>
-					<Row>{this.fieldFooter()}</Row>
-				</Table>
+			innerElement = (
+				<div>
+					{this.documentInputForm(this.props.value)}
+					<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, undefined)}>삭제</span>
+				</div>
 			);
 		} else {
-			inputForms = (
-				<Table>
-					<Row>{this.documentInputForm(this.props.value)}</Row>
-					<Row>{this.fieldFooter()}</Row>
-				</Table>
-			);
+			innerElement = this.documentInputForm(this.props.value);
 		}
 		return (
+			<div>
+				{innerElement}
+				{this.fieldFooter()}
+			</div>
+		);
+	}
+	render(){
+		return (
 			<Row>
-				<Column className="table__label">{this.props.field.subject}</Column>
+				<Column className="table__label">
+					<span>{this.props.field.subject}</span>
+				</Column>
 				<Column>
-					{inputForms}
+					{this.inputForms()}
 				</Column>
 			</Row>
 		);

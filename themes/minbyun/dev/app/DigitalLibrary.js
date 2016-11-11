@@ -43,7 +43,9 @@ class DigitalLibrary extends Component {
 					<Link to="/document/new">자료 입력하기</Link>{' '}
 					<Link to="/test">Test</Link>
 				</div>
-				{child}
+				<div className="digital-library__content">
+					{child}
+				</div>
 			</div>
 		);
 	}

@@ -3,9 +3,8 @@ import {withRouter} from 'react-router';
 import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
-
-import './style/common.less';
-//import './contrib/nanumbarungothic.css';
+import './style/style.less';
+import './style/documentForm.less';
 
 const apiUrl = '/api';
 const emptyDocument = {

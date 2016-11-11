@@ -7,7 +7,7 @@ class FileInput extends Component {
 	}
 	render(){
 		return (
-			<div>
+			<div className="fileinput">
 				<input type="text" value={this.props.value} />
 				<label className="button">
 					<span>찾기</span>

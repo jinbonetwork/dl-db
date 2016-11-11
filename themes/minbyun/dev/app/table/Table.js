@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import '../style/table.less';
 
 class Table extends Component {
 	render(){
@@ -18,6 +17,6 @@ class Table extends Component {
 }
 Table.propTypes = {
 	className: PropTypes.string
-}
+};
 
 export default Table;

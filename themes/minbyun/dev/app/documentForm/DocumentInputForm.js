@@ -1,9 +1,11 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
 import SearchBar from './SearchBar';
-import Textarea from './Textarea';
-import DateForm from './DateForm';
-import FileInput from './FileInput';
+import Textarea from '../inputs/Textarea';
+import DateForm from '../inputs/DateForm';
+import FileInput from '../inputs/FileInput';
+import Select from '../inputs/Select';
+import Option from '../inputs/Option';
 import Table from '../table/Table';
 
 class DocumentInputForm extends Component {
@@ -25,7 +27,7 @@ class DocumentInputForm extends Component {
 	render(){
 		switch(this.props.field.form){
 			case 'text':
-				return <input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />;
+				return <input className="textinput" type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />;
 			case 'search':
 				let searchInfo = this.props.info.formOptions.searchInfo[this.props.field.fid];
 				return (
@@ -53,6 +55,16 @@ class DocumentInputForm extends Component {
 						{options}
 					</select>
 				);
+				/*
+				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {
+					options[term.idx] = <Option key={term.tid} value={term.tid}>{term.name}</Option>;
+				});
+				return (
+					<Select value={this.props.value} onChange={this.handleChange.bind(this)}>
+						{options}
+					</Select>
+				);
+				*/
 			case 'radio':
 				let radioButtons = [];
 				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {
@@ -84,7 +96,7 @@ class DocumentInputForm extends Component {
 						)
 					}
 				});
-				return <Table className={'field_'+this.props.field.fid}>{subFormFields}</Table>
+				return <Table className="inner-table">{subFormFields}</Table>
 		}
 		switch(this.props.field.type){
 			case 'textarea':

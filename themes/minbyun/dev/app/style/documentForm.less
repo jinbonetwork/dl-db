@@ -1,0 +1,66 @@
+.table {
+	.table__row:after {
+		content: ''; display: block; clear: both;
+	}
+	.table__col.table__label {
+		float: left;
+		min-height: 1px;
+	}
+}
+.textinput {
+	width: 100%;
+}
+.fileinput {
+	display: inline-block;
+}
+.document-form {
+	max-width: 500px;
+	margin: 1em auto;
+	h1 {
+		margin: 0 0 1em 0;
+		text-align: center;
+		color: #555555;
+	}
+	h2 {
+		font-size: 20px;
+		margin: 1em 0;
+	}
+	h2.document-form__accented_title {
+		color: #c2000b;
+	}
+	select {
+		width: 80%;
+	}
+	& > .table > .table__row {
+		padding: 0.5em 0;
+	}
+	& > .table > .table__row > .table__label {
+		width: 150px;
+		line-height: 3em;
+		padding-right: 1em;
+		text-align: right;
+	}
+	& > .table > .table__row > .table__col:not(.table__label) {
+		margin-left: 150px;
+	}
+	.inner-table {
+		border: solid 1px #989cff;
+		border-width: 1px 0 0 1px;
+	}
+	.inner-table .table__col {
+		border: solid 1px #989cff;
+		border-width: 0 1px 1px 0;
+	}
+	.inner-table input[type=text] {
+		border: 0;
+	}
+	.inner-table .table__label {
+		width: 80px;
+		line-height: 3em;
+		background-color: #ffffff;
+		text-align: center;
+	}
+	.inner-table .table__col:not(.table__label){
+		margin-left: 80px;
+	}
+}
