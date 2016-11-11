@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
 import FileInput from './FileInput';
-import Table from './Table';
+import Table from '../table/Table';
 
 class DocumentInputForm extends Component {
 	handleChange(event){

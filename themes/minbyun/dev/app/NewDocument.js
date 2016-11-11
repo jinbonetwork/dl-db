@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
-import DocumentFormContainer from './DocumentFormContainer';
+import DocumentFormContainer from './document-form/DocumentFormContainer';
 
 class NewDocument extends Component {
 	/*

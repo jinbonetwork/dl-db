@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentInputForm from './DocumentInputForm';
-import Table from './Table';
-import Row from './Row';
-import Column from './Column';
+import Table from '../table/Table';
+import Row from '../table/Row';
+import Column from '../table/Column';
 
 class DocumentField extends Component {
 	fieldFooter(){
@@ -59,7 +59,7 @@ class DocumentField extends Component {
 		} else {
 			inputForms = (
 				<Table>
-					{this.documentInputForm(this.props.value)}
+					<Row>{this.documentInputForm(this.props.value)}</Row>
 					<Row>{this.fieldFooter()}</Row>
 				</Table>
 			);

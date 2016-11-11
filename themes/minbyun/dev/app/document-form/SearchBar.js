@@ -62,7 +62,7 @@ class SearchBar extends Component {
 		);
 		return(
 			<div className="searchbar">
-				<input type="search" value={this.props.value}
+				<input type="text" value={this.props.value}
 					onChange={this.handleChange.bind(this)}
 					onKeyDown={this.handleKeyDown.bind(this)}
 				/>

@@ -6,10 +6,10 @@ import SearchBar from './SearchBar';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
 import DocumentField from './DocumentField';
-import Table from './Table';
-import Row from './Row';
-import Column from './Column';
-import func from './functions';
+import Table from '../table/Table';
+import Row from '../table/Row';
+import Column from '../table/Column';
+import func from '../functions';
 
 class DocumentForm extends Component {
 	componentWillMount(){
@@ -60,9 +60,8 @@ class DocumentForm extends Component {
 		}
 	}
 	handleClickToSubmit(){
+		console.log(this.props.document);
 		/*
-		console.log(this.props.document.custom);
-
 		let error = this.validationCheck();
 		if(error){
 			alert(error.message);
@@ -96,7 +95,6 @@ class DocumentForm extends Component {
 			}
 		});
 		formData.append('document', JSON.stringify(document));
-
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
 		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)

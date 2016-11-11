@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import './style/table.less';
+import '../style/table.less';
 
 class Column extends Component {
 	render(){
