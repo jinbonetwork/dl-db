@@ -92,7 +92,7 @@ class Autoload
 		}
 
 		if($this->class_map[$class]) {
-			foreach( $this->class_map[$class] as $class_file ) {
+			foreach( $this->class_map[$class]['path'] as $class_file ) {
 				$this->requireFile(DLDB_CONTRIBUTE_PATH."/".$class_file);
 			}
 			return $class_file;

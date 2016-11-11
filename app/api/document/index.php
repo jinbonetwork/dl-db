@@ -20,15 +20,15 @@ class index extends \DLDB\Controller {
 				'required' => $field['required'],
 				'cid' => $field['cid'],
 				'form' => $field['form']
-			);      
+			);
 		}
 
 		if($this->params['id']) {
-			$this->document = \DLDB\Document::get($this->params['id']);
+			$this->document = \DLDB\Document::get($this->params['id'],'view');
 			if(!$this->document) {
 				$this->result = array('error' => -1,'message' => '존재하지 않는 문서입니다');
 			} else {
-				$this->result = array('error' => 0, 'document' => $this->document);
+				$this->result = array('error' => 0, 'fields' => $this->fields, 'document' => $this->document);
 			}
 		} else {
 			if(!$this->params['page']) $this->params['page'] = 1;
@@ -49,6 +49,7 @@ class index extends \DLDB\Controller {
 					'page' => $this->params['page'],
 					'cnt' => @count( $this->documents )
 				),
+				'fields' => $this->fields,
 				'documents' => $this->documents
 			);
 		}

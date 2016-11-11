@@ -1,14 +1,20 @@
 {
-	"Minifier":
-	[
-		"magic-min/class.magic-min.php"
-	],
-	"Smalot\PdfParser\Parser":
-	[
-		"pdfparser/vendor/autoload.php"
-	],
-	"Filetotext":
-	[
-		"class.filetotext.php"
-	]
+	"Minifier": {
+		"autoload": false,
+		"path": [
+			"magic-min/class.magic-min.php"
+		]
+	},
+	"Smalot\\PdfParser\\Parser": {
+		"autoload": true,
+		"path": [
+			"pdfparser/vendor/autoload.php"
+		]
+	},
+	"Filetotext": {
+		"autoload": false,
+		"path": [
+			"class.filetotext.php"
+		]
+	}
 }
