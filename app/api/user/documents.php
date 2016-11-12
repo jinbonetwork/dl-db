@@ -1,9 +1,9 @@
 <?php
-namespace DLDB\App\api\document;
+namespace DLDB\App\api\user;
 
-$Acl = 'view';
+$Acl = 'write';
 
-class index extends \DLDB\Controller {
+class documents extends \DLDB\Controller {
 	public function process() {
 		$this->params['output'] = 'json';
 		$context = \DLDB\Model\Context::instance();
@@ -33,10 +33,10 @@ class index extends \DLDB\Controller {
 		} else {
 			if(!$this->params['page']) $this->params['page'] = 1;
 			if(!$this->params['limit']) $this->params['limit'] = 20;
-			$this->total_cnt = \DLDB\Document::totalCnt();
+			$this->total_cnt = \DLDB\Document::totalCnt($this->user['uid']);
 			if($this->total_cnt) {
 				$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;
-				$this->documents = \DLDB\Document::getList( 0, $this->params['page'], $this->params['limit'] );
+				$this->documents = \DLDB\Document::getList( $this->user['uid'], $this->params['page'], $this->params['limit'] );
 			} else {
 				$this->total_page = 0;
 				$this->documents = array();

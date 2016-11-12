@@ -58,19 +58,20 @@ class Document extends \DLDB\Objects {
 		return $document;
 	}
 
-	public static function totalCnt() {
+	public static function totalCnt($uid=0) {
 		$dbm = \DLDB\DBM::instance();
 
 		$que = "SELECT count(*) AS cnt FROM {documents}";
+		if($uid) $que .= " WHERE `uid` = ".$uid;
 		$row = $dbm->getFetchArray($que);
 
 		return ($row['cnt'] ? $row['cnt'] : 0);
 	}
 
-	public static function getList($page,$limit) {
+	public static function getList($uid=0,$page,$limit) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "SELECT * FROM {documents} ORDER BY id DESC LIMIT " .( ( $page-1 ) * $limit ) . ", ". $limit;
+		$que = "SELECT * FROM {documents} ".( $uid ? "WHERE `uid` = ".$uid." " : '' )."ORDER BY `id` DESC LIMIT " .( ( $page-1 ) * $limit ) . ", ". $limit;
 		$documents = array();
 		while($row = $dbm->getFetchArray($que)) {
 			$documents[] = self::fetchDocument($row,'view');

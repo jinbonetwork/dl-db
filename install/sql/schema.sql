@@ -156,11 +156,14 @@ CREATE TABLE `dldb_taxonomy_term_relative` (
 DROP TABLE IF EXISTS `dldb_members`;
 CREATE TABLE `dldb_members` (
 	`id`		int(10) PRIMARY KEY AUTO_INCREMENT,
+	`uid`		int(10) NOT NULL DEFAULT 0,
 	`name`		char(128) NOT NULL DEFAULT '',
 	`class`		char(20) NOT NULL DEFAULT '',
 	`email`		char(255),
-	`phone`		char(15),
+	`phone`		char(30),
+	`committee`	text,
 
+	KEY `UID` (`uid`),
 	KEY `NAME` (`name`),
 	KEY `CLASS` (`class`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
