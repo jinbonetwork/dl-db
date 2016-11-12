@@ -10,11 +10,11 @@ class history extends \DLDB\Controller {
 		switch( $this->params['mode'] ) {
 			case 'add':
 				if(!$this->params['q']) {
-					\DLDB\RespondJson::ResultPage( array( -1, '검색어를 입력하세요') )
+					\DLDB\RespondJson::ResultPage( array( -1, '검색어를 입력하세요') );
 				}
 				$hid = \DLDB\History::insert($this->user['uid'], $this->params['q'], $this->params['options'] );
 				if( !$hid ) {
-					\DLDB\RespondJson::ResultPage( array( -1, '검색기록을 저장할 수 없습니다') )
+					\DLDB\RespondJson::ResultPage( array( -1, '검색기록을 저장할 수 없습니다') );
 				}
 				$this->result = array(
 					'error' => 0,
@@ -24,10 +24,10 @@ class history extends \DLDB\Controller {
 				break;
 			case 'delete':
 				if(!$this->params['hid']) {
-					\DLDB\RespondJson::ResultPage( array( -1, '검색기록 번호를 입력하세요') )
+					\DLDB\RespondJson::ResultPage( array( -1, '검색기록 번호를 입력하세요') );
 				}
 				if(!\DLDB\History::get($this->user['uid'], $this->params['hid'])) {
-					\DLDB\RespondJson::ResultPage( array( -1, '존재하지 않거나 권한이 없는 검색기록입니다') )
+					\DLDB\RespondJson::ResultPage( array( -1, '존재하지 않거나 권한이 없는 검색기록입니다') );
 				}
 				\DLDB\History::delete($this->params['hid']);
 				$this->result = array(
