@@ -8,8 +8,10 @@ class FileInput extends Component {
 	render(){
 		return (
 			<div className="fileinput">
-				<input type="text" value={this.props.value} />
-				<label className="button">
+				<div className="fileinput__filename-wrap">
+					<input type="text" value={this.props.value} />
+				</div>
+				<label className="fileinput--upload">
 					<span>찾기</span>
 					<input type="file" style={{display: 'none'}} value="" accept={this.props.accept}
 						onChange={this.handleChange.bind(this)}

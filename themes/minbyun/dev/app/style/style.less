@@ -9,19 +9,129 @@ body, html {
 	background-color: #f9f9f9;
 	margin: 0;
 }
-input[type=text],
-select {
+input[type=text], select, textarea {
 	font-family:'Nanum Barun Gothic';
 	font-size: 16px;
 	color: #808080;
 	border: solid 1px #989cff;
-	line-height: 3em;
 	padding: 0 0.5em;
+}
+input[type=text], select {
+	line-height: 3em;
 }
 select {
 	height: 48px;
 }
-
+textarea {
+	line-height: 1.2em;
+}
+ul {
+	margin: 0;
+	list-style-type: none;
+}
+li {
+	padding: 0;
+	list-style-type: none;
+}
+.table {
+	.table__row:after {
+		content: ''; display: block; clear: both;
+	}
+	.table__col.table__label {
+		float: left;
+		min-height: 1px;
+	}
+}
+.textinput {
+	width: 100%;
+}
+.fileinput {
+	display: inline-block;
+	position: relative;
+	.fileinput__filename-wrap {
+		margin-right: 80px;
+	}
+	.fileinput__filename-wrap input[type=text] {
+		width: 100%;
+	}
+	.fileinput--upload {
+		position: absolute;
+		top: 0; right: 0;
+		width: 80px;
+		line-height: 3em;
+		padding: 1px;
+		background-color: #989cff;
+		color: #ffffff;
+		text-align: center;
+		cursor: pointer;
+	}
+}
+.dateform {
+	display: inline-block;
+	.dateform__year {
+		width: 5em;
+		margin-right: 1em;
+	}
+	.dateform__year + span {
+		margin-right: 1em;
+	}
+	.dateform_month {
+		width: 4em;
+		margin-right: 1em;
+	}
+}
+.searchbar {
+	display: inline-block;
+	.searchbar__result {
+		position: relative;
+		width: 100%;
+	}
+	ul {
+		position: absolute;
+		z-index: 10;
+		top: 0; left: 0;
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		padding: 0.5em;
+		background-color: #989cff;
+		color: #ffffff;
+	}
+	li {
+		padding: 0;
+		list-style-type: none;
+		cursor: pointer;
+	}
+	li + li {
+		margin-top: 0.5em;
+	}
+	li span {
+		display: inline-block;
+	}
+	.searchbar__col-0 {
+		width: 60px;
+	}
+}
+.error-message {
+	.error-message__message {
+		position: fixed;
+		top: 50%; left: 50%;
+		transform: translate(-50%, -50%);
+		max-width: 500px;
+		padding: 1em;
+		color: #ffffff;
+		background-color: #989cff;
+		cursor: pointer;
+	}
+}
+.overlay {
+	position: fixed;
+	top: 0; left: 0; bottom: 0; right: 0;
+	width: 100%; height: 100%;
+	background-color: #000000;
+	opacity: 0.2;
+	cursor: pointer;
+}
 .digital-library__content {
 	max-width: 900px;
 	margin: 0 auto;

@@ -26,9 +26,15 @@ class DateForm extends Component {
 	}
 	render(){
 		return (
-			<div>
-				<input type="text" value={this.props.value.year} onChange={this.handleChangeYear.bind(this)} />년{' '}
-				<input type="text" value={this.props.value.month} onChange={this.handleChangeMonth.bind(this)} />월
+			<div className="dateform">
+				<input className="dateform__year" type="text" value={this.props.value.year}
+					onChange={this.handleChangeYear.bind(this)}
+				/>
+				<span>년</span>
+				<input className="dateform_month" type="text" value={this.props.value.month}
+					onChange={this.handleChangeMonth.bind(this)}
+				/>
+				<span>월</span>
 			</div>
 		);
 	}

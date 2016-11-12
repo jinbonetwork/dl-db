@@ -15,7 +15,7 @@ class DocumentField extends Component {
 	handleClickToAddInputForm(){
 		this.props.callBacks.addValueToField(this.props.field.fid);
 	}
-	handleClickToRemoveInputForm(index){ console.log(index);
+	handleClickToRemoveInputForm(index){
 		this.props.callBacks.removeValueInField(this.props.field.fid, index);
 	}
 	documentInputForm(value, index){
@@ -30,17 +30,31 @@ class DocumentField extends Component {
 		let innerElement;
 		if(this.props.field.multiple == '1'){
 			innerElement = this.props.value.map((v, i) => (
-				<div key={i}>
-					{this.documentInputForm(v, i)}
-					<span className="button" onClick={this.handleClickToAddInputForm.bind(this)}>추가</span>
-					<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>삭제</span>
+				<div key={i} className="document-form__input-with-buttons">
+					<div className="document-form__middle">
+						{this.documentInputForm(v, i)}
+					</div>
+					<div className="document-from__buttons">
+						<button type="button" onClick={this.handleClickToAddInputForm.bind(this)}>
+							<i className="pe-7s-plus"></i>
+						</button>
+						<button type="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>
+							<i className="pe-7s-close-circle"></i>
+						</button>
+					</div>
 				</div>
 			));
 		} else if(this.props.field.form == 'file'){
 			innerElement = (
-				<div>
-					{this.documentInputForm(this.props.value)}
-					<span className="button" onClick={this.handleClickToRemoveInputForm.bind(this, undefined)}>삭제</span>
+				<div className="document-form__input-with-buttons">
+					<div className="document-form__middle">
+						{this.documentInputForm(this.props.value)}
+					</div>
+					<div className="document-from__buttons">
+						<button type="button" onClick={this.handleClickToRemoveInputForm.bind(this, undefined)}>
+							<i className="pe-7s-close-circle"></i>
+						</button>
+					</div>
 				</div>
 			);
 		} else {

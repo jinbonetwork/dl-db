@@ -9,6 +9,7 @@ import DocumentField from './DocumentField';
 import Table from '../table/Table';
 import Row from '../table/Row';
 import Column from '../table/Column';
+import ErrorMessage from './ErrorMessage';
 import func from '../functions';
 
 class DocumentForm extends Component {
@@ -20,7 +21,8 @@ class DocumentForm extends Component {
 			if(value != info.term) hiddenFields.push(info.field);
 		}
 		this.setState({
-			hiddenFields: hiddenFields
+			hiddenFields: hiddenFields,
+			errorMessage: undefined
 		});
 	}
 	addHiddenField(fid){
@@ -48,26 +50,23 @@ class DocumentForm extends Component {
 
 			let value = this.props.callBacks.fieldValue(f.fid);
 			if(f.required == '1' && f.type != 'group' && func.isEmpty(value) && !this.isHiddenField(f) && !this.isHiddenField(f.parent)){
-				return {fid: f.fid, message: f.subject+'를(을) 입력하세요.'};
+				return {fid: f.fid, message: f.subject+'을(를) 입력하세요.'};
 			}
 			if((f.type == 'email' && !func.isEmailValid(value)) || (f.type == 'phone' && !func.isPhoneValid(value)) || (f.type == "date" && !func.isDateValid(value, f.form))){
 				return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
 			}
 			if(f.type == 'taxonomy'){
 				let term = this.props.info.formData.taxonomy[f.cid].find((t) => t.tid == value);
-				if(!term) return {fid: f.fid, message: f.subject+'가 올바르지 않습니다.'};
+				if(!term) return {fid: f.fid, message: f.subject+'이(가) 올바르지 않습니다.'};
 			}
 		}
 	}
 	handleClickToSubmit(){
-		console.log(this.props.document);
-		/*
 		let error = this.validationCheck();
 		if(error){
-			alert(error.message);
+			this.setState({errorMessage: error.message});
 			return false;
 		}
-		*/
 
 		let document = {};
 		let formData = new FormData();
@@ -97,10 +96,12 @@ class DocumentForm extends Component {
 		formData.append('document', JSON.stringify(document));
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
-		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			console.log(response.data);
 		});
+	}
+	removeErrorMessage(){
+		this.setState({errorMessage: undefined});
 	}
 	render(){
 		let requiredFields = [], electiveFields = [];
@@ -124,6 +125,11 @@ class DocumentForm extends Component {
 				}
 			}
 		});
+		let errorMessage = (this.state.errorMessage &&
+			<ErrorMessage message={this.state.errorMessage}
+				handleClick={this.removeErrorMessage.bind(this)}
+			/>
+		);
 		return (
 			<div className="document-form">
 				<h1>{this.props.label.header}</h1>
@@ -143,10 +149,13 @@ class DocumentForm extends Component {
 					<Row>
 						<Column className="table__label"></Column>
 						<Column>
-							<button type="button" onClick={this.handleClickToSubmit.bind(this)}>{this.props.label.submit}</button>
+							<button type="button" className="document-form--submit"
+								onClick={this.handleClickToSubmit.bind(this)}>{this.props.label.submit}
+							</button>
 						</Column>
 					</Row>
 				</Table>
+				{errorMessage}
 			</div>
 		);
 	}

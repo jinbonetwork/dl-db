@@ -22,7 +22,7 @@ const documentFormOptions = {
 	search_in_docform: [
 		{
 			field: '13',
-			api: "member?name=",
+			api: "members?q=",
 			resultmap: {
 				fname: ['name', 'class', 'email', 'phone'],
 				fid: ['13', '14', '15', '16']
@@ -55,7 +55,7 @@ class DigitalLibraryContainer extends Component {
 				return response.data;
 			} else {
 				this.props.router.push('/error');
-				throw new Error('Server response was not OK');
+				console.log('Server response was not OK');
 			}
 		})
 		.then((data) => {

@@ -10,29 +10,34 @@ class SearchBar extends Component {
 	}
 	handleChange(event){
 		this.props.updateSingleField(this.props.field, this.props.index, event.target.value);
+		if(event.target.value){
+			this.search(event.target.value);
+		} else {
+			this.setState({results: undefined});
+		}
 	}
 	handleChangeToUpdateFields(event){
 		this.props.updateFields({['f'+this.props.field.fid]: event.target.value});
 	}
-	handleKeyDown(event){ if(event.key == 'Enter' && event.target.value){
-		/*
-		axios.get(this.props.searchApiUrl+event.target.value)
-		.then(({data}) => {
-			console.log(data);
+	search(keyword){
+		axios.get(this.props.searchApiUrl+keyword)
+		.then((response) => {
+			if(response.statusText == 'OK'){
+				if(response.data.error == 0){
+					return response.data.members;
+				} else {
+					this.setState({results: []});
+					console.error(response.data);
+				}
+			} else {
+				this.setState({results: []});
+				console.error('Server response was not OK');
+			}
 		})
-		.catch((error) => {
-			console.error(error);
+		.then((members) => {
+			this.setState({results: members});
 		});
-		*/
-		let results = [
-			{id: 1, name: '테스트1', class:'1기', email: 'example@email.net', phone: '010-1234-1234'},
-			{id: 2, name: '테스트2', class:'2기', email: 'example@email.net', phone: '010-1234-1234'},
-			{id: 3, name: '테스트3', class:'3기', email: 'example@email.net', phone: '010-1234-1234'}
-		];
-		this.setState({
-			results: results
-		});
-	}}
+	}
 	handleClickListItem(result, event){
 		let fields = {};
 		this.props.resultMap.fname.forEach((fname, i) => {
@@ -45,26 +50,22 @@ class SearchBar extends Component {
 		this.setState({results: undefined});
 	}
 	render(){
-		let	displayResults = (this.state.results !== undefined) && (
+		let	displayResults = (this.state.results !== undefined && this.state.results.length > 0) && (
 			<div className="searchbar__result">
-				<span className="button" onClick={this.handleClickClose.bind(this)}>닫기</span>
 				<ul>{
-					this.state.results.length > 1 ?
-						this.state.results.map((result) => (
-							<li className="button" key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
-								<span>{result[this.props.resultMap.fname[0]]}</span>{' '}
-								<span>{result[this.props.resultMap.fname[1]]}</span>
-							</li>
-						))
-					: <span>검색결과없음</span>
-				}</ul>
+					this.state.results.map((result) => (
+						<li className="button" key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
+							<span className="searchbar__col-0">{result[this.props.resultMap.fname[0]]}</span>
+							<span className="searchbar__col-1">{result[this.props.resultMap.fname[1]]}</span>
+						</li>
+					))}
+				</ul>
 			</div>
 		);
 		return(
 			<div className="searchbar">
 				<input type="text" className="textinput" value={this.props.value}
 					onChange={this.handleChange.bind(this)}
-					onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 				{displayResults}
 			</div>
@@ -79,7 +80,6 @@ SearchBar.propTypes = {
 	resultMap: PropTypes.object.isRequired,
 	updateSingleField: PropTypes.func.isRequired,
 	updateFields: PropTypes.func.isRequired
-
 };
 
 export default SearchBar;

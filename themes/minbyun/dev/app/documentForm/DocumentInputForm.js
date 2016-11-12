@@ -76,7 +76,7 @@ class DocumentInputForm extends Component {
 						</label>
 					);
 				});
-				return <div>{radioButtons}</div>
+				return <div className="radio-wrap">{radioButtons}</div>
 			case 'Ym':
 				return (
 					<DateForm field={this.props.field} value={this.props.value} index={this.props.index}
