@@ -133,6 +133,7 @@ class Document extends \DLDB\Objects {
 								foreach($v as $f) {
 									$file = \DLDB\Files::getFile($f);
 									$custom[$key][$f] = array(
+										'fileuri' => \DLDB\Files::getFileUrl($file),
 										'filepath' => $file['filepath'],
 										'filename' => $file['filename'],
 										'mimetype' => $file['mimetype']
@@ -259,6 +260,7 @@ class Document extends \DLDB\Objects {
 								foreach($v as $f) {
 									$file = \DLDB\Files::getFile($f);
 									$custom[$key][$f] = array(
+										'fileuri' => \DLDB\Files::getFileUrl($file),
 										'filepath' => $file['filepath'],
 										'filename' => $file['filename'],
 										'mimetype' => $file['mimetype']
@@ -408,7 +410,7 @@ class Document extends \DLDB\Objects {
 		if(!$row) return null;
 		foreach($row as $k => $v) {
 			if($k == 'custom') $v = unserialize($v);
-			if($mode == 'view' && $k == 'memo') continue;
+			else if($mode == 'view' && $k == 'memo') continue;
 			else if(is_string($v)) $v = stripslashes($v);
 			$document[$k] = $v;
 		}

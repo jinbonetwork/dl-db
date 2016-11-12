@@ -2,7 +2,7 @@ set names utf8;
 
 DROP TABLE IF EXISTS dldb_bookmark;
 CREATE TABLE dldb_bookmark (
-	`id`		bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`bid`		bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`uid`		int(10) NOT NULL DEFAULT 0,
 	`did`		bigint(11) NOT NULL DEFAULT 0,
 	`regdate`	int(10) NOT NULL DEFAULT 0,
@@ -77,6 +77,17 @@ CREATE TABLE `dldb_files` (
 	KEY `DID`(`did`),
 	KEY `FILENAME`(`filename`)
 
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `dldb_history`;
+CREATE TABLE `dldb_history` (
+	`hid`			bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`uid`			bigint(11) NOT NULl DEFAULT 0,
+	`query`			char(255),
+	`options`		text,
+	`search_date`	int(10),
+
+	KEY `UID`(`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_log`;

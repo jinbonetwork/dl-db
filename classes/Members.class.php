@@ -26,9 +26,28 @@ class Members extends \DLDB\Objects {
 
 	public static function get($id) {
 		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT * FROM {members} WHERE id = ".$id;
+		$row = $dbm->getFetchArray($que);
+		$member = self::fetchMember($row);
+
+		return $member;
+	}
+
+	public static function getByUid($uid) {
+		$dbm = \DLDB\DBM::instance();
+
+		if($uid) {
+			$que = "SELECT * FROM {members} WHERE uid = ".$uid;
+			$row = $dbm->getFetchArray($que);
+			$member = self::fetchMember($row);
+		}
+
+		return $member;
 	}
 
 	private static function fetchMember($row) {
+		if(!$row) return null;
 		$member = array();
 		foreach($row as $k => $v) {
 			if($k == 'committee') {
@@ -39,6 +58,7 @@ class Members extends \DLDB\Objects {
 				$member[$k] = stripslashes($v);
 			}
 		}
+
 		return $member;
 	}
 }
