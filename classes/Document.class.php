@@ -47,9 +47,10 @@ class Document extends \DLDB\Objects {
 		if($row) {
 			$document = self::fetchDocument($row);
 		}
+		$fields = self::getFields();
 		if($mode == 'view') {
 			unset($document['memo']);
-			foreach( self::$fields as $fid => $field ) {
+			foreach( $fields as $fid => $field ) {
 				if( $field['type'] == 'group' ) {
 					unset($document['f'.$fid]);
 				}
@@ -111,6 +112,9 @@ class Document extends \DLDB\Objects {
 					switch($field['type']) {
 						case 'taxonomy':
 							$cid = $field['cid'];
+							if($v && !is_array($v)) {
+								$v = array($v);
+							}
 							if(is_array($v) && @count($v) > 0) {
 								foreach($v as $t) {
 									$custom[$key][$t] = array(
@@ -224,6 +228,9 @@ class Document extends \DLDB\Objects {
 								foreach( $document['f'.$key] as $terms ) {
 									$old_terms[$field['cid']][$terms['tid']] = $terms;
 								}
+							}
+							if($v && !is_array($v)) {
+								$v = array($v);
 							}
 							if( is_array( $v ) ) {
 								foreach($v as $t) {

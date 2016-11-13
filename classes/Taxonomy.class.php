@@ -21,11 +21,11 @@ class Taxonomy extends \DLDB\Objects  {
 		return $taxonomy;
 	}
 
-	public static function getTaxonomyTerms($cids) {
+	public static function getTaxonomyTerms($cids,$active=1) {
 		$dbm = \DLDB\DBM::instance();
 		if(!$cids) return null;
 		if(!is_array($cids)) $cids = array($cids);
-		$que = "SELECT * FROM {taxonomy_terms} WHERE cid IN (".implode(",",$cids).") AND current = '1' AND active = '1' ORDER BY cid ASC, parent ASC, idx ASC";
+		$que = "SELECT * FROM {taxonomy_terms} WHERE cid IN (".implode(",",$cids).") AND current = '1'".($active ? " AND active = '1'" : "")." ORDER BY cid ASC, parent ASC, idx ASC";
 		while($row = $dbm->getFetchArray($que)) {
 			$taxonomy_terms[$row['cid']][$row['tid']] = self::fetchTaxonomy($row);
 		}
