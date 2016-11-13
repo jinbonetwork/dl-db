@@ -7,6 +7,9 @@
 	<title>민변 디지털 도서관: <?php print $this->title; ?></title>
 	<link rel="stylesheet" href="<?php print \DLDB\Lib\base_uri(); ?>themes/minbyun/contrib/NanumBarunGothic/nanumbarungothic.css" />
 	<link rel="stylesheet" href="<?php print \DLDB\Lib\base_uri(); ?>themes/minbyun/contrib/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+	<link rel="stylesheet" href="<?php print \DLDB\Lib\base_uri(); ?>themes/minbyun/contrib/pe-icon-7-stroke/css/helper.css" />
+	<link rel="stylesheet" href="<?php print \DLDB\Lib\base_uri(); ?>themes/minbyun/contrib/pe-icon-7-filled/css/pe-icon-7-filled.css" />
+	<link rel="stylesheet" href="<?php print \DLDB\Lib\base_uri(); ?>themes/minbyun/contrib/pe-icon-7-filled/css/helper.css" />
 <?php  print $this->header(); ?>
 
 </head>

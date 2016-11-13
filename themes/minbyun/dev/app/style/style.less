@@ -9,7 +9,7 @@ body, html {
 	background-color: #f9f9f9;
 	margin: 0;
 }
-input[type=text], select, textarea {
+input[type=text], select, textarea, button {
 	font-family:'Nanum Barun Gothic';
 	font-size: 16px;
 	color: #808080;
@@ -34,9 +34,15 @@ li {
 	padding: 0;
 	list-style-type: none;
 }
+p {
+	margin: 0
+}
+p + p {
+	margin-top: 1em;
+}
 .table {
-	.table__row:after {
-		content: ''; display: block; clear: both;
+	.table__row {
+		overflow: hidden;
 	}
 	.table__col.table__label {
 		float: left;
@@ -137,9 +143,8 @@ li {
 	height: 55px;
 }
 .imagewrap {
-	float: left;
-	width: 200px;
 	img {
 		width: 100%;
+		display: block;
 	}
 }
