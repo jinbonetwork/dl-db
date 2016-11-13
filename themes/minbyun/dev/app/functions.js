@@ -29,6 +29,13 @@ let functions = {
 		} else {
 			return true;
 		}
+	},
+	displayDate(date){
+		let items = [];
+		if(date.year) items.push(date.year);
+		if(date.month) items.push(date.month);
+		if(date.date) items.push(date.date);
+		return items.join('/');
 	}
 }
 

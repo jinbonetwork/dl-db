@@ -75,7 +75,7 @@ DocumentFormContainer.propTypes = {
 	document: PropTypes.object.isRequired,
 	documentFormOptions: PropTypes.object.isRequired,
 	apiUrl: PropTypes.string.isRequired,
-	openedDocuments: PropTypes.array
+	openedDocuments: PropTypes.object
 };
 
 export default DocumentFormContainer;

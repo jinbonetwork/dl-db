@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
-import SearchBar from './SearchBar';
+import SearchInput from './SearchInput';
 import Textarea from '../inputs/Textarea';
 import DateForm from '../inputs/DateForm';
 import FileInput from '../inputs/FileInput';
@@ -31,7 +31,7 @@ class DocumentInputForm extends Component {
 			case 'search':
 				let searchInfo = this.props.info.formOptions.searchInfo[this.props.field.fid];
 				return (
-					<SearchBar value={this.props.value} field={this.props.field} index={this.props.index}
+					<SearchInput value={this.props.value} field={this.props.field} index={this.props.index}
 						searchApiUrl={this.props.info.apiUrl+'/'+searchInfo.api}
 						resultMap = {searchInfo.resultMap}
 						updateFields={this.props.callBacks.updateFields.bind(this)}

@@ -7,6 +7,7 @@ import DigitalLibraryContainer from './DigitalLibraryContainer';
 import DigitalLibrary from './DigitalLibrary';
 import User from './User';
 import NewDocument from './NewDocument';
+import Document from './Document';
 import ServerError from './ServerError';
 
 import TestSomething from './TestSomething';
@@ -17,6 +18,7 @@ render((
 			<Route path="/" component={DigitalLibrary}>
 				<Route path="/user" component={User} />
 				<Route path="/document/new" component={NewDocument} />
+				<Route path="/document/:did" component={Document} />
 				<Route path="/test" component={TestSomething} />
 				<Route path="/error" component={ServerError} />
 			</Route>

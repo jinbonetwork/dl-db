@@ -3,8 +3,13 @@ import {Link} from 'react-router';
 
 const childPropList = {
 	'/user': {
-		required: ['userData'],
-		elective: []
+		required: ['userData']
+	},
+	'/document': {
+		required: ['userData']
+	},
+	'/document/:did': {
+		required: ['userData', 'documentFormData', 'documentFormOptions', 'apiUrl']
 	},
 	'/document/new':{
 		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'apiUrl'],
@@ -38,10 +43,14 @@ class DigitalLibrary extends Component {
 		let child = this.cloneChild(this.props.children);
 		return(
 			<div className="digital-library">
-				<div className="digital-library__menu">
-					<Link to="/user">내정보</Link>{' '}
-					<Link to="/document/new">자료 입력하기</Link>{' '}
-					<Link to="/test">Test</Link>
+				<div className="digital-library__header">
+					<div className="searchbar">
+					</div>
+					<div className="digital-library__menu">
+						<Link to="/user">내정보</Link>
+						<Link to="/document/new">자료 입력하기</Link>
+						<Link to="/document/1">문서1</Link>
+					</div>
 				</div>
 				<div className="digital-library__content">
 					{child}
@@ -56,7 +65,7 @@ DigitalLibrary.propTypes = {
 	documentFormData: PropTypes.object,
 	documentForm: PropTypes.object,
 	documentFormOptions: PropTypes.object,
-	openedDocuments: PropTypes.array
+	openedDocuments: PropTypes.object
 };
 
 export default DigitalLibrary;

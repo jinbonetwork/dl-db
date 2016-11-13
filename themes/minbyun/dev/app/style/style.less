@@ -27,6 +27,7 @@ textarea {
 }
 ul {
 	margin: 0;
+	padding: 0;
 	list-style-type: none;
 }
 li {
@@ -80,9 +81,9 @@ li {
 		margin-right: 1em;
 	}
 }
-.searchbar {
+.searchinput {
 	display: inline-block;
-	.searchbar__result {
+	.searchinput__result {
 		position: relative;
 		width: 100%;
 	}
@@ -108,7 +109,7 @@ li {
 	li span {
 		display: inline-block;
 	}
-	.searchbar__col-0 {
+	.searchinput__col-0 {
 		width: 60px;
 	}
 }
@@ -132,7 +133,13 @@ li {
 	opacity: 0.2;
 	cursor: pointer;
 }
-.digital-library__content {
-	max-width: 900px;
-	margin: 0 auto;
+.searchbar {
+	height: 55px;
+}
+.imagewrap {
+	float: left;
+	width: 200px;
+	img {
+		width: 100%;
+	}
 }

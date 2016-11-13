@@ -42,7 +42,7 @@ NewDocument.propTypes = {
 	documentForm: PropTypes.object,
 	documentFormOptions: PropTypes.object,
 	apiUrl: PropTypes.string,
-	openedDocuments: PropTypes.array
+	openedDocuments: PropTypes.object
 };
 
 export default NewDocument;

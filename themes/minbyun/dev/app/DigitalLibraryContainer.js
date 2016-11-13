@@ -4,7 +4,9 @@ import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import './style/style.less';
+import './style/digitalLibrary.less';
 import './style/documentForm.less';
+import './style/document.less';
 
 const apiUrl = '/api';
 const emptyDocument = {
@@ -45,7 +47,7 @@ class DigitalLibraryContainer extends Component {
 			documentFormData: undefined,
 			documentForm: undefined,
 			documentFormOptions: undefined,
-			openedDocuments: []
+			openedDocuments: {}
 		};
 	}
 	fetchData(path, prop){

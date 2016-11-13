@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
+import {withRouter} from 'react-router';
 import 'babel-polyfill'; // for update(), find() ...
 import axios from 'axios';
-import SearchBar from './SearchBar';
+import SearchInput from './SearchInput';
 import Textarea from '../inputs/Textarea';
 import DateForm from '../inputs/DateForm';
 import DocumentField from './DocumentField';
@@ -97,7 +98,18 @@ class DocumentForm extends Component {
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
 		.then((response) => {
-			console.log(response.data);
+			if(response.statusText == 'OK'){
+				if(response.data.error == 0){
+					return response.data.did;
+				} else {
+					console.error(response.data);
+				}
+			} else {
+				console.error('Server response was not OK');
+			}
+		})
+		.then((did) => {
+			this.props.router.push('/document/'+did);
 		});
 	}
 	removeErrorMessage(){
@@ -164,7 +176,10 @@ DocumentForm.propTypes = {
 	label: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	info: PropTypes.object.isRequired,
-	callBacks: PropTypes.object.isRequired
+	callBacks: PropTypes.object.isRequired,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired
+	}).isRequired
 };
 
-export default DocumentForm;
+export default withRouter(DocumentForm);

@@ -1,0 +1,28 @@
+.digital-library__header {
+	position: relative;
+	border-bottom: solid 2px #989cff;
+}
+.digital-library__menu {
+	position: absolute;
+	top: 0; right: 0;
+	&:after {
+		content: ''; display: block; clear: both;
+	}
+	a {
+		display: inline-block;
+		line-height: 55px;
+		padding: 0 1.5em;
+
+	}
+	a:visited, a:link, a:hover, a:active {
+		color: #808080;
+		text-decoration: none;
+	}
+	a + a {
+		border-left: solid 2px #989cff
+	}
+}
+.digital-library__content {
+	max-width: 900px;
+	margin: 0 auto;
+}

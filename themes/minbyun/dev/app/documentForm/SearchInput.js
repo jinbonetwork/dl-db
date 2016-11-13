@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
 
-class SearchBar extends Component {
+class SearchInput extends Component {
 	constructor(){
 		super();
 		this.state = {
@@ -51,19 +51,19 @@ class SearchBar extends Component {
 	}
 	render(){
 		let	displayResults = (this.state.results !== undefined && this.state.results.length > 0) && (
-			<div className="searchbar__result">
+			<div className="searchinput__result">
 				<ul>{
 					this.state.results.map((result) => (
 						<li className="button" key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
-							<span className="searchbar__col-0">{result[this.props.resultMap.fname[0]]}</span>
-							<span className="searchbar__col-1">{result[this.props.resultMap.fname[1]]}</span>
+							<span className="searchinput__col-0">{result[this.props.resultMap.fname[0]]}</span>
+							<span className="searchinput__col-1">{result[this.props.resultMap.fname[1]]}</span>
 						</li>
 					))}
 				</ul>
 			</div>
 		);
 		return(
-			<div className="searchbar">
+			<div className="searchinput">
 				<input type="text" className="textinput" value={this.props.value}
 					onChange={this.handleChange.bind(this)}
 				/>
@@ -72,7 +72,7 @@ class SearchBar extends Component {
 		);
 	}
 }
-SearchBar.propTypes = {
+SearchInput.propTypes = {
 	value: PropTypes.string,
 	index: PropTypes.number,
 	field: PropTypes.object.isRequired,
@@ -82,4 +82,4 @@ SearchBar.propTypes = {
 	updateFields: PropTypes.func.isRequired
 };
 
-export default SearchBar;
+export default SearchInput;
