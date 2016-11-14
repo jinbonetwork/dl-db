@@ -72,6 +72,8 @@ CREATE TABLE `dldb_files` (
 	`download`	bigint(128) NOT NULL DEFAULT 0,
 	`filesize`	bigint(128) NOT NULL DEFAULT 0,
 	`regdate`	int(10),
+	`status`	char(15) NOT NULL DEFAULT 'uploaded',
+	`textsize`	int(10) NOT NULL DEFAULT 0,
 
 	KEY `UID`(`uid`),
 	KEY `DID`(`did`),

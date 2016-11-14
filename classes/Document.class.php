@@ -170,22 +170,13 @@ class Document extends \DLDB\Objects {
 		$memo = '';
 		if(is_array($files)) {
 			foreach($files as $file) {
+				$memo .= \DLDB\Parser::parseFile($file);
 				$que = "UPDATE {files} SET `did` = ? WHERE `fid` = ?";
 				$dbm->execute($que,array("dd", $insert_id, $file['fid']));
 			}
-			switch($file['mimetype']) {
-				case 'application/pdf':
-					$memo .= self::parsePDF($file);
-					break;
-				case 'application/msword':
-				case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-					$memo .= self::parseDoc($file);
-					break;
-			}
 		}
-		if($memo) {
-			$que = "UPDATE {documents} SET memo = ? WHERE id = ?";
-			$dbm->execute($que,array("sd",$memo,$insert_id));
+		if(trim($memo)) {
+			\DLDB\Parser::insert($insert_id,$memo);
 		}
 		if( is_array($taxonomy_map) ) {
 			if( self::reBuildTaxonomy($insert_id, $taxonomy_map) < 0 ) {
@@ -286,29 +277,25 @@ class Document extends \DLDB\Objects {
 				}
 			}
 		}
-		$memo = '';
-		if(is_array($files)) {
-			foreach($files as $file) {
-				switch($file['mimetype']) {
-					case 'application/pdf':
-						$memo .= self::parsePDF($file);
-						break;
-					case 'application/msword':
-					case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-						$memo .= self::parseDoc($file);
-						break;
-				}
-			}
-		}
 
-		$que .= ", `memo` = ? WHERE `id` = ?";
-		$array1 .= 'sd",';
-		$array2 .= ", ".'$'."memo, ".'$'."args['id'])";
+		$que .= " WHERE `id` = ?";
+		$array1 .= 'd",';
+		$array2 .= ", ".'$'."args['id'])";
 
 		$eval_str = '$'."q_args = ".$array1.$array2.";";
 		eval($eval_str);
 
 		$dbm->execute($que,$q_args);
+
+		$memo = '';
+		if(is_array($files)) {
+			foreach($files as $file) {
+				$memo .= \DLDB\Parser::parseFile($file);
+			}
+		}
+		if(trim($memo)) {
+			\DLDB\Parser::insert($args['id'],$memo);
+		}
 
 		if( is_array($taxonomy_map) ) {
 			if( self::reBuildTaxonomy($args['id'], $taxonomy_map) < 0 ) {
@@ -380,29 +367,6 @@ class Document extends \DLDB\Objects {
 		}
 
 		return 0;
-	}
-
-	public static function parsePDF($file_info) {
-		include_once DLDB_CONTRIBUTE_PATH."/pdfparser/vendor/autoload.php";
-		$parser = new \Smalot\PdfParser\Parser();
-		$filename = \DLDB\Files::getFilePath($file_info);
-		$pdf = $parser->parseFile($filename);
-
-		$pages = $pdf->getPages();
-
-		foreach( $pages as $page ) {
-			$text .= $page->getText()."\n";
-		}
-		return $text;
-	}
-
-	public static function parseDoc($file_info) {
-		$filename = \DLDB\Files::getFilePath($file_info);
-		$docObj = new Filetotext($filename);
-
-		$text = $docObj->convertToText();
-
-		return $text;
 	}
 
 	public static function getErrorMsg() {
