@@ -15,7 +15,6 @@ class Document extends Component {
 		this.state = null;
 	}
 
-	/*
 	componentDidMount(){
 		axios.get(this.props.apiUrl+'/document?id='+this.props.params.did)
 		.then((response) => {
@@ -30,10 +29,12 @@ class Document extends Component {
 			}
 		})
 		.then((document) => {
+			console.log(document);
 			this.setState({document: document});
 		});
 	}
-	*/
+
+	/*
 	componentDidMount(){
 		this.setState({
 			id: '1',
@@ -58,6 +59,7 @@ class Document extends Component {
 			f18: [{fid: 8, filename: '테스트_문서_1_2_3_4.pdf', filepath: '/attach/2016/11/테스트_문서_1_2_3_4.pdf', mimetype: 'application/pdf'}]
 		});
 	}
+	*/
 	render(){
 		if(this.state == null) return null;
 

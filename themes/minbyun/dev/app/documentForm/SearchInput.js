@@ -10,6 +10,8 @@ class SearchInput extends Component {
 	}
 	handleChange(event){
 		this.props.updateSingleField(this.props.field, this.props.index, event.target.value);
+	}
+	handleKeyUp(event){
 		if(event.target.value){
 			this.search(event.target.value);
 		} else {
@@ -65,7 +67,7 @@ class SearchInput extends Component {
 		return(
 			<div className="searchinput">
 				<input type="text" className="textinput" value={this.props.value}
-					onChange={this.handleChange.bind(this)}
+					onChange={this.handleChange.bind(this)} onKeyUp={this.handleKeyUp.bind(this)}
 				/>
 				{displayResults}
 			</div>

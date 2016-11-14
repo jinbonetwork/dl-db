@@ -11,6 +11,7 @@ import Table from '../table/Table';
 import Row from '../table/Row';
 import Column from '../table/Column';
 import ErrorMessage from './ErrorMessage';
+import Processing from './Processing';
 import func from '../functions';
 
 class DocumentForm extends Component {
@@ -23,7 +24,8 @@ class DocumentForm extends Component {
 		}
 		this.setState({
 			hiddenFields: hiddenFields,
-			errorMessage: undefined
+			errorMessage: undefined,
+			isProcessing: false
 		});
 	}
 	addHiddenField(fid){
@@ -53,12 +55,19 @@ class DocumentForm extends Component {
 			if(f.required == '1' && f.type != 'group' && func.isEmpty(value) && !this.isHiddenField(f) && !this.isHiddenField(f.parent)){
 				return {fid: f.fid, message: f.subject+'을(를) 입력하세요.'};
 			}
-			if((f.type == 'email' && !func.isEmailValid(value)) || (f.type == 'phone' && !func.isPhoneValid(value)) || (f.type == "date" && !func.isDateValid(value, f.form))){
-				return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
+
+			if(f.multiple != '1'){
+				value = [value];
 			}
-			if(f.type == 'taxonomy'){
-				let term = this.props.info.formData.taxonomy[f.cid].find((t) => t.tid == value);
-				if(!term) return {fid: f.fid, message: f.subject+'이(가) 올바르지 않습니다.'};
+			for(let j in value){
+				let v = value[j];
+				if((f.type == 'email' && !func.isEmailValid(v)) || (f.type == 'phone' && !func.isPhoneValid(v)) || (f.type == 'date' && !func.isDateValid(v, f.form))){
+					return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
+				}
+				if(f.type == 'taxonomy'){
+					let term = this.props.info.formData.taxonomy[f.cid].find((t) => t.tid == v);
+					if(!term) return {fid: f.fid, message: f.subject+'이(가) 올바르지 않습니다.'};
+				}
 			}
 		}
 	}
@@ -68,6 +77,8 @@ class DocumentForm extends Component {
 			this.setState({errorMessage: error.message});
 			return false;
 		}
+		this.setState({isProcessing: true});
+
 
 		let document = {};
 		let formData = new FormData();
@@ -168,6 +179,7 @@ class DocumentForm extends Component {
 					</Row>
 				</Table>
 				{errorMessage}
+				{this.state.isProcessing && <Processing />}
 			</div>
 		);
 	}
