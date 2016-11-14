@@ -1,6 +1,14 @@
 .document {
 	margin-top: 3em;
 	padding: 1em;
+	.document--back{
+		color: #989cff;
+		i {
+			font-size: 1.3em
+		}
+		margin-bottom: 1em;
+		cursor: pointer;
+	}
 	.document__wrap {
 		background-color: #ffffff;
 		padding: 3em;
@@ -43,28 +51,75 @@
 		}
 	}
 	.document__header .table {
+		.table__row + .table__row {
+			margin-top: 1em;
+		}
 		.table__col {
-			line-height: 2em;
+			line-height: 1.5em;
 		}
 		.table__label {
 			color: #555555;
 			width: 10em;
 			text-align: right;
 			font-weight: 700;
+			padding-right: 1em;
+		}
+		.table__col:not(.table__label){
+			margin-left: 10em;
+			padding-left: 1em;
+		}
+		li span:first-child {
+			margin-right: 1em;
+		}
+		a, a:visited, a:link, a:hover, a:active {
+			color: #989cff;
+			text-decoration: none;
+		}
+		i {
+			font-size: 1.5em;
+			color: #989cff;
+		}
+	}
+	.document__contents {
+		margin-top: 3em;
+		max-width: 600px;
+		& > .table__row {
+			padding: 0.5em 0;
+		}
+		& > .table__row + .table__row {
+			margin-top: 1em;
+		}
+		& > .table__row > .table__col {
+			line-height: 2em;
+		}
+		& > .table__row > .table__label {
+			width: 150px;
 			padding-right: 2em;
+			text-align: right;
+			font-weight: 700;
+		}
+		& > .table__row > .table__col:not(.table__label) {
+			margin-left: 150px;
+		}
+		.inner-table {
+			border-top: solid 1px #989cff;
+		}
+		.inner-table .table__col {
+			line-height: 2.5em;
+		}
+		.inner-table .table__label {
+			width: 6em;
+			padding-right: 1em;
+			text-align: right;
+			font-weight: 700;
+			border-bottom: solid 1px #989cff;
+		}
+		.inner-table .table__col:not(.table__label){
+			margin-left: 6em;
+			padding-left: 1em;
+			border: solid 1px #989cff;
+			border-width: 0 0 1px 1px;
 		}
 	}
 
-
-	.document__contents > .table__row {
-		padding: 0.5em 0;
-	}
-	.document__contents > .table__row > .table__label {
-		width: 150px;
-		padding-right: 1em;
-		text-align: right;
-	}
-	.document__contents > .table__row > .table__col:not(.table__label) {
-		margin-left: 150px;
-	}
 }

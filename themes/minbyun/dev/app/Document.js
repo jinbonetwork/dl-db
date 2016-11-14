@@ -22,6 +22,12 @@ const _relation = { //어떤 type의 필드에 대한 term의 작용
 	}
 }
 
+const _show = {
+	'1': '2' // 판결문 -> 재판정보
+}
+
+const _removedFields = ['f11'];
+
 class Document extends Component {
 	constructor(){
 		super();
@@ -55,19 +61,29 @@ class Document extends Component {
 				}
 			}
 		});
-		if(!func.isEmpty(terms)){
-			for(let tid in _relation){
-				if(terms[tid]){
-					this.props.documentFormData.fields.forEach((f) => {
-						if(_relation[tid].type == f.type){
-							let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
-							for(let p in document[fid]){
-								document[fid][p][_relation[tid].prop] = _relation[tid].value;
-							}
+		if(func.isEmpty(terms)) return;
+		for(let tid in _relation){
+			if(terms[tid]){
+				this.props.documentFormData.fields.forEach((f) => {
+					if(_relation[tid].type == f.type){
+						let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
+						for(let p in document[fid]){
+							document[fid][p][_relation[tid].prop] = _relation[tid].value;
 						}
-					});
-				}
+					}
+				});
 			}
+		}
+		for(let tid in _show){
+			if(!terms[tid]){
+				let field = _show[tid];
+				this.props.documentFormData.fields.forEach((f) => {
+					if(f.fid == field || f.parent == field) delete document['f'+f.fid];
+				});
+			}
+		}
+		for(let i in _removedFields){
+			delete document[_removedFields[i]];
 		}
 	}
 	setDocument(document){
@@ -75,56 +91,55 @@ class Document extends Component {
 		this.props.documentFormData.fields.forEach((f) => {
 			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
 			let doc = document[fid];
+			newDocument[fid] = [];
 			switch(f.type){
 				case 'char': case 'date': case 'textarea':
-					if(f.multiple != '1'){
-						newDocument[fid] = [doc];
-					} else {
-						newDocument[fid] = doc;
+					if(!func.isEmpty(doc)){
+						if(f.multiple != '1'){
+							newDocument[fid] = [doc];
+						} else {
+							newDocument[fid] = doc;
+						}
 					}
 					break;
 				case 'taxonomy':
-					newDocument[fid] = [];
 					for(let p in doc){
-						newDocument[fid].push(doc[p].name);
+						let name = doc[p].name;
+						if(!func.isEmpty(name)) newDocument[fid].push(name);
 					}
 					break;
 				case 'image': case 'file':
-					newDocument[fid] = [];
 					for(let p in doc){
-						newDocument[fid].push(doc[p]);
+						let fileinfo = doc[p];
+						if(!func.isEmpty(fileinfo)) newDocument[fid].push(fileinfo);
 					}
 					break;
 			}
 		});
 		this.setState(newDocument);
+
 	}
 	render(){
-		if(this.state == null) return null;
-
-		let hiddenFields = [];
-		for(let fid in this.props.documentFormOptions.actionShowInfo){
-			let info = this.props.documentFormOptions.actionShowInfo[fid];
-			let value =this.state['f'+fid];
-			if(value != info.term) hiddenFields.push(info.field);
-		}
+		if(this.state == null) return null; console.log(this.state);
 
 		let fieldsInHeader = {image: null, file: null, date: null};
 		let fieldsInContents = [];
 		this.props.documentFormData.fields.forEach((field) => {
 			let fid = (field.fid > 0 ? 'f'+field.fid : field.fid);
-			if(field.type == 'image' || field.type == 'file' || field.type == 'date'){
-				fieldsInHeader[field.type] = <FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} />
-			}
-			else if(field.fid != 'subject' && field.parent == '0'){
-				fieldsInContents[field.idx] = (
-					<FieldsInContents key={field.fid} field={field} formData={this.props.documentFormData} document={this.state} />
-				);
+			if((field.type == 'group' || this.state[fid].length > 0) && field.parent == '0' && field.fid != 'subject'){
+				if(field.type == 'image' || field.type == 'file' || field.type == 'date'){
+					fieldsInHeader[field.type] = <FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} />
+				}
+				else {
+					fieldsInContents[field.idx] = (
+						<FieldsInContents key={field.fid} field={field} formData={this.props.documentFormData} document={this.state} />
+					);
+				}
 			}
 		});
 		return (
 			<div className="document">
-				<div>이전 페이지로</div>
+				<div className="document--back"><i className="pe-7f-back pe-va"></i> <span>이전 페이지로</span></div>
 				<div className="document__wrap">
 					<div className="document__header">
 						{fieldsInHeader.image}

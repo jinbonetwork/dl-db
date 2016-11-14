@@ -14,24 +14,33 @@ class FieldsInContents extends Component {
 			case 'group':
 				let inSubontent = [];
 				this.props.formData.fields.forEach((f) => {
-					if(f.parent == this.props.field.fid){
+					if(f.type != 'group' && f.parent == this.props.field.fid && this.props.document['f'+f.fid].length > 0){
 						inSubontent[f.idx] = (
 							<FieldsInContents key={f.fid} field={f} formData={this.props.formData} document={this.props.document} />
 						);
 					}
 				});
-				return <Table className="inner-table">{inSubontent}</Table>;
+				if(inSubontent.length > 0){
+					return <Table className="inner-table">{inSubontent}</Table>;
+				} else {
+					return null;
+				}
 			default:
 				return '';
 		}
 	}
 	render(){
-		return (
-			<Row>
-				<Column className="table__label">{this.props.field.subject}</Column>
-				<Column>{this.content()}</Column>
-			</Row>
-		);
+		let content = this.content();
+		if(content){
+			return (
+				<Row>
+					<Column className="table__label">{this.props.field.subject}</Column>
+					<Column>{content}</Column>
+				</Row>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 FieldsInContents.propTypes = {

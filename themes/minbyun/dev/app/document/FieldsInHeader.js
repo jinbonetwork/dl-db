@@ -30,7 +30,7 @@ class FieldsInHeader extends Component {
 		));
 		return (
 			<Row>
-				<Column className="table__label">다운로드</Column>
+				<Column className="table__label"><i className="pe-7s-download pe-va"></i> {this.props.subject}</Column>
 				<Column><ul>{fileList}</ul></Column>
 			</Row>
 		);
