@@ -53,6 +53,14 @@ class Document extends \DLDB\Objects {
 			foreach( $fields as $fid => $field ) {
 				if( $field['type'] == 'group' ) {
 					unset($document['f'.$fid]);
+				} else if( $field['type'] == 'file' ) {
+					if( is_array($document['f'.$fid]) ) {
+						foreach( $document['f'.$fid] as $fd => $file ) {
+							$_file = \DLDB\Files::getFile($fd);
+							$document['f'.$fid][$fd]['status'] = $_file['status'];
+							$document['f'.$fid][$fd]['textsize'] = $_file['textsize'];
+						}
+					}
 				}
 			}
 		}
