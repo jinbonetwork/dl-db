@@ -18,7 +18,7 @@ $service['themes'] = 'minbyun';
 $service['timezone'] = 'Asia/Seoul';
 $service['encoding'] = 'UTF-8';
 $service['LOG_TYPE'] = 1;
-$service['redis'] = 1;
+$service['search_type'] = 'elastic';
 
 $session['type'] = 'xe';
 $session['server'] = '127.0.0.1';

@@ -88,7 +88,9 @@ class Files extends \DLDB\Objects {
 
 	public static function insertFile($did,$file) {
 		$filepath = substr($file,strlen(DLDB_DATA_PATH));
-		$filename = basename($file);
+		$_filename = explode( "/", $file );
+//		$filename = basename($file);
+		$filename = $_filename[(@count($_filename)-1)];
 		$file_size = @filesize($file);
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$mime = finfo_file($finfo, $file);
@@ -98,8 +100,8 @@ class Files extends \DLDB\Objects {
 		if($file_size > 0) {
 			$dbm = \DLDB\DBM::instance();
 
-			$que = "INSERT INTO {files} (`did`,`filepath`,`filename`,`mimetype`,`uid`,`download`,`filesize`,`regdate`) VALUES (?,?,?,?,?,?,?,?)";
-			$dbm->execute($que,array("dsssdddd",($did ? $did : 0),$filepath,$filename,$mime,$_SESSION['user']['uid'],0,$file_size,time()));
+			$que = "INSERT INTO {files} (`did`,`filepath`,`filename`,`mimetype`,`uid`,`download`,`filesize`,`regdate`,`status`,`textsize`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+			$dbm->execute($que,array("dsssddddsd",($did ? $did : 0),$filepath,$filename,$mime,$_SESSION['user']['uid'],0,$file_size,time(),'uploaded',0));
 
 			$fid = $dbm->getLastInsertId();
 		}
