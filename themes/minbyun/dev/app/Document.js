@@ -9,12 +9,24 @@ import Row from './table/Row';
 import Column from './table/Column';
 import func from './functions';
 
+const _relation = { //어떤 type의 필드에 대한 term의 작용
+	'32': { // 열람
+		type: 'file',
+		prop: 'link',
+		value: false
+	},
+	'33': { // 다운로드
+		type: 'file',
+		prop: 'link',
+		value: true
+	}
+}
+
 class Document extends Component {
 	constructor(){
 		super();
 		this.state = null;
 	}
-
 	componentDidMount(){
 		axios.get(this.props.apiUrl+'/document?id='+this.props.params.did)
 		.then((response) => {
@@ -29,38 +41,67 @@ class Document extends Component {
 			}
 		})
 		.then((document) => {
-			console.log(document);
-			this.setState({document: document});
+			this.applyRelation(document);
+			this.setDocument(document);
 		});
 	}
-
-	/*
-	componentDidMount(){
-		this.setState({
-			id: '1',
-			subject: '부산고등법원 2012.9.4. 선고 2011나9075 판결',
-			content: '내부적으로는 박 대통령이 두 차례에 걸쳐 사과하고 특검까지 수용 의사를 밝혔고 청와대 개편에 이어 국회 추천 총리를 수용하겠다고 했음에도 퇴진 요구가 분출되고 있는 것에 대해 답답해하는 목소리도 들린다.',
-			uid: '4',
-			created: '1478910982',
-			f1: '1',
-			f3: '법원',
-			f4: '사건번호',
-			f5: '판사',
-			f6: '검사',
-			f7: '변호사',
-			f8: ['7'],
-			f10: {year: '2016', month: '1'},
-			f11: '32',
-			f13: '호득',
-			f14: '1기',
-			f15: 'example@email.net',
-			f16: '010-1234-1234',
-			f17: {fid: 7, filename: '베가본드_2_1_2.jpg', filepath: '/attach/2016/11/베가본드_2_1_2.jpg', mimetype: 'image/jpeg'},
-			f18: [{fid: 8, filename: '테스트_문서_1_2_3_4.pdf', filepath: '/attach/2016/11/테스트_문서_1_2_3_4.pdf', mimetype: 'application/pdf'}]
+	applyRelation(document){
+		let terms = {};
+		this.props.documentFormData.fields.forEach((f) => {
+			if(f.type == 'taxonomy'){
+				let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
+				for(let k in document[fid]){
+					terms[k] = document[fid][k];
+				}
+			}
 		});
+		if(!func.isEmpty(terms)){
+			for(let tid in _relation){
+				if(terms[tid]){
+					this.props.documentFormData.fields.forEach((f) => {
+						if(_relation[tid].type == f.type){
+							let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
+							for(let p in document[fid]){
+								document[fid][p][_relation[tid].prop] = _relation[tid].value;
+							}
+						}
+					});
+				}
+			}
+		}
 	}
-	*/
+	setDocument(document){
+		let newDocument = {};
+		this.props.documentFormData.fields.forEach((f) => {
+			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
+			let doc = document[fid];
+			switch(f.type){
+				case 'char': case 'date': case 'textarea':
+					if(f.multiple != '1'){
+						newDocument[fid] = [doc];
+					} else {
+						newDocument[fid] = doc;
+					}
+					break;
+				case 'taxonomy':
+					newDocument[fid] = [];
+					for(let p in doc){
+						newDocument[fid].push(doc[p].name);
+					}
+					break;
+				case 'image': case 'file':
+					newDocument[fid] = [];
+					for(let p in doc){
+						newDocument[fid].push(doc[p]);
+					}
+					break;
+			}
+		});
+		this.setState(newDocument);
+		console.log(newDocument);
+	}
 	render(){
+		return null;
 		if(this.state == null) return null;
 
 		let hiddenFields = [];

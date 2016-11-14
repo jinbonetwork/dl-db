@@ -7,11 +7,10 @@ import func from '../functions';
 
 class FieldsInHeader extends Component {
 	images(){
-		let paths = [];
+		let paths;
 		if(this.props.field.multiple == '1'){
-			this.props.document['f'+this.props.field.fid].forEach((img) => {
-				paths.push('/files'+img.filelpath);
-			});
+
+			paths = this.props.document['f'+this.props.field.fid].map((img) => ('/files'+img.fileuri));
 		} else {
 			paths.push('/files'+this.props.document['f'+this.props.field.fid].filepath);
 		}
