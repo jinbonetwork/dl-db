@@ -88,7 +88,9 @@ class Files extends \DLDB\Objects {
 
 	public static function insertFile($did,$file) {
 		$filepath = substr($file,strlen(DLDB_DATA_PATH));
-		$filename = basename($file);
+		$_filename = explode( "/", $file );
+//		$filename = basename($file);
+		$filename = $_filename[(@count($_filename)-1)];
 		$file_size = @filesize($file);
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$mime = finfo_file($finfo, $file);

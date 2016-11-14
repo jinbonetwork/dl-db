@@ -6,6 +6,7 @@
 
 @error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors','1');
+setlocale( LC_ALL, "ko_KR.UTF-8" );
 
 if(!defined('__DLDB__')) exit();
 
