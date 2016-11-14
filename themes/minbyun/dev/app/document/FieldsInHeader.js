@@ -7,40 +7,25 @@ import func from '../functions';
 
 class FieldsInHeader extends Component {
 	images(){
-		let paths;
-		if(this.props.field.multiple == '1'){
-
-			paths = this.props.document['f'+this.props.field.fid].map((img) => ('/files'+img.fileuri));
-		} else {
-			paths.push('/files'+this.props.document['f'+this.props.field.fid].filepath);
-		}
+		let paths = this.props.value.map((img) => (img.fileuri));
+		if(paths.length == 0) return null;
 		return <ImageWrap paths={paths} />
 	}
 	date(){
-		let date;
-		if(this.props.field.multiple == '1'){
-			date = this.props.document['f'+this.props.field.fid].map((d) => func.displayDate(d));
-		} else {
-			date = [func.displayDate(this.props.document['f'+this.props.field.fid])];
-		}
+		let date = this.props.value.map((d) => func.displayDate(d));
 		return (
 			<Row>
-				<Column className="table__label">{this.props.field.subject}</Column>
+				<Column className="table__label">{this.props.subject}</Column>
 				<Column>{date.join(', ')}</Column>
 			</Row>
 		);
 	}
 	files(){
-		let files;
-		if(this.props.field.multiple == '1'){
-			files = this.props.document['f'+this.props.field.fid].map((file) => ({name: file.filename, path: file.filepath}));
-		} else {
-			files = [{name: this.props.document['f'+filed.fid].filename, path: this.props.document['f'+filed.fid].filepath}];
-		}
-		let fileList = files.map((file, i) => (
+		let fileList = this.props.value.map((file, i) => (
 			<li key={i}>
 				<span>{(i+1)+'.'}</span>
-				<a href={'/files'+file.path} target="_blank">{file.name}</a>
+				{file.link && <a href={file.fileuri} target="_blank">{file.filename}</a>}
+				{!file.link && <span>{file.filename}</span>}
 			</li>
 		));
 		return (
@@ -51,7 +36,7 @@ class FieldsInHeader extends Component {
 		);
 	}
 	render(){
-		switch(this.props.field.type){
+		switch(this.props.type){
 			case 'image': return this.images();
 			case 'date': return this.date();
 			case 'file': return this.files();
@@ -60,8 +45,9 @@ class FieldsInHeader extends Component {
 	}
 }
 FieldsInHeader.propTypes = {
-	field: PropTypes.object.isRequired,
-	document: PropTypes.object.isRequired
+	type: PropTypes.string.isRequired,
+	value: PropTypes.array.isRequired,
+	subject: PropTypes.string.isRequired
 };
 
 export default FieldsInHeader;

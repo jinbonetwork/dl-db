@@ -1,12 +1,11 @@
 let functions = {
 	isEmpty(value){
 		if(!value) return true;
-		if(typeof value === 'object'){
-			for(let k in value){
-				if(!value[k]) return true;
-			}
+		if(value.length == 0) return true;
+		for(var p in value) {
+			if(value.hasOwnProperty(p) && value[p]) return false;
 		}
-		return false;
+		return true;
 	},
 	isEmailValid(email){
 		email = email.trim();

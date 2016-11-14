@@ -98,10 +98,8 @@ class Document extends Component {
 			}
 		});
 		this.setState(newDocument);
-		console.log(newDocument);
 	}
 	render(){
-		return null;
 		if(this.state == null) return null;
 
 		let hiddenFields = [];
@@ -114,18 +112,14 @@ class Document extends Component {
 		let fieldsInHeader = {image: null, file: null, date: null};
 		let fieldsInContents = [];
 		this.props.documentFormData.fields.forEach((field) => {
-			if(hiddenFields.indexOf(field.fid) < 0){
-				if(field.type == 'image' || field.type == 'file' || field.type == 'date'){
-					fieldsInHeader[field.type] = <FieldsInHeader field={field} document={this.state} />
-				}
-				else if(field.fid != 'subject' && field.parent == '0'){
-					fieldsInContents[field.idx] = (
-						<FieldsInContents key={field.fid} field={field}
-							formData={this.props.documentFormData}
-							document={this.state}
-						/>
-					);
-				}
+			let fid = (field.fid > 0 ? 'f'+field.fid : field.fid);
+			if(field.type == 'image' || field.type == 'file' || field.type == 'date'){
+				fieldsInHeader[field.type] = <FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} />
+			}
+			else if(field.fid != 'subject' && field.parent == '0'){
+				fieldsInContents[field.idx] = (
+					<FieldsInContents key={field.fid} field={field} formData={this.props.documentFormData} document={this.state} />
+				);
 			}
 		});
 		return (
