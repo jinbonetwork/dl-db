@@ -10,7 +10,7 @@ import DocumentField from './DocumentField';
 import Table from '../table/Table';
 import Row from '../table/Row';
 import Column from '../table/Column';
-import ErrorMessage from './ErrorMessage';
+import ErrorMessage from '../ErrorMessage';
 import Processing from './Processing';
 import func from '../functions';
 

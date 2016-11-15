@@ -6,6 +6,7 @@ import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
 import EditDocument from './EditDocument';
+import LinkByRole from './LinkByRole';
 import Table from './table/Table';
 import Row from './table/Row';
 import Column from './table/Column';
@@ -121,6 +122,7 @@ class Document extends Component {
 	}
 	render(){
 		if(this.state == null) return null;
+		let userRole = (this.props.userData ? this.props.userData.role : null);
 
 		let fieldsInHeader = {image: null, file: null, date: null};
 		let fieldsInContents = [];
@@ -128,7 +130,7 @@ class Document extends Component {
 			let fid = (field.fid > 0 ? 'f'+field.fid : field.fid);
 			if((field.type == 'group' || this.state[fid].length > 0) && field.parent == '0' && field.fid != 'subject'){
 				if(field.type == 'image' || field.type == 'file' || field.type == 'date'){
-					fieldsInHeader[field.type] = <FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} />
+					fieldsInHeader[field.type] = <FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} userRole={this.props.userData.role} />
 				}
 				else {
 					fieldsInContents[field.idx] = (
@@ -149,7 +151,7 @@ class Document extends Component {
 							<h1>{this.state.subject}</h1>
 							<div className="document__buttons">
 								<button type="button"><i className="pe-7f-bookmarks pe-va"></i>{' '}북마크</button>
-								<Link to={'/document/'+this.state.id+'/edit'}>수정하기</Link>
+								<LinkByRole to={'/document/'+this.state.id+'/edit'} role={[1, 3]} userRole={userRole}>수정하기</LinkByRole>
 							</div>
 							<Table>
 								{fieldsInHeader.date}

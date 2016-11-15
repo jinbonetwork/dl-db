@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import Overlay from '../Overlay';
+import Overlay from './Overlay';
 
 class ErrorMessage extends Component {
 	render(){
