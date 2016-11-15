@@ -23,15 +23,15 @@ class FieldsInHeader extends Component {
 	files(){
 		let fileList = this.props.value.map((file, i) => (
 			<li key={i}>
-				<span>{(i+1)+'.'}</span>
 				{file.link && <a href={file.fileuri} target="_blank">{file.filename}</a>}
 				{!file.link && <span>{file.filename}</span>}
+				{file.status != 'parsed' && <span>경고</span>}
 			</li>
 		));
 		return (
 			<Row>
 				<Column className="table__label"><i className="pe-7s-download pe-va"></i> {this.props.subject}</Column>
-				<Column><ul>{fileList}</ul></Column>
+				<Column><ol>{fileList}</ol></Column>
 			</Row>
 		);
 	}

@@ -2,9 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 class Overlay extends Component {
 	handleClick(event){
-		if(this.props.handleClick){
-			this.props.handleClick.bind(this);
-		}
+		if(this.props.handleClick) this.props.handleClick();
 	}
 	render(){
 		return (

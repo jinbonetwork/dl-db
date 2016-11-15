@@ -56,7 +56,7 @@ class DocumentFormContainer extends Component {
 						break;
 				}
 			} else {
-				newDocument[fid] = this.state[fid];
+				if(f.type != 'group') newDocument[fid] = this.state[fid];
 			}
 		});
 		newDocument = update(document, {$merge: newDocument});

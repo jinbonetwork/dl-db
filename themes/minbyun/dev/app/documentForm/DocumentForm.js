@@ -83,11 +83,10 @@ class DocumentForm extends Component {
 				document[fid] = this.props.document[fid];
 			}
 		});
-		document = update(this.props.document, {$merge: document});
+		document = update(this.props.document, {$merge: document}); console.log(document);
 		formData.append('document', JSON.stringify(document));
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode='+this.props.formAttr.mode, formData)
-		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
@@ -139,7 +139,9 @@ class Document extends Component {
 		});
 		return (
 			<div className="document">
-				<div className="document--back"><i className="pe-7f-back pe-va"></i> <span>이전 페이지로</span></div>
+				<div className="document--back" onClick={this.props.router.goBack.bind(this)}>
+					<i className="pe-7f-back pe-va"></i> <span>이전 페이지로</span>
+				</div>
 				<div className="document__wrap">
 					<div className="document__header">
 						{fieldsInHeader.image}
@@ -168,7 +170,10 @@ Document.propTypes = {
 	documentFormData: PropTypes.object,
 	documentFormOptions: PropTypes.object,
 	apiUrl: PropTypes.string,
-	openedDocuments: PropTypes.object
+	openedDocuments: PropTypes.object,
+	router: PropTypes.shape({
+		goBack: PropTypes.func.isRequired
+	}).isRequired
 };
 
-export default Document;
+export default withRouter(Document);

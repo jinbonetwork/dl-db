@@ -98,8 +98,6 @@ class DigitalLibraryContainer extends Component {
 				return {year: '', month: ''};
 			case 'image': case 'file':
 				return {filename: ''};
-			case 'group':
-				return 'group';
 			default:
 				return '';
 		}
@@ -109,7 +107,7 @@ class DigitalLibraryContainer extends Component {
 		formData.fields.forEach((field) => {
 			let value = this.defaultValue(field, formData);
 			if(field.multiple == '1') value = [value];
-			if(field.fid > 0) customFields['f'+field.fid] = value;
+			if(field.type != 'group' && field.fid > 0) customFields['f'+field.fid] = value;
 		});
 		this.setState({documentForm: update(
 			emptyDocument, {$merge: customFields}
