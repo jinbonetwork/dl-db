@@ -104,10 +104,10 @@ class FieldsQuery extends \DLDB\Objects {
 					$que .= ", `f".$key."` = ?";
 					switch($field['type']) {
 						case 'int':
-							$array1 .= ",d";
+							$array1 .= "d";
 							break;
 						default:
-							$array1 .= ",s";
+							$array1 .= "s";
 							break;
 					}
 					$array2 .= ", ".($args['f'.$key] ? '$'."args[f".$key."]" : "''");
@@ -116,8 +116,8 @@ class FieldsQuery extends \DLDB\Objects {
 						case 'taxonomy':
 							$cid = $field['cid'];
 							if( is_array($old['f'.$key]) && count($old['f'.$key]) ) {
-								foreach( $old['f'.$key] as $terms ) {
-									$old_terms[$field['cid']][$terms['tid']] = $terms;
+								foreach( $old['f'.$key] as $_t => $terms ) {
+									$old_terms[$field['cid']][$_t] = $terms;
 								}
 							}
 							if($v && !is_array($v)) {
@@ -164,9 +164,6 @@ class FieldsQuery extends \DLDB\Objects {
 										'mimetype' => $file['mimetype']
 									);
 									$files[] = $file;
-									if($file['mimetype'] == 'application/pdf') {
-										$attach_exists = true;
-									}
 								}
 							}
 							break;
@@ -193,7 +190,7 @@ class FieldsQuery extends \DLDB\Objects {
 								if( is_array($taxonomies) ) {
 									foreach( $taxonomies as $tid => $term ) {
 										$que = "INSERT INTO {taxonomy_term_relative} (`tid`, `tables`, `did`) VALUES (?,?,?)";
-										if( $dbm->execute( $que, array("dsd",$id,$table,$tid) ) < 1 ) {
+										if( $dbm->execute( $que, array("dsd",$tid,$table,$id) ) < 1 ) {
 											$this->setErrorMsg( $que." 가 DB에 반영되지 않았습니다." );
 											return -1;
 										}
