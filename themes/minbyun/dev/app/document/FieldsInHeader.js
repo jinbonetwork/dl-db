@@ -25,7 +25,7 @@ class FieldsInHeader extends Component {
 			<li key={i}>
 				{file.link && <a href={file.fileuri} target="_blank">{file.filename}</a>}
 				{!file.link && <span>{file.filename}</span>}
-				{file.status != 'parsed' && <span>경고</span>}
+				{file.status != 'parsed' && <i className="docuement__attention pe-7f-attention pe-va"></i>}
 			</li>
 		));
 		return (
