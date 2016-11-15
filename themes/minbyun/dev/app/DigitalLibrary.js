@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
+import LinkByRole from './LinkByRole';
 
 const childPropList = {
 	'/user': {
@@ -52,7 +53,8 @@ class DigitalLibrary extends Component {
 					</div>
 					<div className="digital-library__menu">
 						<Link to="/user">내정보</Link>
-						<Link to="/document/new">자료 입력하기</Link>
+						{/*}<Link to="/document/new">자료 입력하기</Link>*/}
+						<LinkByRole to="/document/new" role={[1, 3, 5]} userData={this.props.userData}>자료 입력하기</LinkByRole>
 					</div>
 				</div>
 				<div className="digital-library__content">
