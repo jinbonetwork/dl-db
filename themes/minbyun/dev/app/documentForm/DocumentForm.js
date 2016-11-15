@@ -16,35 +16,13 @@ import func from '../functions';
 
 class DocumentForm extends Component {
 	componentWillMount(){
-		let hiddenFields = [];
-		for(let fid in this.props.info.formOptions.actionShowInfo){
-			let info = this.props.info.formOptions.actionShowInfo[fid];
-			let value =this.props.document['f'+fid];
-			if(value != info.term) hiddenFields.push(info.field);
-		}
 		this.setState({
-			hiddenFields: hiddenFields,
 			errorMessage: undefined,
 			isProcessing: false
 		});
 	}
-	addHiddenField(fid){
-		if(this.state.hiddenFields.indexOf(fid) < 0){
-			this.setState(update(this.state, {
-				hiddenFields: {$push: [fid]}
-			}));
-		}
-	}
-	removeHiddenField(fid){
-		let index = this.state.hiddenFields.indexOf(fid);
-		if(index >= 0){
-			this.setState(update(this.state, {
-				hiddenFields: {$splice: [[index, 1]]}
-			}));
-		}
-	}
 	isHiddenField(fid){
-		if(this.state.hiddenFields.indexOf(fid) >= 0) return true;
+		if(this.props.info.hiddenFields.indexOf(fid) >= 0) return true;
 		else return false;
 	}
 	validationCheck(){
@@ -79,7 +57,6 @@ class DocumentForm extends Component {
 		}
 		this.setState({isProcessing: true});
 
-
 		let document = {};
 		let formData = new FormData();
 		this.props.info.formData.fields.forEach((f) => {
@@ -90,6 +67,7 @@ class DocumentForm extends Component {
 						if(file.name){
 							formData.append(fid+'[]', file);
 						} else if(file.filename){
+							if(!document[fid]) document[fid] = [];
 							document[fid][index] = file;
 						}
 					});
@@ -105,22 +83,21 @@ class DocumentForm extends Component {
 				document[fid] = this.props.document[fid];
 			}
 		});
+		document = update(this.props.document, {$merge: document});
 		formData.append('document', JSON.stringify(document));
 
-		axios.post(this.props.info.apiUrl+'/document/save?mode=add', formData)
+		axios.post(this.props.info.apiUrl+'/document/save?mode='+this.props.formAttr.mode, formData)
+		//axios.post(this.props.info.apiUrl+'/__test_upload', formData)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){
-					return response.data.did;
+					this.props.router.push('/document/'+response.data.did);
 				} else {
 					console.error(response.data);
 				}
 			} else {
 				console.error('Server response was not OK');
 			}
-		})
-		.then((did) => {
-			this.props.router.push('/document/'+did);
 		});
 	}
 	removeErrorMessage(){
@@ -135,8 +112,6 @@ class DocumentForm extends Component {
 						key={field.fid} field={field} value={this.props.callBacks.fieldValue(field.fid)}
 						info={this.props.info} callBacks={this.props.callBacks}
 						formCallBacks={{
-							addHiddenField: this.addHiddenField.bind(this),
-							removeHiddenField: this.removeHiddenField.bind(this),
 							isHiddenField: this.isHiddenField.bind(this)
 						}}
 					/>
@@ -155,7 +130,7 @@ class DocumentForm extends Component {
 		);
 		return (
 			<div className="document-form">
-				<h1>{this.props.label.header}</h1>
+				<h1>{this.props.formAttr.header}</h1>
 				<Table>
 					<Row>
 						<Column className="table__label"></Column>
@@ -173,7 +148,7 @@ class DocumentForm extends Component {
 						<Column className="table__label"></Column>
 						<Column>
 							<button type="button" className="document-form--submit"
-								onClick={this.handleClickToSubmit.bind(this)}>{this.props.label.submit}
+								onClick={this.handleClickToSubmit.bind(this)}>{this.props.formAttr.submit}
 							</button>
 						</Column>
 					</Row>
@@ -185,7 +160,7 @@ class DocumentForm extends Component {
 	}
 }
 DocumentForm.propTypes = {
-	label: PropTypes.object.isRequired,
+	formAttr: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	info: PropTypes.object.isRequired,
 	callBacks: PropTypes.object.isRequired,

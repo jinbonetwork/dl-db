@@ -12,17 +12,6 @@ class DocumentInputForm extends Component {
 	handleChange(event){
 		let value = (this.props.field.form != 'file' ? event.target.value : event.target.files[0]);
 		this.props.callBacks.updateSingleField(this.props.field, this.props.index, value);
-
-		if(this.props.field.type == 'taxonomy'){
-			let actionShowInfo = this.props.info.formOptions.actionShowInfo[this.props.field.fid];
-			if(actionShowInfo){
-				if(actionShowInfo.term == value){
-					this.props.formCallBacks.removeHiddenField(actionShowInfo.field);
-				} else {
-					this.props.formCallBacks.addHiddenField(actionShowInfo.field);
-				}
-			}
-		}
 	}
 	render(){
 		switch(this.props.field.form){
@@ -55,16 +44,6 @@ class DocumentInputForm extends Component {
 						{options}
 					</select>
 				);
-				/*
-				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {
-					options[term.idx] = <Option key={term.tid} value={term.tid}>{term.name}</Option>;
-				});
-				return (
-					<Select value={this.props.value} onChange={this.handleChange.bind(this)}>
-						{options}
-					</Select>
-				);
-				*/
 			case 'radio':
 				let radioButtons = [];
 				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {

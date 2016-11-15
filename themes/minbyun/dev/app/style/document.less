@@ -32,6 +32,19 @@
 	}
 	.document__buttons {
 		margin: 2em 0;
+		a, a:visited, a:link, a:hover, a:active {
+			color: #989cff;
+			text-decoration: none;
+		}
+		a {
+			display: inline-block;
+			line-height: 2em;
+			padding: 0 1em;
+			border: solid 1px #989cff;
+		}
+		a:last-child {
+			margin-left: 1em;
+		}
 		button {
 			line-height: 2em;
 			padding: 0 1em;
@@ -44,11 +57,7 @@
 			color: #ffffff;
 			background-color: #989cff
 		}
-		button:last-child {
-			margin-left: 1em;
-			color: #989cff;
-			background-color: transparent;
-		}
+
 	}
 	.document__header .table {
 		.table__row + .table__row {

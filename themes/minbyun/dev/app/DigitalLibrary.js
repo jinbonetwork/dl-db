@@ -15,6 +15,10 @@ const childPropList = {
 		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'apiUrl'],
 		elective: ['openedDocuments']
 	},
+	'/document/:did/edit': {
+		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'apiUrl'],
+		elective: ['openedDocuments']
+	},
 	'/error': {},
 	'/test': {}
 }
@@ -49,7 +53,6 @@ class DigitalLibrary extends Component {
 					<div className="digital-library__menu">
 						<Link to="/user">내정보</Link>
 						<Link to="/document/new">자료 입력하기</Link>
-						<Link to="/document/7">테스트 문서</Link>
 					</div>
 				</div>
 				<div className="digital-library__content">

@@ -1,9 +1,11 @@
 import React, {Component, PropTypes} from 'react';
+import {Link} from 'react-router';
 import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
+import EditDocument from './EditDocument';
 import Table from './table/Table';
 import Row from './table/Row';
 import Column from './table/Column';
@@ -21,11 +23,9 @@ const _relation = { //어떤 type의 필드에 대한 term의 작용
 		value: true
 	}
 }
-
-const _show = {
+const _show = { // term -> field
 	'1': '2' // 판결문 -> 재판정보
 }
-
 const _removedFields = ['f11'];
 
 class Document extends Component {
@@ -46,7 +46,7 @@ class Document extends Component {
 				console.error('Server response was not OK');
 			}
 		})
-		.then((document) => {
+		.then((document) => { console.log(document);
 			this.applyRelation(document);
 			this.setDocument(document);
 		});
@@ -88,6 +88,7 @@ class Document extends Component {
 	}
 	setDocument(document){
 		let newDocument = {};
+		newDocument.id = document.id;
 		this.props.documentFormData.fields.forEach((f) => {
 			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
 			let doc = document[fid];
@@ -117,10 +118,9 @@ class Document extends Component {
 			}
 		});
 		this.setState(newDocument);
-
 	}
 	render(){
-		if(this.state == null) return null; console.log(this.state);
+		if(this.state == null) return null;
 
 		let fieldsInHeader = {image: null, file: null, date: null};
 		let fieldsInContents = [];
@@ -147,7 +147,7 @@ class Document extends Component {
 							<h1>{this.state.subject}</h1>
 							<div className="document__buttons">
 								<button type="button"><i className="pe-7f-bookmarks pe-va"></i>{' '}북마크</button>
-								<button type="button">수정하기</button>
+								<Link to={'/document/'+this.state.id+'/edit'}>수정하기</Link>
 							</div>
 							<Table>
 								{fieldsInHeader.date}
