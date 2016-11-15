@@ -68,7 +68,7 @@ class DocumentForm extends Component {
 							formData.append(fid+'[]', file);
 						} else if(file.filename){
 							if(!document[fid]) document[fid] = [];
-							document[fid][index] = file;
+							document[fid][index] = file.fid;
 						}
 					});
 				} else {
@@ -76,7 +76,7 @@ class DocumentForm extends Component {
 					if(file.name){
 						formData.append(fid, file);
 					} else if(file.filename){
-						document[fid] = file;
+						document[fid] = file.fid;
 					}
 				}
 			} else if(f.type != 'group'){
