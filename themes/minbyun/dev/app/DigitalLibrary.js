@@ -22,6 +22,10 @@ const _childProps = {
 		role: [1, 3, 7],
 		required: ['userData', 'documentFormData', 'documentForm', 'documentFormOptions', 'apiUrl'],
 		elective: ['openedDocuments']
+	},
+	'/search': {
+		role: [1, 3, 7, 15],
+		required: ['userData', 'apiUrl'],
 	}
 }
 
@@ -61,6 +65,7 @@ class DigitalLibrary extends Component {
 					</div>
 					<div className="digital-library__menu">
 						<LinkByRole to="/user" role={[1, 3, 7]} userRole={userRole}>내정보</LinkByRole>
+						<LinkByRole to="/search" role={[1, 3, 7, 15]} userRole={userRole}>자료</LinkByRole>
 						<LinkByRole to="/document/new" role={[1, 3]} userRole={userRole}>자료 입력</LinkByRole>
 					</div>
 				</div>

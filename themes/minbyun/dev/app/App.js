@@ -9,6 +9,7 @@ import User from './User';
 import NewDocument from './NewDocument';
 import EditDocument from './EditDocument';
 import Document from './Document';
+import SearchResult from './SearchResult';
 
 render((
 	<Router history={browserHistory}>
@@ -18,6 +19,7 @@ render((
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />
 				<Route path="/document/:did/edit" component={EditDocument} />
+				<Route path="/search" component={SearchResult} />
 			</Route>
 		</Route>
 	</Router>

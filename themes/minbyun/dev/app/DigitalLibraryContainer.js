@@ -7,6 +7,7 @@ import './style/style.less';
 import './style/digitalLibrary.less';
 import './style/documentForm.less';
 import './style/document.less';
+import './style/searchResult.less';
 
 const apiUrl = '/api';
 const emptyDocument = {
