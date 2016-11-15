@@ -8,7 +8,7 @@ class fields extends \DLDB\Controller {
 		$this->params['output'] = 'json';
 		$context = \DLDB\Model\Context::instance();
 
-		$fields = \DLDB\Fields::getFields();
+		$fields = \DLDB\Fields::getFields('documents');
 		$this->fields = array();
 		$cids = array();
 		foreach($fields as $fid => $field) {

@@ -8,19 +8,15 @@ class Fields extends \DLDB\Objects  {
 		return self::_instance(__CLASS__);
 	}
 
-	public static function getFields($active=1) {
+	public static function getFields($table,$active=1) {
 		$context = \DLDB\Model\Context::instance();
-
-		if(!is_array($table)) {
-			if($table != 'all') $table = array($table);
-		}
 
 		$fields = array();
 
 		self::$fields = $context->getProperty('fields');
 		if(!self::$fields) {
 			$dbm = \DLDB\DBM::instance();
-			$que = "SELECT * FROM {fields} ".($active ? "WHERE active = '".$active."' " : "")."ORDER BY parent ASC, idx ASC";
+			$que = "SELECT * FROM {fields} ".($active ? "WHERE `tables` = '".$table."' AND active = '".$active."' " : "")."ORDER BY parent ASC, idx ASC";
 			while($row = $dbm->getFetchArray($que)) {
 				self::$fields[$row['fid']] = self::fetchFields($row);
 			}

@@ -45,6 +45,7 @@ CREATE TABLE `dldb_options` (
 DROP TABLE IF EXISTS `dldb_fields`;
 CREATE TABLE `dldb_fields` (
 	`fid`		int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`tables`	char(80) NOT NULL DEFAULT '',
 	`parent`	int(10) NOT NULL DEFAULT 0,
 	`idx`		smallint(5) NOT NULL DEFAULT 1,
 	`subject`	char(255),
@@ -57,7 +58,7 @@ CREATE TABLE `dldb_fields` (
 	`active`	char(1) DEFAULT '1',
 	`system`	char(1) DEFAULT '0',
 
-	KEY `IDX` (`parent`,`idx`)
+	KEY `IDX` (`tables`,`parent`,`idx`)
 
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -174,7 +175,7 @@ CREATE TABLE `dldb_members` (
 	`class`		char(20) NOT NULL DEFAULT '',
 	`email`		char(255),
 	`phone`		char(30),
-	`committee`	text,
+	`custom`	text,
 
 	KEY `UID` (`uid`),
 	KEY `NAME` (`name`),
