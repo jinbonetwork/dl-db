@@ -46,7 +46,7 @@ class Document extends Component {
 				console.error('Server response was not OK');
 			}
 		})
-		.then((document) => { console.log(document);
+		.then((document) => {
 			this.applyRelation(document);
 			this.setDocument(document);
 		});

@@ -58,32 +58,36 @@ class DocumentForm extends Component {
 		this.setState({isProcessing: true});
 
 		let document = {};
+		['id', 'uid', 'owner', 'created'].forEach((prop) => {
+			if(this.props.document[prop] !== undefined)
+			document[prop] = this.props.document[prop];
+		});
 		let formData = new FormData();
 		this.props.info.formData.fields.forEach((f) => {
 			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
 			if(f.form == 'file'){
 				if(f.multiple == '1'){
 					this.props.document[fid].forEach((file, index) => {
-						if(file.name){
-							formData.append(fid+'[]', file);
-						} else if(file.filename){
+						if(file.fid){
 							if(!document[fid]) document[fid] = [];
-							document[fid][index] = file.fid;
+							document[fid].push(file.fid);
+						}
+						else if(file.name) {
+							formData.append(fid+'[]', file);
 						}
 					});
 				} else {
 					let file = this.props.document[fid];
-					if(file.name){
-						formData.append(fid, file);
-					} else if(file.filename){
+					if(file.fid){
 						document[fid] = file.fid;
+					} else if(file.name){
+						formData.append(fid, file);
 					}
 				}
 			} else if(f.type != 'group'){
 				document[fid] = this.props.document[fid];
 			}
 		});
-		document = update(this.props.document, {$merge: document}); console.log(document);
 		formData.append('document', JSON.stringify(document));
 
 		axios.post(this.props.info.apiUrl+'/document/save?mode='+this.props.formAttr.mode, formData)
