@@ -28,9 +28,9 @@ class ResultItem extends Component {
 						{this.props.item.title}
 					</LinkByRole>
 				</div>
-				<div>
+				<div className="result-item__content">
 					<ul className="result-item__side">{side}</ul>
-					<p className="result-item__content">{this.props.item.content}</p>
+					<p>{this.props.item.content}</p>
 				</div>
 			</div>
 		);

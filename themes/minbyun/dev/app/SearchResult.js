@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {Link} from 'react-router';
 import axios from 'axios';
 import ResultItem from './searchResult/ResultItem';
 import func from './functions';
@@ -18,14 +19,25 @@ const _tidOfdocTypeCase = 1;
 class SearchResult extends Component {
 	constructor(){
 		super();
-		this.state = {items: []};
+		this.state = {
+			items: [],
+			page: 0,
+			numOfPages: 0
+		};
 	}
 	componentDidMount(){
-		axios.get(this.props.apiUrl+'/document')
+		this.fetchData(this.props.location.query.page);
+	}
+	componentWillReceiveProps(nextProps){
+		this.fetchData(nextProps.location.query.page);
+	}
+	fetchData(page){
+		page = (page ? page : 1);
+		axios.get(this.props.apiUrl+'/document?page='+page)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){
-					this.setDocumets(response.data.documents);
+					this.setDocuments(response.data);
 				} else {
 					console.error(response.data.message);
 				}
@@ -34,18 +46,26 @@ class SearchResult extends Component {
 			}
 		});
 	}
-	setDocumets(documents){
-		this.setState({items: documents.map((doc) => {
+	setDocuments(data){
+		let items = data.documents.map((doc) => {
 			let item = {}, isDocTypeCase = false, prop;
 			for(let p in _propMap){
 				prop = _propMap[p];
 				if(!func.isEmpty(doc[p])){
 					switch(prop){
-						case 'doctype': case 'commitee':
+						case 'doctype':
 							for(let tid in doc[p]){
 								item[prop] = doc[p][tid].name;
 								if(tid == _tidOfdocTypeCase) isDocTypeCase = true;
 							}
+							break;
+						case 'commitee':
+							item[prop] = []
+							for(let tid in doc[p]){
+								item[prop].push(doc[p][tid].name);
+								if(tid == _tidOfdocTypeCase) isDocTypeCase = true;
+							}
+							item[prop] = item[prop].join(', ');
 							break;
 						case 'date':
 							item[prop] = func.displayDate(doc[p]);
@@ -57,10 +77,37 @@ class SearchResult extends Component {
 			}
 			if(item.number && isDocTypeCase === false) delete item.number;
 			return item;
-		})});
+		});
+		this.setState({
+			items: items,
+			page: data.result.page,
+			numOfPages: data.result.total_page
+		});
+	}
+	pageOfPagination(page){
+		if(page != 0){
+			if(page != this.state.page){
+				return <Link className="search-result__page" key={page} to={'/search?page='+page}>{page}</Link>
+			} else {
+				return <span className="search-result__page" key={page}>{page}</span>
+			}
+		} else {
+			return <span className="search-result__page search-result_ellipsis" key={page}>...</span>
+		}
+	}
+	pagination(){
+		let maxPage = 10;
+		let pagination = [];
+		for(let i = 1; i <= this.state.numOfPages && i < maxPage; i++){
+			pagination.push(this.pageOfPagination(i));
+		}
+		if(this.state.numOfPages > maxPage){
+			pagination.push(this.pageOfPagination(0));
+			pagination.push(this.pageOfPagination(this.state.numOfPages));
+		}
+		return pagination;
 	}
 	render(){
-		console.log(this.props.location.query);
 		let userRole = (this.props.userData ? this.props.userData.role : null);
 		let items = this.state.items.map((item, index) => (
 			<div key={index} className="search-result__item">
@@ -70,7 +117,8 @@ class SearchResult extends Component {
 		));
 		return (
 			<div className="search-result">
-				{items}
+				<div>{items}</div>
+				<div className="search-result__pagination">{this.pagination()}</div>
 			</div>
 		);
 	}

@@ -19,7 +19,7 @@ render((
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />
 				<Route path="/document/:did/edit" component={EditDocument} />
-				<Route path="/search" component={SearchResult} />
+				<Route path="/search**" component={SearchResult} />
 			</Route>
 		</Route>
 	</Router>
