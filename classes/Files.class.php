@@ -33,7 +33,7 @@ class Files extends \DLDB\Objects {
 	}
 
 	public static function getFileUrl($file) {
-		$file_uri = DLDB_DATA_URI."/".$file['filepath'];
+		$file_uri = DLDB_DATA_URI.$file['filepath'];
 		return $file_uri;
 	}
 

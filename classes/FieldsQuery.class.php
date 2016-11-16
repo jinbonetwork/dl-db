@@ -149,7 +149,11 @@ class FieldsQuery extends \DLDB\Objects {
 						case "file":
 						case "image":
 							if( $old['f'.$key] && @count($old['f'.$key]) > 0 ) {
-								$old_files = $old['f'.$key];
+								if( is_array($old['f'.$key]) ) {
+									foreach( $old['f'.$key] as $_fd => $_o_file ) {
+										$old_files[$_fd] = $_o_file;
+									}
+								}
 							}
 							if($v && !is_array($v)) {
 								$v = array($v);
@@ -164,6 +168,7 @@ class FieldsQuery extends \DLDB\Objects {
 										'mimetype' => $file['mimetype']
 									);
 									$files[] = $file;
+									$n_files[$file['fid']] = $file;
 								}
 							}
 							break;
@@ -175,7 +180,16 @@ class FieldsQuery extends \DLDB\Objects {
 			}
 		}
 
-		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'taxonomy_map' => $taxonomy_map);
+		if( is_array($old_files) ) {
+			$del_files = array();
+			foreach( $old_files as $_fd => $_file ) {
+				if( !$n_files[$_fd] ) {
+					$del_files[] = $_file;
+				}
+			}
+		}
+
+		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'del_files' => $del_files, 'taxonomy_map' => $taxonomy_map);
 	}
 
 	public function reBuildTaxonomy($table, $id,$taxonomy_map) {

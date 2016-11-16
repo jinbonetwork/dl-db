@@ -161,9 +161,15 @@ class Document extends \DLDB\Objects {
 		$dbm->execute($que,$q_args);
 
 		$memo = '';
-		if(is_array($files)) {
+		if( is_array($files) ) {
 			foreach($files as $file) {
 				$memo .= \DLDB\Parser::parseFile($file);
+			}
+		}
+		if( is_array($del_files) ) {
+			foreach($del_files as $d_file) {
+				\DLDB\Files::deleteFile($d_file['fid']);
+				\DLDB\Files::unlinkFile(DLDB_DATA_PATH.$d_file['filepath']);
 			}
 		}
 		if(trim($memo)) {
