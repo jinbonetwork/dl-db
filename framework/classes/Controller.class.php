@@ -46,7 +46,8 @@ abstract class Controller {
 		if($uri->uri['appFile'] != 'index') $this->breadcrumbs .= "/".$uri->uri['appFile'];
 		$this->MyAppClass();
 
-		if(isset($this->owner) && !$this->owner) $this->owner = Acl::imMaster();
+		$acl = \DLDB\Acl::instance();
+		if(isset($this->owner) && !$this->owner) $this->owner = $acl->imMaster();
 
 		if(!$this->user) {
 			if($_SESSION['user']) {

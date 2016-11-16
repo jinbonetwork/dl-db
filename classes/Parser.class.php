@@ -6,7 +6,7 @@ class Parser extends \DLDB\Objects {
 	public static function insert($did,$memo) {
 		$context = \DLDB\Model\Context::instance();
 
-		switch($context->getProperty('service.serach_type')) {
+		switch($context->getProperty('service.search_type')) {
 			case 'db':
 				$dbm = \DLDB\DBM::instance();
 				$que = "UPDATE {documents} SET `memo` = ? WHERE id = ?";

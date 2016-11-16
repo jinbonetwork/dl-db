@@ -67,6 +67,19 @@ class Document extends \DLDB\Objects {
 		return $document;
 	}
 
+	public static function getTexts($id) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT memo,uid FROM {documents} WHERE `id` = ".$id;
+		$row = $dbm->getFetchArray($que);
+
+		if($row) {
+			$row['memo'] = trim(stripslashes($row['memo']));
+		}
+
+		return $row;
+	}
+
 	public static function totalCnt($uid=0) {
 		$dbm = \DLDB\DBM::instance();
 
