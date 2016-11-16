@@ -22,9 +22,6 @@ input[type=text], select {
 select {
 	height: 48px;
 }
-textarea {
-	line-height: 1.2em;
-}
 ul {
 	margin: 0;
 	padding: 0;
@@ -39,6 +36,18 @@ p {
 }
 p + p {
 	margin-top: 1em;
+}
+.textarea {
+	textarea {
+		line-height: 1.5em;
+	}
+	.textarea__footer {
+		position: relative;
+	}
+	.textarea__num-of-words {
+		position: absolute;
+		top: 0; right: 0;
+	}
 }
 .table {
 	.table__row {

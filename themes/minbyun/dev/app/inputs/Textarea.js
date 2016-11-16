@@ -10,7 +10,7 @@ class Textarea extends Component {
 				<textarea value={this.props.value} onChange={this.handleChange.bind(this)} />
 				<div className="textarea__footer">
 					{(this.props.field.form > 0) && <span>* {this.props.field.form}자 내외로 작성해주세요.</span>}
-					<span>{this.props.value.length}자</span>
+					<span className="textarea__num-of-words">{this.props.value.length}자</span>
 				</div>
 			</div>
 		);
