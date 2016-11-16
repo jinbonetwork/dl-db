@@ -1,12 +1,35 @@
 import React, {Component, PropTypes} from 'react';
+import Table from './table/Table';
+import Row from './table/Row';
+import Column from './table/Column';
 
 class User extends Component {
 	render(){
 		return(
-			<div className="userinfo">
-				<p>uid: {this.props.userData.user.uid}</p>
-				<p>nick_name: {this.props.userData.user.nick_name}</p>
-				<p>role: {this.props.userData.role.join()}</p>
+			<div className="user">
+				<Table>
+					{
+						this.props.userData.user.user_name &&
+						<Row>
+							<Column>이름</Column>
+							<Column>{this.props.userData.user.user_name}</Column>
+						</Row>
+					}
+					{
+						this.props.userData.user.class &&
+						<Row>
+							<Column>기수</Column>
+							<Column>{this.props.userData.user.class}</Column>
+						</Row>
+					}
+					{
+						this.props.userData.user.email &&
+						<Row>
+							<Column>이메일</Column>
+							<Column>{this.props.userData.user.email}</Column>
+						</Row>
+					}
+				</Table>
 			</div>
 		);
 	}
