@@ -80,6 +80,13 @@ class Document extends \DLDB\Objects {
 		return $row;
 	}
 
+	public static function modifyText($id,$memo) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {documents} SET `memo` = ? WHERE `id` = ?";
+		$dbm->execute($que,array("sd",$memo,$id));
+	}
+
 	public static function totalCnt($uid=0) {
 		$dbm = \DLDB\DBM::instance();
 
