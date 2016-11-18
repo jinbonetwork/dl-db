@@ -18,6 +18,9 @@ class text extends \DLDB\Controller {
 		}
 		if($this->params['fid']) {
 			$this->file = \DLDB\Files::getFile( $this->params['fid'] );
+			if( $this->file['did'] != $this->params['id'] ) {
+				\DLDB\RespondJson::ResultPage( array( -2, '권한이 없습니다') );
+			}
 		}
 		if($this->params['mode'] == 'modify') {
 			if($this->params['fid']) {

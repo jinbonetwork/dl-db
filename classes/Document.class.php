@@ -187,9 +187,9 @@ class Document extends \DLDB\Objects {
 			}
 		}
 		if( is_array($del_files) ) {
-			foreach($del_files as $d_file) {
-				\DLDB\Files::deleteFile($d_file['fid']);
-				\DLDB\Files::unlinkFile(DLDB_DATA_PATH.$d_file['filepath']);
+			foreach($del_files as $d_fd => $d_file) {
+				\DLDB\Files::deleteFile($d_fd);
+				\DLDB\Files::unlinkFile(DLDB_DA_PATH.$d_file['filepath']);
 			}
 		}
 		if(trim($memo)) {
