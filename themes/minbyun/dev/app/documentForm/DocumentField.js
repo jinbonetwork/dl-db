@@ -1,8 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentInputForm from './DocumentInputForm';
-import Table from '../table/Table';
-import Row from '../table/Row';
-import Column from '../table/Column';
+import {Table, Row, Column} from '../Table';
 
 class DocumentField extends Component {
 	fieldFooter(){

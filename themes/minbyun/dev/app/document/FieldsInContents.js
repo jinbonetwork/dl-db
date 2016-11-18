@@ -1,7 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import Table from '../table/Table';
-import Row from '../table/Row';
-import Column from '../table/Column';
+import {Table, Row, Column} from '../Table';
 
 class FieldsInContents extends Component {
 	content(){

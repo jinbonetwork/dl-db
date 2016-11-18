@@ -1,8 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import ImageWrap from './ImageWrap';
-import Table from '../table/Table';
-import Row from '../table/Row';
-import Column from '../table/Column';
+import {Table, Row, Column} from '../Table';
 import func from '../functions';
 
 class FieldsInHeader extends Component {

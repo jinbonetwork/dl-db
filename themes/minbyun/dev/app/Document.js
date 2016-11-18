@@ -7,9 +7,7 @@ import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
 import EditDocument from './EditDocument';
 import LinkByRole from './LinkByRole';
-import Table from './table/Table';
-import Row from './table/Row';
-import Column from './table/Column';
+import {Table, Row, Column} from './Table';
 import func from './functions';
 
 const _relation = { //어떤 type의 필드에 대한 term의 작용

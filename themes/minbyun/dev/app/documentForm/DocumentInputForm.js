@@ -6,7 +6,7 @@ import DateForm from '../inputs/DateForm';
 import FileInput from '../inputs/FileInput';
 import Select from '../inputs/Select';
 import Option from '../inputs/Option';
-import Table from '../table/Table';
+import {Table} from '../Table';
 
 class DocumentInputForm extends Component {
 	handleChange(event){
