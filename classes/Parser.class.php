@@ -31,8 +31,8 @@ class Parser extends \DLDB\Objects {
 		}
 		if(trim($memo)) {
 			$dbm = \DLDB\DBM::instance();
-			$que = "UPDATE {files} SET `status` = ?, `textsize` = ? WHERE fid = ?";
-			$dbm->execute($que,array('sdd','parsed',strlen(trim($memo)),$file['fid']));
+			$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ? WHERE fid = ?";
+			$dbm->execute($que,array('sdsd','parsed', strlen(trim($memo)), trim($memo), $file['fid']) );
 		}
 		return trim($memo);
 	}
@@ -58,6 +58,13 @@ class Parser extends \DLDB\Objects {
 		$text = $docObj->convertToText();
 
 		return $text;
+	}
+
+	public static function updateParse($file_info,$text) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ? WHERE fid = ?";
+		$dbm->execute($que,array('sdsd','parsed', strlen(trim($text)), trim($text), $file_info['fid']) );
 	}
 }
 ?>

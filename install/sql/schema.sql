@@ -75,6 +75,7 @@ CREATE TABLE `dldb_files` (
 	`regdate`	int(10),
 	`status`	char(15) NOT NULL DEFAULT 'uploaded',
 	`textsize`	int(10) NOT NULL DEFAULT 0,
+	`text`		mediumtext,
 
 	KEY `UID`(`uid`),
 	KEY `DID`(`did`),
