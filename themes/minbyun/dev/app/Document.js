@@ -89,7 +89,9 @@ class Document extends Component {
 	}
 	setDocument(document){
 		let newDocument = {};
-		newDocument.id = document.id;
+		['id', 'uid', 'owner', 'created'].forEach((prop) => {
+			if(document[prop] !== undefined) newDocument[prop] = document[prop];
+		});
 		this.props.documentFormData.fields.forEach((f) => {
 			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
 			let doc = document[fid];
@@ -130,7 +132,9 @@ class Document extends Component {
 			let fid = (field.fid > 0 ? 'f'+field.fid : field.fid);
 			if((field.type == 'group' || this.state[fid].length > 0) && field.parent == '0' && field.fid != 'subject'){
 				if(field.type == 'image' || field.type == 'file' || field.type == 'date'){
-					fieldsInHeader[field.type] = <FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} userRole={this.props.userData.role} />
+					fieldsInHeader[field.type] = (
+						<FieldsInHeader type={field.type} value={this.state[fid]} subject={field.subject} userRole={this.props.userData.role} isOwner={this.state.owner == '1'} />
+					);
 				}
 				else {
 					fieldsInContents[field.idx] = (

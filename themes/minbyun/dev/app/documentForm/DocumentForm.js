@@ -59,8 +59,7 @@ class DocumentForm extends Component {
 
 		let document = {};
 		['id', 'uid', 'owner', 'created'].forEach((prop) => {
-			if(this.props.document[prop] !== undefined)
-			document[prop] = this.props.document[prop];
+			if(this.props.document[prop] !== undefined) document[prop] = this.props.document[prop];
 		});
 		let formData = new FormData();
 		this.props.info.formData.fields.forEach((f) => {

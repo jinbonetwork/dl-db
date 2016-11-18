@@ -23,11 +23,11 @@ class FieldsInHeader extends Component {
 	files(){
 		let canYouDownload = func.isCommon([1, 5], this.props.userRole);
 		let areYouAdmin = func.isCommon([1], this.props.userRole);
+		let canYouWrite = func.isCommon([1, 3], this.props.userRole);
 		let fileList = this.props.value.map((file, i) => (
 			<li key={i}>
 				{(file.link && canYouDownload) && <a href={file.fileuri} target="_blank">{file.filename}</a>}
-				{(file.link && !canYouDownload) && <span>{file.filename}</span>}
-				{!file.link && <span>{file.filename}</span>}
+				{((file.link && !canYouDownload) || !file.link) && <span>{file.filename}</span>}
 				{(file.status != 'parsed' && areYouAdmin) && <i className="docuement__attention pe-7f-attention pe-va"></i>}
 			</li>
 		));
@@ -51,7 +51,8 @@ FieldsInHeader.propTypes = {
 	type: PropTypes.string.isRequired,
 	value: PropTypes.array.isRequired,
 	subject: PropTypes.string.isRequired,
-	userRole: PropTypes.array.isRequired
+	userRole: PropTypes.array.isRequired,
+	isOwner: PropTypes.bool
 };
 
 export default FieldsInHeader;
