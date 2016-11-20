@@ -89,13 +89,11 @@ class Files extends \DLDB\Objects {
 	public static function insertFile($did,$file) {
 		$filepath = substr($file,strlen(DLDB_DATA_PATH));
 		$_filename = explode( "/", $file );
-//		$filename = basename($file);
 		$filename = $_filename[(@count($_filename)-1)];
 		$file_size = @filesize($file);
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$mime = finfo_file($finfo, $file);
 		finfo_close($finfo);
-//		$mime = mime_content_type($file);
 
 		if($file_size > 0) {
 			$dbm = \DLDB\DBM::instance();
@@ -112,7 +110,7 @@ class Files extends \DLDB\Objects {
 	public static function deleteFile($fid) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "DELETE FROM {files} WHERE did = ?";
+		$que = "DELETE FROM {files} WHERE fid = ?";
 		$dbm->execute($que,array("d",$fid));
 	}
 

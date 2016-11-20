@@ -168,7 +168,7 @@ class FieldsQuery extends \DLDB\Objects {
 										'mimetype' => $file['mimetype']
 									);
 									$files[] = $file;
-									$n_files[$file['fid']] = $file;
+									$n_files[$f] = $file;
 								}
 							}
 							break;
@@ -184,7 +184,7 @@ class FieldsQuery extends \DLDB\Objects {
 			$del_files = array();
 			foreach( $old_files as $_fd => $_file ) {
 				if( !$n_files[$_fd] ) {
-					$del_files[] = $_file;
+					$del_files[$_fd] = $_file;
 				}
 			}
 		}
