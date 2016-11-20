@@ -23,6 +23,15 @@
 	.document__header > .document__column {
 		margin-left: 18em;
 	}
+	.document__filetext {
+		margin-left: 0.5em;
+		padding: 0 0.2em;
+		background-color: transparent;
+		color: #989cff;
+	}
+	.document__filetext span {
+		font-size: 0.8em;
+	}
 	h1 {
 		margin: 0;
 		font-size: 2.5em;
@@ -138,5 +147,44 @@
 			border: solid 1px #989cff;
 			border-width: 0 0 1px 1px;
 		}
+	}
+}
+.file-text-editor {
+	.file-text-editor__innerwrap {
+		position: fixed;
+		top: 50%; left: 50%;
+		width: 100%; height: 100%;
+		max-width: 500px; max-height: 400px;
+		transform: translate(-50%, -50%);
+		padding: 1em;
+	}
+	.file-text-editor__textarea-wrap {
+		position: relative;
+		width: 100%; height: 100%;
+		padding-bottom: 3em;
+	}
+	textarea {
+		width: 100%; height: 100%;
+		padding: 0.5em;
+		border: solid 2px #989cff;
+	}
+	.file-text-editor__buttons {
+		position: absolute;
+		bottom: 0; right: 0;
+	}
+	button:first-child {
+		padding: 0.5em 1em;
+		background-color: #989cff;
+		color: #ffffff;
+		border: solid 1px #989cff;
+	}
+	button:last-child {
+		padding: 0.5em 1em;
+		background-color: #ffffff;
+		color: #989cff;
+		border: solid 1px #989cff;
+	}
+	button + button {
+		margin-left: 1em;
 	}
 }

@@ -5,6 +5,12 @@ import {_fieldAttrs} from '../docSchema';
 import {_displayDate, _isCommon} from '../functions';
 
 class FieldsInHeader extends Component {
+	handleClick(what, args, event){
+		if(what == 'fileText'){
+			let fileId = args;
+			this.props.callBacks.setFileTextEditor(fileId);
+		}
+	}
 	date(){
 		return (
 			<Row>
@@ -18,11 +24,16 @@ class FieldsInHeader extends Component {
 		let areYouAdmin = _isCommon([1], this.props.userRole);
 		let canYouWrite = _isCommon([1, 3], this.props.userRole);
 		let isItAnchor = (this.props.document['access'] == 33); // 33: 다운로드
+
 		let fileList = this.props.document[this.props.fname].map((file, i) => (
 			<li key={i}>
 				{(isItAnchor && canYouDownload) && <a href={file.fileuri} target="_blank">{file.filename}</a>}
 				{((isItAnchor && !canYouDownload) || !isItAnchor) && <span>{file.filename}</span>}
 				{(file.status != 'parsed' && areYouAdmin) && <i className="docuement__attention pe-7f-attention pe-va"></i>}
+				<button type="button" className="document__filetext"
+					onClick={this.handleClick.bind(this, 'fileText', file.fid)}>
+					<span>TEXT</span>
+				</button>
 			</li>
 		));
 		return (
@@ -46,7 +57,8 @@ class FieldsInHeader extends Component {
 FieldsInHeader.propTypes = {
 	fname: PropTypes.string.isRequired,
 	document: PropTypes.object.isRequired,
-	userRole: PropTypes.array.isRequired
+	userRole: PropTypes.array.isRequired,
+	callBacks: PropTypes.objectOf(PropTypes.func).isRequired
 };
 
 export default FieldsInHeader;

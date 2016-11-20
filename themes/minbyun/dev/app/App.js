@@ -10,6 +10,7 @@ import NewDocument from './NewDocument';
 import EditDocument from './EditDocument';
 import Document from './Document';
 import SearchResult from './SearchResult';
+import ServerError from './ServerError';
 
 import './style/style.less';
 import './style/digitalLibrary.less';
@@ -27,6 +28,7 @@ render((
 				<Route path="/document/:did" component={Document} />
 				<Route path="/document/:did/edit" component={EditDocument} />
 				<Route path="/search**" component={SearchResult} />
+				<Route path="/error" component={ServerError} />
 			</Route>
 		</Route>
 	</Router>

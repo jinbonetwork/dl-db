@@ -29,11 +29,14 @@ const _childProps = {
 		role: [1, 3, 7],
 		required: ['userData'],
 		elective: ['docData']
+	},
+	'/error': {
+		role: [1, 3, 5, 7, 15]
 	}
 }
 
 class DigitalLibrary extends Component {
-	handleClickToGoBoak(){
+	handleClickToGoBack(){
 		this.props.router.goBack();
 	}
 	cloneChild(children, userRole){
@@ -59,7 +62,7 @@ class DigitalLibrary extends Component {
 		let userRole = this.props.userData.role;
 		let child = this.cloneChild(this.props.children, userRole);
 		if(child && _isCommon(_childProps[this.props.children.props.route.path].role, userRole) === false){
-			child = <ErrorMessage message="이 페이지에 접근할 권한이 없습니다. 되돌아가려면 클릭하세요." handleClick={this.handleClickToGoBoak.bind(this)} />
+			child = <ErrorMessage message="이 페이지에 접근할 권한이 없습니다. 되돌아가려면 클릭하세요." handleClick={this.handleClickToGoBack.bind(this)} />
 		}
 		return(
 			<div className="digital-library">
