@@ -1,30 +1,33 @@
 import React, {Component, PropTypes} from 'react';
 import {Table, Row, Column} from '../Table';
+import {_fieldAttrs} from '../docSchema';
 
 class FieldsInContents extends Component {
 	content(){
-		let fid = (this.props.field.fid > 0 ? 'f'+this.props.field.fid : this.props.field.fid);
-		switch(this.props.field.type){
-			case 'char': case 'taxonomy':
-				return this.props.document[fid].join(', ');
-			case 'textarea':
-				return this.props.document[fid].map((text, i) => <p key={i}>{text}</p>);
+		let value = this.props.document[this.props.fname];
+		let fAttr = _fieldAttrs[this.props.fname];
+		switch(fAttr.type){
+			case 'taxonomy':
+				if(!fAttr.multiple) value = [value];
+				return value.map((v) => this.props.docData.terms[v]).join(', ');
+			case 'char': case 'date':
+				if(!fAttr.multiple) value = [value];
+				if(fAttr.form !== 'textarea'){
+					return value.join(', ');
+				} else{
+					return value.map((text, i) => <p key={i}>{text}</p>);
+				}
 			case 'group':
 				let inSubontent = [];
-				this.props.formData.fields.forEach((f) => {
-					if(f.type != 'group' && f.parent == this.props.field.fid && this.props.document['f'+f.fid].length > 0){
-						inSubontent[f.idx] = (
-							<FieldsInContents key={f.fid} field={f} formData={this.props.formData} document={this.props.document} />
-						);
-					}
+				fAttr.children.forEach((fn) => {
+					inSubontent.push(<FieldsInContents key={fn} fname={fn} document={this.props.document} />);
 				});
 				if(inSubontent.length > 0){
 					return <Table className="inner-table">{inSubontent}</Table>;
 				} else {
 					return null;
 				}
-			default:
-				return '';
+			default: return '';
 		}
 	}
 	render(){
@@ -32,7 +35,7 @@ class FieldsInContents extends Component {
 		if(content){
 			return (
 				<Row>
-					<Column className="table__label">{this.props.field.subject}</Column>
+					<Column className="table__label">{_fieldAttrs[this.props.fname].displayName}</Column>
 					<Column>{content}</Column>
 				</Row>
 			);
@@ -42,9 +45,9 @@ class FieldsInContents extends Component {
 	}
 }
 FieldsInContents.propTypes = {
-	field: PropTypes.object.isRequired,
-	document: PropTypes.object.isRequired,
-	formData: PropTypes.object.isRequired
+	fname: PropTypes.string.isRequired,
+	docData: PropTypes.object,
+	document: PropTypes.object
 };
 
 export default FieldsInContents;

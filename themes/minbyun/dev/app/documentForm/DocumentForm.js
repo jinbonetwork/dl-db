@@ -10,7 +10,8 @@ import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../Table';
 import ErrorMessage from '../ErrorMessage';
 import Processing from './Processing';
-import func from '../functions';
+import {_fieldAttrs, _sFname, _convertDocToSave} from '../docSchema';
+import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
 
 class DocumentForm extends Component {
 	componentWillMount(){
@@ -19,30 +20,31 @@ class DocumentForm extends Component {
 			isProcessing: false
 		});
 	}
-	isHiddenField(fid){
-		if(this.props.info.hiddenFields.indexOf(fid) >= 0) return true;
-		else return false;
+	isHiddenField(fname){
+		if(fname == 'trial'){
+			if(this.props.document.doctype == 1) return false;
+			else return true;
+		}
+		return false;
 	}
 	validationCheck(){
-		for(let i in this.props.info.formData.fields){
-			let f = this.props.info.formData.fields[i];
-
-			let value = this.props.callBacks.fieldValue(f.fid);
-			if(f.required == '1' && f.type != 'group' && func.isEmpty(value) && !this.isHiddenField(f) && !this.isHiddenField(f.parent)){
-				return {fid: f.fid, message: f.subject+'을(를) 입력하세요.'};
-			}
-
-			if(f.multiple != '1'){
-				value = [value];
-			}
-			for(let j in value){
-				let v = value[j];
-				if((f.type == 'email' && !func.isEmailValid(v)) || (f.type == 'phone' && !func.isPhoneValid(v)) || (f.type == 'date' && !func.isDateValid(v, f.form))){
-					return {fid: f.fid, message: f.subject+'의 형식이 적합하지 않습니다.'};
+		for(let fn in this.props.document){
+			let value = this.props.document[fn];
+			let fAttr = _fieldAttrs[fn];
+			if(fAttr.type != 'meta' && fAttr.type != 'group'){
+				if(fAttr.required && _isEmpty(value) && !this.isHiddenField(fn) && !this.isHiddenField(fAttr.parent)){
+					return {fname: fn, message: fAttr.displayName+'을(를) 입력하세요.'};
 				}
-				if(f.type == 'taxonomy'){
-					let term = this.props.info.formData.taxonomy[f.cid].find((t) => t.tid == v);
-					if(!term) return {fid: f.fid, message: f.subject+'이(가) 올바르지 않습니다.'};
+				if(fAttr.multiple === false) value = [value];
+				for(let j in value){
+					let v = value[j];
+					if(
+						(fAttr.type == 'email' && !_isEmailValid(v)) ||
+						(fAttr.type == 'phone' && !_isPhoneValid(v)) ||
+						(fAttr.type == 'date' && !_isDateValid(v, fAttr.form))
+					){
+						return {fname: fn, message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
+					}
 				}
 			}
 		}
@@ -55,39 +57,25 @@ class DocumentForm extends Component {
 		}
 		this.setState({isProcessing: true});
 
-		let document = {};
-		['id', 'uid', 'owner', 'created'].forEach((prop) => {
-			if(this.props.document[prop] !== undefined) document[prop] = this.props.document[prop];
-		});
 		let formData = new FormData();
-		this.props.info.formData.fields.forEach((f) => {
-			let fid = (f.fid > 0 ? 'f'+f.fid : f.fid);
-			if(f.form == 'file'){
-				if(f.multiple == '1'){
-					this.props.document[fid].forEach((file, index) => {
-						if(file.fid){
-							if(!document[fid]) document[fid] = [];
-							document[fid].push(file.fid);
-						}
-						else if(file.name) {
-							formData.append(fid+'[]', file);
-						}
+		formData.append('document', JSON.stringify(
+			_convertDocToSave(this.props.document)
+		));
+		for(let fn in this.props.document){
+			let value = this.props.document[fn];
+			let fAttr = _fieldAttrs[fn];
+			if(fAttr.form == 'file'){
+				if(fAttr.multiple){
+					value.forEach((file) => {
+						if(file.name) formData.append(_sFname[fn]+'[]', file);
 					});
 				} else {
-					let file = this.props.document[fid];
-					if(file.fid){
-						document[fid] = file.fid;
-					} else if(file.name){
-						formData.append(fid, file);
-					}
+					if(value.name) formData.append(_sFname[fn], value);
 				}
-			} else if(f.type != 'group'){
-				document[fid] = this.props.document[fid];
 			}
-		});
-		formData.append('document', JSON.stringify(document));
+		};
 
-		axios.post(this.props.info.apiUrl+'/document/save?mode='+this.props.formAttr.mode, formData)
+		axios.post('/api/document/save?mode='+this.props.formAttr.mode, formData)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){
@@ -105,24 +93,25 @@ class DocumentForm extends Component {
 	}
 	render(){
 		let requiredFields = [], electiveFields = [];
-		this.props.info.formData.fields.forEach((field) => {
-			if(field.parent == 0 && this.isHiddenField(field.fid) === false){
+		for(let fn in this.props.document){
+			let fAttr = _fieldAttrs[fn];
+			let value = this.props.document[fn];
+			if(fAttr.type != 'meta' && !fAttr.parent && !this.isHiddenField(fn)){
 				let documentField = (
 					<DocumentField
-						key={field.fid} field={field} value={this.props.callBacks.fieldValue(field.fid)}
-						info={this.props.info} callBacks={this.props.callBacks}
+						key={fn} fname={fn} value={value} docData={this.props.docData} callBacks={this.props.callBacks}
 						formCallBacks={{
 							isHiddenField: this.isHiddenField.bind(this)
 						}}
 					/>
 				);
-				if(field.required == '1'){
-					requiredFields[field.idx] = documentField;
+				if(fAttr.required){
+					requiredFields.push(documentField);
 				} else {
-					electiveFields[field.idx] = documentField;
+					electiveFields.push(documentField);
 				}
 			}
-		});
+		};
 		let errorMessage = (this.state.errorMessage &&
 			<ErrorMessage message={this.state.errorMessage}
 				handleClick={this.removeErrorMessage.bind(this)}
@@ -162,7 +151,7 @@ class DocumentForm extends Component {
 DocumentForm.propTypes = {
 	formAttr: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
-	info: PropTypes.object.isRequired,
+	docData: PropTypes.object.isRequired,
 	callBacks: PropTypes.object.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired

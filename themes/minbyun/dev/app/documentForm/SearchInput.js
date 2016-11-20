@@ -1,15 +1,16 @@
 import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
+import {_fieldAttrs} from '../docSchema';
 
 class SearchInput extends Component {
-	constructor(){
-		super();
-		this.state = {
+	componentWillMount(){
+		this.setState({
+			fieldsToPut: _fieldAttrs[_fieldAttrs[this.props.fname].parent].children,
 			results: undefined
-		}
+		});
 	}
 	handleChange(event){
-		this.props.updateSingleField(this.props.field, this.props.index, event.target.value);
+		this.props.updateSingleField(this.props.fname, undefined, event.target.value);
 	}
 	handleKeyUp(event){
 		if(event.target.value){
@@ -18,15 +19,12 @@ class SearchInput extends Component {
 			this.setState({results: undefined});
 		}
 	}
-	handleChangeToUpdateFields(event){
-		this.props.updateFields({['f'+this.props.field.fid]: event.target.value});
-	}
 	search(keyword){
-		axios.get(this.props.searchApiUrl+keyword)
+		axios.get(this.props.api+keyword)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){
-					return response.data.members;
+					this.setState({results: response.data.members});
 				} else {
 					this.setState({results: []});
 					console.error(response.data);
@@ -36,14 +34,11 @@ class SearchInput extends Component {
 				console.error('Server response was not OK');
 			}
 		})
-		.then((members) => {
-			this.setState({results: members});
-		});
 	}
 	handleClickListItem(result, event){
 		let fields = {};
-		this.props.resultMap.fname.forEach((fname, i) => {
-			fields['f'+this.props.resultMap.fid[i]] = result[fname];
+		this.state.fieldsToPut.forEach((f) => {
+			fields[f] = result[f];
 		});
 		this.props.updateFields(fields);
 		this.setState({results: undefined});
@@ -57,8 +52,8 @@ class SearchInput extends Component {
 				<ul>{
 					this.state.results.map((result) => (
 						<li className="button" key={result.id} onClick={this.handleClickListItem.bind(this, result)}>
-							<span className="searchinput__col-0">{result[this.props.resultMap.fname[0]]}</span>
-							<span className="searchinput__col-1">{result[this.props.resultMap.fname[1]]}</span>
+							<span className="searchinput__col-0">{result[this.state.fieldsToPut[0]]}</span>
+							<span className="searchinput__col-1">{result[this.state.fieldsToPut[1]]}</span>
 						</li>
 					))}
 				</ul>
@@ -75,11 +70,9 @@ class SearchInput extends Component {
 	}
 }
 SearchInput.propTypes = {
-	value: PropTypes.string,
-	index: PropTypes.number,
-	field: PropTypes.object.isRequired,
-	searchApiUrl: PropTypes.string.isRequired,
-	resultMap: PropTypes.object.isRequired,
+	value: PropTypes.string.isRequired,
+	fname: PropTypes.string.isRequired,
+	api: PropTypes.string.isRequired,
 	updateSingleField: PropTypes.func.isRequired,
 	updateFields: PropTypes.func.isRequired
 };

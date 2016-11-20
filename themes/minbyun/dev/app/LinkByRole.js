@@ -1,11 +1,10 @@
-
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
-import func from './functions';
+import {_isCommon} from './functions';
 
 class LinkByRole extends Component {
 	render(){
-		let isAuthorized = this.props.userRole && func.isCommon(this.props.role, this.props.userRole);
+		let isAuthorized = this.props.userRole && _isCommon(this.props.role, this.props.userRole);
 		if(isAuthorized){
 			return <Link className={this.props.className} to={this.props.to}>{this.props.children}</Link>
 		} else {

@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 class ImageWrap extends Component {
 	componentWillMount(){
-		let display = this.props.paths.map((p, i) => {
+		let display = this.props.uris.map((p, i) => {
 			if(i != 0) return 'none';
 		});
 		this.setState({
@@ -10,7 +10,7 @@ class ImageWrap extends Component {
 		});
 	}
 	render(){
-		let images = this.props.paths.map((p, i) => (
+		let images = this.props.uris.map((p, i) => (
 			<img key={i} style={{display: this.state.display[i]}} src={p} />
 		));
 		return (
@@ -21,7 +21,7 @@ class ImageWrap extends Component {
 	}
 }
 ImageWrap.propTypes = {
-	paths: PropTypes.array.isRequired
+	uris: PropTypes.array.isRequired
 }
 
 export default ImageWrap;

@@ -11,6 +11,13 @@ import EditDocument from './EditDocument';
 import Document from './Document';
 import SearchResult from './SearchResult';
 
+import './style/style.less';
+import './style/digitalLibrary.less';
+import './style/documentForm.less';
+import './style/document.less';
+import './style/searchResult.less';
+import './style/searchBar.less';
+
 render((
 	<Router history={browserHistory}>
 		<Route component={DigitalLibraryContainer}>

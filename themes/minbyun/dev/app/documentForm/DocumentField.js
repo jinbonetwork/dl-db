@@ -1,32 +1,33 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentInputForm from './DocumentInputForm';
 import {Table, Row, Column} from '../Table';
+import {_fieldAttrs} from '../docSchema';
 
 class DocumentField extends Component {
 	fieldFooter(){
-		switch(this.props.field.form){
+		switch(_fieldAttrs[this.props.fname].form){
 			case 'file':
-				let accept = (this.props.field.type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
+				let accept = (_fieldAttrs[this.props.fname].type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
 				return <div>{`* 파일형식: ${accept}`}</div>;
 		}
 	}
 	handleClickToAddInputForm(){
-		this.props.callBacks.addValueToField(this.props.field.fid);
+		this.props.callBacks.addValueToField(this.props.fname);
 	}
 	handleClickToRemoveInputForm(index){
-		this.props.callBacks.removeValueInField(this.props.field.fid, index);
+		this.props.callBacks.removeValueInField(this.props.fname, index);
 	}
 	documentInputForm(value, index){
 		return (
-			<DocumentInputForm field={this.props.field} value={value} index={index}
-				info={this.props.info} callBacks={this.props.callBacks}
+			<DocumentInputForm fname={this.props.fname} value={value} index={index}
+				docData={this.props.docData} callBacks={this.props.callBacks}
 				formCallBacks={this.props.formCallBacks}
 			/>
 		);
 	}
 	inputForms(){
 		let innerElement;
-		if(this.props.field.multiple == '1'){
+		if(_fieldAttrs[this.props.fname].multiple){
 			innerElement = this.props.value.map((v, i) => (
 				<div key={i} className="document-form__input-with-buttons">
 					<div className="document-form__middle">
@@ -42,7 +43,7 @@ class DocumentField extends Component {
 					</div>
 				</div>
 			));
-		} else if(this.props.field.form == 'file'){
+		} else if(_fieldAttrs[this.props.fname].form == 'file'){
 			innerElement = (
 				<div className="document-form__input-with-buttons">
 					<div className="document-form__middle">
@@ -69,7 +70,7 @@ class DocumentField extends Component {
 		return (
 			<Row>
 				<Column className="table__label">
-					<span>{this.props.field.subject}</span>
+					<span>{_fieldAttrs[this.props.fname].displayName}</span>
 				</Column>
 				<Column>
 					{this.inputForms()}
@@ -79,9 +80,9 @@ class DocumentField extends Component {
 	}
 }
 DocumentField.propTypes = {
-	field: PropTypes.object.isRequired,
+	fname: PropTypes.string.isRequired,
 	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
-	info: PropTypes.object.isRequired,
+	docData: PropTypes.object.isRequired,
 	callBacks: PropTypes.objectOf(PropTypes.func).isRequired,
 	formCallBacks: PropTypes.object.isRequired,
 };

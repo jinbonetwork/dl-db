@@ -8,7 +8,7 @@ class DateForm extends Component {
 		} else {
 			year = '';
 		}
-		this.props.updateSingleField(this.props.field, this.props.index, {
+		this.props.updateSingleField(this.props.fname, this.props.index, {
 			year: year, month: this.props.value.month
 		});
 	}
@@ -20,7 +20,7 @@ class DateForm extends Component {
 		} else {
 			month = '';
 		}
-		this.props.updateSingleField(this.props.field, this.props.index, {
+		this.props.updateSingleField(this.props.fname, this.props.index, {
 			year: this.props.value.year, month: month
 		});
 	}
@@ -40,7 +40,7 @@ class DateForm extends Component {
 	}
 }
 DateForm.propTypes = {
-	field: PropTypes.object.isRequired,
+	fname: PropTypes.string.isRequired,
 	value: PropTypes.object.isRequired,
 	index: PropTypes.number,
 	updateSingleField: PropTypes.func.isRequired

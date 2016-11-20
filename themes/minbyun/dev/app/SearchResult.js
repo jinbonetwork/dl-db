@@ -2,25 +2,14 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import axios from 'axios';
 import ResultItem from './searchResult/ResultItem';
-import func from './functions';
-
-const _propMap = {
-	id: 'id',
-	subject: 'title',
-	f1: 'doctype',
-	content: 'content',
-	f10: 'date',
-	f8: 'commitee',
-	f4: 'number',
-	f13: 'author'
-}
-const _tidOfdocTypeCase = 1;
+import {_convertToDoc} from './docSchema';
+//import func from './functions';
 
 class SearchResult extends Component {
 	constructor(){
 		super();
 		this.state = {
-			items: [],
+			documents: [],
 			page: 0,
 			numOfPages: 0
 		};
@@ -33,7 +22,7 @@ class SearchResult extends Component {
 	}
 	fetchData(page){
 		page = (page ? page : 1);
-		axios.get(this.props.apiUrl+'/document?page='+page)
+		axios.get('/api/document?page='+page)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){
@@ -47,39 +36,8 @@ class SearchResult extends Component {
 		});
 	}
 	setDocuments(data){
-		let items = data.documents.map((doc) => {
-			let item = {}, isDocTypeCase = false, prop;
-			for(let p in _propMap){
-				prop = _propMap[p];
-				if(!func.isEmpty(doc[p])){
-					switch(prop){
-						case 'doctype':
-							for(let tid in doc[p]){
-								item[prop] = doc[p][tid].name;
-								if(tid == _tidOfdocTypeCase) isDocTypeCase = true;
-							}
-							break;
-						case 'commitee':
-							item[prop] = []
-							for(let tid in doc[p]){
-								item[prop].push(doc[p][tid].name);
-								if(tid == _tidOfdocTypeCase) isDocTypeCase = true;
-							}
-							item[prop] = item[prop].join(', ');
-							break;
-						case 'date':
-							item[prop] = func.displayDate(doc[p]);
-							break;
-						default:
-							item[prop] = doc[p];
-					}
-				}
-			}
-			if(item.number && isDocTypeCase === false) delete item.number;
-			return item;
-		});
 		this.setState({
-			items: items,
+			documents: data.documents.map((doc) => _convertToDoc(doc)),
 			page: data.result.page,
 			numOfPages: data.result.total_page
 		});
@@ -108,16 +66,15 @@ class SearchResult extends Component {
 		return pagination;
 	}
 	render(){
-		let userRole = (this.props.userData ? this.props.userData.role : null);
-		let items = this.state.items.map((item, index) => (
+		let documents = this.state.documents.map((document, index) => (
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
-				<ResultItem item={item} userRole={userRole} apiUrl={this.props.apiUrl} />
+				<ResultItem document={document} docData={this.props.docData} userRole={this.props.userData.role} />
 			</div>
 		));
 		return (
 			<div className="search-result">
-				<div>{items}</div>
+				<div>{documents}</div>
 				<div className="search-result__pagination">{this.pagination()}</div>
 			</div>
 		);
@@ -125,7 +82,7 @@ class SearchResult extends Component {
 }
 SearchResult.propTypes = {
 	userData: PropTypes.object,
-	apiUrl: PropTypes.string
+	docData: PropTypes.object
 };
 
 export default SearchResult;

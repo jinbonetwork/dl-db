@@ -7,28 +7,33 @@ import FileInput from '../inputs/FileInput';
 import Select from '../inputs/Select';
 import Option from '../inputs/Option';
 import {Table} from '../Table';
+import {_fieldAttrs, _taxonomy, _terms} from '../docSchema';
 
 class DocumentInputForm extends Component {
 	handleChange(event){
-		let value = (this.props.field.form != 'file' ? event.target.value : event.target.files[0]);
-		this.props.callBacks.updateSingleField(this.props.field, this.props.index, value);
+		let value = (_fieldAttrs[this.props.fname].form != 'file' ? event.target.value : event.target.files[0]);
+		this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
 	}
 	render(){
-		switch(this.props.field.form){
+		let fAttr = _fieldAttrs[this.props.fname];
+		switch(fAttr.form){
 			case 'text':
-				return <input className="textinput" type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />;
-			case 'search':
-				let searchInfo = this.props.info.formOptions.searchInfo[this.props.field.fid];
 				return (
-					<SearchInput value={this.props.value} field={this.props.field} index={this.props.index}
-						searchApiUrl={this.props.info.apiUrl+'/'+searchInfo.api}
-						resultMap = {searchInfo.resultMap}
+					<input className="textinput" type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />
+				);
+			case 'search':
+				let api;
+				if(this.props.fname == 'name') api = '/api/members?q=';
+				return (
+					<SearchInput value={this.props.value} fname={this.props.fname} api={api}
 						updateFields={this.props.callBacks.updateFields.bind(this)}
 						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
 					/>
 				);
 			case 'file':
-				let accept = (this.props.field.type == 'file' ? '.pdf, .hwp, .doc, .docx' : '.jpg, .png');
+				let accept;
+				if(fAttr.type == 'file') accept = '.pdf, .hwp, .doc, .docx';
+				else if(fAttr.type == 'image') accept = '.jpg, .png';
 				return (
 					<FileInput value={this.props.value.name || this.props.value.filename}
 						accept={accept} handleChange={this.handleChange.bind(this)}
@@ -36,9 +41,9 @@ class DocumentInputForm extends Component {
 				)
 			case 'select':
 				let options = [];
-				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {
-					options[term.idx] = <option key={term.tid} value={term.tid}>{term.name}</option>;
-				});
+				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
+					options.push(<option key={tid} value={tid}>{this.props.docData.terms[tid]}</option>);
+				}});
 				return (
 					<select value={this.props.value} onChange={this.handleChange.bind(this)}>
 						{options}
@@ -46,30 +51,38 @@ class DocumentInputForm extends Component {
 				);
 			case 'radio':
 				let radioButtons = [];
-				this.props.info.formData.taxonomy[this.props.field.cid].forEach((term) => {
-					let checked = (this.props.value == term.tid ? true : false);
-					radioButtons[term.idx] = (
-						<label key={term.tid}>
-							<input type="radio" name={'taxonomy_'+term.cid} value={term.tid} defaultChecked={checked} onChange={this.handleChange.bind(this)} />
-							{term.name}
+				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
+					let checked = (this.props.value == tid ? true : false);
+					radioButtons.push(
+						<label key={tid}>
+							<input type="radio" name={'taxonomy_'+this.props.fname} value={tid} checked={checked} onChange={this.handleChange.bind(this)} />
+							{this.props.docData.terms[tid]}
 						</label>
 					);
-				});
+				}});
 				return <div className="radio-wrap">{radioButtons}</div>
 			case 'Ym':
 				return (
-					<DateForm field={this.props.field} value={this.props.value} index={this.props.index}
+					<DateForm fname={this.props.fname} value={this.props.value} index={this.props.index}
+						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
+					/>
+				);
+			case 'textarea':
+				let numOfWords;
+				if(this.props.fname == 'content') numOfWords = 200;
+				return (
+					<Textarea fname={this.props.fname} value={this.props.value} index={this.props.index} numOfWords={numOfWords}
 						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
 					/>
 				);
 			case 'fieldset':
 				let subFormFields = [];
-				this.props.info.formData.fields.forEach((f) => {
-					if(f.parent == this.props.field.fid && this.props.formCallBacks.isHiddenField(f.fid) === false){
-						subFormFields[f.idx] = (
+				fAttr.children.forEach((fn) => {
+					if(this.props.formCallBacks.isHiddenField(fn) === false){
+						subFormFields.push(
 							<DocumentField
-								key={f.fid} field={f} value={this.props.callBacks.fieldValue(f.fid)}
-								info={this.props.info} callBacks={this.props.callBacks}
+								key={fn} fname={fn} value={this.props.callBacks.fieldValue(fn)}
+								docData={this.props.docData} callBacks={this.props.callBacks}
 								formCallBacks={this.props.formCallBacks}
 							/>
 						)
@@ -77,21 +90,13 @@ class DocumentInputForm extends Component {
 				});
 				return <Table className="inner-table">{subFormFields}</Table>
 		}
-		switch(this.props.field.type){
-			case 'textarea':
-				return (
-					<Textarea field={this.props.field} value={this.props.value} index={this.props.index}
-						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
-					/>
-				);
-		}
 	}
 }
 DocumentInputForm.propTypes = {
-	field: PropTypes.object.isRequired,
+	fname: PropTypes.string.isRequired,
 	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
 	index: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	info: PropTypes.object.isRequired,
+	docData: PropTypes.object.isRequired,
 	callBacks: PropTypes.objectOf(PropTypes.func).isRequired,
 	formCallBacks: PropTypes.object.isRequired
 };

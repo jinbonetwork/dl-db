@@ -10,5 +10,6 @@ themes/*/node_modules
 themes/*/node_modules/*
 themes/minbyun/script/script.js
 themes/minbyun/css/style.css
+themes/minbyun/dev/app.old/
 app/api/__test_upload.php
 npm-debug.log
