@@ -11,6 +11,7 @@ class index extends \DLDB\Controller {
 		$this->user_info = \DLDB\Member::getUser($_SESSION['user']['uid']);
 		$acl = \DLDB\Acl::instance();
 		$this->role = $acl->getAcl();
+		$this->sessiontype = $context->getProperty('session.type');
 	}
 }
 ?>
