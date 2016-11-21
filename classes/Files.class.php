@@ -12,7 +12,7 @@ class Files extends \DLDB\Objects {
 		$dbm = \DLDB\DBM::instance();
 
 		$que = "SELECT * FROM {files} WHERE `did` = ".$did;
-		while($row = $dbm->getFetchArray()) {
+		while($row = $dbm->getFetchArray($que)) {
 			$files[] = self::fetchFiles($row);
 		}
 		return $files;
