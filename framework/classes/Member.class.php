@@ -8,6 +8,10 @@ class Member extends \DLDB\Objects {
 	public static function getUser($uid) {
 		$context = \DLDB\Model\Context::instance();
 
+		if(!$uid) {
+			$user = array('uid'=>0);
+			return $user;
+		}
 		$session_type = $context->getProperty('session.type');
 		$classname = "DLDB\\Model\\".strtoupper($session_type);
 
