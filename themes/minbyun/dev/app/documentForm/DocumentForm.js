@@ -8,7 +8,7 @@ import Textarea from '../inputs/Textarea';
 import DateForm from '../inputs/DateForm';
 import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../Table';
-import ErrorMessage from '../ErrorMessage';
+import Message from '../Message';
 import Processing from './Processing';
 import {_fieldAttrs, _sFname, _convertDocToSave} from '../docSchema';
 import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
@@ -16,8 +16,7 @@ import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '.
 class DocumentForm extends Component {
 	componentWillMount(){
 		this.setState({
-			errorMessage: undefined,
-			isProcessing: false
+			child: null
 		});
 	}
 	isHiddenField(fname){
@@ -52,10 +51,10 @@ class DocumentForm extends Component {
 	handleClickToSubmit(){
 		let error = this.validationCheck();
 		if(error){
-			this.setState({errorMessage: error.message});
+			this.setState({child: <Message handleClick={this.unsetChild.bind(this)}>{error.message}</Message>});
 			return false;
 		}
-		this.setState({isProcessing: true});
+		this.setState({child: <Processing />});
 
 		let formData = new FormData();
 		formData.append('document', JSON.stringify(
@@ -82,14 +81,21 @@ class DocumentForm extends Component {
 					this.props.router.push('/document/'+response.data.did);
 				} else {
 					console.error(response.data);
+					this.setServerError();
 				}
 			} else {
 				console.error('Server response was not OK');
+				this.setServerError();
 			}
 		});
 	}
-	removeErrorMessage(){
-		this.setState({errorMessage: undefined});
+	setServerError(){
+		this.setState({ child: (
+			<Message handleClick={this.unsetChild.bind(this)}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
+		)});
+	}
+	unsetChild(){
+		this.setState({child: null});
 	}
 	render(){
 		let requiredFields = [], electiveFields = [];
@@ -112,11 +118,6 @@ class DocumentForm extends Component {
 				}
 			}
 		};
-		let errorMessage = (this.state.errorMessage &&
-			<ErrorMessage message={this.state.errorMessage}
-				handleClick={this.removeErrorMessage.bind(this)}
-			/>
-		);
 		return (
 			<div className="document-form">
 				<h1>{this.props.formAttr.header}</h1>
@@ -142,8 +143,7 @@ class DocumentForm extends Component {
 						</Column>
 					</Row>
 				</Table>
-				{errorMessage}
-				{this.state.isProcessing && <Processing />}
+				{this.state.child}
 			</div>
 		);
 	}

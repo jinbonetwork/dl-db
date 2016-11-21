@@ -130,17 +130,15 @@ p + p {
 		width: 60px;
 	}
 }
-.error-message {
-	.error-message__message {
-		position: fixed;
-		top: 50%; left: 50%;
-		transform: translate(-50%, -50%);
-		max-width: 500px;
-		padding: 1em;
-		color: #ffffff;
-		background-color: #989cff;
-		cursor: pointer;
-	}
+.message {
+	position: fixed;
+	top: 50%; left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 500px;
+	padding: 1em;
+	color: #ffffff;
+	background-color: #989cff;
+	cursor: pointer;
 }
 .overlay {
 	position: fixed;
@@ -148,6 +146,9 @@ p + p {
 	width: 100%; height: 100%;
 	background-color: #000000;
 	opacity: 0.2;
+	&.overlay--clickable {
+		cursor: pointer;
+	}
 }
 .processing {
 	i {

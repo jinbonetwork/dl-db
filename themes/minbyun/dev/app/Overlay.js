@@ -5,8 +5,9 @@ class Overlay extends Component {
 		if(this.props.handleClick) this.props.handleClick();
 	}
 	render(){
+		let className = (this.props.handleClick ? 'overlay overlay--clickable' : 'overlay');
 		return (
-			<div className="overlay" onClick={this.handleClick.bind(this)}></div>
+			<div className={className} onClick={this.handleClick.bind(this)}></div>
 		);
 	}
 }

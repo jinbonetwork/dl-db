@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import SearchBar from './SearchBar';
 import LinkByRole from './LinkByRole';
-import ErrorMessage from './ErrorMessage';
+import Message from './Message';
 import {_isEmpty, _isCommon} from './functions';
 
 const _childProps = {
@@ -36,8 +36,10 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
-	handleClickToGoBack(){
-		this.props.router.goBack();
+	handleClick(which, args, event){
+		if(which == 'goback'){
+			this.props.router.goBack();
+		}
 	}
 	cloneChild(children, userRole){
 		if(!children || !userRole) return null;
@@ -62,7 +64,7 @@ class DigitalLibrary extends Component {
 		let userRole = this.props.userData.role;
 		let child = this.cloneChild(this.props.children, userRole);
 		if(child && _isCommon(_childProps[this.props.children.props.route.path].role, userRole) === false){
-			child = <ErrorMessage message="이 페이지에 접근할 권한이 없습니다. 되돌아가려면 클릭하세요." handleClick={this.handleClickToGoBack.bind(this)} />
+			child = <Message handleClick={this.handleClick.bind(this, 'goback')}>이 페이지에 접근할 권한이 없습니다. 되돌아가려면 클릭하세요.</Message>
 		}
 		return(
 			<div className="digital-library">

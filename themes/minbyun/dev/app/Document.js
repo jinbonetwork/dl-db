@@ -7,7 +7,7 @@ import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
 import FileTextEditor from './document/FileTextEditor';
 import LinkByRole from './LinkByRole';
-import ErrorMessage from  './ErrorMessage';
+import Message from  './Message';
 import {Table, Row, Column} from './Table';
 import {_fieldAttrs, _convertToDoc} from './docSchema';
 import {_isEmpty} from './functions';
@@ -18,8 +18,7 @@ class Document extends Component {
 		this.state = {
 			document: null,
 			fileText: {},
-			fileTextEditor: null,
-			errorMessage: null
+			child: null
 		};
 	}
 	fetchData(uri, callBack){
@@ -28,10 +27,12 @@ class Document extends Component {
 				if(response.data.error == 0){
 					callBack(response.data);
 				} else {
-					console.error(response.data.message);
+					console.error(response.data);
+					this.setServerError();
 				}
 			} else {
 				console.error('Server response was not OK');
+				this.setServerError();
 			}
 		});
 	}
@@ -41,13 +42,13 @@ class Document extends Component {
 			this.setState({
 				document: document
 			});
-			document.file.forEach((f) => {
+			document.file.forEach((f) => {if(f.fid){
 				this.fetchData('/api/document/text?id='+this.props.params.did+'&fid='+f.fid, (data) => {
 					this.setState({
 						fileText: update(this.state.fileText, {$merge: {[f.fid]: data.text}})
 					});
 				});
-			})
+			}});
 		});
 	}
 	isHiddenField(fname){
@@ -59,25 +60,23 @@ class Document extends Component {
 		return false;
 	}
 	setFileTextEditor(fileId, filename){
-		this.setState({
-			fileTextEditor: (
-				<FileTextEditor fid={fileId} filename={filename}
-					text={this.state.fileText[fileId]}
-					submit={this.submitFileText.bind(this)}
-					cancel={this.unsetFileTextEditor.bind(this)}
-				/>
-			)
-		});
+		this.setState({child: (
+			<FileTextEditor fid={fileId} filename={filename}
+				text={this.state.fileText[fileId]}
+				submit={this.submitFileText.bind(this)}
+				cancel={this.unsetChild.bind(this)}
+			/>
+		)});
 	}
-	unsetFileTextEditor(){
-		this.setState({fileTextEditor: null});
+	unsetChild(){
+		this.setState({child: null});
 	}
 	submitFileText(fileId, text){
 		let prevFiletext = this.state.fileText;
 
 		this.setState({
 			fileText: update(this.state.fileText, {[fileId]: {$set: text}}),
-			fileTextEditor: null
+			child: null
 		});
 
 		let formData = new FormData();
@@ -97,17 +96,9 @@ class Document extends Component {
 		});
 	}
 	setServerError(){
-		this.setState({
-			errorMessage: (
-				<ErrorMessage
-					message='요청한 작업을 처리하는 과정에서 문제가 발생했습니다.'
-					handleClick={this.unsetServerError.bind(this)}
-				/>
-			)
-		});
-	}
-	unsetServerError(){
-		this.setState({errorMessage: null});
+		this.setState({child: (
+			<Message handleClick={this.unsetChild.bind(this)}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
+		)});
 	}
 	render(){
 		if(!this.state.document) return null;
@@ -154,8 +145,7 @@ class Document extends Component {
 						{fieldsInContents}
 					</Table>
 				</div>
-				{this.state.fileTextEditor}
-				{this.state.errorMessage}
+				{this.state.child}
 			</div>
 		);
 	}

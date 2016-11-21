@@ -1,23 +1,22 @@
 import React, {Component, PropTypes} from 'react';
 import Overlay from './Overlay';
 
-class ErrorMessage extends Component {
+class Message extends Component {
 	render(){
-		let className = (this.props.className ? 'error-message__message '+this.props.className : 'error-message__message');
+		let className = (this.props.className ? 'message '+this.props.className : 'message');
 		return (
-			<div className="error-message">
+			<div>
 				<Overlay handleClick={this.props.handleClick.bind(this)} />
 				<div className={className} onClick={this.props.handleClick.bind(this)}>
-					{this.props.message}
+					{this.props.children}
 				</div>
 			</div>
 		);
 	}
 }
-ErrorMessage.propTypes = {
+Message.propTypes = {
 	className: PropTypes.string,
-	message: PropTypes.string.isRequired,
 	handleClick: PropTypes.func.isRequired
 }
 
-export default ErrorMessage;
+export default Message;
