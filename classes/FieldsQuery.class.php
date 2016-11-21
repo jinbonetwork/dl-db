@@ -192,6 +192,24 @@ class FieldsQuery extends \DLDB\Objects {
 		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'del_files' => $del_files, 'taxonomy_map' => $taxonomy_map);
 	}
 
+	public function buidDate($field,$value) {
+		$out = '';
+		for($i=0; $i<strlen($field['form']); $i++) {
+			switch($field['form'][$i]) {
+				case 'Y':
+					if($value['year']) $out .= ($out ? "-" : "").sprintf("%4d",(int)$value['year']);
+					break;
+				case 'm':
+					if($value['month']) $out .= ($out ? "-" : "").sprintf("%02d",(int)$value['month']);
+					break;
+				case 'd':
+					if($value['day']) $out .= ($out ? "-" : "").sprintf("%02d",(int)$value['day']);
+					break;
+			]
+		}
+		return $out;
+	}
+
 	public function reBuildTaxonomy($table, $id,$taxonomy_map) {
 		$dbm = \DLDB\DBM::instance();
 
