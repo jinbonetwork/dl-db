@@ -34,6 +34,10 @@ class FieldsQuery extends \DLDB\Objects {
 						case 'int':
 							$array1 .= "d";
 							break;
+						case 'date':
+							$array1 .= "s";
+							$args['f'.$key] = self::buidDate($field,$args['f'.$key]);
+							break;
 						default:
 							$array1 .= "s";
 							break;
@@ -58,6 +62,9 @@ class FieldsQuery extends \DLDB\Objects {
 									);
 								}
 							}
+							break;
+						case "date":
+							$v = self::buidDate($field,$v);
 							break;
 						case "file":
 						case "image":
