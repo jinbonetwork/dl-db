@@ -8,8 +8,8 @@ import Textarea from '../inputs/Textarea';
 import DateForm from '../inputs/DateForm';
 import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../Table';
-import Message from '../Message';
-import Processing from './Processing';
+import Message from '../overlay/Message';
+import Processing from '../overlay/Processing';
 import {_fieldAttrs, _sFname, _convertDocToSave} from '../docSchema';
 import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
 

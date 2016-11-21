@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import SearchBar from './SearchBar';
 import LinkByRole from './LinkByRole';
-import Message from './Message';
+import Message from './overlay/Message';
 import {_isEmpty, _isCommon} from './functions';
 
 const _childProps = {
@@ -29,9 +29,6 @@ const _childProps = {
 		role: [1, 3, 7],
 		required: ['userData'],
 		elective: ['docData']
-	},
-	'/error': {
-		role: [1, 3, 5, 7, 15]
 	}
 }
 

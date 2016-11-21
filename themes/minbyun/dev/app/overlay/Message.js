@@ -3,7 +3,9 @@ import Overlay from './Overlay';
 
 class Message extends Component {
 	render(){
-		let className = (this.props.className ? 'message '+this.props.className : 'message');
+		let className = (this.props.handleClick ? 'message message--clickable': 'message');
+		if(this.props.className) className += ' '+this.props.className;
+		//&#9888; --> attention icon
 		return (
 			<div>
 				<Overlay handleClick={this.props.handleClick.bind(this)} />

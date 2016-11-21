@@ -7,7 +7,7 @@ import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
 import FileTextEditor from './document/FileTextEditor';
 import LinkByRole from './LinkByRole';
-import Message from  './Message';
+import Message from  './overlay/Message';
 import {Table, Row, Column} from './Table';
 import {_fieldAttrs, _convertToDoc} from './docSchema';
 import {_isEmpty} from './functions';

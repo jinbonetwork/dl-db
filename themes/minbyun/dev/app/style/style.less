@@ -136,9 +136,12 @@ p + p {
 	transform: translate(-50%, -50%);
 	max-width: 500px;
 	padding: 1em;
-	color: #ffffff;
-	background-color: #989cff;
-	cursor: pointer;
+	color: #989cff;
+	border: solid 1px #989cff;
+	background-color: #ffffff;
+	&.message--clickable {
+		cursor: pointer;
+	}
 }
 .overlay {
 	position: fixed;
