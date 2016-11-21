@@ -1,35 +1,55 @@
 import React, {Component, PropTypes} from 'react';
 import Overlay from '../overlay/Overlay';
+import jQ from 'jquery';
 
 class FileTextEditor extends Component {
 	componentWillMount(){
 		this.setState({
-			text: this.props.text
+			text: this.props.text,
+			textareaStyle: {},
+			isFullScreen: false,
 		});
+	}
+	componentDidMount(){
+		this.handleResize();
+		jQ(window).resize(this.handleResize.bind(this));
+	}
+	componentDidUpdate(nextProps, nextState){
+		if(this.state.isFullScreen !== nextState.isFullScreen) this.handleResize();
+	}
+	handleResize(){
+		let wrapH = jQ(this.refs.wrap).height();
+		let filenameH = jQ(this.refs.filename).outerHeight(true);
+		let buttonsH = jQ(this.refs.buttons).outerHeight(true);
+		this.setState({textareaStyle: {
+			height: (wrapH - filenameH - buttonsH - 5)
+		}});
 	}
 	handleChange(event){
 		this.setState({text: event.target.value});
 	}
-	handleClick(which, event){
-		if(which == 'submit'){
-			this.props.submit(this.props.fid, this.state.text);
-		}
-		else if(which == 'cancel'){
-			this.props.cancel();
-		}
-	}
+	handleClick(which, event){ switch(which){
+		case 'submit':
+			this.props.submit(this.props.fid, this.state.text); break;
+		case 'cancel':
+			this.props.cancel(); break;
+		case 'alterScreen':
+			this.setState({isFullScreen: !this.state.isFullScreen}); break;
+	}}
 	render(){
+		let className = (this.state.isFullScreen ? 'file-text-editor file-text-editor__full-screen' : 'file-text-editor');
 		return (
 			<div>
 				<Overlay />
-				<div className="file-text-editor">
-					<div className="file-text-editor__filename"><span>{this.props.filename}</span></div>
-					<div className="file-text-editor__wrap">
-						<textarea value={this.state.text} onChange={this.handleChange.bind(this)} />
-						<div className="file-text-editor__buttons">
-							<button type="button" onClick={this.handleClick.bind(this, 'submit')}>저장</button>
-							<button type="button" onClick={this.handleClick.bind(this, 'cancel')}>취소</button>
-						</div>
+				<div className={className} ref="wrap">
+					<div className="file-text-editor__filename" ref="filename"><span>{this.props.filename}</span></div>
+					<textarea value={this.state.text} onChange={this.handleChange.bind(this)} style={this.state.textareaStyle} />
+					<div className="file-text-editor__buttons" ref="buttons">
+						<button type="button" className={(this.state.isFullScreen ? 'reverse-color': '')} onClick={this.handleClick.bind(this, 'alterScreen')}>
+							{(this.state.isFullScreen ? '화면축소' : '화면확대')}
+						</button>
+						<button type="button" onClick={this.handleClick.bind(this, 'submit')}>저장</button>
+						<button type="button" className="reverse-color" onClick={this.handleClick.bind(this, 'cancel')}>취소</button>
 					</div>
 				</div>
 			</div>
