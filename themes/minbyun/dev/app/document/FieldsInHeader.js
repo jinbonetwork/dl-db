@@ -7,8 +7,7 @@ import {_displayDate, _isCommon} from '../functions';
 class FieldsInHeader extends Component {
 	handleClick(what, args, event){
 		if(what == 'fileText'){
-			let fileId = args;
-			this.props.callBacks.setFileTextEditor(fileId);
+			this.props.callBacks.setFileTextEditor(args.fid, args.filename);
 		}
 	}
 	date(){
@@ -31,7 +30,7 @@ class FieldsInHeader extends Component {
 				{((isItAnchor && !canYouDownload) || !isItAnchor) && <span>{file.filename}</span>}
 				{(file.status != 'parsed' && areYouAdmin) && <i className="docuement__attention pe-7f-attention pe-va"></i>}
 				<button type="button" className="document__filetext"
-					onClick={this.handleClick.bind(this, 'fileText', file.fid)}>
+					onClick={this.handleClick.bind(this, 'fileText', {fid: file.fid, filename: file.filename})}>
 					<span>TEXT</span>
 				</button>
 			</li>

@@ -58,10 +58,11 @@ class Document extends Component {
 		else if(fname == 'access') return true;
 		return false;
 	}
-	setFileTextEditor(fileId){
+	setFileTextEditor(fileId, filename){
 		this.setState({
 			fileTextEditor: (
-				<FileTextEditor fid={fileId} text={this.state.fileText[fileId]}
+				<FileTextEditor fid={fileId} filename={filename}
+					text={this.state.fileText[fileId]}
 					submit={this.submitFileText.bind(this)}
 					cancel={this.unsetFileTextEditor.bind(this)}
 				/>

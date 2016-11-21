@@ -20,10 +20,11 @@ class FileTextEditor extends Component {
 	}
 	render(){
 		return (
-			<div className="file-text-editor">
+			<div>
 				<Overlay />
-				<div className="file-text-editor__innerwrap">
-					<div className="file-text-editor__textarea-wrap">
+				<div className="file-text-editor">
+					<div className="file-text-editor__filename"><span>{this.props.filename}</span></div>
+					<div className="file-text-editor__wrap">
 						<textarea value={this.state.text} onChange={this.handleChange.bind(this)} />
 						<div className="file-text-editor__buttons">
 							<button type="button" onClick={this.handleClick.bind(this, 'submit')}>저장</button>
@@ -37,6 +38,7 @@ class FileTextEditor extends Component {
 }
 FileTextEditor.propType = {
 	fid: PropTypes.string.isRequired,
+	filename: PropTypes.string.isRequired,
 	text: PropTypes.string,
 	submit: PropTypes.func.isRequired,
 	cancel: PropTypes.func.isRequired
