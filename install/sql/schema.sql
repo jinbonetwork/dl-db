@@ -57,6 +57,7 @@ CREATE TABLE `dldb_fields` (
 	`form`		char(20),
 	`active`	char(1) DEFAULT '1',
 	`system`	char(1) DEFAULT '0',
+	`indextype`	char(128) DEFAULT 'none',
 
 	KEY `IDX` (`tables`,`parent`,`idx`)
 
