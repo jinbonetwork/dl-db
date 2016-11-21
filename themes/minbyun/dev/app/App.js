@@ -5,6 +5,7 @@ import {createHistory} from 'history';
 
 import DigitalLibraryContainer from './DigitalLibraryContainer';
 import DigitalLibrary from './DigitalLibrary';
+import Login from './Login';
 import User from './User';
 import NewDocument from './NewDocument';
 import EditDocument from './EditDocument';
@@ -22,6 +23,7 @@ render((
 	<Router history={browserHistory}>
 		<Route component={DigitalLibraryContainer}>
 			<Route path="/" component={DigitalLibrary}>
+				<Route path="/login" component={Login} />
 				<Route path="/user" component={User} />
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />

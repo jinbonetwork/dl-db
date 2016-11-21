@@ -6,6 +6,9 @@ import Message from './overlay/Message';
 import {_isEmpty, _isCommon} from './functions';
 
 const _childProps = {
+	'/login': {
+		role: [1, 3, 5, 7, 15]
+	},
 	'/user': {
 		role: [1, 3, 7],
 		required: ['userData']
