@@ -1,7 +1,7 @@
 <?php
 namespace DLDB\App\react;
 
-$Acl = 'view';
+$Acl = 'anonymous';
 
 class index extends \DLDB\Controller {
 	public function process() {
