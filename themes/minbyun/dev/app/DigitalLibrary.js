@@ -36,6 +36,9 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
+	componentWillMount(){
+		if(!this.props.userData.role) this.props.router.push('/login');
+	}
 	handleClick(which, args, event){
 		if(which == 'goback'){
 			this.props.router.goBack();
@@ -91,6 +94,7 @@ DigitalLibrary.propTypes = {
 	docData: PropTypes.object,
 	openedDocuments: PropTypes.object,
 	router: PropTypes.shape({
+		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired
 	}).isRequired
 };

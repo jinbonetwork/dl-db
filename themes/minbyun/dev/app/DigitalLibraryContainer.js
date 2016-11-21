@@ -10,7 +10,7 @@ class DigitalLibraryContainer extends Component {
 	constructor(){
 		super();
 		this.state = {
-			userData: {user: null, role: null},
+			userData: {user: null, role: null, sessiontype: null},
 			docData: {
 				taxonomy: _defaultTaxonomy,
 				terms: _defaultTerms,
@@ -20,31 +20,33 @@ class DigitalLibraryContainer extends Component {
 			openedDocuments: null
 		};
 	}
-	fetchData(path, prop){
-		axios.get('/api'+path)
-		.then((response) => {
+	fetchData(uri, callBack){
+		axios.get(uri).then((response) => {
 			if(response.statusText == 'OK'){
-				this.setData(prop, response.data);
+				if(response.data.error == 0){
+					callBack(response.data);
+				} else {
+					console.error(response.data);
+					//this.setServerError();
+				}
 			} else {
-				console.log('Server response was not OK');
+				console.error('Server response was not OK');
+				//this.setServerError();
 			}
-		})
+		});
 	}
-	setData(prop, data){
-		if(prop == 'userData'){
-			this.setState({[prop]: data});
-		} else if(prop == 'docData'){
-			this.setState({[prop]: {
+	componentDidMount(){
+		this.fetchData('/api/', (data) => {
+			this.setState({userData: data})
+		});
+		this.fetchData('/api/fields', (data) => {
+			this.setState({docData: {
 				taxonomy: _taxonomy(data.taxonomy, data.fields),
 				terms: _terms(data.taxonomy),
 				customFields: _customFields(data.fields),
 				customFieldAttrs: _customFieldAttrs(data.fields)
 			}});
-		}
-	}
-	componentDidMount(){
-		this.fetchData('/', 'userData');
-		this.fetchData('/fields', 'docData');
+		});
 	}
 	render(){
 		let	digitalLibrary = this.props.children && React.cloneElement(this.props.children, {

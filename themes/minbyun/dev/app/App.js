@@ -23,7 +23,6 @@ render((
 	<Router history={browserHistory}>
 		<Route component={DigitalLibraryContainer}>
 			<Route path="/" component={DigitalLibrary}>
-				<Route path="/login" component={Login} />
 				<Route path="/user" component={User} />
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />
@@ -31,5 +30,6 @@ render((
 				<Route path="/search**" component={SearchResult} />
 			</Route>
 		</Route>
+		<Route path="/login" component={Login} />
 	</Router>
 ), document.getElementById('root'));
