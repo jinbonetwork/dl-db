@@ -239,6 +239,7 @@ class Document extends \DLDB\Objects {
 	}
 
 	private static function fetchDocument($row,$mode='') {
+		$fields = self::getFields();
 		if(!$row) return null;
 		foreach($row as $k => $v) {
 			if($k == 'custom') $v = unserialize($v);
@@ -258,6 +259,44 @@ class Document extends \DLDB\Objects {
 		} else {
 			$document['owner'] = 0;
 		}
+
+		foreach($fields as $f => $field) {
+			switch($field['type']) {
+				case 'date':
+					if(is_string($document['f'.$f])) {
+						$_date = preg_split("/[\- :]+/i",$document['f'.$f]);
+						for($i=0; $i<strlen($field['form']); $i++) {
+							switch($field['form'][$i]) {
+								case 'Y':
+									$date['year'] = $_date[$i];
+									break;
+								case 'm':
+									$date['month'] = $_date[$i];
+									break;
+								case 'd':
+									$date['day'] = $_date[$i];
+									break;
+								case 'H':
+									$date['hour'] = $_date[$i];
+									break;
+								case 'i':
+									$date['minute'] = $_date[$i];
+									break;
+								case 's':
+									$date['second'] = $_date[$i];
+									break;
+								default:
+									break;
+							}
+						}
+						$document['f'.$f] = $date;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
 		return $document;
 	}
 }
