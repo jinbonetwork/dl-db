@@ -5,7 +5,6 @@ class SearchBar extends Component {
 		let className = (this.props.mode == 'content' ? 'serchbar searchbar--content' : 'searchbar');
 		return(
 			<div className={className}>
-				검색
 			</div>
 		);
 	}

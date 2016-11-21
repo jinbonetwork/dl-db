@@ -63,7 +63,7 @@ final class URIHandler extends \DLDB\Objects {
 		} else if($uri['fragment'][0] == 'search') {
 			$uri['appType'] = 'react';
 			$pathPart = DLDB_APP_PATH."react";
-		} else if( in_array($uri['fragment'][0], array( 'user', 'document', 'error' ) ) ) {
+		} else if( in_array($uri['fragment'][0], array( 'user', 'document', 'error', 'login', 'logout' ) ) ) {
 			$uri['appType'] = 'react';
 			$pathPart = DLDB_APP_PATH."react";
 		} else {

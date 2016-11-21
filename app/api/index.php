@@ -1,7 +1,7 @@
 <?php
 namespace DLDB\App\api;
 
-$Acl = "authenticated";
+$Acl = "anonymouse";
 
 class index extends \DLDB\Controller {
 	public function process() {

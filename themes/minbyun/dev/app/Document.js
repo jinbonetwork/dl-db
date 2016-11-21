@@ -7,10 +7,11 @@ import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
 import FileTextEditor from './document/FileTextEditor';
 import LinkByRole from './LinkByRole';
+import LinkIf from './LinkIf';
 import Message from  './overlay/Message';
 import {Table, Row, Column} from './Table';
 import {_fieldAttrs, _convertToDoc} from './docSchema';
-import {_isEmpty} from './functions';
+import {_isEmpty, _isCommon} from './functions';
 
 class Document extends Component {
 	constructor(){
@@ -133,7 +134,9 @@ class Document extends Component {
 							<h1>{this.state.document.title}</h1>
 							<div className="document__buttons">
 								<button type="button"><i className="pe-7f-bookmarks pe-va"></i>{' '}북마크</button>
-								<LinkByRole to={'/document/'+this.state.document.id+'/edit'} role={[1, 3]} userRole={userRole}>수정하기</LinkByRole>
+								<LinkIf to={'/document/'+this.state.document.id+'/edit'} condition={_isCommon([1], userRole) || this.state.document.owner}>
+									수정하기
+								</LinkIf>
 							</div>
 							<Table>
 								{fieldsInHeader.date}
