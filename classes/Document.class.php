@@ -100,6 +100,8 @@ class Document extends \DLDB\Objects {
 	public static function getList($uid=0,$page,$limit) {
 		$dbm = \DLDB\DBM::instance();
 
+		$fields = self::getFields();
+
 		$que = "SELECT * FROM {documents} ".( $uid ? "WHERE `uid` = ".$uid." " : '' )."ORDER BY `id` DESC LIMIT " .( ( $page-1 ) * $limit ) . ", ". $limit;
 		$documents = array();
 		while($row = $dbm->getFetchArray($que)) {
