@@ -3,7 +3,6 @@ import {Link} from 'react-router';
 import axios from 'axios';
 import ResultItem from './searchResult/ResultItem';
 import {_convertToDoc} from './docSchema';
-//import func from './functions';
 
 class SearchResult extends Component {
 	constructor(){

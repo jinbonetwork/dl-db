@@ -7,7 +7,8 @@ import {_isEmpty, _isCommon} from './functions';
 
 const _childProps = {
 	'/login': {
-		role: [1, 3, 5, 7, 15]
+		role: null,
+		required: ['userData']
 	},
 	'/user': {
 		role: [1, 3, 7],
@@ -36,17 +37,27 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
-	componentWillMount(){
-		if(!this.props.userData.role) this.props.router.push('/login');
+	componentWillReceiveProps(nextProps){
+		if(!nextProps.children && nextProps.userData.user && nextProps.userData.user.uid == 0){
+			this.props.router.push('/login');
+		}
 	}
 	handleClick(which, args, event){
 		if(which == 'goback'){
 			this.props.router.goBack();
 		}
 	}
-	cloneChild(children, userRole){
-		if(!children || !userRole) return null;
-		let childProp = _childProps[children.props.route.path];
+	cloneChild(child, userRole){
+		if(!child) return null;
+		let childProp = _childProps[child.props.route.path];
+		if(!userRole && childProp.role) return null;
+		if(childProp.role && !_isCommon(childProp.role, userRole)){
+			return (
+				<Message handleClick={this.handleClick.bind(this, 'goback')}>
+					이 페이지에 접근할 권한이 없습니다. 되돌아가려면 클릭하세요.
+				</Message>
+			);
+		}
 		let props = {};
 		if(childProp.required){
 			for(let i = 0, len = childProp.required.length; i < len; i++){
@@ -61,14 +72,11 @@ class DigitalLibrary extends Component {
 				props[p] = this.props[p];
 			}
 		}
-		return React.cloneElement(children, props);
+		return React.cloneElement(child, props);
 	}
 	render(){
 		let userRole = this.props.userData.role;
 		let child = this.cloneChild(this.props.children, userRole);
-		if(child && _isCommon(_childProps[this.props.children.props.route.path].role, userRole) === false){
-			child = <Message handleClick={this.handleClick.bind(this, 'goback')}>이 페이지에 접근할 권한이 없습니다. 되돌아가려면 클릭하세요.</Message>
-		}
 		return(
 			<div className="digital-library">
 				<div className="digital-library__header">
