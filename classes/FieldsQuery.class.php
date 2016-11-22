@@ -36,7 +36,7 @@ class FieldsQuery extends \DLDB\Objects {
 							break;
 						case 'date':
 							$array1 .= "s";
-							$args['f'.$key] = self::buidDate($field,$args['f'.$key]);
+							$args['f'.$key] = $this->buildDate($field,$args['f'.$key]);
 							break;
 						default:
 							$array1 .= "s";
@@ -64,7 +64,7 @@ class FieldsQuery extends \DLDB\Objects {
 							}
 							break;
 						case "date":
-							$v = self::buidDate($field,$v);
+							$v = $this->buildDate($field,$v);
 							break;
 						case "file":
 						case "image":
@@ -95,7 +95,7 @@ class FieldsQuery extends \DLDB\Objects {
 		$array1 .= '",';
         $array2 .= ")";
 
-		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'taxonomy_map' => $taxonomy_map);
+		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'taxonomy_map' => $taxonomy_map, 'args' => $args);
 	}
 
 	public function modifyQue($que,$array1,$array2,$old,$args) {
@@ -112,6 +112,10 @@ class FieldsQuery extends \DLDB\Objects {
 					switch($field['type']) {
 						case 'int':
 							$array1 .= "d";
+							break;
+						case 'date':
+							$array1 .= "s";
+							$args['f'.$key] = $this->buildDate($field,$args['f'.$key]);
 							break;
 						default:
 							$array1 .= "s";
@@ -152,6 +156,9 @@ class FieldsQuery extends \DLDB\Objects {
 									}
 								}
 							}
+							break;
+						case "date":
+							$v = $this->buildDate($field,$v);
 							break;
 						case "file":
 						case "image":
@@ -196,10 +203,10 @@ class FieldsQuery extends \DLDB\Objects {
 			}
 		}
 
-		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'del_files' => $del_files, 'taxonomy_map' => $taxonomy_map);
+		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'del_files' => $del_files, 'taxonomy_map' => $taxonomy_map, 'args' => $args);
 	}
 
-	public function buidDate($field,$value) {
+	public function buildDate($field,$value) {
 		$out = '';
 		for($i=0; $i<strlen($field['form']); $i++) {
 			switch($field['form'][$i]) {
@@ -212,8 +219,20 @@ class FieldsQuery extends \DLDB\Objects {
 				case 'd':
 					if($value['day']) $out .= ($out ? "-" : "").sprintf("%02d",(int)$value['day']);
 					break;
-			]
+				case 'H':
+					if($value['month']) $out .= ($out ? " " : "").sprintf("%02d",(int)$value['month']);
+					break;
+				case 'i':
+					if($value['minute']) $out .= ($out ? ":" : "").sprintf("%02d",(int)$value['minute']);
+					break;
+				case 's':
+					if($value['second']) $out .= ($out ? ":" : "").sprintf("%02d",(int)$value['second']);
+					break;
+				default:
+					break;
+			}
 		}
+
 		return $out;
 	}
 
