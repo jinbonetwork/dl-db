@@ -48,10 +48,10 @@ class DocumentForm extends Component {
 			}
 		}
 	}
-	handleClickToSubmit(){
+	submit(){
 		let error = this.validationCheck();
 		if(error){
-			this.setState({child: <Message handleClick={this.unsetChild.bind(this)}>{error.message}</Message>});
+			this.setState({child: <Message handleClick={this.handleClick.bind(this, 'error')}>{error.message}</Message>});
 			return false;
 		}
 		this.setState({child: <Processing />});
@@ -74,7 +74,8 @@ class DocumentForm extends Component {
 			}
 		};
 
-		axios.post('/api/document/save?mode='+this.props.formAttr.mode, formData)
+		let axiosInst = axios.create({timeout: 60000});
+		axiosInst.post('/api/document/save?mode='+this.props.formAttr.mode, formData)
 		.then((response) => {
 			if(response.statusText == 'OK'){
 				if(response.data.error == 0){
@@ -87,15 +88,27 @@ class DocumentForm extends Component {
 				console.error('Server response was not OK');
 				this.setServerError();
 			}
+		})
+		.catch((error) => {
+			console.error(error);
+			this.setServerError();
 		});
 	}
 	setServerError(){
 		this.setState({ child: (
-			<Message handleClick={this.unsetChild.bind(this)}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
+			<Message handleClick={this.handleClick.bind(this, 'serverError')}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
 		)});
 	}
-	unsetChild(){
-		this.setState({child: null});
+	handleClick(which, event){
+		if(which == 'submit'){
+			this.submit();
+		}
+		else if(which == 'error'){
+			this.setState({child: null});
+		}
+		else if(which == 'serverError'){
+			this.props.router.goBack();
+		}
 	}
 	render(){
 		let requiredFields = [], electiveFields = [];
@@ -138,7 +151,7 @@ class DocumentForm extends Component {
 						<Column className="table__label"></Column>
 						<Column>
 							<button type="button" className="document-form--submit"
-								onClick={this.handleClickToSubmit.bind(this)}>{this.props.formAttr.submit}
+								onClick={this.handleClick.bind(this, 'submit')}>{this.props.formAttr.submit}
 							</button>
 						</Column>
 					</Row>
@@ -154,7 +167,8 @@ DocumentForm.propTypes = {
 	docData: PropTypes.object.isRequired,
 	callBacks: PropTypes.object.isRequired,
 	router: PropTypes.shape({
-		push: PropTypes.func.isRequired
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
 	}).isRequired
 };
 
