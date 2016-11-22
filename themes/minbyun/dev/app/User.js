@@ -1,11 +1,15 @@
 import React, {Component, PropTypes} from 'react';
+import {withRouter} from 'react-router';
 import axios from 'axios';
 import {Table, Row, Column} from './Table';
 
 class User extends Component {
 	handleClick(which, event){
 		if(which == 'logout'){
-
+			axios.post('/api/logout').then((response) => {
+				this.props.removeUserData();
+				this.props.router.push('/login');
+			});
 		}
 	}
 	render(){
@@ -42,7 +46,8 @@ class User extends Component {
 	}
 }
 User.propTypes = {
-	userData: PropTypes.object,
+	userData: PropTypes.object.isRequired,
+	removeUserData: PropTypes.func.isRequired
 };
 
-export default User;
+export default withRouter(User);

@@ -13,7 +13,7 @@ const _childProps = {
 	},
 	'/user': {
 		role: [1, 3, 7],
-		required: ['userData']
+		required: ['userData', 'removeUserData']
 	},
 	'/document/:did': {
 		role: [1, 7],
@@ -102,7 +102,8 @@ class DigitalLibrary extends Component {
 DigitalLibrary.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
-	fetchContainerData: PropTypes.func,
+	fetchContainerData: PropTypes.func.isRequired,
+	removeUserData: PropTypes.func.isRequired,
 	openedDocuments: PropTypes.object,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,

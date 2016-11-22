@@ -51,6 +51,9 @@ class DigitalLibraryContainer extends Component {
 			}
 		});
 	}
+	removeUserData(){
+		this.setState({userData: {user: null, role: null, type: null}});
+	}
 	componentDidMount(){
 		this.fetchContainerData();
 	}
@@ -66,8 +69,9 @@ class DigitalLibraryContainer extends Component {
 		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
 			userData: this.state.userData,
 			docData: this.state.docData,
+			openedDocuments: this.state.openedDocuments,
 			fetchContainerData: this.fetchContainerData.bind(this),
-			openedDocuments: this.state.openedDocuments
+			removeUserData: this.removeUserData.bind(this)
 		});
 		return this.state.child || digitalLibrary;
 	}
