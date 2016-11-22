@@ -20,21 +20,25 @@ class Parser extends \DLDB\Objects {
 	public static function parseFile($file) {
 		switch($file['mimetype']) {
 			case 'application/pdf':
-				$memo = self::parsePDF($file);
+				$out = self::parsePDF($file);
 				break;
 			case 'application/msword':
 			case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-				$memo = self::parseDoc($file);
+				$out = self::parseDoc($file);
 				break;
 			default:
 				break;
 		}
-		if(trim($memo)) {
+		if($out['text']) {
 			$dbm = \DLDB\DBM::instance();
-			$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ? WHERE fid = ?";
-			$dbm->execute($que,array('sdsd','parsed', strlen(trim($memo)), trim($memo), $file['fid']) );
+			$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ?, `header` = ? WHERE fid = ?";
+			$dbm->execute($que, array('sdsd','parsed', strlen($out['text']), $out['text'], serialize($out['header']), $file['fid'] ) );
+		} else if( $out['header']['error'] ) {
+			$dbm = \DLDB\DBM::instance();
+			$que = "UPDATE {files} SET `header` = ? WHERE fid = ?";
+			$dbm->execute($que, array("sd", serialize($out['header']), $file['fid'] ) );
 		}
-		return trim($memo);
+		return $out['text'];
 	}
 
 	public static function parsePDF($file_info) {
@@ -43,12 +47,28 @@ class Parser extends \DLDB\Objects {
 		$filename = \DLDB\Files::getFilePath($file_info);
 		$pdf = $parser->parseFile($filename);
 
-		$pages = $pdf->getPages();
-
-		foreach( $pages as $page ) {
-			$text .= $page->getText()."\n";
+		$details  = $pdf->getDetails();
+		if ( is_array($details) ) {
+			foreach( $details as $property => $value ) {
+				if ( is_array( $value ) ) {
+					$value = implode(', ', $value);
+				}
+				$header[$property] = $value;
+			}
 		}
-		return $text;
+
+		$errmsg = self::validPDF( $header );
+
+		if(!$errmsg) {
+			$pages = $pdf->getPages();
+
+			foreach( $pages as $page ) {
+				$text .= $page->getText()."\n";
+			}
+		} else {
+			$header['error'] = $errmsg;
+		}
+		return array('text'=>trim($text),'header'=>$header);
 	}
 
 	public static function parseDoc($file_info) {
@@ -56,8 +76,9 @@ class Parser extends \DLDB\Objects {
 		$docObj = new Filetotext($filename);
 
 		$text = $docObj->convertToText();
+		$header = '';
 
-		return $text;
+		return array('text'=>trim($text),'header'=>$header);
 	}
 
 	public static function updateParse($file_info,$text) {
@@ -65,6 +86,13 @@ class Parser extends \DLDB\Objects {
 
 		$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ? WHERE fid = ?";
 		$dbm->execute($que,array('sdsd','parsed', strlen(trim($text)), trim($text), $file_info['fid']) );
+	}
+
+	public static function validPDF($header) {
+		if( preg_match("/ezPDF Builder 200[0-6]+/i", $header['Producer'] ) ) {
+			return $header['Producer']." 로 제작된 PDF는 분석할 수 없습니다.";
+		}
+		return '';
 	}
 }
 ?>

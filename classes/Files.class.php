@@ -121,7 +121,8 @@ class Files extends \DLDB\Objects {
 	private static function fetchFiles($row) {
 		if(!$row) return null;
 		foreach($row as $k => $v) {
-			if(is_string($v)) $v = stripslashes($v);
+			if($k == 'header') $v = unserialize($v);
+			else if(is_string($v)) $v = stripslashes($v);
 			$file[$k] = $v;
 		}
 		return $file;
