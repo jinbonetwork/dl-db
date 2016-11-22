@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
+import Message from './overlay/Message';
 import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './docSchema';
 import {_isEmpty} from './functions';
 
@@ -16,32 +17,29 @@ class DigitalLibraryContainer extends Component {
 				customFields: null,
 				customFieldAttrs: null
 			},
-			openedDocuments: null
+			openedDocuments: null,
+			child: null
 		};
 	}
 	fetchData(uri, callBack){
 		axios.get(uri).then((response) => {
 			if(response.statusText == 'OK'){
-				if(response.data.error == 0){
-					callBack(response.data);
-				} else {
-					//console.error(response.data);
-					//this.setServerError();
-				}
+				callBack(response.data);
 			} else {
-				//console.error('Server response was not OK');
-				//this.setServerError();
+				console.error('Server response was not OK');
+				this.setServerError();
 			}
 		});
 	}
-	componentDidMount(){
+	fetchContainerData(callBack){
 		this.fetchData('/api/', (data) => {
 			this.setState({userData: {
 				user: data.user,
 				role: data.role,
 				type: data.sessiontype
 			}});
-			if(data.user.uid == 0){
+			if(callBack) callBack(data);
+			if(data.role){
 				this.fetchData('/api/fields', (data) => {
 					this.setState({docData: {
 						taxonomy: _taxonomy(data.taxonomy, data.fields),
@@ -53,13 +51,25 @@ class DigitalLibraryContainer extends Component {
 			}
 		});
 	}
+	componentDidMount(){
+		this.fetchContainerData();
+	}
+	setServerError(){
+		this.setState({ child: (
+			<Message handleClick={this.unsetChild.bind(this)}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
+		)});
+	}
+	unsetChild(){
+		this.setState({child: null});
+	}
 	render(){
 		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
 			userData: this.state.userData,
 			docData: this.state.docData,
+			fetchContainerData: this.fetchContainerData.bind(this),
 			openedDocuments: this.state.openedDocuments
 		});
-		return digitalLibrary;
+		return this.state.child || digitalLibrary;
 	}
 }
 

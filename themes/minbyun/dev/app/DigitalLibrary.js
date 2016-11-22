@@ -8,7 +8,8 @@ import {_isEmpty, _isCommon} from './functions';
 const _childProps = {
 	'/login': {
 		role: null,
-		required: ['userData']
+		required: ['fetchContainerData'],
+		elective: ['userData']
 	},
 	'/user': {
 		role: [1, 3, 7],
@@ -37,10 +38,8 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
-	componentWillReceiveProps(nextProps){
-		if(!nextProps.children && nextProps.userData.user && nextProps.userData.user.uid == 0){
-			this.props.router.push('/login');
-		}
+	componentWillMount(){
+		if(!this.props.userData.role) this.props.router.push('/login');
 	}
 	handleClick(which, args, event){
 		if(which == 'goback'){
@@ -77,6 +76,9 @@ class DigitalLibrary extends Component {
 	render(){
 		let userRole = this.props.userData.role;
 		let child = this.cloneChild(this.props.children, userRole);
+		if(!userRole){
+			return <div className="digital-library">{child}</div>
+		}
 		return(
 			<div className="digital-library">
 				<div className="digital-library__header">
@@ -100,6 +102,7 @@ class DigitalLibrary extends Component {
 DigitalLibrary.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
+	fetchContainerData: PropTypes.func,
 	openedDocuments: PropTypes.object,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,

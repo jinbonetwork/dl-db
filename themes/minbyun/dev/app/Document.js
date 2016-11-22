@@ -29,7 +29,13 @@ class Document extends Component {
 					callBack(response.data);
 				} else {
 					console.error(response.data);
-					this.setServerError();
+					if(response.data.message){
+						this.setState({child: (
+							<Message handleClick={this.unsetChild.bind(this)}>{response.data.message}</Message>
+						)});
+					} else {
+						this.setServerError();
+					}
 				}
 			} else {
 				console.error('Server response was not OK');
@@ -38,7 +44,7 @@ class Document extends Component {
 		});
 	}
 	componentDidMount(){
-		this.fetchData('/api/document?id='+this.props.params.did, (data) => {
+		this.fetchData('/api/document?id='+this.props.params.did, (data) => { console.log(data);
 			let document = _convertToDoc(data.document);
 			this.setState({
 				document: document

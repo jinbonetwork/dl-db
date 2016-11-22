@@ -1,7 +1,13 @@
 import React, {Component, PropTypes} from 'react';
+import axios from 'axios';
 import {Table, Row, Column} from './Table';
 
 class User extends Component {
+	handleClick(which, event){
+		if(which == 'logout'){
+
+		}
+	}
 	render(){
 		return(
 			<div className="user">
@@ -27,6 +33,9 @@ class User extends Component {
 							<Column>{this.props.userData.user.email}</Column>
 						</Row>
 					}
+					<Row>
+						<Column><button type="button" onClick={this.handleClick.bind(this, 'logout')}>로그아웃</button></Column>
+					</Row>
 				</Table>
 			</div>
 		);
