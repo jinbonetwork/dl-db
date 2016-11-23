@@ -17,7 +17,7 @@ class FieldsInContents extends Component {
 				} else{
 					return value.map((text, i) => {
 						text = text.split(/\n/).map((t, j) => <div key={j}>{t}</div>);
-						return <p key={i}>{text}</p>
+						return <div key={i}>{text}</div>
 					});
 				}
 			case 'group':
