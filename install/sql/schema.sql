@@ -77,6 +77,7 @@ CREATE TABLE `dldb_files` (
 	`status`	char(15) NOT NULL DEFAULT 'uploaded',
 	`textsize`	int(10) NOT NULL DEFAULT 0,
 	`text`		mediumtext,
+	`header`	text,
 
 	KEY `UID`(`uid`),
 	KEY `DID`(`did`),
@@ -182,4 +183,14 @@ CREATE TABLE `dldb_members` (
 	KEY `UID` (`uid`),
 	KEY `NAME` (`name`),
 	KEY `CLASS` (`class`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `dldb_file_filter`;
+CREATE TABLE `dldb_file_filter` (
+	`id`		int(10) PRIMARY KEY AUTO_INCREMENT,
+	`ext`		char(10) NOT NULL DEFAULT '',
+	`field`		char(128),
+	`pattern`	char(256),
+
+	KEY `EXT` (`ext`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

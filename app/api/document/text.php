@@ -56,7 +56,8 @@ class text extends \DLDB\Controller {
 			if( $this->params['fid'] ) {
 				$this->result = array(
 					'error' => 0,
-					'text' => $this->file['text']
+					'text' => $this->file['text'],
+					'header' => $this->file['header']
 				);
 			} else {
 				$this->result = array(
