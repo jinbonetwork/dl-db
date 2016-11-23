@@ -2,6 +2,7 @@
 namespace DLDB\App\api\document;
 
 set_time_limit(0);
+ini_set("memory_limit", '1024M');
 $Acl = 'write';
 
 class save extends \DLDB\Controller {
