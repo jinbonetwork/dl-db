@@ -52,7 +52,9 @@ class Document extends Component {
 			document.file.forEach((f) => {if(f.fid){
 				this.fetchData('/api/document/text?id='+this.props.params.did+'&fid='+f.fid, (data) => {
 					this.setState({
-						fileText: update(this.state.fileText, {$merge: {[f.fid]: data.text}})
+						fileText: update(this.state.fileText, {$merge: {[f.fid]: {
+							text: data.text, header: data.header
+						}}})
 					});
 				});
 			}});
@@ -69,7 +71,8 @@ class Document extends Component {
 	setFileTextEditor(fileId, filename){
 		this.setState({child: (
 			<FileTextEditor fid={fileId} filename={filename}
-				text={this.state.fileText[fileId]}
+				header={this.state.fileText[fileId].header}
+				text={this.state.fileText[fileId].text}
 				submit={this.submitFileText.bind(this)}
 				cancel={this.unsetChild.bind(this)}
 			/>
