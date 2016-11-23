@@ -22,14 +22,17 @@ class Parser extends \DLDB\Objects {
 		if(!self::$filter) {
 			$dbm = \DLDB\DBM::instance();
 
-			$que = "SELECT * FROM {file_filter) ORDER BY id ASC";
+			$que = "SELECT * FROM {file_filter} ORDER BY id ASC";
 			while( $row = $dbm->getFetchArray($que) ) {
 				self::$filter[$row['ext']][$row['id']] = self::fetchFilter($row);
 			}
 		}
+		return self::$filter;
 	}
 	
 	public static function parseFile($file) {
+		self::getFilter();
+
 		switch($file['mimetype']) {
 			case 'application/pdf':
 				$out = self::parsePDF($file);
@@ -101,8 +104,13 @@ class Parser extends \DLDB\Objects {
 	}
 
 	public static function validPDF($header) {
-		if( preg_match("/ezPDF Builder 200[0-6]+/i", $header['Producer'] ) ) {
-			return $header['Producer']." 로 제작된 PDF는 분석할 수 없습니다.";
+		$filters = self::getFilter();
+		if( $filters['pdf'] && is_array($filters['pdf']) ) {
+			foreach( $filters['pdf'] as $fid => $filter ) {
+				if( preg_match($filter['pattern'], $header[$filter['field']] ) ) {
+					return $filter['message'];
+				}
+			}
 		}
 		return '';
 	}
