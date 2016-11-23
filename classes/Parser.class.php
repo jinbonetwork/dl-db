@@ -2,6 +2,7 @@
 namespace DLDB;
 
 class Parser extends \DLDB\Objects {
+	private static $filter;
 
 	public static function insert($did,$memo) {
 		$context = \DLDB\Model\Context::instance();
@@ -14,6 +15,17 @@ class Parser extends \DLDB\Objects {
 				break;
 			case 'elastic':
 				break;
+		}
+	}
+
+	public static function getFilter() {
+		if(!self::$filter) {
+			$dbm = \DLDB\DBM::instance();
+
+			$que = "SELECT * FROM {file_filter) ORDER BY id ASC";
+			while( $row = $dbm->getFetchArray($que) ) {
+				self::$filter[$row['ext']][$row['id']] = self::fetchFilter($row);
+			}
 		}
 	}
 	
@@ -93,6 +105,17 @@ class Parser extends \DLDB\Objects {
 			return $header['Producer']." 로 제작된 PDF는 분석할 수 없습니다.";
 		}
 		return '';
+	}
+
+	private static function fetchFilter($row) {
+		if(!$row) return null;
+		foreach($row as $k => $v) {
+			if(is_string($v)) {
+				$v = stripslashes($v);
+			}
+			$filter[$k] = $v;
+		}
+		return $filter;
 	}
 }
 ?>
