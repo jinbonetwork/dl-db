@@ -1,3 +1,8 @@
+/****
+
+
+****/
+
 *, *:after, *:before {
 	box-sizing: border-box;
 }
@@ -9,15 +14,18 @@ body, html {
 	background-color: #f5f5f5;
 	margin: 0;
 }
-input[type=text], select, textarea, button {
+input[type=text], input[type=password], select, textarea, button {
 	font-family:'Nanum Barun Gothic';
 	font-size: 16px;
 	color: #808080;
 	border: solid 1px #989cff;
 	padding: 0 0.5em;
 }
-input[type=text], select {
+input[type=text], input[type=password], select {
 	line-height: 3em;
+}
+input[type=text], input[type=password], button {
+	appearance: none;
 }
 select {
 	height: 48px;
@@ -40,6 +48,7 @@ p {
 p + p {
 	margin-top: 1em;
 }
+
 .textarea {
 	textarea {
 		line-height: 1.5em;
@@ -52,6 +61,7 @@ p + p {
 		top: 0; right: 0;
 	}
 }
+
 .table {
 	.table__row {
 	}
@@ -60,9 +70,11 @@ p + p {
 		min-height: 1px;
 	}
 }
+
 .textinput {
 	width: 100%;
 }
+
 .fileinput {
 	display: inline-block;
 	position: relative;
@@ -84,6 +96,7 @@ p + p {
 		cursor: pointer;
 	}
 }
+
 .dateform {
 	display: inline-block;
 	.dateform__year {
@@ -98,6 +111,7 @@ p + p {
 		margin-right: 1em;
 	}
 }
+
 .searchinput {
 	display: inline-block;
 	.searchinput__result {
@@ -130,6 +144,7 @@ p + p {
 		width: 60px;
 	}
 }
+
 .message {
 	position: fixed;
 	top: 50%; left: 50%;
@@ -143,6 +158,7 @@ p + p {
 		cursor: pointer;
 	}
 }
+
 .overlay {
 	position: fixed;
 	top: 0; left: 0; bottom: 0; right: 0;
@@ -153,6 +169,7 @@ p + p {
 		cursor: pointer;
 	}
 }
+
 .processing {
 	i {
 		position: fixed;
@@ -161,6 +178,7 @@ p + p {
 		color: #989cff;
 	}
 }
+
 .imagewrap {
 	img {
 		width: 100%;

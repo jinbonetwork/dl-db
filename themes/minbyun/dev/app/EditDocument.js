@@ -12,13 +12,15 @@ class EditDocument extends Component {
 				formAttr={{header: '자료수정하기', submit: '수정', mode: 'modify'}}
 				document={document}
 				docData={this.props.docData}
+				removeUserData={this.props.removeUserData}
 			/>
 		);
 	}
 }
 EditDocument.propTypes = {
 	userData: PropTypes.object,
-	docData: PropTypes.object
+	docData: PropTypes.object,
+	removeUserData: PropTypes.func
 };
 
 export default EditDocument;
