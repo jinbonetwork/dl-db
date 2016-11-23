@@ -1,6 +1,7 @@
 <?php
 namespace DLDB\App\api\document;
 
+set_time_limit(0);
 $Acl = 'write';
 
 class save extends \DLDB\Controller {
