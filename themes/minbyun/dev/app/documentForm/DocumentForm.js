@@ -51,7 +51,7 @@ class DocumentForm extends Component {
 	submit(){
 		let error = this.validationCheck();
 		if(error){
-			this.setState({child: <Message handleClick={this.handleClick.bind(this, 'error')}>{error.message}</Message>});
+			this.setState({child: <Message handleClick={this.handleClick.bind(this, 'diappear')}>{error.message}</Message>});
 			return false;
 		}
 		this.setState({child: <Processing />});
@@ -82,7 +82,14 @@ class DocumentForm extends Component {
 					this.props.router.push('/document/'+response.data.did);
 				} else {
 					console.error(response.data);
-					this.setServerError();
+					if(response.data.error == -9999){
+						this.setState({ child: (
+							<Message handleClick={this.handleClick.bind(this, 'toLogin')}>{response.data.message}</Message>
+						)});
+					} else {
+						this.setServerError(response.data.message)
+					}
+
 				}
 			} else {
 				console.error('Server response was not OK');
@@ -94,20 +101,25 @@ class DocumentForm extends Component {
 			this.setServerError();
 		});
 	}
-	setServerError(){
+	setServerError(message){
+		message = (message ? message : '요청한 작업을 처리하는 과정에서 문제가 발생했습니다.');
 		this.setState({ child: (
-			<Message handleClick={this.handleClick.bind(this, 'serverError')}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
+			<Message handleClick={this.handleClick.bind(this, 'goBack')}>{message}</Message>
 		)});
 	}
 	handleClick(which, event){
 		if(which == 'submit'){
 			this.submit();
 		}
-		else if(which == 'error'){
+		else if(which == 'disappear'){
 			this.setState({child: null});
 		}
-		else if(which == 'serverError'){
+		else if(which == 'goBack'){
 			this.props.router.goBack();
+		}
+		else if(which == 'toLogin'){
+			this.props.callBacks.removeUserData();
+			this.props.router.push('/login');
 		}
 	}
 	render(){

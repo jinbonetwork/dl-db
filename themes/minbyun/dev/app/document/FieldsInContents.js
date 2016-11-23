@@ -15,7 +15,10 @@ class FieldsInContents extends Component {
 				if(fAttr.form !== 'textarea'){
 					return value.join(', ');
 				} else{
-					return value.map((text, i) => <p key={i}>{text}</p>);
+					return value.map((text, i) => {
+						text = text.split(/\n/).map((t, j) => <div key={j}>{t}</div>);
+						return <div key={i}>{text}</div>
+					});
 				}
 			case 'group':
 				let inSubontent = [];

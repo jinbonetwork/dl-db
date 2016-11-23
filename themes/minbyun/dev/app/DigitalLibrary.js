@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
+import axios from 'axios';
 import SearchBar from './SearchBar';
 import LinkByRole from './LinkByRole';
 import Message from './overlay/Message';
@@ -8,7 +9,7 @@ import {_isEmpty, _isCommon} from './functions';
 const _childProps = {
 	'/login': {
 		role: null,
-		required: ['fetchContainerData'],
+		required: ['fetchContainerData', 'removeUserData'],
 		elective: ['userData']
 	},
 	'/user': {
@@ -17,22 +18,22 @@ const _childProps = {
 	},
 	'/document/:did': {
 		role: [1, 7],
-		required: ['userData'],
+		required: ['userData', 'removeUserData'],
 		elective: ['docData']
 	},
 	'/document/new':{
 		role: [1, 3],
-		required: ['userData'],
+		required: ['userData', 'removeUserData'],
 		elective: ['docData']
 	},
 	'/document/:did/edit': {
 		role: [1, 7],
-		required: ['userData'],
+		required: ['userData', 'removeUserData'],
 		elective: ['docData']
 	},
 	'/search**': {
 		role: [1, 3, 7],
-		required: ['userData'],
+		required: ['userData', 'removeUserData'],
 		elective: ['docData']
 	}
 }
@@ -44,6 +45,12 @@ class DigitalLibrary extends Component {
 	handleClick(which, args, event){
 		if(which == 'goback'){
 			this.props.router.goBack();
+		}
+		if(which == 'logout'){
+			axios.post('/api/logout').then((response) => {
+				this.props.removeUserData();
+				this.props.router.push('/login');
+			});
 		}
 	}
 	cloneChild(child, userRole){
@@ -83,11 +90,12 @@ class DigitalLibrary extends Component {
 			<div className="digital-library">
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
-						<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
+						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && <SearchBar />}
 					<div className="digital-library__menu">
-						<LinkByRole to="/user" role={[1, 3, 7]} userRole={userRole}>내정보</LinkByRole>
+						{/*<LinkByRole to="/user" role={[1, 3, 7]} userRole={userRole}>내정보</LinkByRole>*/}
+						<a onClick={this.handleClick.bind(this, 'logout')}>로그아웃</a>
 						<LinkByRole to="/search" role={[1, 7]} userRole={userRole}>자료목록</LinkByRole>
 						<LinkByRole to="/document/new" role={[1, 3]} userRole={userRole}>자료 입력</LinkByRole>
 					</div>

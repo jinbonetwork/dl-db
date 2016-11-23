@@ -12,13 +12,15 @@ class NewDocument extends Component {
 				formAttr={{header: '자료입력하기', submit: '등록', mode: 'add'}}
 				document={document}
 				docData={this.props.docData}
+				removeUserData={this.props.removeUserData}
 			/>
 		);
 	}
 }
 NewDocument.propTypes = {
 	userData: PropTypes.object,
-	docData: PropTypes.object
+	docData: PropTypes.object,
+	removeUserData: PropTypes.func
 };
 
 export default NewDocument;

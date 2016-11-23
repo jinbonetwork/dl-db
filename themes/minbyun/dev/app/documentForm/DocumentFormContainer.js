@@ -73,7 +73,8 @@ class DocumentFormContainer extends Component {
 					updateSingleField: this.updateSingleField.bind(this),
 					updateFields: this.updateFields.bind(this),
 					addValueToField: this.addValueToField.bind(this),
-					removeValueInField: this.removeValueInField.bind(this)
+					removeValueInField: this.removeValueInField.bind(this),
+					removeUserData: this.props.removeUserData
 				}}
 			/>
 		);
@@ -82,7 +83,8 @@ class DocumentFormContainer extends Component {
 DocumentFormContainer.propTypes = {
 	formAttr: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
-	docData: PropTypes.object
+	docData: PropTypes.object,
+	removeUserData: PropTypes.func
 };
 
 export default DocumentFormContainer;

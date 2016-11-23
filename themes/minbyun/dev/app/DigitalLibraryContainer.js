@@ -18,7 +18,8 @@ class DigitalLibraryContainer extends Component {
 				customFieldAttrs: null
 			},
 			openedDocuments: null,
-			child: null
+			child: null,
+			axiosInst: axios.create({timeout: 60000})
 		};
 	}
 	fetchData(uri, callBack){
@@ -52,7 +53,9 @@ class DigitalLibraryContainer extends Component {
 		});
 	}
 	removeUserData(){
-		this.setState({userData: {user: null, role: null, type: null}});
+		this.setState({userData: update(this.state.userData, {
+			user: {$set: null}, role: {$set: null}
+		})});
 	}
 	componentDidMount(){
 		this.fetchContainerData();
