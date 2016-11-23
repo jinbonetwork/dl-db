@@ -19,10 +19,10 @@ class FileTextEditor extends Component {
 	}
 	handleResize(){
 		let wrapH = jQ(this.refs.wrap).height();
-		let filenameH = jQ(this.refs.filename).outerHeight(true);
+		let headerH = jQ(this.refs.header).outerHeight(true);
 		let buttonsH = jQ(this.refs.buttons).outerHeight(true);
 		this.setState({textareaStyle: {
-			height: (wrapH - filenameH - buttonsH - 5)
+			height: (wrapH - headerH - buttonsH - 5)
 		}});
 	}
 	handleChange(event){
@@ -36,13 +36,23 @@ class FileTextEditor extends Component {
 		case 'alterScreen':
 			this.setState({isFullScreen: !this.state.isFullScreen}); break;
 	}}
+	fileMeta(){ if(this.props.header){
+		let meta = [];
+		for(let prop in this.props.header){
+			meta.push(<div key={prop}><span>{prop}: {this.props.header[prop]}</span></div>);
+		}
+		return <div className="file-text-editor__filemeta">{meta}</div>
+	}}
 	render(){
 		let className = (this.state.isFullScreen ? 'file-text-editor file-text-editor__full-screen' : 'file-text-editor');
 		return (
 			<div>
 				<Overlay />
 				<div className={className} ref="wrap">
-					<div className="file-text-editor__filename" ref="filename"><span>{this.props.filename}</span></div>
+					<div className="file-text-editor__header" ref="header">
+						<div className="file-text-editor__filename"><span>{this.props.filename}</span></div>
+						{this.fileMeta()}
+					</div>
 					<textarea value={this.state.text} onChange={this.handleChange.bind(this)} style={this.state.textareaStyle} />
 					<div className="file-text-editor__buttons" ref="buttons">
 						<button type="button" className={(this.state.isFullScreen ? 'reverse-color': '')} onClick={this.handleClick.bind(this, 'alterScreen')}>
@@ -59,6 +69,7 @@ class FileTextEditor extends Component {
 FileTextEditor.propType = {
 	fid: PropTypes.string.isRequired,
 	filename: PropTypes.string.isRequired,
+	header: PropTypes.object,
 	text: PropTypes.string,
 	submit: PropTypes.func.isRequired,
 	cancel: PropTypes.func.isRequired

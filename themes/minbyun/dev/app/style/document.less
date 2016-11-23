@@ -161,13 +161,22 @@
 	&:not(.file-text-editor__full-screen){
 		max-width: 700px; max-height: 600px;
 	}
-	.file-text-editor__filename {
-		margin-bottom: 1em;
+	.file-text-editor__header {
+		margin-bottom: 2em;
 	}
 	.file-text-editor__filename span {
 		font-size: 1.2em;
 		font-weight: 700;
 		color: #989cff;
+	}
+	.file-text-editor__filename + .file-text-editor__filemeta {
+		margin-top: 1em;
+	}
+	.file-text-editor__filemeta {
+		padding-left: 1em;
+	}
+	.file-text-editor__filemeta span {
+		font-size: 0.8em;
 	}
 	textarea {
 		width: 100%;
