@@ -6,10 +6,11 @@ class Option extends Component {
 		this.props.handleClick({value: this.props.value, checked: !this.props.checked});
 	}
 	render(){
+		let className = (this.props.checked ? 'option option--checked': 'option');
 		return (
-			<li onClick={this.handleClick.bind(this)}>
-				{(this.props.checked ? 'v ' : '')}
-				{this.props.name}
+			<li className={className} onClick={this.handleClick.bind(this)}>
+				<i className="pe-7s-check pe-va"></i>
+				<span>{this.props.name}</span>
 			</li>
 		);
 	}
@@ -22,6 +23,12 @@ Option.propTypes = {
 };
 
 class DoctypeSelect extends Component {
+	constructor(){
+		super();
+		this.state = {
+			isFolded: true
+		};
+	}
 	handleClick(which, arg, event){
 		if(which == 'option'){
 			let newValues;
@@ -36,6 +43,9 @@ class DoctypeSelect extends Component {
 			}
 			this.props.handleChange(newValues);
 		}
+		else if(which == 'header'){
+			this.setState({isFolded: !this.state.isFolded});
+		}
 	}
 	render(){
 		let options = [];
@@ -47,12 +57,12 @@ class DoctypeSelect extends Component {
 				/>
 			);
 		}
-
+		let className = (this.state.isFolded ? 'doctype-select': 'doctype-select  doctype-select--unfolded');
 		return (
-			<div className="doctype-select">
-				<div className="doctype-select__header">
+			<div className={className}>
+				<div className="doctype-select__header" onClick={this.handleClick.bind(this, 'header')}>
 					<span>{this.props.displayName}</span>
-					<i className="pe-7s-angle-down"></i>
+					<i className="pe-7s-angle-down pe-va"></i>
 				</div>
 				<ul>{options}</ul>
 			</div>

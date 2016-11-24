@@ -9,13 +9,46 @@
 }
 .doctype-select {
 	display: inline-block;
+	border: solid 2px #989cff;
 	background-color: #ffffff;
 	.doctype-select__header {
-		border: solid 2px #989cff;
 		line-height: 3em;
-		padding: 0 1em;
+		padding: 0 0.5em 0 1em;
+		color: #989cff;
+		cursor: pointer;
+	}
+	.doctype-select__header span + i {
+		margin-left: 1em;
 	}
 	.doctype-select__header i {
 		font-size: 2em;
+		font-weight: bold;
+	}
+	ul {
+		overflow: hidden;
+		height: 0;
+	}
+	&.doctype-select--unfolded ul {
+		height: auto;
+	}
+}
+.option {
+	cursor: pointer;
+	&.option--checked {
+		color: #989cff;
+	}
+	&:last-child {
+		margin-bottom: 1em;
+	}
+	padding: 0.5em 1em 0.5em 1em;
+	i {
+		font-weight: bold;
+		visibility: hidden;
+	}
+	&.option--checked i {
+		visibility: visible;
+	}
+	i + span {
+		margin-left: 0.5em;
 	}
 }
