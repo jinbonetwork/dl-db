@@ -183,9 +183,15 @@ class Document extends \DLDB\Objects {
 		$dbm->execute($que,$q_args);
 
 		$memo = '';
+		$new_parse = false;
 		if( is_array($files) ) {
 			foreach($files as $file) {
-				$memo .= \DLDB\Parser::parseFile($file);
+				if($old_files[$file['fid']]) {
+					$memo .= $file['text'];
+				} else {
+					$new_parse = true;
+					$memo .= \DLDB\Parser::parseFile($file);
+				}
 			}
 		}
 		if( is_array($del_files) ) {
@@ -194,7 +200,7 @@ class Document extends \DLDB\Objects {
 				\DLDB\Files::unlinkFile(DLDB_DA_PATH.$d_file['filepath']);
 			}
 		}
-		if(trim($memo)) {
+		if(trim($memo) && $new_parse) {
 			\DLDB\Parser::insert($args['id'],$memo);
 		}
 

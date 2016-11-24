@@ -203,7 +203,7 @@ class FieldsQuery extends \DLDB\Objects {
 			}
 		}
 
-		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'del_files' => $del_files, 'taxonomy_map' => $taxonomy_map, 'args' => $args);
+		return array('que' => $que, 'que2' => $que2.")", 'array1' => $array1, 'array2' => $array2, 'custom' => $custom, 'files' => $files, 'del_files' => $del_files, 'taxonomy_map' => $taxonomy_map, 'old_files' => $old_files, 'args' => $args);
 	}
 
 	public function buildDate($field,$value) {
