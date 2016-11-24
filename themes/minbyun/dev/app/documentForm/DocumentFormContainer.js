@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
-import axios from 'axios';
 import DocumentForm from './DocumentForm';
 import {_emptyDocument, _fieldAttrs, _convertToDoc} from '../docSchema';
 
@@ -11,18 +10,9 @@ class DocumentFormContainer extends Component {
 	}
 	componentDidMount(){
 		if(this.props.formAttr.mode == 'modify'){
-			axios.get('/api/document?id='+this.state.id)
-			.then((response) => {
-				if(response.statusText == 'OK'){
-					if(response.data.error == 0){
-						this.setState(_convertToDoc(response.data.document));
-					} else {
-						console.error(response.data.message);
-					}
-				} else {
-					console.error('Server response was not OK');
-				}
-			});
+			this.props.fetchData('get', '/api/document?id='+this.state.id, (data) => { if(data){
+				this.setState(_convertToDoc(data.document));
+			}});
 		}
 	}
 	updateFields(fields){ if(!fields) return;
@@ -74,7 +64,8 @@ class DocumentFormContainer extends Component {
 					updateFields: this.updateFields.bind(this),
 					addValueToField: this.addValueToField.bind(this),
 					removeValueInField: this.removeValueInField.bind(this),
-					removeUserData: this.props.removeUserData
+					fetchData: this.props.fetchData,
+					setMessage: this.props.setMessage
 				}}
 			/>
 		);
@@ -84,7 +75,8 @@ DocumentFormContainer.propTypes = {
 	formAttr: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	docData: PropTypes.object,
-	removeUserData: PropTypes.func
+	fetchData: PropTypes.func,
+	setMessage: PropTypes.func
 };
 
 export default DocumentFormContainer;

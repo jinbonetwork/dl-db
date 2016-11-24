@@ -28,6 +28,7 @@ class DocumentInputForm extends Component {
 					<SearchInput value={this.props.value} fname={this.props.fname} api={api}
 						updateFields={this.props.callBacks.updateFields.bind(this)}
 						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
+						fetchData={this.props.callBacks.fetchData}
 					/>
 				);
 			case 'file':

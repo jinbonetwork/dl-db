@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
-import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import FieldsInHeader from './document/FieldsInHeader';
@@ -22,43 +21,22 @@ class Document extends Component {
 			child: null
 		};
 	}
-	fetchData(uri, callBack){
-		axios.get(uri).then((response) => {
-			if(response.statusText == 'OK'){
-				if(response.data.error == 0){
-					callBack(response.data);
-				} else {
-					console.error(response.data);
-					if(response.data.message){
-						this.setState({child: (
-							<Message handleClick={this.unsetChild.bind(this)}>{response.data.message}</Message>
-						)});
-					} else {
-						this.setServerError();
-					}
-				}
-			} else {
-				console.error('Server response was not OK');
-				this.setServerError();
-			}
-		});
-	}
 	componentDidMount(){
-		this.fetchData('/api/document?id='+this.props.params.did, (data) => {
+		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){
 			let document = _convertToDoc(data.document);
 			this.setState({
 				document: document
 			});
 			document.file.forEach((f) => {if(f.fid){
-				this.fetchData('/api/document/text?id='+this.props.params.did+'&fid='+f.fid, (data) => {
+				this.props.fetchData('get', '/api/document/text?id='+this.props.params.did+'&fid='+f.fid, (data) => { if(data){
 					this.setState({
 						fileText: update(this.state.fileText, {$merge: {[f.fid]: {
 							text: data.text, header: data.header
 						}}})
 					});
-				});
+				}});
 			}});
-		});
+		}});
 	}
 	isHiddenField(fname){
 		if(fname == 'trial'){
@@ -83,32 +61,19 @@ class Document extends Component {
 	}
 	submitFileText(fileId, text){
 		let prevFiletext = this.state.fileText;
-
 		this.setState({
-			fileText: update(this.state.fileText, {[fileId]: {$set: text}}),
+			fileText: update(this.state.fileText, {[fileId]: {text: {$set: text}}}),
 			child: null
 		});
 
 		let formData = new FormData();
 		formData.append('text', text);
-		axios.post('/api/document/text?mode=modify&id='+this.props.params.did+'&fid='+fileId, formData)
-		.then((response) => {
-			if(response.statusText == 'OK'){
-				if(response.data.error != 0){
-					this.setState({fileText: prevFiletext});
-					console.error(response.data);
-					this.setServerError();
-				}
-			} else {
-				console.error('Server response was not OK');
-				this.setServerError();
+
+		this.props.fetchData('post', '/api/document/text?mode=modify&id='+this.props.params.did+'&fid='+fileId, formData, (data) => {
+			if(!data){
+				this.setState({fileText: prevFiletext});
 			}
 		});
-	}
-	setServerError(){
-		this.setState({child: (
-			<Message handleClick={this.unsetChild.bind(this)}>요청한 작업을 처리하는 과정에서 문제가 발생했습니다.</Message>
-		)});
 	}
 	render(){
 		if(!this.state.document) return null;
@@ -165,6 +130,8 @@ class Document extends Component {
 Document.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
+	fetchData: PropTypes.func,
+	setMessage: PropTypes.func,
 	openedDocuments: PropTypes.object,
 	router: PropTypes.shape({
 		goBack: PropTypes.func.isRequired,

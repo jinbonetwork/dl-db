@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
-import axios from 'axios';
 import ResultItem from './searchResult/ResultItem';
 import {_convertToDoc} from './docSchema';
 
@@ -21,25 +20,13 @@ class SearchResult extends Component {
 	}
 	fetchData(page){
 		page = (page ? page : 1);
-		axios.get('/api/document?page='+page)
-		.then((response) => {
-			if(response.statusText == 'OK'){
-				if(response.data.error == 0){
-					this.setDocuments(response.data);
-				} else {
-					console.error(response.data.message);
-				}
-			} else {
-				console.error('Server response was not OK');
-			}
-		});
-	}
-	setDocuments(data){
-		this.setState({
-			documents: data.documents.map((doc) => _convertToDoc(doc)),
-			page: data.result.page,
-			numOfPages: data.result.total_page
-		});
+		this.props.fetchData('get', '/api/document?page='+page, (data) => {if(data){
+			this.setState({
+				documents: data.documents.map((doc) => _convertToDoc(doc)),
+				page: data.result.page,
+				numOfPages: data.result.total_page
+			});
+		}});
 	}
 	pageOfPagination(page){
 		if(page != 0){
@@ -81,7 +68,8 @@ class SearchResult extends Component {
 }
 SearchResult.propTypes = {
 	userData: PropTypes.object,
-	docData: PropTypes.object
+	docData: PropTypes.object,
+	fetchData: PropTypes.func
 };
 
 export default SearchResult;

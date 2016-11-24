@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import {withRouter} from 'react-router';
 import 'babel-polyfill'; // for update(), find() ...
-import axios from 'axios';
 import SearchInput from './SearchInput';
 import Textarea from '../inputs/Textarea';
 import DateForm from '../inputs/DateForm';
@@ -14,11 +13,6 @@ import {_fieldAttrs, _sFname, _convertDocToSave} from '../docSchema';
 import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
 
 class DocumentForm extends Component {
-	componentWillMount(){
-		this.setState({
-			child: null
-		});
-	}
 	isHiddenField(fname){
 		if(fname == 'trial'){
 			if(this.props.document.doctype == 1) return false;
@@ -51,10 +45,9 @@ class DocumentForm extends Component {
 	submit(){
 		let error = this.validationCheck();
 		if(error){
-			this.setState({child: <Message handleClick={this.handleClick.bind(this, 'diappear')}>{error.message}</Message>});
+			this.props.callBacks.setMessage(error.message, 'unset');
 			return false;
 		}
-		this.setState({child: <Processing />});
 
 		let formData = new FormData();
 		formData.append('document', JSON.stringify(
@@ -74,52 +67,15 @@ class DocumentForm extends Component {
 			}
 		};
 
-		let axiosInst = axios.create({timeout: 60000});
-		axiosInst.post('/api/document/save?mode='+this.props.formAttr.mode, formData)
-		.then((response) => {
-			if(response.statusText == 'OK'){
-				if(response.data.error == 0){
-					this.props.router.push('/document/'+response.data.did);
-				} else {
-					console.error(response.data);
-					if(response.data.error == -9999){
-						this.setState({ child: (
-							<Message handleClick={this.handleClick.bind(this, 'toLogin')}>{response.data.message}</Message>
-						)});
-					} else {
-						this.setServerError(response.data.message)
-					}
-
-				}
-			} else {
-				console.error('Server response was not OK');
-				this.setServerError();
-			}
-		})
-		.catch((error) => {
-			console.error(error);
-			this.setServerError();
-		});
-	}
-	setServerError(message){
-		message = (message ? message : '요청한 작업을 처리하는 과정에서 문제가 발생했습니다.');
-		this.setState({ child: (
-			<Message handleClick={this.handleClick.bind(this, 'goBack')}>{message}</Message>
-		)});
+		let usetProcessing = this.props.callBacks.setMessage(null);
+		this.props.callBacks.fetchData('post', '/api/document/save?mode='+this.props.formAttr.mode, formData, (data) => { if(data){
+			usetProcessing();
+			this.props.router.push('/document/'+data.did);
+		}});
 	}
 	handleClick(which, event){
 		if(which == 'submit'){
 			this.submit();
-		}
-		else if(which == 'disappear'){
-			this.setState({child: null});
-		}
-		else if(which == 'goBack'){
-			this.props.router.goBack();
-		}
-		else if(which == 'toLogin'){
-			this.props.callBacks.removeUserData();
-			this.props.router.push('/login');
 		}
 	}
 	render(){
@@ -168,7 +124,6 @@ class DocumentForm extends Component {
 						</Column>
 					</Row>
 				</Table>
-				{this.state.child}
 			</div>
 		);
 	}

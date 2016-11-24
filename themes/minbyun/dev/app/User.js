@@ -1,15 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
-import axios from 'axios';
 import {Table, Row, Column} from './Table';
 
 class User extends Component {
 	handleClick(which, event){
 		if(which == 'logout'){
-			axios.post('/api/logout').then((response) => {
-				this.props.removeUserData();
-				this.props.router.push('/login');
-			});
+			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){ console.log(data);
+				this.props.setMessage('로그아웃되었습니다.', 'goToLogin');
+			}});
 		}
 	}
 	render(){
@@ -47,7 +45,8 @@ class User extends Component {
 }
 User.propTypes = {
 	userData: PropTypes.object.isRequired,
-	removeUserData: PropTypes.func.isRequired
+	fetchData: PropTypes.func.isRequired,
+	setMessage: PropTypes.func.isRequired
 };
 
 export default withRouter(User);

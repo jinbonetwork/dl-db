@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import axios from 'axios';
 import {_fieldAttrs} from '../docSchema';
 
 class SearchInput extends Component {
@@ -20,20 +19,9 @@ class SearchInput extends Component {
 		}
 	}
 	search(keyword){
-		axios.get(this.props.api+keyword)
-		.then((response) => {
-			if(response.statusText == 'OK'){
-				if(response.data.error == 0){
-					this.setState({results: response.data.members});
-				} else {
-					this.setState({results: []});
-					console.error(response.data);
-				}
-			} else {
-				this.setState({results: []});
-				console.error('Server response was not OK');
-			}
-		})
+		this.props.fetchData('get', this.props.api+keyword, (data) => { if(data){
+			this.setState({results: data.members});
+		}});
 	}
 	handleClickListItem(result, event){
 		let fields = {};
@@ -74,7 +62,8 @@ SearchInput.propTypes = {
 	fname: PropTypes.string.isRequired,
 	api: PropTypes.string.isRequired,
 	updateSingleField: PropTypes.func.isRequired,
-	updateFields: PropTypes.func.isRequired
+	updateFields: PropTypes.func.isRequired,
+	fetchData: PropTypes.func.isRequired
 };
 
 export default SearchInput;

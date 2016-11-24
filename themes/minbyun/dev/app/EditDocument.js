@@ -12,7 +12,8 @@ class EditDocument extends Component {
 				formAttr={{header: '자료수정하기', submit: '수정', mode: 'modify'}}
 				document={document}
 				docData={this.props.docData}
-				removeUserData={this.props.removeUserData}
+				fetchData={this.props.fetchData}
+				setMessage={this.props.setMessage}
 			/>
 		);
 	}
@@ -20,7 +21,8 @@ class EditDocument extends Component {
 EditDocument.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
-	removeUserData: PropTypes.func
+	fetchData: PropTypes.func,
+	setMessage: PropTypes.func
 };
 
 export default EditDocument;
