@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import LinkByRole from '../LinkByRole';
-import {_displayDate} from '../functions';
+import LinkIf from '../LinkIf';
+import {_displayDate, _isCommon} from '../functions';
 
 const _sideDispNames = {
 	date: '작성일',
@@ -32,10 +32,10 @@ class ResultItem extends Component {
 			<div className="result-item">
 				<div className="result-item__header">
 					<span>{'['+this.props.docData.terms[this.props.document.doctype]+']'}</span>
-					<LinkByRole className="result-item__title" to={'/document/'+this.props.document.id} userRole={this.props.userRole}
-						role={[1, 7]} isVisible={true}>
+					<LinkIf className="result-item__title" to={'/document/'+this.props.document.id} if={_isCommon([1, 7], this.props.userRole)} isVisible={true}>
 						{this.props.document.title}
-					</LinkByRole>
+					</LinkIf>
+
 				</div>
 				<div className="result-item__content">
 					<ul className="result-item__side">{side}</ul>

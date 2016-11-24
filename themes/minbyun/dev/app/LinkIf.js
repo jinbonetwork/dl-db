@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 
 class LinkIf extends Component {
 	render(){
-		if(this.props.condition){
+		if(this.props.if){
 			if(!this.props.isAnchor){
 				return <Link className={this.props.className} to={this.props.to}>{this.props.children}</Link>
 			} else {
@@ -19,9 +19,9 @@ class LinkIf extends Component {
 	}
 }
 LinkIf.propTypes = {
-	className: PropTypes.string,
+	classNmae: PropTypes.string,
 	to: PropTypes.string.isRequired,
-	condition: PropTypes.bool.isRequired,
+	if: PropTypes.bool.isRequired,
 	isVisible: PropTypes.bool,
 	isAnchor: PropTypes.bool
 };

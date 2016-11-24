@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import SearchBar from './SearchBar';
-import LinkByRole from './LinkByRole';
+import LinkIf from './LinkIf';
 import Message from './overlay/Message';
 import {_isEmpty, _isCommon} from './functions';
 
@@ -85,9 +85,9 @@ class DigitalLibrary extends Component {
 					</Link>
 					{child && <SearchBar />}
 					<div className="digital-library__menu">
-						<LinkByRole to="/user" role={[1, 3, 7]} userRole={userRole}>내정보</LinkByRole>
-						<LinkByRole to="/search" role={[1, 7]} userRole={userRole}>자료목록</LinkByRole>
-						<LinkByRole to="/document/new" role={[1, 3]} userRole={userRole}>자료 입력</LinkByRole>
+						<LinkIf to="/user" if={_isCommon([1, 3, 7], userRole)}>내정보</LinkIf>
+						<LinkIf to="/search" if={_isCommon([1, 7], userRole)}>자료목록</LinkIf>
+						<LinkIf to="/document/new" if={_isCommon([1, 3], userRole)}>자료 입력</LinkIf>
 					</div>
 				</div>
 				<div className="digital-library__content">
