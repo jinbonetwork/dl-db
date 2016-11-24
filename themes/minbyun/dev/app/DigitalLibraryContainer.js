@@ -6,6 +6,7 @@ import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import Message from './overlay/Message';
 import Overlay from './overlay/Overlay';
 import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './docSchema';
+import {_role} from './userSchema';
 import {_isEmpty} from './functions';
 
 class DigitalLibraryContainer extends Component {
@@ -55,7 +56,7 @@ class DigitalLibraryContainer extends Component {
 		this.fetchData('get', '/api', (data) => {
 			this.setState({userData: {
 				user: data.user,
-				role: data.role,
+				role: _role(data.role),
 				type: data.sessiontype
 			}});
 			if(data.role){

@@ -107,7 +107,7 @@ class Document extends Component {
 							<h1>{this.state.document.title}</h1>
 							<div className="document__buttons">
 								<button type="button"><i className="pe-7f-bookmarks pe-va"></i>{' '}북마크</button>
-								<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon([1], userRole) || this.state.document.owner}>
+								<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
 									수정하기
 								</LinkIf>
 							</div>

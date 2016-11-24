@@ -12,26 +12,26 @@ const _childProps = {
 		elective: ['userData']
 	},
 	'/user': {
-		role: [1, 3, 7],
+		role: ['admin', 'write', 'view'],
 		required: ['userData', 'fetchData', 'setMessage']
 	},
 	'/document/:did': {
-		role: [1, 7],
+		role: ['admin', 'view'],
 		required: ['userData', 'fetchData', 'setMessage'],
 		elective: ['docData']
 	},
 	'/document/new':{
-		role: [1, 3],
+		role: ['admin', 'write'],
 		required: ['userData', 'fetchData', 'setMessage'],
 		elective: ['docData']
 	},
 	'/document/:did/edit': {
-		role: [1, 7],
+		role: ['admin', 'write'],
 		required: ['userData', 'fetchData', 'setMessage'],
 		elective: ['docData']
 	},
 	'/search**': {
-		role: [1, 3, 7],
+		role: ['admin', 'write', 'view'],
 		required: ['userData', 'fetchData'],
 		elective: ['docData']
 	}
@@ -85,9 +85,9 @@ class DigitalLibrary extends Component {
 					</Link>
 					{child && <SearchBar />}
 					<div className="digital-library__menu">
-						<LinkIf to="/user" if={_isCommon([1, 3, 7], userRole)}>내정보</LinkIf>
-						<LinkIf to="/search" if={_isCommon([1, 7], userRole)}>자료목록</LinkIf>
-						<LinkIf to="/document/new" if={_isCommon([1, 3], userRole)}>자료 입력</LinkIf>
+						<LinkIf to="/user" if={_isCommon(['admin', 'write', 'view'], userRole)}>내정보</LinkIf>
+						<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>
+						<LinkIf to="/document/new" if={_isCommon(['admin', 'write'], userRole)}>자료 입력</LinkIf>
 					</div>
 				</div>
 				<div className="digital-library__content">

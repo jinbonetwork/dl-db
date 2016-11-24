@@ -32,7 +32,7 @@ class ResultItem extends Component {
 			<div className="result-item">
 				<div className="result-item__header">
 					<span>{'['+this.props.docData.terms[this.props.document.doctype]+']'}</span>
-					<LinkIf className="result-item__title" to={'/document/'+this.props.document.id} if={_isCommon([1, 7], this.props.userRole)} isVisible={true}>
+					<LinkIf className="result-item__title" to={'/document/'+this.props.document.id} if={_isCommon(['admin', 'view'], this.props.userRole)} isVisible={true}>
 						{this.props.document.title}
 					</LinkIf>
 
