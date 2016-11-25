@@ -5,11 +5,11 @@ import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
 import FileTextEditor from './document/FileTextEditor';
-import LinkIf from './LinkIf';
-import Message from  './overlay/Message';
-import {Table, Row, Column} from './Table';
-import {_fieldAttrs, _convertToDoc} from './docSchema';
-import {_isEmpty, _isCommon} from './functions';
+import LinkIf from './accessories/LinkIf';
+import Message from  './accessories/Message';
+import {Table, Row, Column} from './accessories/Table';
+import {_fieldAttrs, _convertToDoc} from './schema/docSchema';
+import {_isEmpty, _isCommon} from './accessories/functions';
 
 class Document extends Component {
 	constructor(){

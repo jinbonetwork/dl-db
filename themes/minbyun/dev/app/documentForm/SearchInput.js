@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {_fieldAttrs} from '../docSchema';
+import {_fieldAttrs} from '../schema/docSchema';
 
 class SearchInput extends Component {
 	componentWillMount(){

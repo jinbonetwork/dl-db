@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {_isCommon} from '../functions';
+import {_isCommon} from '../accessories/functions';
 
 class Option extends Component {
 	handleClick(){

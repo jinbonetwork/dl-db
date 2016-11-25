@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import DoctypeSelect from './searchBar/DoctypeSelect';
-import {_fieldAttrs} from './docSchema';
+import {_fieldAttrs} from './schema/docSchema';
 
 class SearchBar extends Component {
 	constructor(){

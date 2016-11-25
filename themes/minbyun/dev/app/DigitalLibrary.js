@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import SearchBar from './SearchBar';
-import LinkIf from './LinkIf';
-import Message from './overlay/Message';
-import {_isEmpty, _isCommon} from './functions';
+import LinkIf from './accessories/LinkIf';
+import Message from './accessories/Message';
+import {_isEmpty, _isCommon} from './accessories/functions';
 
 const _childProps = {
 	'/login': {

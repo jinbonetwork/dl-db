@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 import DocumentForm from './DocumentForm';
-import {_emptyDocument, _fieldAttrs, _convertToDoc} from '../docSchema';
+import {_emptyDocument, _fieldAttrs, _convertToDoc} from '../schema/docSchema';
 
 class DocumentFormContainer extends Component {
 	componentWillMount(){

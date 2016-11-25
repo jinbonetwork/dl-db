@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {Table, Row, Column} from '../Table';
-import {_fieldAttrs} from '../docSchema';
+import {Table, Row, Column} from '../accessories/Table';
+import {_fieldAttrs} from '../schema/docSchema';
 
 class FieldsInContents extends Component {
 	content(){

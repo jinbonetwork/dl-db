@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
-import {Table, Row, Column} from './Table';
+import {Table, Row, Column} from './accessories/Table';
 
 class User extends Component {
 	handleClick(which, event){

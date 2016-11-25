@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import ResultItem from './searchResult/ResultItem';
-import {_convertToDoc} from './docSchema';
+import {_convertToDoc} from './schema/docSchema';
 
 class SearchResult extends Component {
 	constructor(){

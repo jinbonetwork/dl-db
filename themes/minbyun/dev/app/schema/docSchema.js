@@ -1,4 +1,4 @@
-import {_isEmpty} from './functions';
+import {_isEmpty} from '../accessories/functions';
 
 const _emptyDocument = {
 	id: 0, uid: 0, created: 0, owner: false,

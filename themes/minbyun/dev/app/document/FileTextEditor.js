@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import Overlay from '../overlay/Overlay';
+import Overlay from '../accessories/Overlay';
 import jQ from 'jquery';
 
 class FileTextEditor extends Component {

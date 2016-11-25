@@ -3,11 +3,11 @@ import {withRouter} from 'react-router';
 import axios from 'axios';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
-import Message from './overlay/Message';
-import Overlay from './overlay/Overlay';
-import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './docSchema';
-import {_role} from './userSchema';
-import {_isEmpty} from './functions';
+import Message from './accessories/Message';
+import Overlay from './accessories/Overlay';
+import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './schema/docSchema';
+import {_role} from './schema/userSchema';
+import {_isEmpty} from './accessories/functions';
 
 class DigitalLibraryContainer extends Component {
 	constructor(){

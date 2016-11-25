@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 import DocumentFormContainer from './documentForm/DocumentFormContainer';
-import {_emptyDocument} from './docSchema';
+import {_emptyDocument} from './schema/docSchema';
 
 class EditDocument extends Component {
 	render(){

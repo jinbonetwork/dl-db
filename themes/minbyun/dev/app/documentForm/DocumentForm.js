@@ -3,14 +3,13 @@ import update from 'react-addons-update';  // for update()
 import {withRouter} from 'react-router';
 import 'babel-polyfill'; // for update(), find() ...
 import SearchInput from './SearchInput';
-import Textarea from '../inputs/Textarea';
-import DateForm from '../inputs/DateForm';
+import Textarea from '../accessories/Textarea';
+import DateForm from '../accessories/DateForm';
 import DocumentField from './DocumentField';
-import {Table, Row, Column} from '../Table';
-import Message from '../overlay/Message';
-import Processing from '../overlay/Processing';
-import {_fieldAttrs, _sFname, _convertDocToSave} from '../docSchema';
-import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
+import {Table, Row, Column} from '../accessories/Table';
+import Message from '../accessories/Message';
+import {_fieldAttrs, _sFname, _convertDocToSave} from '../schema/docSchema';
+import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../accessories/functions';
 
 class DocumentForm extends Component {
 	isHiddenField(fname){

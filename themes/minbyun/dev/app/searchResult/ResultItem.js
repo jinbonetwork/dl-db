@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import LinkIf from '../LinkIf';
-import {_displayDate, _isCommon} from '../functions';
+import LinkIf from '../accessories/LinkIf';
+import {_displayDate, _isCommon} from '../accessories/functions';
 
 const _sideDispNames = {
 	date: '작성일',

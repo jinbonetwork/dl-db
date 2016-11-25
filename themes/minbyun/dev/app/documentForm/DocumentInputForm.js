@@ -1,13 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
 import SearchInput from './SearchInput';
-import Textarea from '../inputs/Textarea';
-import DateForm from '../inputs/DateForm';
-import FileInput from '../inputs/FileInput';
-import Select from '../inputs/Select';
-import Option from '../inputs/Option';
-import {Table} from '../Table';
-import {_fieldAttrs, _taxonomy, _terms} from '../docSchema';
+import Textarea from '../accessories/Textarea';
+import DateForm from '../accessories/DateForm';
+import FileInput from '../accessories/FileInput';
+import Select from '../accessories/Select';
+import Option from '../accessories/Option';
+import {Table} from '../accessories/Table';
+import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
 
 class DocumentInputForm extends Component {
 	handleChange(event){
