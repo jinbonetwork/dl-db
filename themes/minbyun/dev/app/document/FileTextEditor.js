@@ -12,18 +12,22 @@ class FileTextEditor extends Component {
 	}
 	componentDidMount(){
 		this.handleResize();
-		jQ(window).resize(this.handleResize.bind(this));
+		jQ(window).on('resize', this.handleResize.bind(this));
 	}
 	componentDidUpdate(nextProps, nextState){
 		if(this.state.isFullScreen !== nextState.isFullScreen) this.handleResize();
+	}
+	componentWillUnmount(){
+		jQ(window).off('resize');
 	}
 	handleResize(){
 		let wrapH = jQ(this.refs.wrap).height();
 		let headerH = jQ(this.refs.header).outerHeight(true);
 		let buttonsH = jQ(this.refs.buttons).outerHeight(true);
-		this.setState({textareaStyle: {
-			height: (wrapH - headerH - buttonsH - 5)
-		}});
+		let height = wrapH - headerH - buttonsH - 5;
+		if(this.state.textareaStyle.height != height){
+			this.setState({textareaStyle: {height: height}});
+		}
 	}
 	handleChange(event){
 		this.setState({text: event.target.value});

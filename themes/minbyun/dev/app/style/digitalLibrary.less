@@ -2,14 +2,17 @@
 
 .digital-library__header {
 	position: relative;
-	border-bottom: solid 2px #989cff;
-	background-color: #ffffff;
+	border-bottom: solid 2px @main-color;
+	background-color: @minor-color-2;
+	line-height: 3.3em;
 }
 .digital-library__logo {
+	display: block;
 	float: left;
-	height: 55px;
+	height: 3.3em;
+	padding: 0.3em;
 	img {
-		margin: 5px 0 0 10px;
+		height: 100%;
 	}
 }
 .digital-library__menu {
@@ -21,7 +24,7 @@
 	}
 	a {
 		display: inline-block;
-		line-height: 55px;
+		line-height: 3.3em;
 		padding: 0 1.5em;
 		cursor: pointer;
 
@@ -31,7 +34,7 @@
 		text-decoration: none;
 	}
 	a:first-child, a + a {
-		border-left: solid 2px #989cff
+		border-left: solid 2px @main-color;
 	}
 }
 .digital-library__content {

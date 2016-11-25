@@ -83,7 +83,7 @@ class DigitalLibrary extends Component {
 					<Link className="digital-library__logo" to="/">
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
-					{child && <SearchBar docData={this.props.docData} />}
+					{child && <SearchBar docData={this.props.docData} />}{!child && <span>&nbsp;</span>}
 					<div className="digital-library__menu">
 						<LinkIf to="/user" if={_isCommon(['admin', 'write', 'view'], userRole)}>내정보</LinkIf>
 						<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>

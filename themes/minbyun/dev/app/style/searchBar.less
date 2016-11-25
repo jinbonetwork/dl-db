@@ -20,7 +20,7 @@
 	.searchbar__keyword div:first-child {
 		float: left;
 		width: 3em;
-		line-height: 3em;
+		line-height: 3.3em;
 		color: @main-color;
 		text-align: center;
 	}
@@ -29,6 +29,7 @@
 	}
 	.searchbar__keyword div:last-child {
 		margin-left: 3em;
+		line-height: 3.3em;
 	}
 	.searchbar__keyword input[type=text] {
 		border: 0;
@@ -48,7 +49,7 @@
 	}
 	.searchbar__period div {
 		display: inline-block;
-		line-height: 3em;
+		line-height: 3.3em;
 		width: 2em;
 		text-align: center;
 	}
@@ -61,21 +62,26 @@
 		position: absolute;
 		top: 0; right: 0;
 		width: 8em;
-		line-height: 3em;
+		line-height: 3.3em;
 		border: solid 3px @main-color;
 		background-color: @main-color;
 		color: @minor-color-2;
 	}
 }
 .searchbar:not(.searchbar--content){
-	margin-left: 130px;
+	margin-left: 7.4em;
 	margin-right: @main-menu-width;
 	.doctype-select__innerwrap {
-		padding: 3px 1px;
 		border-width: 0 2px;
 	}
 	.doctype-select--unfolded .doctype-select__innerwrap {
 		border-bottom-width: 2px;
+	}
+	.searchbar__keyword {
+		border-width: 0 2px 0 0;
+	}
+	.searchbar__period, .searchbar__button {
+		border: 0;
 	}
 }
 .searchbar.searchbar--content {
@@ -141,7 +147,7 @@
 		background-color: inherit;
 	}
 	.doctype-select__header {
-		line-height: 3em;
+		line-height: 3.3em;
 		padding: 0 0.5em 0 1em;
 		color: @main-color;
 		cursor: pointer;
@@ -163,6 +169,7 @@
 }
 
 .option {
+	line-height: normal;
 	cursor: pointer;
 	&.option--checked {
 		color: @main-color;

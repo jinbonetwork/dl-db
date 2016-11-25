@@ -35,20 +35,23 @@ class DoctypeSelect extends Component {
 	}
 	componentDidMount(){
 		this.handleResize();
-		jQ(window).resize(this.handleResize.bind(this));
+		jQ(window).on('resize', this.handleResize.bind(this));
 	}
-	handleResize(){ if(this.refs.innerWrap){
+	componentWillUnmount(){
+		jQ(window).off('resize');
+	}
+	handleResize(){
 		let innerWrapSize = this.refs.innerWrap.getBoundingClientRect();
 		if(!this.state.style.wrap){
 			this.setState({style: {
 				wrap: {width: innerWrapSize.width, height: innerWrapSize.height},
 				innerWrap: {position: 'absolute', top: 0, left: 0}
 			}});
-		} else {
+		} else if(this.state.style.innerWrap.width != innerWrapSize.width || this.state.style.innerWrap.height != innerWrapSize.height){
 			this.setState({style: update(this.state.style, {wrap: {$set: {width: innerWrapSize.width, height: innerWrapSize.height}}})});
 		}
 		if(this.props.handleResize) this.props.handleResize(innerWrapSize);
-	}}
+	}
 	handleClick(which, arg, event){
 		if(which == 'option'){
 			let newValues;
