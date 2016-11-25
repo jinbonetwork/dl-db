@@ -1,10 +1,12 @@
+@import "variables";
+
 .digital-library__header {
 	position: relative;
 	border-bottom: solid 2px #989cff;
 	background-color: #ffffff;
 }
 .digital-library__logo {
-	display: inline-block;
+	float: left;
 	height: 55px;
 	img {
 		margin: 5px 0 0 10px;
@@ -13,6 +15,7 @@
 .digital-library__menu {
 	position: absolute;
 	top: 0; right: 0;
+	width: @main-menu-width;
 	&:after {
 		content: ''; display: block; clear: both;
 	}

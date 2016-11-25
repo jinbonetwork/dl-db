@@ -1,20 +1,149 @@
-.searchbar {
-	&:not(.searchbar--content){
-		position: absolute;
-		left: 130px; top: 0;
-	}
-	&.searchbar--content {
+@import "variables";
 
+.searchbar {
+	.searchbar__bar {
+		position: relative;
+		background-color: @minor-color-2;
+	}
+	.searchbar__bar > div:first-child {
+		margin-right: 20em;
+	}
+	.searchbar__bar > div:last-child {
+		position: absolute;
+		top: 0; right: 0;
+		width: 20em;
+	}
+	.searchbar__keyword {
+		border: solid 3px @main-color;
+		border-left: 0;
+	}
+	.searchbar__keyword div:first-child {
+		float: left;
+		width: 3em;
+		line-height: 3em;
+		color: @main-color;
+		text-align: center;
+	}
+	.searchbar__keyword i {
+		font-size: 2em;
+	}
+	.searchbar__keyword div:last-child {
+		margin-left: 3em;
+	}
+	.searchbar__keyword input[type=text] {
+		border: 0;
+		width: 100%;
+	}
+	.searchbar__period {
+		border: solid 3px @main-color;
+		border-left: 0;
+		border-right: 0;
+		margin-right: 8em;
+	}
+	.searchbar__period input[type=text] {
+		width: 5em;
+		border: 0;
+		padding-left: 0; padding-right: 0;
+		text-align: center;
+	}
+	.searchbar__period div {
+		display: inline-block;
+		line-height: 3em;
+		width: 2em;
+		text-align: center;
+	}
+	.searchbar__period i {
+		font-size: 2em;
+		font-weight: bold;
+		color: @main-color;
+	}
+	.searchbar__button {
+		position: absolute;
+		top: 0; right: 0;
+		width: 8em;
+		line-height: 3em;
+		border: solid 3px @main-color;
+		background-color: @main-color;
+		color: @minor-color-2;
 	}
 }
+.searchbar:not(.searchbar--content){
+	margin-left: 130px;
+	margin-right: @main-menu-width;
+	.doctype-select__innerwrap {
+		padding: 3px 1px;
+		border-width: 0 2px;
+	}
+	.doctype-select--unfolded .doctype-select__innerwrap {
+		border-bottom-width: 2px;
+	}
+}
+.searchbar.searchbar--content {
+	margin-top: 10%;
+	.searchbar__header {
+		text-align: center;
+	}
+	.searchbar__header span {
+		font-size: 3.4em;
+		font-weight: 700;
+		color: @main-color;
+	}
+	.searchbar__header + .searchbar__bar {
+		margin-top: 10%;
+	}
+	.searchbar__bar + .searchbar__helper {
+		margin-top: 1em;
+	}
+	.searchbar__helper {
+		max-width: 26em;
+		margin-left: auto; margin-right: auto;
+		padding: 0.625em;
+		background-color: @main-color*1.5;
+	}
+	.searchbar__helper > div {
+		border: solid 1px @minor-color-2;
+	}
+	.searchbar__helper-title {
+		padding: 1em;
+		color: @main-color;
+		font-weight: @font-bold;
+	}
+	.table {
+		color: @accent-font-color;
+	}
+	.table__row {
+		padding: 0.3em;
+		border-bottom: solid 1px @minor-color-2;
+	}
+	.table__col:first-child {
+		width: 7em;
+		padding-right: 1em;
+		float: left;
+		font-weight: @font-bold;
+		text-align: right;
+	}
+	.table__col:last-child {
+		margin-left: 7em;
+	}
+	.table__row:nth-child(3) .table__col:last-child div + div {
+		color: @font-color;
+		font-size: 0.8em;
+	}
+}
+
 .doctype-select {
+	float: left;
+	position: relative;
 	display: inline-block;
-	border: solid 2px #989cff;
-	background-color: #ffffff;
+	background-color: @minor-color-2;
+	.doctype-select__innerwrap{
+		border: solid 3px @main-color;
+		background-color: inherit;
+	}
 	.doctype-select__header {
 		line-height: 3em;
 		padding: 0 0.5em 0 1em;
-		color: #989cff;
+		color: @main-color;
 		cursor: pointer;
 	}
 	.doctype-select__header span + i {
@@ -32,10 +161,11 @@
 		height: auto;
 	}
 }
+
 .option {
 	cursor: pointer;
 	&.option--checked {
-		color: #989cff;
+		color: @main-color;
 	}
 	&:last-child {
 		margin-bottom: 1em;

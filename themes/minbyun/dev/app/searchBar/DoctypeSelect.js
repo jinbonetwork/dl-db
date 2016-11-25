@@ -1,4 +1,7 @@
 import React, {Component, PropTypes} from 'react';
+import update from 'react-addons-update';  // for update()
+import 'babel-polyfill'; // for update(), find(), findIndex() ...
+import jQ from 'jquery';
 import {_isCommon} from '../accessories/functions';
 
 class Option extends Component {
@@ -26,9 +29,26 @@ class DoctypeSelect extends Component {
 	constructor(){
 		super();
 		this.state = {
-			isFolded: true
+			isFolded: true,
+			style: {wrap: null, innerWrap: null}
 		};
 	}
+	componentDidMount(){
+		this.handleResize();
+		jQ(window).resize(this.handleResize.bind(this));
+	}
+	handleResize(){ if(this.refs.innerWrap){
+		let innerWrapSize = this.refs.innerWrap.getBoundingClientRect();
+		if(!this.state.style.wrap){
+			this.setState({style: {
+				wrap: {width: innerWrapSize.width, height: innerWrapSize.height},
+				innerWrap: {position: 'absolute', top: 0, left: 0}
+			}});
+		} else {
+			this.setState({style: update(this.state.style, {wrap: {$set: {width: innerWrapSize.width, height: innerWrapSize.height}}})});
+		}
+		if(this.props.handleResize) this.props.handleResize(innerWrapSize);
+	}}
 	handleClick(which, arg, event){
 		if(which == 'option'){
 			let newValues;
@@ -59,12 +79,14 @@ class DoctypeSelect extends Component {
 		}
 		let className = (this.state.isFolded ? 'doctype-select': 'doctype-select  doctype-select--unfolded');
 		return (
-			<div className={className}>
-				<div className="doctype-select__header" onClick={this.handleClick.bind(this, 'header')}>
-					<span>{this.props.displayName}</span>
-					<i className="pe-7s-angle-down pe-va"></i>
+			<div className={className} style={this.state.style.wrap}>
+				<div className="doctype-select__innerwrap" ref="innerWrap" style={this.state.style.innerWrap}>
+					<div className="doctype-select__header" onClick={this.handleClick.bind(this, 'header')}>
+						<span>{this.props.displayName}</span>
+						<i className="pe-7s-angle-down pe-va"></i>
+					</div>
+					<ul>{options}</ul>
 				</div>
-				<ul>{options}</ul>
 			</div>
 		);
 	}
@@ -73,6 +95,7 @@ DoctypeSelect.propTypes = {
 	displayName: PropTypes.string.isRequired,
 	values: PropTypes.array.isRequired,
 	options: PropTypes.object.isRequired,
-	handleChange: PropTypes.func.isRequired
+	handleChange: PropTypes.func.isRequired,
+	handleResize: PropTypes.func
 };
 export default DoctypeSelect;
