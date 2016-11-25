@@ -30,27 +30,27 @@ class DoctypeSelect extends Component {
 		super();
 		this.state = {
 			isFolded: true,
-			style: {wrap: null, innerWrap: null}
+			style: {
+				wrap: {width: null, height: null}
+			}
 		};
 	}
 	componentDidMount(){
 		this.handleResize();
 		jQ(window).on('resize', this.handleResize.bind(this));
 	}
+	componentWillReceiveProps(nextProps){
+		this.handleResize();
+	}
 	componentWillUnmount(){
 		jQ(window).off('resize');
 	}
 	handleResize(){
-		let innerWrapSize = this.refs.innerWrap.getBoundingClientRect();
-		if(!this.state.style.wrap){
-			this.setState({style: {
-				wrap: {width: innerWrapSize.width, height: innerWrapSize.height},
-				innerWrap: {position: 'absolute', top: 0, left: 0}
-			}});
-		} else if(this.state.style.innerWrap.width != innerWrapSize.width || this.state.style.innerWrap.height != innerWrapSize.height){
-			this.setState({style: update(this.state.style, {wrap: {$set: {width: innerWrapSize.width, height: innerWrapSize.height}}})});
+		let size = this.refs.innerWrap.getBoundingClientRect();
+		if(size.width != this.state.style.wrap.width || size.height != this.state.style.wrap.height) {
+			this.setState({style: {wrap: {width: size.width, height: size.height}}});
+			if(this.props.handleResize) this.props.handleResize(size);
 		}
-		if(this.props.handleResize) this.props.handleResize(innerWrapSize);
 	}
 	handleClick(which, arg, event){
 		if(which == 'option'){
@@ -82,8 +82,8 @@ class DoctypeSelect extends Component {
 		}
 		let className = (this.state.isFolded ? 'doctype-select': 'doctype-select  doctype-select--unfolded');
 		return (
-			<div className={className} style={this.state.style.wrap}>
-				<div className="doctype-select__innerwrap" ref="innerWrap" style={this.state.style.innerWrap}>
+			<div className={className}>
+				<div className="doctype-select__innerwrap" ref="innerWrap">
 					<div className="doctype-select__header" onClick={this.handleClick.bind(this, 'header')}>
 						<span>{this.props.displayName}</span>
 						<i className="pe-7s-angle-down pe-va"></i>

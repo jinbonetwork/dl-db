@@ -139,10 +139,14 @@
 
 .doctype-select {
 	float: left;
+}
+.doctype-select {
 	position: relative;
-	display: inline-block;
+	width: 100%;
 	background-color: @minor-color-2;
 	.doctype-select__innerwrap{
+		position: absolute;
+		top: 0; left: 0;
 		border: solid 3px @main-color;
 		background-color: inherit;
 	}

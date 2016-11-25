@@ -13,7 +13,7 @@ class SearchBar extends Component {
 			keyword: '',
 			from: '',
 			to: '',
-			style: {keyword: null}
+			style: {keyword: {marginLeft: null}}
 		};
 	}
 	doctypeOptions(){
