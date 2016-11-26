@@ -19,9 +19,7 @@
 	position: absolute;
 	top: 0; right: 0;
 	width: @main-menu-width;
-	&:after {
-		content: ''; display: block; clear: both;
-	}
+	text-align: right;
 	a {
 		display: inline-block;
 		line-height: 3.3em;
@@ -33,7 +31,7 @@
 		color: #808080;
 		text-decoration: none;
 	}
-	a:first-child, a + a {
+	a + a {
 		border-left: solid 2px @main-color;
 	}
 }
