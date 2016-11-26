@@ -25,7 +25,7 @@ const _isPhoneValid = (phone) => {
 const _isDateValid = (value, form) => {
 	let date = new Date();
 	if(form == 'Ym'){
-		if(1970 <= value.year && value.year <= date.getFullYear() && 1 <= value.month && value.month <= 12 ){
+		if(1900 <= value.year && value.year <= date.getFullYear() && 1 <= value.month && value.month <= 12 ){
 			return true;
 		} else {
 			return false;
@@ -49,5 +49,13 @@ const _isCommon = (array1, array2) => {
 	}
 	return false;
 }
+const _params = (params) => {
+	let array = [];
+	for(let p in params){
+		if(params[p]) array.push(p+'='+params[p]);
+	}
+	if(array.length) return '?'+array.join('&');
+	return '';
+}
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _isCommon};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _isCommon, _params};
