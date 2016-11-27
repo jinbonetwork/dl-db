@@ -69,7 +69,7 @@ class DocumentField extends Component {
 	render(){
 		return (
 			<Row>
-				<Column className="table__label">
+				<Column>
 					<span>{_fieldAttrs[this.props.fname].displayName}</span>
 				</Column>
 				<Column>

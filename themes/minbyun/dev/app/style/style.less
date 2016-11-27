@@ -1,24 +1,23 @@
-/****
+@import "variables";
 
-
-****/
-*, *:after, *:before {
+*, *:before, *:after {
 	box-sizing: border-box;
 }
 body, html {
 	font-family:'Nanum Barun Gothic';
-	font-size: 16px;
-	font-weight: 400;
-	color: #808080;
-	background-color: #f5f5f5;
+	font-size: @font-size;
+	font-weight: @font-normal;
+	color: @font-color;
+	background-color: @minor-color-1;
 	margin: 0;
 }
 input[type=text], input[type=password], select, textarea, button {
 	font-family:'Nanum Barun Gothic';
-	font-size: 16px;
-	color: #808080;
-	border: solid 1px #989cff;
+	font-size: @font-size;
+	color: @font-color;
+	border: solid 1px @main-color;
 	padding: 0 0.5em;
+	outline: none;
 }
 input[type=text], input[type=password] {
 	line-height: 1.2em;
@@ -64,9 +63,7 @@ p + p {
 }
 
 .table {
-	.table__row {
-	}
-	.table__col.table__label {
+	.table__col:first-child {
 		float: left;
 		min-height: 1px;
 	}
@@ -80,7 +77,7 @@ p + p {
 	display: inline-block;
 	position: relative;
 	.fileinput__filename-wrap {
-		margin-right: 80px;
+		margin-right: 5em;
 	}
 	.fileinput__filename-wrap input[type=text] {
 		width: 100%;
@@ -88,11 +85,11 @@ p + p {
 	.fileinput--upload {
 		position: absolute;
 		top: 0; right: 0;
-		width: 80px;
+		width: 5em;
 		line-height: 3em;
 		padding: 1px;
-		background-color: #989cff;
-		color: #ffffff;
+		background-color: @main-color;
+		color: @minor-color-2;
 		text-align: center;
 		cursor: pointer;
 	}
@@ -100,14 +97,14 @@ p + p {
 
 .dateform {
 	display: inline-block;
-	.dateform__year {
+	input[type=text].dateform__year {
 		width: 5em;
 		margin-right: 1em;
 	}
 	.dateform__year + span {
 		margin-right: 1em;
 	}
-	.dateform_month {
+	input[type=text].dateform_month {
 		width: 4em;
 		margin-right: 1em;
 	}
@@ -127,8 +124,8 @@ p + p {
 		margin: 0;
 		list-style-type: none;
 		padding: 0.5em;
-		background-color: #989cff;
-		color: #ffffff;
+		background-color: @main-color;
+		color: @minor-color-2;
 	}
 	li {
 		padding: 0;
@@ -142,7 +139,7 @@ p + p {
 		display: inline-block;
 	}
 	.searchinput__col-0 {
-		width: 60px;
+		width: 4em;
 	}
 }
 
@@ -150,11 +147,11 @@ p + p {
 	position: fixed;
 	top: 50%; left: 50%;
 	transform: translate(-50%, -50%);
-	max-width: 500px;
+	max-width: 31em;
 	padding: 1em;
-	color: #989cff;
-	border: solid 1px #989cff;
-	background-color: #ffffff;
+	color: @main-color;
+	border: solid 1px @main-color;
+	background-color: @minor-color-2;
 	&.message--clickable {
 		cursor: pointer;
 	}
@@ -176,7 +173,7 @@ p + p {
 		position: fixed;
 		top: 50%; left: 50%;
 		transform: translate(-50%, -50%);
-		color: #989cff;
+		color: @main-color;
 	}
 }
 
@@ -184,5 +181,33 @@ p + p {
 	img {
 		width: 100%;
 		display: block;
+	}
+}
+
+.pagination {
+	text-align: center;
+	margin-top: 3em;
+
+	.pagination__page {
+		display: inline-block;
+		line-height: 2em;
+		padding: 0 0.5em;
+		font-weight: 700;
+	}
+	.pagination__page + .pagination__page {
+		margin-left: 0.5em;
+	}
+	a, a:visited, a:link, a:hover, a:active {
+		color: @accent-font-color;
+		text-decoration: none;
+		background-color: @minor-color-2;
+	}
+	span.pagination__page {
+		color: @minor-color-2;
+		background-color: @main-color;
+	}
+	.pagination__page.pagination__ellipsis {
+		color: @accent-font-color;
+		background-color: transparent;
 	}
 }

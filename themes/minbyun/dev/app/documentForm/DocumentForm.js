@@ -103,19 +103,19 @@ class DocumentForm extends Component {
 				<h1>{this.props.formAttr.header}</h1>
 				<Table>
 					<Row>
-						<Column className="table__label"></Column>
+						<Column></Column>
 						<Column>
 							<h2 className="document-form__accented_title">필수입력사항</h2>
 						</Column>
 					</Row>
 					{requiredFields}
 					<Row>
-						<Column className="table__label"></Column>
+						<Column></Column>
 						<Column><h2>선택입력사항</h2></Column>
 					</Row>
 					{electiveFields}
 					<Row>
-						<Column className="table__label"></Column>
+						<Column></Column>
 						<Column>
 							<button type="button" className="document-form--submit"
 								onClick={this.handleClick.bind(this, 'submit')}>{this.props.formAttr.submit}

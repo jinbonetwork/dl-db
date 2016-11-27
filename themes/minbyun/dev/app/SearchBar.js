@@ -11,10 +11,6 @@ class SearchBar extends Component {
 	constructor(){
 		super();
 		this.state = {
-			doctypes: [],
-			keyword: '',
-			from: '',
-			to: '',
 			style: {keyword: {marginLeft: null}}
 		};
 	}
@@ -27,8 +23,8 @@ class SearchBar extends Component {
 	}
 	period(){
 		let period=[];
-		if(this.state.from == '.') period.push(''); else period.push(this.state.from);
-		if(this.state.to && this.state.to != '.') period.push(this.state.to);
+		if(this.props.query.from == '.') period.push(''); else period.push(this.props.query.from);
+		if(this.props.query.to && this.props.query.to != '.') period.push(this.props.query.to);
 		period = period.map((date, index) => {
 			date = date.split('.');
 			date = {year: date[0], month: date[1]};
@@ -53,18 +49,23 @@ class SearchBar extends Component {
 	}
 	handleChange(which, arg){
 		switch(which){
-			case 'doctype': this.setState({doctypes: arg}); break;
-			case 'keyword': this.setState({keyword: arg.target.value}); break;
+			case 'doctype': this.props.update(which, arg); break;
+			case 'keyword': this.props.update(which, arg.target.value); break;
 			case 'from': case 'to':
 				let now = new Date();
 				let date = arg.target.value.split('.');
 				if(date.length <= 2 && (!date[0] || (date[0] > 0 && date[0] <= now.getFullYear()))){
 					if((date.length == 2 && (!date[1] || (date[1] > 0 && date[1] <= 12))) || date.length == 1){
-						this.setState({[which]: arg.target.value});
+						this.props.update(which, arg.target.value);
 					}
 				}
 				break;
 			default:
+		}
+	}
+	handleKeyDown(event){
+		if(event.key === 'Enter'){
+			this.handleclick('search');
 		}
 	}
 	handleResize(which, size){
@@ -76,12 +77,13 @@ class SearchBar extends Component {
 		if(which == 'search'){
 			let period = this.period();
 			let params = {
-				q: encodeURIComponent(this.state.keyword),
-				[_sFname['doctype']]: (this.state.doctypes.length ? '{'+this.state.doctypes.join(',')+'}' : ''),
+				q: encodeURIComponent(this.props.query.keyword),
+				[_sFname['doctype']]: (this.props.query.doctypes.length ? '{'+this.props.query.doctypes.join(',')+'}' : ''),
 				[_sFname['date']]: encodeURIComponent(period.join('-'))
 			};
 			this.setState({from: period[0], to: (period[1] ? period[1] : '')});
-			this.props.router.push('/search'+_params(params));
+			let urlParams = _params(params);
+			if(urlParams) this.props.router.push('/search'+urlParams);
 		}
 	}
 	render(){
@@ -90,19 +92,27 @@ class SearchBar extends Component {
 			<div className="searchbar__bar">
 				<div>
 					<DoctypeSelect displayName={_fieldAttrs['doctype'].displayName}
-						values={this.state.doctypes} options={this.doctypeOptions()}
+						values={this.props.query.doctypes} options={this.doctypeOptions()}
 						handleChange={this.handleChange.bind(this, 'doctype')} handleResize={this.handleResize.bind(this, 'doctype')}
 					/>
 					<div className="searchbar__keyword" style={this.state.style.keyword}>
 						<div><i className="pe-7f-search pe-va"></i></div>
-						<div><input type="text" value={this.state.keyword} placeholder="검색어를 입력하세요" onChange={this.handleChange.bind(this, 'keyword')} /></div>
+						<div>
+							<input type="text" value={this.props.query.keyword} placeholder="검색어를 입력하세요"
+								onChange={this.handleChange.bind(this, 'keyword')} onKeyDown={this.handleKeyDown.bind(this)}
+							/>
+						</div>
 					</div>
 				</div>
 				<div>
 					<div className="searchbar__period">
-						<input type="text" value={this.state.from} onChange={this.handleChange.bind(this, 'from')} placeholder="1988.5" />
+						<input type="text" value={this.props.query.from} placeholder="1988.5"
+							onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
+						/>
 						<div><i className="pe-7s-right-arrow pe-va"></i></div>
-						<input type="text" value={this.state.to} onChange={this.handleChange.bind(this, 'to')} placeholder="2015.11" />
+						<input type="text" value={this.props.query.to} placeholder="2015.11"
+							onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
+						/>
 					</div>
 					<button className="searchbar__button" onClick={this.handleclick.bind(this, 'search')}>검색</button>
 				</div>
@@ -152,6 +162,8 @@ class SearchBar extends Component {
 }
 SearchBar.propTypes = {
 	mode: PropTypes.string,
+	query: PropTypes.object.isRequired,
+	update: PropTypes.func.isRequired,
 	docData: PropTypes.object.isRequired,
 	router: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired
 }

@@ -20,6 +20,12 @@ class DigitalLibraryContainer extends Component {
 				customFields: null,
 				customFieldAttrs: null
 			},
+			searchQuery: {
+				doctypes: [],
+				keyword: '',
+				from: '',
+				to: ''
+			},
 			message: null,
 			openedDocuments: null,
 		};
@@ -104,14 +110,19 @@ class DigitalLibraryContainer extends Component {
 			default:
 		}
 	}
+	updateSearchQuery(which, value){
+		this.setState({searchQuery: update(this.state.searchQuery, {[which]: {$set: value}})});
+	}
 	render(){
 		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
 			userData: this.state.userData,
 			docData: this.state.docData,
+			searchQuery: this.state.searchQuery,
 			openedDocuments: this.state.openedDocuments,
 			fetchContData: this.fetchContData.bind(this),
 			setMessage: this.setMessage.bind(this),
 			fetchData: this.fetchData.bind(this),
+			updateSearchQuery: this.updateSearchQuery.bind(this),
 			message: this.state.message
 		});
 		return digitalLibrary;

@@ -1,5 +1,7 @@
+@import "variables";
+
 .document-form {
-	max-width: 600px;
+	max-width: 38em;
 	margin: 3em auto;
 	h1 {
 		margin: 0 0 1em 0;
@@ -7,26 +9,29 @@
 		color: #555555;
 	}
 	h2 {
-		font-size: 20px;
+		font-size: 1.25em;
 		margin: 1em 0;
 	}
 	h2.document-form__accented_title {
 		color: #c2000b;
 	}
+	input[type=text] {
+		width: 100%;
+	}
 	select {
-		width: 80%;
+		width: 8em;
 	}
 	textarea {
 		width: 100%;
-		height: 180px;
+		height: 11em;
 		padding: 0.5em;
 	}
 	.document-form__input-with-buttons {
 		position: relative;
 	}
 	.document-form__middle {
-		margin-right: 100px;
-		margin-bottom: 10px;
+		margin-right: 6.25em;
+		margin-bottom: 0.5em;
 	}
 	.document-form__middle > * {
 		width: 100%;
@@ -38,9 +43,9 @@
 	.document-from__buttons button {
 		float: left;
 		height: 1em;
-		font-size: 48px;
+		font-size: 3em;
 		background-color: transparent;
-		color: #989cff;
+		color: @main-color;
 		border: 0;
 		padding: 0;
 		cursor: pointer;
@@ -57,44 +62,42 @@
 	& > .table > .table__row {
 		padding: 0.5em 0;
 	}
-	& > .table > .table__row > .table__label {
-		width: 150px;
+	& > .table > .table__row > .table__col:first-child {
+		width: 9em;
 		line-height: 1.2em;
 		padding-top: 0.9em;
 		padding-bottom: 0.9em;
 		padding-right: 1em;
 		text-align: right;
 	}
-	& > .table > .table__row > .table__col:not(.table__label) {
-		margin-left: 150px;
+	& > .table > .table__row > .table__col:last-child {
+		margin-left: 10em;
 	}
 	.inner-table {
-		border: solid 1px #989cff;
+		border: solid 1px @main-color;
 		border-width: 1px 0 0 1px;
 	}
 	.inner-table .table__col {
-		border: solid 1px #989cff;
+		border: solid 1px @main-color;
 		border-width: 0 1px 1px 0;
 	}
 	.inner-table input[type=text] {
 		border: 0;
 	}
-	.inner-table .table__label {
-		width: 80px;
+	.inner-table .table__col:first-child {
+		width: 5em;
 		line-height: 3em;
 		background-color: #ffffff;
 		text-align: center;
 	}
-	.inner-table .table__col:not(.table__label){
-		margin-left: 80px;
+	.inner-table .table__col:last-child{
+		margin-left: 5em;
 	}
 	button.document-form--submit {
-		font-family:'Nanum Barun Gothic';
-		font-size: 16px;
 		line-height: 3em;
 		width: 100%;
 		color: #ffffff;
-		background-color: #989cff;
+		background-color: @main-color;
 		border: 0;
 		padding: 0 0.5em;
 		cursor: pointer;

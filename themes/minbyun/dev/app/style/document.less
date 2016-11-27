@@ -1,3 +1,5 @@
+@label-width: 9.4em;
+
 .document {
 	margin-top: 3em;
 	padding: 1em;
@@ -109,7 +111,7 @@
 	}
 	.document__contents {
 		margin-top: 3em;
-		max-width: 600px;
+		max-width: 37.5em;
 		& > .table__row {
 			padding: 0.5em 0;
 		}
@@ -120,13 +122,13 @@
 			line-height: 2em;
 		}
 		& > .table__row > .table__label {
-			width: 150px;
+			width: @label-width;
 			padding-right: 2em;
 			text-align: right;
 			font-weight: 700;
 		}
 		& > .table__row > .table__col:not(.table__label) {
-			margin-left: 150px;
+			margin-left: @label-width;
 		}
 		.inner-table {
 			border-top: solid 1px #989cff;
@@ -159,7 +161,7 @@
 	border: solid 1px #989cff;
 
 	&:not(.file-text-editor__full-screen){
-		max-width: 700px; max-height: 600px;
+		max-width: 43.8em; max-height: 37.5em;
 	}
 	.file-text-editor__header {
 		margin-bottom: 2em;
