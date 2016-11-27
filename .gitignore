@@ -12,4 +12,7 @@ themes/minbyun/script/script.js
 themes/minbyun/css/style.css
 themes/minbyun/dev/app.old/
 app/api/__test_upload.php
+contribute/*/vendor
+contribute/*/vendor/*
+*.lock
 npm-debug.log
