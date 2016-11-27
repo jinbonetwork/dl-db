@@ -19,7 +19,7 @@ class DocumentInputForm extends Component {
 		switch(fAttr.form){
 			case 'text':
 				return (
-					<input className="textinput" type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />
+					<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />
 				);
 			case 'search':
 				let api;

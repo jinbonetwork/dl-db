@@ -32,7 +32,7 @@ const _childProps = {
 	},
 	'/search**': {
 		role: ['admin', 'write', 'view'],
-		required: ['userData', 'fetchData'],
+		required: ['userData', 'fetchData', 'updateSearchQuery', 'setMessage'],
 		elective: ['docData']
 	}
 }
@@ -66,6 +66,16 @@ class DigitalLibrary extends Component {
 		}
 		return React.cloneElement(child, props);
 	}
+	searchBar(mode){
+		return (
+			<SearchBar
+				mode={mode}
+				docData={this.props.docData}
+				query={this.props.searchQuery}
+				update={this.props.updateSearchQuery}
+			/>
+		);
+	}
 	render(){
 		let userRole = this.props.userData.role;
 		let child = this.cloneChild(this.props.children, this.props.userData);
@@ -83,15 +93,15 @@ class DigitalLibrary extends Component {
 					<Link className="digital-library__logo" to="/">
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
-					{child && <SearchBar docData={this.props.docData} />}{!child && <span>&nbsp;</span>}
+					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
 					<div className="digital-library__menu">
 						<LinkIf to="/user" if={_isCommon(['admin', 'write', 'view'], userRole)}>내정보</LinkIf>
-						<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>
+						{/*<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>*/}
 						<LinkIf to="/document/new" if={_isCommon(['admin', 'write'], userRole)}>자료 입력</LinkIf>
 					</div>
 				</div>
 				<div className="digital-library__content">
-					{child || <SearchBar mode="content" docData={this.props.docData} />}
+					{child || this.searchBar('content')}
 				</div>
 				{this.props.message}
 			</div>
@@ -101,10 +111,12 @@ class DigitalLibrary extends Component {
 DigitalLibrary.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
+	searchQuery: PropTypes.object,
 	fetchContData: PropTypes.func.isRequired,
 	setMessage: PropTypes.func.isRequired,
 	openedDocuments: PropTypes.object,
 	fetchData: PropTypes.func,
+	updateSearchQuery: PropTypes.func,
 	message: PropTypes.element,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
