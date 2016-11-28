@@ -19,6 +19,7 @@
 	position: absolute;
 	top: 0; right: 0;
 	width: @main-menu-width;
+	height: 100%;
 	text-align: right;
 	a {
 		display: inline-block;
@@ -33,6 +34,21 @@
 	}
 	a + a {
 		border-left: solid 2px @main-color;
+	}
+}
+.digital-library__menu .menu.menu--dropdown {
+	.menu__items {
+		background-color: @minor-color-2;
+	}
+	.menuitem--title, .menu__items .menuitem {
+		border: solid 2px @main-color;
+	}
+	.menuitem--title {
+		border-right: transparent;
+	}
+	.menu__items .menuitem:not(.menuitem--title) {
+		line-height: 2.5em;
+		text-align: left;
 	}
 }
 .digital-library__content {
