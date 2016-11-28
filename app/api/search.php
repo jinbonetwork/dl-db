@@ -10,12 +10,16 @@ class search extends \DLDB\Controller {
 		if(!$this->params['q']) {
 			\DLDB\RepondJson::ResultPage( array(-1,'검색어를 입력하세요') );
 		}
+		$this->que = \DLDB\Search\ParseQue::parse($this->params['q']);
 
 		$context = \DLDB\Model\Context::instance();
 
 		$this->fields = \DLDB\Fields::getFields('documents');
 		$this->ofields = array();
 		foreach($this->fields as $fid => $field) {
+			if($field['type'] == 'taxonomy') {
+				$cids[] = $field['cid'];
+			}
 			$this->ofields[] = array(
 				'fid' => $field['fid'],
 				'parent' => $field['parent'],
@@ -27,6 +31,10 @@ class search extends \DLDB\Controller {
 				'cid' => $field['cid'],
 				'form' => $field['form']
 			);
+		}
+		if($cids && is_array($cids) ) {
+			$this->taxonomies = \DLDB\Taxonomy::getTaxonomy($cids);
+			$this->taxonomy = \DLDB\Taxonomy::getTaxonomyTerms($cids);
 		}
 
 		if(!$this->params['page']) $this->params['page'] = 1;
@@ -47,13 +55,35 @@ class search extends \DLDB\Controller {
 	}
 	
 	function do_dbm_search() {
+		$this->result = \DLDB\Search\Elastic::setField($this->fields,$this->taxonomy);
 	}
 
 	function do_elastic_search() {
-		require_once DLDB_CONTRIBUTE_PATH."/elasticsearch/vendor/autoload.php";
-		$client = \Elasticsearch\ClientBuilder::create()->build();
+		\DLDB\Search\Elastic::setFields($this->fields,$this->taxonomy);
+		$this->documents = \DLDB\Search\Elastic::getList($this->que, $this->params, $this->params['order'], $this->params['page'], $this->params['limit']);
+		$this->total_cnt = ( $this->documents['hits']['total'] ? $this->documents['hits']['total'] : 0 );
+		if($this->total_cnt) {
+			$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;
+		} else {
+			$this->total_page = 0;
+		}
+		$this->query = \DLDB\Search\Elastic::getParams();
+		$this->result = array(
+			'result' => array(
+				'total_cnt' => $this->total_cnt,
+				'total_page' => $this->total_page,
+				'page' => $this->params['page'],
+				'cnt' => @count($this->documents['hits']['hits'])
+			),
+			'fields'=>$this->ofields,
+			'query' => $this->query,
+			'documents' => $this->documents['hits']['hits']
+		);
 
-		$params = [
+//		require_once DLDB_CONTRIBUTE_PATH."/elasticsearch/vendor/autoload.php";
+//		$client = \Elasticsearch\ClientBuilder::create()->build();
+
+/*		$params = [
 		    'index' => 'dldb',
     		'type' => 'main',
     		'body' => [
@@ -73,9 +103,9 @@ class search extends \DLDB\Controller {
 					]
         		]
     		]
-		];
+		]; */
 
-		$this->results = $client->search($params);
+//		$this->results = $client->search($params);
 	}
 
 	function do_solr_search() {
