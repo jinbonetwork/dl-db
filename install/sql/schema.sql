@@ -19,7 +19,7 @@ CREATE TABLE `dldb_documents` (
 	`content`	text,
 	`memo`		mediumtext,
 	`custom`	text,
-	`uid`		bigint(11) NOT NULl DEFAULT 0,
+	`uid`		bigint(11) NOT NULL DEFAULT 0,
 	`created`	int(10) NOT NULL DEFAULT 0,
 	`f3`		char(255),
 	`f4`		char(255),
