@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {Router, Route, browserHistory} from 'react-router';
+import {Router, Route, IndexRedirect, browserHistory} from 'react-router';
 import {createHistory} from 'history';
 
 import DigitalLibraryContainer from './DigitalLibraryContainer';
 import DigitalLibrary from './DigitalLibrary';
 import Login from './Login';
 import User from './User';
+import UserProfile from './user/UserProfile';
 import NewDocument from './NewDocument';
 import EditDocument from './EditDocument';
 import Document from './Document';
@@ -26,7 +27,10 @@ render((
 		<Route component={DigitalLibraryContainer}>
 			<Route path="/" component={DigitalLibrary}>
 				<Route path="/login" component={Login} />
-				<Route path="/user" component={User} />
+				<Route path="/user" component={User}>
+					<IndexRedirect to="/user/profile" />
+					<Route path="profile" component={UserProfile} />
+				</Route>
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />
 				<Route path="/document/:did/edit" component={EditDocument} />

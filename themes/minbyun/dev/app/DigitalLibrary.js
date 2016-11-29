@@ -14,7 +14,8 @@ const _childProps = {
 	},
 	'/user': {
 		role: ['admin', 'write', 'view'],
-		required: ['userData', 'fetchData', 'setMessage']
+		required: ['userData', 'fetchData', 'setMessage'],
+		elective: ['userProfile']
 	},
 	'/document/:did': {
 		role: ['admin', 'view'],

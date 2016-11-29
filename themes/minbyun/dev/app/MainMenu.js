@@ -38,7 +38,7 @@ class MainMenu extends Component {
 						<i className="pe-7f-user pe-2x pe-va"></i>
 						<DdArrow><i className="pe-7s-angle-down pe-va pe-2x"></i></DdArrow>
 					</DdHead>
-					<DdItem><Link to="/user"><i className="pe-7s-user pe-2x pe-va"></i><span>내정보</span></Link></DdItem>
+					<DdItem><Link to="/user/profile"><i className="pe-7s-user pe-2x pe-va"></i><span>내정보</span></Link></DdItem>
 					<DdItem><i className="pe-7s-bookmarks pe-2x pe-va"></i><span>북마크</span></DdItem>
 					<DdItem><i className="pe-7s-search pe-2x pe-va"></i><span>검색기록</span></DdItem>
 					<DdItem><i className="pe-7s-file pe-2x pe-va"></i><span>내가 올린 자료</span></DdItem>

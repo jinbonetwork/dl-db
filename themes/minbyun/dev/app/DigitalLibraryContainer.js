@@ -6,7 +6,7 @@ import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import Message from './accessories/Message';
 import Overlay from './accessories/Overlay';
 import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './schema/docSchema';
-import {_role} from './schema/userSchema';
+import {_role, _convertToUser} from './schema/userSchema';
 import {_isEmpty} from './accessories/functions';
 
 class DigitalLibraryContainer extends Component {
@@ -26,6 +26,7 @@ class DigitalLibraryContainer extends Component {
 				from: '',
 				to: ''
 			},
+			userProfile: null,
 			message: null,
 			openedDocuments: null,
 		};
@@ -74,6 +75,9 @@ class DigitalLibraryContainer extends Component {
 						customFieldAttrs: _customFieldAttrs(data.fields)
 					}});
 				});
+				this.fetchData('get', '/api/user/profile', (data) => {
+					this.setState({userProfile: _convertToUser(data.profile)});
+				});
 			}
 			if(callBack) callBack(data);
 		});
@@ -116,6 +120,7 @@ class DigitalLibraryContainer extends Component {
 	render(){
 		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
 			userData: this.state.userData,
+			userProfile: this.state.userProfile,
 			docData: this.state.docData,
 			searchQuery: this.state.searchQuery,
 			openedDocuments: this.state.openedDocuments,
