@@ -95,39 +95,7 @@ class DigitalLibrary extends Component {
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
-					<div className="digital-library__menu">
-						{/*<LinkIf to="/user" if={_isCommon(['admin', 'write', 'view'], userRole)}>내정보</LinkIf>*/}
-						{/*<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>*/}
-
-
-						<MainMenu />
-
-
-						{/*
-						<LinkIf to="/document/new" if={_isCommon(['admin', 'write'], userRole)}>
-							<i className="pe-7s-note pe-2x pe-va"></i>
-						</LinkIf>
-						<Menu shape="drop-down">
-							<MenuItem><i className="pe-7f-user pe-2x pe-va"></i></MenuItem>
-							<MenuItem><span>내정보</span></MenuItem>
-							<MenuItem><span>북마크</span></MenuItem>
-							<MenuItem><span>검색기록</span></MenuItem>
-							<MenuItem><span>내가 올린 자료</span></MenuItem>
-							<MenuItem><span>로그아웃</span></MenuItem>
-						</Menu>
-						<Menu shape="drop-down">
-							<MenuItem><span>게시판</span></MenuItem>
-							<MenuItem><span>Q & A</span></MenuItem>
-							<MenuItem><span>이주의 변론</span></MenuItem>
-							<MenuItem><span>소송도우미</span></MenuItem>
-						</Menu>
-						<Menu shape="drop-down">
-							<MenuItem><span>바로가기</span></MenuItem>
-							<MenuItem><span>민변</span></MenuItem>
-							<MenuItem><span>대법원</span></MenuItem>
-						</Menu>
-						*/}
-					</div>
+					<MainMenu userRole={userRole} />
 				</div>
 				<div className="digital-library__content">
 					{child || this.searchBar('content')}

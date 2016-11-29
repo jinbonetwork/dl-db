@@ -1,87 +1,75 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 import jQ from 'jquery';
-import update from 'react-addons-update';  // for update()
-import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
 class DdItem extends Component {
 	render(){
 		return <li className="dditem">{this.props.children}</li>
 	}
 }
-DdItem.propTypes = {
-};
 
 class DdHead extends Component {
-	render(){
-		return (
-			<div className="ddhead" style={{width: this.props.width}}>
-				{this.props.children}
-			</div>
-		);
-	}
-}
-DdHead.propTypes = {
-	width: PropTypes.number
-};
-
-class Dropdown extends Component {
-	/*
-	componentWillMount(){
-		if(this.props.shape == 'drop-down'){
-			this.setState({
-				isUnfolded: false,
-				style: {
-					wrap: {width: null}
-				}
-			});
-		}
-	}
-	componentDidMount(){
-		let itemsRect = this.refs.items.getBoundingClientRect();
-		this.setState({style: update(this.state.style, {wrap: {width: {$set: itemsRect.width}}})});
-	}
-	handleClick(which){
-		if(which == 'title'){
-			this.setState({isUnfolded: !this.state.isUnfolded});
-		}
-	}
-	render(){
-		let className = (this.props.className ? 'menu '+this.props.className : 'menu');
-		className += (this.props.shape == 'drop-down' ? ' menu--dropdown' : '');
-
-		if(this.props.shape == 'drop-down'){
-			let title, items = [];
-			title = this.props.children[0] && cloneElement(this.props.children[0], {
-				position: 'title', handleClick: this.handleClick.bind(this, 'title')
-			});
-			Children.forEach(this.props.children, (child, index) => { if(child){
-				if(index >= 1) items.push(child);
-			}});
-			//const items = this.props.children;
-			className += (this.state.isUnfolded ? ' menu--unfolded' : '');
-			return (
-				<div className={className} style={this.state.style.wrap}>
-					<div className="menu__items-wrap" ref="items">
-						{title}
-						<div className="menu__items">{items}</div>
-					</div>
-				</div>
-			);
-		} else {
-			return <div className={className}>{this.props.children}</div>
-		}
-	}
-	*/
 	constructor(){
 		super();
 		this.state = {
-			isUnfolded: false,
-			headWidth: null,
+			minWidth: null
 		};
 	}
 	componentDidMount(){
 		this.handleResize();
 		jQ(window).on('resize', this.handleResize.bind(this));
+	}
+	componentWillUnmount(){
+		jQ(window).off('resize');
+	}
+	handleResize(){
+		const rect = this.refs.head.getBoundingClientRect();
+		if(this.state.minWidth != rect.width){
+			this.setState({minWidth: rect.width});
+			if(this.props.setMinWidth) this.props.setMinWidth(rect.width);
+		}
+	}
+	render(){
+		let arrow, children = [];
+		Children.forEach(this.props.children, (child) => {
+			if(child.type == DdArrow) arrow = child;
+			else children.push(child);
+		});
+		return (
+			<div className="ddhead" ref="head" style={{width: this.props.width, minWidth: this.state.minWidth}}>
+				{children}
+				{arrow}
+			</div>
+		);
+	}
+}
+DdHead.propTypes = {
+	width: PropTypes.number,
+	setMinWidth: PropTypes.func
+};
+
+class DdArrow extends Component {
+	render(){
+		return <div className="ddarrow">{this.props.children}</div>
+	}
+}
+
+class Dropdown extends Component {
+	constructor(){
+		super();
+		this.state = {
+			isUnfolded: false,
+			headWidth: null,
+			minWidth: null
+		};
+	}
+	componentDidMount(){
+		this.handleResize();
+		jQ(window).on('resize', this.handleResize.bind(this));
+	}
+	componentWillReceiveProps(nextProps){
+		if(nextProps.hasOwnProperty('isUnfolded') && nextProps.isUnfolded != this.state.isUnfolded){
+			this.setState({isUnfolded: nextProps.isUnfolded});
+		}
 	}
 	componentWillUnmount(){
 		jQ(window).off('resize');
@@ -94,6 +82,10 @@ class Dropdown extends Component {
 	}
 	handleClick(){
 		this.setState({isUnfolded: !this.state.isUnfolded});
+		if(this.props.handleClick(!this.state.isUnfolded));
+	}
+	setMinWidth(minWidth){
+		this.setState({minWidth: minWidth});
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
@@ -102,7 +94,7 @@ class Dropdown extends Component {
 		let head, items = [];
 		Children.forEach(this.props.children, (child) => { if(child){
 			if(child.type == DdHead){
-				head = cloneElement(child, {width: this.state.headWidth});
+				head = cloneElement(child, {width: this.state.headWidth, setMinWidth: this.setMinWidth.bind(this)});
 			}
 			else if(child.type == DdItem){
 				items.push(child);
@@ -118,7 +110,7 @@ class Dropdown extends Component {
 					<div>
 						<div>
 							<div className="dropdown__items">
-								<ul ref="items">{items}</ul>
+								<ul ref="items" style={{minWidth: this.state.minWidth}}>{items}</ul>
 							</div>
 						</div>
 					</div>
@@ -128,9 +120,10 @@ class Dropdown extends Component {
 	}
 }
 Dropdown.propTypes = {
-	shape: PropTypes.string,
 	className: PropTypes.string,
+	isUnfolded: PropTypes.bool,
+	handleClick: PropTypes.func,
 	children: PropTypes.arrayOf(PropTypes.element).isRequired
 };
 
-export {Dropdown, DdHead, DdItem};
+export {Dropdown, DdHead, DdItem, DdArrow};
