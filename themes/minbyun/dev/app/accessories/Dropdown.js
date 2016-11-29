@@ -3,19 +3,29 @@ import jQ from 'jquery';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
-class MenuItem extends Component {
+class DdItem extends Component {
 	render(){
-		let className = (this.props.position == 'title' ? 'menuitem menuitem--title' : 'menuitem');
-		return <div className={className} onClick={this.props.handleClick}>{this.props.children}</div>
+		return <li className="dditem">{this.props.children}</li>
 	}
 }
-MenuItem.propTypes = {
-	position: PropTypes.string,
-	handleClick: PropTypes.func,
-	children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired
+DdItem.propTypes = {
 };
 
-class Menu extends Component {
+class DdHead extends Component {
+	render(){
+		return (
+			<div className="ddhead" style={{width: this.props.width}}>
+				{this.props.children}
+			</div>
+		);
+	}
+}
+DdHead.propTypes = {
+	width: PropTypes.number
+};
+
+class Dropdown extends Component {
+	/*
 	componentWillMount(){
 		if(this.props.shape == 'drop-down'){
 			this.setState({
@@ -61,11 +71,66 @@ class Menu extends Component {
 			return <div className={className}>{this.props.children}</div>
 		}
 	}
+	*/
+	constructor(){
+		super();
+		this.state = {
+			isUnfolded: false,
+			headWidth: null,
+		};
+	}
+	componentDidMount(){
+		this.handleResize();
+		jQ(window).on('resize', this.handleResize.bind(this));
+	}
+	componentWillUnmount(){
+		jQ(window).off('resize');
+	}
+	handleResize(){
+		let itemsRect = this.refs.items.getBoundingClientRect();
+		if(itemsRect.width != this.state.headWidth){
+			this.setState({headWidth: itemsRect.width});
+		}
+	}
+	handleClick(){
+		this.setState({isUnfolded: !this.state.isUnfolded});
+	}
+	render(){
+		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
+		className += (this.state.isUnfolded ? ' dropdown--unfolded' : '');
+
+		let head, items = [];
+		Children.forEach(this.props.children, (child) => { if(child){
+			if(child.type == DdHead){
+				head = cloneElement(child, {width: this.state.headWidth});
+			}
+			else if(child.type == DdItem){
+				items.push(child);
+			}
+		}});
+
+		return (
+			<div className={className}>
+				<div className="dropdown__headwrap" onClick={this.handleClick.bind(this)}>
+					{head}
+				</div>
+				<div className="dropdown__innerwrap">
+					<div>
+						<div>
+							<div className="dropdown__items">
+								<ul ref="items">{items}</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 }
-Menu.propTypes = {
+Dropdown.propTypes = {
 	shape: PropTypes.string,
 	className: PropTypes.string,
 	children: PropTypes.arrayOf(PropTypes.element).isRequired
 };
 
-export {Menu, MenuItem};
+export {Dropdown, DdHead, DdItem};

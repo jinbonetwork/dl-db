@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
-import {Menu, MenuItem} from './accessories/Menu';
+import MainMenu from './MainMenu';
 import SearchBar from './SearchBar';
 import LinkIf from './accessories/LinkIf';
 import Message from './accessories/Message';
@@ -98,6 +98,12 @@ class DigitalLibrary extends Component {
 					<div className="digital-library__menu">
 						{/*<LinkIf to="/user" if={_isCommon(['admin', 'write', 'view'], userRole)}>내정보</LinkIf>*/}
 						{/*<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>*/}
+
+
+						<MainMenu />
+
+
+						{/*
 						<LinkIf to="/document/new" if={_isCommon(['admin', 'write'], userRole)}>
 							<i className="pe-7s-note pe-2x pe-va"></i>
 						</LinkIf>
@@ -120,6 +126,7 @@ class DigitalLibrary extends Component {
 							<MenuItem><span>민변</span></MenuItem>
 							<MenuItem><span>대법원</span></MenuItem>
 						</Menu>
+						*/}
 					</div>
 				</div>
 				<div className="digital-library__content">
