@@ -78,7 +78,7 @@ class Dropdown extends Component {
 		jQ(window).off('resize');
 	}
 	handleResize(){
-		let itemsRect = this.refs.items.getBoundingClientRect();
+		let itemsRect = this.refs.items.getBoundingClientRect(); console.log(itemsRect.width);
 		if(itemsRect.width != this.state.headWidth){
 			this.setState({headWidth: itemsRect.width});
 		}
