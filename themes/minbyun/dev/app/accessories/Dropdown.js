@@ -3,9 +3,12 @@ import jQ from 'jquery';
 
 class DdItem extends Component {
 	render(){
-		return <li className="dditem">{this.props.children}</li>
+		return <li className="dditem" onClick={this.props.handleClick}>{this.props.children}</li>
 	}
 }
+DdItem.propTypes = {
+	handleClick: PropTypes.func
+};
 
 class DdHead extends Component {
 	constructor(){
@@ -80,7 +83,7 @@ class Dropdown extends Component {
 			this.setState({headWidth: itemsRect.width});
 		}
 	}
-	handleClick(){
+	handleClick(which){
 		this.setState({isUnfolded: !this.state.isUnfolded});
 		if(this.props.handleClick(!this.state.isUnfolded));
 	}
@@ -92,18 +95,18 @@ class Dropdown extends Component {
 		className += (this.state.isUnfolded ? ' dropdown--unfolded' : '');
 
 		let head, items = [];
-		Children.forEach(this.props.children, (child) => { if(child){
+		Children.forEach(this.props.children, (child, index) => { if(child){
 			if(child.type == DdHead){
 				head = cloneElement(child, {width: this.state.headWidth, setMinWidth: this.setMinWidth.bind(this)});
 			}
 			else if(child.type == DdItem){
-				items.push(child);
+				items.push(cloneElement(child, {key: index, handleClick: this.handleClick.bind(this, 'item')}));
 			}
 		}});
 
 		return (
 			<div className={className}>
-				<div className="dropdown__headwrap" onClick={this.handleClick.bind(this)}>
+				<div className="dropdown__headwrap" onClick={this.handleClick.bind(this, 'head')}>
 					{head}
 				</div>
 				<div className="dropdown__innerwrap">

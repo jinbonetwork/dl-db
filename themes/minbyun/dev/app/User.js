@@ -5,7 +5,7 @@ import {Table, Row, Column} from './accessories/Table';
 class User extends Component {
 	handleClick(which, event){
 		if(which == 'logout'){
-			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){ console.log(data);
+			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
 				this.props.setMessage('로그아웃되었습니다.', 'goToLogin');
 			}});
 		}

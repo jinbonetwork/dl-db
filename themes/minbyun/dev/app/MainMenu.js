@@ -16,12 +16,15 @@ class MainMenu extends Component {
 		if(dropdown){
 			let index = dropdown[1], isUnfolded = arg;
 			if(this.state.stateOfUnfolded[index] != isUnfolded){
-				if(isUnfolded){
-					let state = [false, false, false];
-					state[index] = true;
-					this.setState({stateOfUnfolded: state});
-				}
+				let state = [false, false, false];
+				if(isUnfolded) state[index] = true;
+				this.setState({stateOfUnfolded: state});
 			}
+		}
+		else if(which == 'logout'){
+			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
+				this.props.setMessage('로그아웃되었습니다.', 'goToLogin');
+			}});
 		}
 	}
 	render(){
@@ -35,11 +38,15 @@ class MainMenu extends Component {
 						<i className="pe-7f-user pe-2x pe-va"></i>
 						<DdArrow><i className="pe-7s-angle-down pe-va pe-2x"></i></DdArrow>
 					</DdHead>
-					<DdItem><i className="pe-7s-user pe-2x pe-va"></i><span>내정보</span></DdItem>
+					<DdItem><Link to="/user"><i className="pe-7s-user pe-2x pe-va"></i><span>내정보</span></Link></DdItem>
 					<DdItem><i className="pe-7s-bookmarks pe-2x pe-va"></i><span>북마크</span></DdItem>
 					<DdItem><i className="pe-7s-search pe-2x pe-va"></i><span>검색기록</span></DdItem>
 					<DdItem><i className="pe-7s-file pe-2x pe-va"></i><span>내가 올린 자료</span></DdItem>
-					<DdItem><i className="pe-7s-unlock pe-2x pe-va"></i><span>로그아웃</span></DdItem>
+					<DdItem>
+						<div onClick={this.handleClick.bind(this, 'logout')}>
+							<i className="pe-7s-unlock pe-2x pe-va"></i><span>로그아웃</span>
+						</div>
+					</DdItem>
 				</Dropdown>
 				<Dropdown className="main-menu__board" isUnfolded={this.state.stateOfUnfolded[1]} handleClick={this.handleClick.bind(this, 'dropdown-1')}>
 					<DdHead>
@@ -63,6 +70,7 @@ class MainMenu extends Component {
 	}
 }
 MainMenu.propTypes = {
-	userRole: PropTypes.array
+	userRole: PropTypes.array,
+	fetchData: PropTypes.func
 }
 export default withRouter(MainMenu);

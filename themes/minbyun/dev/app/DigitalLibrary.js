@@ -95,7 +95,7 @@ class DigitalLibrary extends Component {
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
-					<MainMenu userRole={userRole} />
+					<MainMenu userRole={userRole} fetchData={this.props.fetchData} setMessage={this.props.setMessage} />
 				</div>
 				<div className="digital-library__content">
 					{child || this.searchBar('content')}
