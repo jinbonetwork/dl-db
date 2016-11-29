@@ -19,6 +19,7 @@ import './style/documentForm.less';
 import './style/document.less';
 import './style/searchResult.less';
 import './style/searchBar.less';
+import './style/accessories.less';
 
 render((
 	<Router history={browserHistory}>

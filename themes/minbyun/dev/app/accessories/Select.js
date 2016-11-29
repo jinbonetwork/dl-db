@@ -1,6 +1,19 @@
 import React, {Component, PropTypes} from 'react';
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
+class Option extends Component {
+	render(){
+		return (
+			<li>
+				{this.props.children}
+			</li>
+		);
+	}
+}
+Option.propTypes = {
+	children: PropTypes.string.isRequired
+};
+
 class Select extends Component {
 	handleChange(event){
 

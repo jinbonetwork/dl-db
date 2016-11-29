@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
+import MainMenu from './MainMenu';
 import SearchBar from './SearchBar';
 import LinkIf from './accessories/LinkIf';
 import Message from './accessories/Message';
@@ -94,11 +95,7 @@ class DigitalLibrary extends Component {
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
-					<div className="digital-library__menu">
-						<LinkIf to="/user" if={_isCommon(['admin', 'write', 'view'], userRole)}>내정보</LinkIf>
-						{/*<LinkIf to="/search" if={_isCommon(['admin', 'view'], userRole)}>자료목록</LinkIf>*/}
-						<LinkIf to="/document/new" if={_isCommon(['admin', 'write'], userRole)}>자료 입력</LinkIf>
-					</div>
+					<MainMenu userRole={userRole} />
 				</div>
 				<div className="digital-library__content">
 					{child || this.searchBar('content')}

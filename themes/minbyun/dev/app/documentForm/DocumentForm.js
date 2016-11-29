@@ -3,8 +3,8 @@ import update from 'react-addons-update';  // for update()
 import {withRouter} from 'react-router';
 import 'babel-polyfill'; // for update(), find() ...
 import SearchInput from './SearchInput';
-import Textarea from '../accessories/Textarea';
-import DateForm from '../accessories/DateForm';
+import Textarea from './Textarea';
+import DateForm from './DateForm';
 import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../accessories/Table';
 import Message from '../accessories/Message';
