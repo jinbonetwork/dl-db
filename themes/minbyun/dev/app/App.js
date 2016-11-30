@@ -37,7 +37,10 @@ render((
 					<Route path="profile" component={UserProfile} />
 					<Route path="bookmarks" component={Bookmarks} />
 					<Route path="history" component={History} />
-					<Route path="documents" component={UserDocuments} />
+					<Route path="documents" component={UserDocuments}>
+						<IndexRedirect to="/user/documents/page/1" />
+						<Route path="page/:page" component={UserDocuments} />
+					</Route>
 				</Route>
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />

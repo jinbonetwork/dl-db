@@ -66,11 +66,13 @@ class DocumentForm extends Component {
 			}
 		};
 
-		let usetProcessing = this.props.callBacks.setMessage(null);
-		this.props.callBacks.fetchData('post', '/api/document/save?mode='+this.props.formAttr.mode, formData, (data) => { if(data){
-			usetProcessing();
-			this.props.router.push('/document/'+data.did);
-		}});
+		let unsetProcessing = this.props.callBacks.setMessage(null);
+		this.props.callBacks.fetchData('post', '/api/document/save?mode='+this.props.formAttr.mode, formData, (data) => {
+			unsetProcessing();
+			if(data){
+				this.props.router.push('/document/'+data.did);
+			}
+		});
 	}
 	handleClick(which, event){
 		if(which == 'submit'){

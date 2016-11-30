@@ -4,22 +4,15 @@ import {Link} from 'react-router';
 const _maxPage = 10;
 
 class Pagination extends Component {
-	componentWillMount(){
-		let separator = (this.props.url.match(/\?/) ? '&' : '?');
-		let paramName = (this.props.paramName ? this.props.paramName+'=' : 'page=');
-		this.setState({
-			url: this.props.url+separator+paramName
-		});
-	}
 	page(page){
 		if(page != 0){
 			if(page != this.props.page){
-				return <Link className="pagination__page" key={page} to={this.state.url+page}>{page}</Link>
+				return <Link className="pagination__page" key={page} to={this.props.url+page}>{page}</Link>
 			} else {
 				return <span className="pagination__page" key={page}>{page}</span>
 			}
 		} else {
-			return <span className="pagination__page pagination__ellipsis" key={page}>...</span>
+			return <span className="pagination__page pagination__ellipsis" key={page}><i className="pe-7f-more"></i></span>
 		}
 	}
 	render(){
