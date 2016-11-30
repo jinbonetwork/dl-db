@@ -8,6 +8,9 @@ import DigitalLibrary from './DigitalLibrary';
 import Login from './Login';
 import User from './User';
 import UserProfile from './user/UserProfile';
+import Bookmarks from './user/Bookmarks';
+import History from './user/History';
+import UserDocuments from './user/UserDocuments';
 import NewDocument from './NewDocument';
 import EditDocument from './EditDocument';
 import Document from './Document';
@@ -22,6 +25,7 @@ import './style/searchResult.less';
 import './style/searchBar.less';
 import './style/accessories.less';
 import './style/user.less';
+import './style/documentList.less';
 
 render((
 	<Router history={browserHistory}>
@@ -31,6 +35,9 @@ render((
 				<Route path="/user" component={User}>
 					<IndexRedirect to="/user/profile" />
 					<Route path="profile" component={UserProfile} />
+					<Route path="bookmarks" component={Bookmarks} />
+					<Route path="history" component={History} />
+					<Route path="documents" component={UserDocuments} />
 				</Route>
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document} />

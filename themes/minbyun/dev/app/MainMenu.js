@@ -3,6 +3,7 @@ import {Link, withRouter} from 'react-router';
 import {Dropdown, DdHead, DdItem, DdArrow} from './accessories/Dropdown';
 import LinkIf from './accessories/LinkIf';
 import {_isCommon} from './accessories/functions';
+import {_userMenu} from './schema/menuSchema';
 
 class MainMenu extends Component {
 	constructor(){
@@ -28,6 +29,11 @@ class MainMenu extends Component {
 		}
 	}
 	render(){
+		let userMenuItems = _userMenu.map((item) => (
+			<DdItem key={item.path}>
+				<Link to={'/user/'+item.path}><i className={item.icon+' pe-va'}></i><span>{item.name}</span></Link>
+			</DdItem>
+		));
 		return (
 			<div className="main-menu">
 				<LinkIf className="main-menu__write" to="/document/new" if={_isCommon(['admin', 'write'], this.props.userRole)}>
@@ -38,10 +44,7 @@ class MainMenu extends Component {
 						<i className="pe-7f-user pe-va"></i>
 						<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
 					</DdHead>
-					<DdItem><Link to="/user/profile"><i className="pe-7s-user pe-va"></i><span>내정보</span></Link></DdItem>
-					<DdItem><i className="pe-7s-bookmarks pe-va"></i><span>북마크</span></DdItem>
-					<DdItem><i className="pe-7s-search pe-va"></i><span>검색기록</span></DdItem>
-					<DdItem><i className="pe-7s-file pe-va"></i><span>내가 올린 자료</span></DdItem>
+					{userMenuItems}
 					<DdItem>
 						<div onClick={this.handleClick.bind(this, 'logout')}>
 							<i className="pe-7s-unlock pe-va"></i><span>로그아웃</span>

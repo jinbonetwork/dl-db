@@ -1,0 +1,53 @@
+@import "variables";
+
+.doclist {
+	.doclist__number {
+		float: left;
+		width: 4em;
+		text-align: right;
+	}
+	.doclist__number span {
+		font-size: 3em;
+	}
+	.doclist__number + .doclist__item {
+		margin-left: 5em;
+	}
+	.doclist__item + .doclist__item {
+		margin-top: 2em;
+	}
+}
+.doclist-item {
+	background-color: @minor-color-2;
+	overflow: hidden;
+	.doclist-item__header {
+		padding-bottom: 1em;
+	}
+	.doclist-item__header span:first-child {
+		margin-right: 0.5em;
+	}
+	.doclist-item__title {
+		font-size: 1.5em;
+		font-weight: @font-bold;
+		line-height: 1.3em;
+	}
+	a, a:visited, a:link, a:hover, a:active {
+		color: @main-color;
+		text-decoration: none;
+	}
+	.doclist-item__side {
+		float: left;
+		width: 13em;
+		padding: 1em;
+		margin: 0 1em 1em 0;
+		line-height: 1.5em;
+		background-color: @main-color * 1.5;
+	}
+	.doclist-item__side span:first-child {
+		font-weight: @font-bold;
+	}
+	.doclist-item__content p {
+		min-height: 8em;
+		line-height: 1.5em;
+		text-align: justify;
+	}
+}

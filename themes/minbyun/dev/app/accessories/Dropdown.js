@@ -121,8 +121,7 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
 	className: PropTypes.string,
 	isUnfolded: PropTypes.bool,
-	handleClick: PropTypes.func,
-	children: PropTypes.arrayOf(PropTypes.element).isRequired
+	handleClick: PropTypes.func
 };
 
 export {Dropdown, DdHead, DdItem, DdArrow};
