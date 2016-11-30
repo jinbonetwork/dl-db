@@ -1,0 +1,78 @@
+@import "variables";
+
+@user-menu-width: 13em;
+@user-profile-col-width: 8em;
+
+.user {
+	margin-top: 10%;
+}
+.user__menu {
+	float: left;
+	width: @user-menu-width;
+
+	li {
+		background-color: @minor-color-2;
+	}
+	li.user__selected {
+		background-color: @main-color;
+		color: @minor-color-2;
+	}
+	li + li {
+		margin-top: 0.5em;
+	}
+	a, a:visited, a:link, a:hover, a:active {
+		color: inherit;
+		text-decoration: none;
+	}
+	a {
+		position: relative;
+		display: block;
+		padding: 0 1em;
+		line-height: 3em;
+	}
+	a i {
+		font-size: 2em;
+		width: 1em;
+	}
+	a > i {
+		margin-right: 0.5em;
+	}
+	a > span + span {
+		position: absolute;
+		top: 0; right: 0;
+	}
+	span > i {
+		font-weight: bold;
+		color: transparent;
+	}
+	li.user__selected span > i {
+		color: @minor-color-2;
+	}
+}
+.user__content {
+	margin-left: @user-menu-width + 1em;
+	padding: 1.5em;
+	background-color: @minor-color-2;
+}
+.user-profile {
+	margin: 5%;
+	.table__col {
+		line-height: 3em;
+		border-style: solid;
+		border-color: @main-color;
+	}
+	.table__col:first-child {
+		width: @user-profile-col-width;
+		padding: 0 0.5em;
+		text-align: center;
+		border-width: 0 1px 1px 0;
+	}
+	.table__col + .table__col {
+		margin-left: @user-profile-col-width;
+		padding: 0 1em;
+		border-width: 0 0 1px 0;
+	}
+	.table__row:first-child .table__col {
+		border-top-width: 1px;
+	}
+}

@@ -116,6 +116,7 @@ DigitalLibrary.propTypes = {
 	fetchData: PropTypes.func,
 	updateSearchQuery: PropTypes.func,
 	message: PropTypes.element,
+	handleResize: PropTypes.func,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

@@ -37,13 +37,13 @@ class DoctypeSelect extends Component {
 	}
 	componentDidMount(){
 		this.handleResize();
-		jQ(window).on('resize', this.handleResize.bind(this));
+		//jQ(window).on('resize', this.handleResize.bind(this));
 	}
 	componentWillReceiveProps(nextProps){
 		this.handleResize();
 	}
 	componentWillUnmount(){
-		jQ(window).off('resize');
+		//jQ(window).off('resize');
 	}
 	handleResize(){
 		let size = this.refs.innerWrap.getBoundingClientRect();

@@ -18,13 +18,12 @@ class DdHead extends Component {
 		};
 	}
 	componentDidMount(){
-		this.handleResize();
-		jQ(window).on('resize', this.handleResize.bind(this));
+		this.setSize();
 	}
-	componentWillUnmount(){
-		jQ(window).off('resize');
+	componentWillReceiveProps(){
+		this.setSize();
 	}
-	handleResize(){
+	setSize(){
 		const rect = this.refs.head.getBoundingClientRect();
 		if(this.state.minWidth != rect.width){
 			this.setState({minWidth: rect.width});
@@ -66,19 +65,16 @@ class Dropdown extends Component {
 		};
 	}
 	componentDidMount(){
-		this.handleResize();
-		jQ(window).on('resize', this.handleResize.bind(this));
+		this.setSize();
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.hasOwnProperty('isUnfolded') && nextProps.isUnfolded != this.state.isUnfolded){
 			this.setState({isUnfolded: nextProps.isUnfolded});
 		}
+		this.setSize();
 	}
-	componentWillUnmount(){
-		jQ(window).off('resize');
-	}
-	handleResize(){ console.log('resize');
-		let itemsRect = this.refs.items.getBoundingClientRect(); console.log(itemsRect.width);
+	setSize(){
+		let itemsRect = this.refs.items.getBoundingClientRect();
 		if(itemsRect.width != this.state.headWidth){
 			this.setState({headWidth: itemsRect.width});
 		}

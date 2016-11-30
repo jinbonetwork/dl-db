@@ -34,6 +34,16 @@ const _convertToUser = (sUser) => {
 	return user;
 };
 
+const _usCustomFields = (sFields) => {
+	let customFields = {};
+	return null;
+}
+
+const _usCustomFieldAttrs = (sFields) => {
+	let customFieldAttrs = {};
+	return null;
+}
+
 const _role = (sRole) => {
 	if(sRole){
 		const role = {
@@ -45,4 +55,4 @@ const _role = (sRole) => {
 	}
 };
 
-export {_emptyUser, _usFdAttrs, _usFname, _sUsFname, _convertToUser, _role};
+export {_emptyUser, _usFdAttrs, _usFname, _sUsFname, _convertToUser, _usCustomFields, _usCustomFieldAttrs, _role};

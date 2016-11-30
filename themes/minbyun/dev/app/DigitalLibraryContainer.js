@@ -6,8 +6,9 @@ import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import Message from './accessories/Message';
 import Overlay from './accessories/Overlay';
 import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './schema/docSchema';
-import {_role, _convertToUser} from './schema/userSchema';
+import {_role, _convertToUser, _emptyUser, _usCustomFieldAttrs, _usCustomFields} from './schema/userSchema';
 import {_isEmpty} from './accessories/functions';
+import jQ from 'jquery';
 
 class DigitalLibraryContainer extends Component {
 	constructor(){
@@ -26,13 +27,22 @@ class DigitalLibraryContainer extends Component {
 				from: '',
 				to: ''
 			},
-			userProfile: null,
+			userProfile: {
+				profile: _emptyUser,
+				customFields: null,
+				customFieldAttrs: null
+			},
 			message: null,
 			openedDocuments: null,
+			windowResize: false
 		};
 	}
 	componentDidMount(){
 		this.fetchContData();
+		jQ(window).on('resize', () => {this.setState({windowResize: true})});
+	}
+	componentWillUnmount(){
+		jQ(window).off('resize');
 	}
 	fetchData(method, url, arg2, arg3){
 		let data = (method == 'get' ? null : arg2);
@@ -76,7 +86,11 @@ class DigitalLibraryContainer extends Component {
 					}});
 				});
 				this.fetchData('get', '/api/user/profile', (data) => {
-					this.setState({userProfile: _convertToUser(data.profile)});
+					this.setState({userProfile: {
+						profile: _convertToUser(data.profile),
+						customFields: _usCustomFields(data.fields),
+						customFieldAttrs: _usCustomFieldAttrs(data.fields)
+					}});
 				});
 			}
 			if(callBack) callBack(data);
@@ -124,11 +138,11 @@ class DigitalLibraryContainer extends Component {
 			docData: this.state.docData,
 			searchQuery: this.state.searchQuery,
 			openedDocuments: this.state.openedDocuments,
+			message: this.state.message,
 			fetchContData: this.fetchContData.bind(this),
 			setMessage: this.setMessage.bind(this),
 			fetchData: this.fetchData.bind(this),
-			updateSearchQuery: this.updateSearchQuery.bind(this),
-			message: this.state.message
+			updateSearchQuery: this.updateSearchQuery.bind(this)
 		});
 		return digitalLibrary;
 	}

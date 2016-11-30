@@ -1,42 +1,24 @@
 import React, {Component, PropTypes} from 'react';
 import {Table, Row, Column} from '../accessories/Table';
+import {_usFdAttrs} from '../schema/userSchema';
 
 class UserProfile extends Component {
-	render(){ console.log(this.props.userProfile);
-		if(!this.props.userProfile) return null;
-		return <div>user profile</div>
-		/*
-		return(
-			<div className="user">
-				<Table>
-					{
-						this.props.userData.user.user_name &&
-						<Row>
-							<Column>이름</Column>
-							<Column>{this.props.userData.user.user_name}</Column>
-						</Row>
-					}
-					{
-						this.props.userData.user.class &&
-						<Row>
-							<Column>기수</Column>
-							<Column>{this.props.userData.user.class}</Column>
-						</Row>
-					}
-					{
-						this.props.userData.user.email &&
-						<Row>
-							<Column>이메일</Column>
-							<Column>{this.props.userData.user.email}</Column>
-						</Row>
-					}
-					<Row>
-						<Column><button type="button" onClick={this.handleClick.bind(this, 'logout')}>로그아웃</button></Column>
-					</Row>
-				</Table>
+	render(){
+		let rows = [];
+		for(let fn in this.props.userProfile.profile){
+			let value = this.props.userProfile.profile[fn];
+			rows.push(
+				<Row key={fn}>
+					<Column><span>{_usFdAttrs[fn].displayName}</span></Column>
+					<Column>{(value ? <span>{value}</span> : <span>&nbsp;</span>)}</Column>
+				</Row>
+			);
+		}
+		return (
+			<div className="user-profile">
+				<Table>{rows}</Table>
 			</div>
 		);
-		*/
 	}
 }
 UserProfile.propTypes = {

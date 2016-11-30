@@ -71,6 +71,8 @@ class MainMenu extends Component {
 }
 MainMenu.propTypes = {
 	userRole: PropTypes.array,
-	fetchData: PropTypes.func
+	fetchData: PropTypes.func,
+	setMessage: PropTypes.func,
+	handleResize: PropTypes.func
 }
 export default withRouter(MainMenu);
