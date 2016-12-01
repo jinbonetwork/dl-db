@@ -1,5 +1,4 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
-import jQ from 'jquery';
 
 class DdItem extends Component {
 	render(){

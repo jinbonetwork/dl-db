@@ -1,6 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import DoctypeSelect from './searchBar/DoctypeSelect';
+
+//import {DdSelect, DsItem} from './accessories/DdSelect';
+//import {DdHead, DdArrow} from './accessories/Dropdown';
+
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
@@ -149,6 +153,15 @@ class SearchBar extends Component {
 							</Table>
 						</div>
 					</div>
+
+
+					{/*<DdSelect>
+						<DdItem><span>Q & A</span></DdItem>
+						<DdItem><span>이주의 변론</span></DdItem>
+						<DdItem><span>소송도우미</span></DdItem>
+					</DdSelect>*/}
+
+
 				</div>
 			);
 		} else {
