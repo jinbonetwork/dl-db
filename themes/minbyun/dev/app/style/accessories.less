@@ -57,6 +57,11 @@
 .dropdown {
 	display: inline-block;
 	text-align: center;
+	.dropdown__invisible {
+		position: fixed;
+		top: 0; left: 0;
+		visibility: hidden;
+	}
 	.dropdown__headwrap {
 		display: inline-block;
 		border: solid 1px #fe9a2e;
@@ -71,14 +76,6 @@
 		top: 0; right: 0;
 	}
 	.dropdown__innerwrap {
-		position: relative;
-	}
-	.dropdown__innerwrap > div {
-		position: absolute;
-		top: 0; left: 0; width: 100vw;
-		background-color: yellow;
-	}
-	.dropdown__innerwrap > div > div {
 		position: relative;
 	}
 	.dropdown__items {

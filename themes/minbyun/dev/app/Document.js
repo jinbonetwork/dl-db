@@ -4,7 +4,6 @@ import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import FieldsInHeader from './document/FieldsInHeader';
 import FieldsInContents from './document/FieldsInContents';
-import FileTextEditor from './document/FileTextEditor';
 import LinkIf from './accessories/LinkIf';
 import Message from  './accessories/Message';
 import {Table, Row, Column} from './accessories/Table';
