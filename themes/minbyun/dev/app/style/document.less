@@ -1,10 +1,12 @@
+@import "variables";
+
 @label-width: 9.4em;
 
 .document {
 	margin-top: 3em;
 	padding: 1em;
 	.document--back{
-		color: #989cff;
+		color: @main-color;
 		i {
 			font-size: 1.3em
 		}
@@ -28,30 +30,30 @@
 	.document__filetext {
 		margin-left: 0.5em;
 		padding: 0 0.2em;
-		background-color: transparent;
-		color: #989cff;
+		border: solid 1px @main-color;
 	}
 	.document__filetext span {
 		font-size: 0.8em;
+		color: @main-color;
 	}
 	h1 {
 		margin: 0;
 		font-size: 2.5em;
 		padding-bottom: 0.5em;
-		border-bottom: solid 2px #989cff;
-		color: #989cff;
+		border-bottom: solid 2px @main-color;
+		color: @main-color;
 	}
 	.document__buttons {
 		margin: 2em 0;
 		a, a:visited, a:link, a:hover, a:active {
-			color: #989cff;
+			color: @main-color;
 			text-decoration: none;
 		}
 		a {
 			display: inline-block;
 			line-height: 2em;
 			padding: 0 1em;
-			border: solid 1px #989cff;
+			border: solid 1px @main-color;
 		}
 		a:last-child {
 			margin-left: 1em;
@@ -66,7 +68,7 @@
 		}
 		button:first-child {
 			color: #ffffff;
-			background-color: #989cff
+			background-color: @main-color
 		}
 
 	}
@@ -96,14 +98,14 @@
 			padding-left: 0.5em;
 		}
 		a, a:visited, a:link, a:hover, a:active {
-			color: #989cff;
+			color: @main-color;
 			text-decoration: none;
 		}
 		i {
 			font-size: 1.5em;
-			color: #989cff;
+			color: @main-color;
 		}
-		i.docuement__attention {
+		i.document__attention {
 			color: #b40404;
 			font-size: 1.3em;
 			margin-left: 0.5em;
@@ -131,7 +133,7 @@
 			margin-left: @label-width;
 		}
 		.inner-table {
-			border-top: solid 1px #989cff;
+			border-top: solid 1px @main-color;
 		}
 		.inner-table .table__col {
 			line-height: 2.5em;
@@ -141,12 +143,12 @@
 			padding-right: 1em;
 			text-align: right;
 			font-weight: 700;
-			border-bottom: solid 1px #989cff;
+			border-bottom: solid 1px @main-color;
 		}
 		.inner-table .table__col:not(.table__label){
 			margin-left: 6em;
 			padding-left: 1em;
-			border: solid 1px #989cff;
+			border: solid 1px @main-color;
 			border-width: 0 0 1px 1px;
 		}
 	}
@@ -158,7 +160,7 @@
 	transform: translate(-50%, -50%);
 	padding: 1em;
 	background-color: #ffffff;
-	border: solid 1px #989cff;
+	border: solid 1px @main-color;
 
 	&:not(.file-text-editor__full-screen){
 		max-width: 43.8em; max-height: 37.5em;
@@ -169,7 +171,7 @@
 	.file-text-editor__filename span {
 		font-size: 1.2em;
 		font-weight: 700;
-		color: #989cff;
+		color: @main-color;
 	}
 	.file-text-editor__filename + .file-text-editor__filemeta {
 		margin-top: 1em;
@@ -192,21 +194,25 @@
 		margin-top: 1em;
 		text-align: right;
 	}
-	button {
-		padding: 0.5em 1em;
-		background-color: #989cff;
-		color: #ffffff;
-		border: solid 1px #989cff;
+	a:visited, a:link, a:hover, a:active {
+		text-decoration: none;
+		color: @main-color;
 	}
-	button.reverse-color {
-		background-color: #ffffff;
-		color: #989cff;
+	.file-text-editor__buttons a, button {
+		padding: 0.5em 1em;
+		background-color: @main-color;
+		color: @minor-color-2;
+		border: solid 1px @main-color;
+	}
+	.file-text-editor__buttons a, button.reverse-color {
+		background-color: @minor-color-2;
+		color: @main-color;
 	}
 	button:first-child {
 		position: absolute;
 		top: 0; left: 0;
 	}
-	button + button {
+	button + a {
 		margin-left: 1em;
 	}
 }

@@ -51,12 +51,12 @@
 	}
 }
 .user__content {
-	margin-left: @user-menu-width + 1em;
-	padding: 1.5em;
-	background-color: @minor-color-2;
+	margin-left: @user-menu-width;
+	padding-left: 1.5em;
 }
 .user-profile {
-	margin: 5%;
+	background-color: @minor-color-2;
+	padding: 5%;
 	.table__col {
 		line-height: 3em;
 		border-style: solid;
@@ -78,7 +78,14 @@
 	}
 }
 .userdocs {
+	.userdocs__doclist {
+		background-color: @minor-color-2;
+		padding: 5%;
+	}
 	.doclist-item + .doclist-item {
 		margin-top: 2em;
+	}
+	.pagination {
+		margin-top: 3%;
 	}
 }

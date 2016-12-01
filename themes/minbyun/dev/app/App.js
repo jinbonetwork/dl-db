@@ -13,6 +13,7 @@ import History from './user/History';
 import UserDocuments from './user/UserDocuments';
 import NewDocument from './NewDocument';
 import EditDocument from './EditDocument';
+import FileTextEditor from './FileTextEditor';
 import Document from './Document';
 import SearchResult from './SearchResult';
 
@@ -43,7 +44,9 @@ render((
 					</Route>
 				</Route>
 				<Route path="/document/new" component={NewDocument} />
-				<Route path="/document/:did" component={Document} />
+				<Route path="/document/:did" component={Document}>
+					<Route path="text/:fid" component={FileTextEditor} />
+				</Route>
 				<Route path="/document/:did/edit" component={EditDocument} />
 				<Route path="/search**" component={SearchResult} />
 			</Route>

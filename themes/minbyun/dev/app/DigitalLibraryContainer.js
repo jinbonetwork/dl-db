@@ -49,13 +49,14 @@ class DigitalLibraryContainer extends Component {
 		let callBack = (method == 'get' ? arg2 : arg3);
 		axios({method: method, url: url, data: data, timeout: 60000}).then((response) => {
 			if(response.statusText == 'OK'){
-				if(!response.data.error || response.data.error == 0){
+				if((!response.data.error || response.data.error == 0) && typeof response.data === 'object'){
 					if(callBack) callBack(response.data);
 				} else {
 					let actOnClick = (response.data.error == -9999 ? 'goToLogin' : 'unset');
 					if(callBack) callBack(null);
+					let message = (response.data.message ? response.data.message : response.data);
+					this.setMessage(message, actOnClick);
 					console.error(response.data);
-					this.setMessage(response.data.message, actOnClick);
 				}
 			} else {
 				console.error('Server response was not OK');

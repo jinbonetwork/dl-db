@@ -11,16 +11,12 @@ class FileTextEditor extends Component {
 		});
 	}
 	componentDidMount(){
-		this.handleResize();
-		jQ(window).on('resize', this.handleResize.bind(this));
+		this.setSize();
 	}
 	componentDidUpdate(nextProps, nextState){
-		if(this.state.isFullScreen !== nextState.isFullScreen) this.handleResize();
+		if(this.state.isFullScreen !== nextState.isFullScreen) this.setSize();
 	}
-	componentWillUnmount(){
-		jQ(window).off('resize');
-	}
-	handleResize(){
+	setSize(){
 		let wrapH = jQ(this.refs.wrap).height();
 		let headerH = jQ(this.refs.header).outerHeight(true);
 		let buttonsH = jQ(this.refs.buttons).outerHeight(true);

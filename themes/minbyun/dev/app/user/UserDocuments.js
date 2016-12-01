@@ -37,14 +37,15 @@ class UserDocuments extends Component {
 		});
 	}
 	render(){
-		//return null;
 		if(!this.state.documents) return null;
 		let documents = this.state.documents && this.state.documents.map((doc) => (
 			<DocListItem key={doc.id} document={doc} docData={this.props.docData} userRole={this.props.userData.role} />
 		));
 		return (
 			<div className="userdocs">
-				{documents}
+				<div className="userdocs__doclist">
+					{documents}
+				</div>
 				<Pagination url="/user/documents/page/" page={parseInt(this.props.params.page)} numOfPages={this.state.numOfPages} />
 			</div>
 		);

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {Link} from 'react-router';
 import ImageWrap from './ImageWrap';
 import LinkIf from '../accessories/LinkIf';
 import {Table, Row, Column} from '../accessories/Table';
@@ -6,11 +7,6 @@ import {_fieldAttrs} from '../schema/docSchema';
 import {_displayDate, _isCommon} from '../accessories/functions';
 
 class FieldsInHeader extends Component {
-	handleClick(what, args, event){
-		if(what == 'fileText'){
-			this.props.callBacks.setFileTextEditor(args.fid, args.filename);
-		}
-	}
 	date(){
 		return (
 			<Row>
@@ -27,13 +23,8 @@ class FieldsInHeader extends Component {
 		let fileList = this.props.document[this.props.fname].map((file, i) => (
 			<li key={i}>
 				<LinkIf tag="a" to={file.fileuri} if={isItDownload && canYouDownload} notIf="visible">{file.filename}</LinkIf>
-				{(file.status != 'parsed' && areYouOwner) && <i className="docuement__attention pe-7f-attention pe-va"></i>}
-				{areYouOwner &&
-					<button type="button" className="document__filetext"
-						onClick={this.handleClick.bind(this, 'fileText', {fid: file.fid, filename: file.filename})}>
-						<span>TEXT</span>
-					</button>
-				}
+				{(file.status != 'parsed' && areYouOwner) && <i className="document__attention pe-7f-attention pe-va"></i>}
+				{areYouOwner && <Link className="document__filetext" to={'/document/'+this.props.document.id+'/text/'+file.fid}><span>TEXT</span></Link>}
 			</li>
 		));
 		return (
@@ -57,8 +48,7 @@ class FieldsInHeader extends Component {
 FieldsInHeader.propTypes = {
 	fname: PropTypes.string.isRequired,
 	document: PropTypes.object.isRequired,
-	userRole: PropTypes.array.isRequired,
-	callBacks: PropTypes.objectOf(PropTypes.func).isRequired
+	userRole: PropTypes.array.isRequired
 };
 
 export default FieldsInHeader;

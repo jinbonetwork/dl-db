@@ -1,4 +1,4 @@
-import React, {Component, PropTypes, cloneElement} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
@@ -11,12 +11,25 @@ import {Table, Row, Column} from './accessories/Table';
 import {_fieldAttrs, _convertToDoc} from './schema/docSchema';
 import {_isEmpty, _isCommon} from './accessories/functions';
 
+class Dummy extends Component {
+	componentWillReceiveProps(){
+		console.log('dummy: will receive props');
+	}
+	componentDidUpdate(){
+		console.log('dummy: did update');
+	}
+	render(){
+		return null;
+	}
+}
+
 class Document extends Component {
 	constructor(){
 		super();
 		this.state = {
 			document: null,
-			fileText: {}
+			fileText: {},
+			child: null
 		};
 	}
 	componentDidMount(){
@@ -44,6 +57,19 @@ class Document extends Component {
 		else if(fname == 'access') return true;
 		return false;
 	}
+	setFileTextEditor(fileId, filename){
+		this.setState({child: (
+			<FileTextEditor fid={fileId} filename={filename}
+				header={this.state.fileText[fileId].header}
+				text={this.state.fileText[fileId].text}
+				submit={this.submitFileText.bind(this)}
+				cancel={this.unsetChild.bind(this)}
+			/>
+		)});
+	}
+	unsetChild(){
+		this.setState({child: null});
+	}
 	handleClick(which){
 		if(which == 'bookmark'){
 			/*
@@ -58,7 +84,8 @@ class Document extends Component {
 	submitFileText(fileId, text){
 		let prevFiletext = this.state.fileText;
 		this.setState({
-			fileText: update(this.state.fileText, {[fileId]: {text: {$set: text}}})
+			fileText: update(this.state.fileText, {[fileId]: {text: {$set: text}}}),
+			child: null
 		});
 
 		let formData = new FormData();
@@ -81,7 +108,9 @@ class Document extends Component {
 			if(!fAttr.parent && fn != 'title'){
 				if(fn == 'image' || fn == 'file' || fn == 'date'){
 					fieldsInHeader[fn] = !_isEmpty(this.state.document[fn]) && (
-						<FieldsInHeader fname={fn} document={this.state.document} userRole={userRole} />
+						<FieldsInHeader fname={fn} document={this.state.document} userRole={userRole}
+							callBacks={{setFileTextEditor: this.setFileTextEditor.bind(this)}}
+						/>
 					);
 				}
 				else if(!this.isHiddenField(fn)){
@@ -117,9 +146,8 @@ class Document extends Component {
 						{fieldsInContents}
 					</Table>
 				</div>
-				{this.props.children && cloneElement(this.props.children, {
-					document: this.state.document,  fileText: this.state.fileText, submit: this.submitFileText.bind(this)
-				})}
+				{this.state.child}
+				<Dummy />
 			</div>
 		);
 	}

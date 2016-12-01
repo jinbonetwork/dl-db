@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
-import DocListItem from './documentList/DocListItem';
+import {Link} from 'react-router';
+import ResultItem from './searchResult/ResultItem';
 import Pagination from './accessories/Pagination';
-import {Table, Row, Column} from './accessories/Table';
 import {_convertToDoc} from './schema/docSchema';
 import {_params} from './accessories/functions';
 
@@ -9,24 +9,27 @@ class SearchResult extends Component {
 	constructor(){
 		super();
 		this.state = {
-			documents: null,
-			numOfPages: 1
+			documents: [],
+			page: 0,
+			numOfPages: 0
 		};
 	}
+	componentWillMount(){
+		console.log(this.props.searchQuery);
+	}
 	componentDidMount(){
-		this.fetchData(_params(this.props.location.query));
+		this.fetchData(this.props.location.query);
 	}
 	componentWillReceiveProps(nextProps){
 		let thisUrlParams = _params(this.props.location.query);
 		let nextUrlParams = _params(nextProps.location.query);
 		if(thisUrlParams != nextUrlParams){
-			this.fetchData(nextUrlParams);
+			this.fetchData(nextProps.location.query);
 		}
 	}
-	fetchData(params){ console.log(params);
-		/*
+	fetchData(query){
 		let unsetProcessing = this.props.setMessage(null);
-		this.props.fetchData('get', '/api/search?page=1', (data) => { if(data){
+		this.props.fetchData('get', '/api/document?page=1', (data) => { if(data){
 			this.setState({
 				documents: data.documents.map((doc) => _convertToDoc(doc)),
 				page: data.result.page,
@@ -34,7 +37,6 @@ class SearchResult extends Component {
 			});
 			unsetProcessing();
 		}});
-		*/
 	}
 	doctypeOptions(){
 		let options = {};
@@ -44,10 +46,6 @@ class SearchResult extends Component {
 		return options;
 	}
 	render(){
-
-		return null;
-
-
 		let documents = this.state.documents.map((document, index) => (
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
