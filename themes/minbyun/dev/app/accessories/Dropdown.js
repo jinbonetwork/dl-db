@@ -1,8 +1,11 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 
 class DdItem extends Component {
+	handleClick(){
+		if(this.props.handleClick) this.props.handleClick();
+	}
 	render(){
-		return <li className="dditem" onClick={this.props.handleClick}>{this.props.children}</li>
+		return <li className="dditem" onClick={this.handleClick.bind(this)}>{this.props.children}</li>
 	}
 }
 DdItem.propTypes = {
@@ -58,7 +61,7 @@ class Dropdown extends Component {
 	}
 	handleClick(which){
 		this.setState({isUnfolded: !this.state.isUnfolded});
-		if(this.props.handleClick(!this.state.isUnfolded));
+		if(this.props.handleClick) this.props.handleClick(!this.state.isUnfolded);
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');

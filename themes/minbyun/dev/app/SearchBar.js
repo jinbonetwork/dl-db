@@ -2,8 +2,8 @@ import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import DoctypeSelect from './searchBar/DoctypeSelect';
 
-//import {DdSelect, DsItem} from './accessories/DdSelect';
-//import {DdHead, DdArrow} from './accessories/Dropdown';
+import DdSelect from './accessories/DdSelect';
+import {DdItem, DdHead, DdArrow} from './accessories/Dropdown';
 
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
@@ -155,11 +155,15 @@ class SearchBar extends Component {
 					</div>
 
 
-					{/*<DdSelect>
-						<DdItem><span>Q & A</span></DdItem>
-						<DdItem><span>이주의 변론</span></DdItem>
-						<DdItem><span>소송도우미</span></DdItem>
-					</DdSelect>*/}
+					<DdSelect>
+						<DdHead>
+							<i className="pe-7s-note2 pe-va"></i>{' '}<span>게시판</span>
+							<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
+						</DdHead>
+						<DdItem value="1"><span>Q & A</span></DdItem>
+						<DdItem value="2"><span>이주의 변론</span></DdItem>
+						<DdItem value="3"><span>소송도우미</span></DdItem>
+					</DdSelect>
 
 
 				</div>
