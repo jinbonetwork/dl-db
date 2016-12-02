@@ -4,6 +4,8 @@ namespace DLDB;
 class Taxonomy extends \DLDB\Objects  {
 	private static $fields;
 	private static $tree;
+	private static $taxonomy;
+	private static $taxonomy_terms;
 
 	public static function instance() {
 		return self::_instance(__CLASS__);
@@ -12,23 +14,50 @@ class Taxonomy extends \DLDB\Objects  {
 	public static function getTaxonomy($cids) {
 		$dbm = \DLDB\DBM::instance();
 
-		if(!$cids) return null;
-		if(!is_array($cids)) $cids = array($cids);
-		$que = "SELECT * FROM {taxonomy} WHERE cid IN (".implode(",",$cids).")";
-		while($row = $dbm->getFetchArray($que)) {
-			$taxonomy[$row['cid']] = self::fetchTaxonomy($row);
+		$context = \DLDB\Model\Context::instance();
+
+		if( $cids && !is_array($cids) ) $cids = array($cids);
+
+		self::$taxonomy = $context->getProperty('taxonomy');
+		if(!self::$taxonomy) {
+			$que = "SELECT * FROM {taxonomy} ORDER BY cid ASC";
+			while($row = $dbm->getFetchArray($que)) {
+				self::$taxonomy[$row['cid']] = self::fetchTaxonomy($row);
+			}
+			$context->setProperty('taxonomy',self::$taxonomy);
 		}
+
+		
+		if( $cids ) {
+			foreach($cids as $cid) {
+				$taxonomy[$cid] = self::$taxonomy[$cid];
+			}
+		} else {
+			$taxonomy = self::$taxonomy;
+		}
+
 		return $taxonomy;
 	}
 
 	public static function getTaxonomyTerms($cids,$active=1) {
 		$dbm = \DLDB\DBM::instance();
+
+		$context = \DLDB\Model\Context::instance();
+
 		if(!$cids) return null;
 		if(!is_array($cids)) $cids = array($cids);
-		$que = "SELECT * FROM {taxonomy_terms} WHERE cid IN (".implode(",",$cids).") AND current = '1'".($active ? " AND active = '1'" : "")." ORDER BY cid ASC, parent ASC, idx ASC";
-		while($row = $dbm->getFetchArray($que)) {
-			$taxonomy_terms[$row['cid']][$row['tid']] = self::fetchTaxonomy($row);
+		self::$taxonomy_terms = $context->getProperty('taxonomy_terms');
+		if(!self::$taxonomy_terms) {
+			$que = "SELECT * FROM {taxonomy_terms} WHERE current = '1'".($active ? " AND active = '1'" : "")." ORDER BY cid ASC, parent ASC, idx ASC";
+			while($row = $dbm->getFetchArray($que)) {
+				self::$taxonomy_terms[$row['cid']][$row['tid']] = self::fetchTaxonomy($row);
+			}
+			$context->setProperty( 'taxonomy_terms', self::$taxonomy_terms );
 		}
+		foreach($cids as $cid) {
+			$taxonomy_terms[$cid] = self::$taxonomy_terms[$cid];
+		}
+
 		return $taxonomy_terms;
 	}
 

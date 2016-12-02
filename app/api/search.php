@@ -55,19 +55,19 @@ class search extends \DLDB\Controller {
 	}
 	
 	function do_dbm_search() {
-		$this->result = \DLDB\Search\Elastic::setField($this->fields,$this->taxonomy);
 	}
 
 	function do_elastic_search() {
-		\DLDB\Search\Elastic::setFields($this->fields,$this->taxonomy);
-		$this->documents = \DLDB\Search\Elastic::getList($this->que, $this->params, $this->params['order'], $this->params['page'], $this->params['limit']);
+		$else = \DLDB\Search\Elastic::instance();
+		$else->setFields($this->fields,$this->taxonomies,$this->taxonomy);
+		$this->documents = $else->getList($this->que, $this->params, $this->params['order'], $this->params['page'], $this->params['limit']);
 		$this->total_cnt = ( $this->documents['hits']['total'] ? $this->documents['hits']['total'] : 0 );
 		if($this->total_cnt) {
 			$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;
 		} else {
 			$this->total_page = 0;
 		}
-		$this->query = \DLDB\Search\Elastic::getParams();
+		$this->query = $else->getParams();
 		$this->result = array(
 			'result' => array(
 				'total_cnt' => $this->total_cnt,

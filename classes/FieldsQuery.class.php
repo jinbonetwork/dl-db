@@ -4,6 +4,7 @@ namespace DLDB;
 class FieldsQuery extends \DLDB\Objects {
 	private $fields;
 	private $taxonomy;
+	private $taxonomy_terms;
 	private $errmsg;
 
 	public static function instance() {
@@ -18,9 +19,13 @@ class FieldsQuery extends \DLDB\Objects {
 		$this->taxonomy = $taxonomy;
 	}
 
+	public function setTaxonomyTerms($taxonomy_terms) {
+		$this->taxonomy_terms = $taxonomy_terms;
+	}
+
 	public function insertQue($que,$que2,$array1,$array2,$args) {
 		$fields = $this->fields;
-		$taxonomy = $this->taxonomy;
+		$taxonomy_terms = $this->taxonomy_terms;
 		$files = array();
 
 		foreach($args as $k => $v) {
@@ -54,10 +59,10 @@ class FieldsQuery extends \DLDB\Objects {
 								foreach($v as $t) {
 									$custom[$key][$t] = array(
 										'cid' => $cid,
-										'name' => $taxonomy[$cid][$t]['name']
+										'name' => $taxonomy_terms[$cid][$t]['name']
 									);
 									$taxonomy_map[$cid]['add'][$t] = array(
-										'oid' => 0,
+										'cid' => $cid,
 										'tid' => $t
 									);
 								}
@@ -100,7 +105,7 @@ class FieldsQuery extends \DLDB\Objects {
 
 	public function modifyQue($que,$array1,$array2,$old,$args) {
 		$fields = $this->fields;
-		$taxonomy = $this->taxonomy;
+		$taxonomy_terms = $this->taxonomy_terms;
 		$files = array();
 
 		foreach($args as $k => $v) {
@@ -138,12 +143,12 @@ class FieldsQuery extends \DLDB\Objects {
 								foreach($v as $t) {
 									$custom[$key][$t] = array(
 										'cid' => $cid,
-										'name' => $taxonomy[$cid][$t]['name']
+										'name' => $taxonomy_terms[$cid][$t]['name']
 									);
-									$new_terms[$field['cid']][$t] = $taxonomy[$cid][$t];
+									$new_terms[$field['cid']][$t] = $taxonomy_terms[$cid][$t];
 									if( !$old_terms[$field['cid']][$t] ) {
 										$taxonomy_map[$cid]['add'][$t] = array(
-											'oid' => 0,
+											'cid' => $cid,
 											'tid' => $t
 										);
 									}
@@ -260,6 +265,13 @@ class FieldsQuery extends \DLDB\Objects {
 									foreach( $taxonomies as $tid => $term ) {
 										$que = "DELETE FROM {taxonomy_term_relative} WHERE `tid` = ? AND `tables` = ? AND `did` = ?";
 										$dbm->execute( $que, array("dsd",$tid,$table,$id) );
+										if( $this->taxonomy[$cid]['skey'] ) {
+											if(!$else) {
+												$else = \DLDB\Search\Elastic::instance();
+												$else->setFields($this->fields, $this->taxonomy, $this->taxonomy_terms);
+											}
+											$else->remove($id, 't'.$cid);
+										}
 									}
 								}
 								break;

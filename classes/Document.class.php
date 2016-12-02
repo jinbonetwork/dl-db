@@ -5,6 +5,7 @@ class Document extends \DLDB\Objects {
 	private static $fields;
 	private static $cids;
 	private static $taxonomy;
+	private static $taxonomy_terms;
 	private static $errmsg;
 
 	public static function instance() {
@@ -23,7 +24,10 @@ class Document extends \DLDB\Objects {
 			}
 		}
 		if(!self::$taxonomy) {
-			self::$taxonomy = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
+			self::$taxonomy = \DLDB\Taxonomy::getTaxonomy(self::$cids);
+		}
+		if(!self::$taxonomy_terms) {
+			self::$taxonomy_terms = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
 		}
 		return self::$fields;
 	}
@@ -32,11 +36,11 @@ class Document extends \DLDB\Objects {
 		self::$fields = $fields;
 	}
 
-	public static function getTaxonomy() {
-		if( self::$cids && !self::$taxonomy ) {
-			self::$taxonomy = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
+	public static function getTaxonomyTerms() {
+		if( self::$cids && !self::$taxonomy_terms ) {
+			self::$taxonomy_terms = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
 		}
-		return self::$taxonomy;
+		return self::$taxonomy_terms;
 	}
 
 	public static function get($id,$mode='') {
@@ -124,6 +128,7 @@ class Document extends \DLDB\Objects {
 		$fieldquery = \DLDB\FieldsQuery::instance();
 		$fieldquery->setFields($fields);
 		$fieldquery->setTaxonomy(self::$taxonomy);
+		$fieldquery->setTaxonomyTerms(self::$taxonomy_terms);
 		$result = $fieldquery->insertQue($que,$que2,$array1,$array2,$args);
 		@extract($result);
 
@@ -147,7 +152,7 @@ class Document extends \DLDB\Objects {
 			}
 		}
 		if(trim($memo)) {
-			\DLDB\Parser::insert($insert_id,$memo);
+			\DLDB\Parser::insert($insert_id,$args,$memo);
 		}
 		if( is_array($taxonomy_map) ) {
 			if( $fieldquery->reBuildTaxonomy('documents', $insert_id, $taxonomy_map) < 0 ) {
@@ -170,6 +175,7 @@ class Document extends \DLDB\Objects {
 		$fieldquery = \DLDB\FieldsQuery::instance();
 		$fieldquery->setFields($fields);
 		$fieldquery->setTaxonomy(self::$taxonomy);
+		$fieldquery->setTaxonomyTerms(self::$taxonomy_terms);
 		$result = $fieldquery->modifyQue($que,$array1,$array2,$document,$args);
 		@extract($result);
 
