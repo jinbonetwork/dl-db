@@ -33,8 +33,9 @@ class DdSelect extends Component {
 			}
 			if(this.props.onChange){
 				this.props.onChange(selected);
+			} else {
+				this.setState({selected: selected});
 			}
-			this.setState({selected: selected});
 		}
 		else if(which == 'head'){
 			this.setState({isUnfolded: !this.state.isUnfolded});

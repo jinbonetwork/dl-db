@@ -52,7 +52,7 @@ const _sFname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', title: 'subject', content: 'content',
 	doctype: 'f1', trial: 'f2', court: 'f3', number: 'f4', judge: 'f5', prosecutor: 'f6', lawyer: 'f7', commitee: 'f8', date: 'f10',
 	access: 'f11', author: 'f12', name: 'f13', class: 'f14', email: 'f15', phone: 'f16', image: 'f17', file: 'f18'
-}
+};
 const _convertToDoc = (sDoc) => {
 	let document = {};
 	for(let fn in _emptyDocument){
@@ -83,7 +83,7 @@ const _convertToDoc = (sDoc) => {
 		}
 	}
 	return document;
-}
+};
 const _convertDocToSave = (doc) => {
 	let sDocument = {};
 	for(let fn in doc){
@@ -108,15 +108,15 @@ const _convertDocToSave = (doc) => {
 		}
 	}
 	return sDocument;
-}
+};
 const _customFields = (sFields) => {
 	let customFields = {};
 	return null;
-}
+};
 const _customFieldAttrs = (sFields) => {
 	let customFieldAttrs = {};
 	return null;
-}
+};
 const _taxonomy = (sTaxonomy, sFields) => {
 	let taxonomy = {};
 	sFields.forEach((sFAttr) => {
@@ -129,7 +129,7 @@ const _taxonomy = (sTaxonomy, sFields) => {
 		}
 	});
 	return taxonomy;
-}
+};
 const _terms = (taxonomyData) => {
 	let terms = {};
 	for(let cid in taxonomyData){
@@ -138,6 +138,6 @@ const _terms = (taxonomyData) => {
 		});
 	}
 	return terms;
-}
+};
 
 export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms};

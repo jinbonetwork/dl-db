@@ -123,8 +123,14 @@ class DigitalLibraryContainer extends Component {
 			default:
 		}
 	}
-	updateSearchQuery(which, value){
-		this.setState({searchQuery: update(this.state.searchQuery, {[which]: {$set: value}})});
+	updateSearchQuery(arg0, arg1){
+		if(typeof arg0 !== 'object'){
+			let which = arg0, value = arg1;
+			this.setState({searchQuery: update(this.state.searchQuery, {[which]: {$set: value}})});
+		} else {
+			let searchQuery = arg0;
+			this.setState({searchQuery: update(this.state.searchQuery, {$merge: searchQuery})});
+		}
 	}
 	render(){
 		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {

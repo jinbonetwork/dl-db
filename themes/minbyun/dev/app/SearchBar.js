@@ -16,19 +16,6 @@ class SearchBar extends Component {
 			keywordMarginLeft: null
 		};
 	}
-	componentDidMount(){
-		this.setSize();
-	}
-	componentDidUpdate(prevProps, prevState){
-		this.setSize();
-	}
-	setSize(){
-		if(!this.refs.select) return;
-		let rect = this.refs.select.getBoundingClientRect(); console.log(rect.width);
-		if(rect.width != this.state.keywordMarginLeft){
-			this.setState({keywordMarginLeft: rect.width});
-		}
-	}
 	period(){
 		let period=[];
 		if(this.props.query.from == '.') period.push(''); else period.push(this.props.query.from);
@@ -57,7 +44,7 @@ class SearchBar extends Component {
 	}
 	handleChange(which, arg){
 		switch(which){
-			case 'doctype': this.props.update(which, arg); break;
+			case 'doctypes': this.props.update(which, arg); break;
 			case 'keyword': this.props.update(which, arg.target.value); break;
 			case 'from': case 'to':
 				let now = new Date();
@@ -76,11 +63,6 @@ class SearchBar extends Component {
 			this.handleclick('search');
 		}
 	}
-	handleResize(which, size){
-		if(which == 'doctype' && size){
-			this.setState({style: update(this.state.style, {keyword: {$set: {marginLeft: size.width}}})});
-		}
-	}
 	handleclick(which, arg){
 		if(which == 'search'){
 			let period = this.period();
@@ -95,7 +77,7 @@ class SearchBar extends Component {
 		}
 	}
 	handleResize(which, size){
-		if(which == 'select'){
+		if(which == 'doctypes'){
 			this.setState({keywordMarginLeft: size.width});
 		}
 	}
@@ -107,7 +89,7 @@ class SearchBar extends Component {
 		let searchBar = (
 			<div className="searchbar__bar">
 				<div>
-					<DdSelect onResize={this.handleResize.bind(this, 'select')}>
+					<DdSelect selected={this.props.query.doctypes} onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}>
 						<DdHead>
 							<span>{_fieldAttrs['doctype'].displayName}</span>
 							<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>

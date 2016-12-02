@@ -22,7 +22,6 @@ import './style/login.less';
 import './style/digitalLibrary.less';
 import './style/documentForm.less';
 import './style/document.less';
-import './style/searchResult.less';
 import './style/searchBar.less';
 import './style/accessories.less';
 import './style/user.less';

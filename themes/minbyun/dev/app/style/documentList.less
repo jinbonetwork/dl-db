@@ -1,24 +1,5 @@
 @import "variables";
 
-/*
-.doclist {
-	.doclist__number {
-		float: left;
-		width: 4em;
-		text-align: right;
-	}
-	.doclist__number span {
-		font-size: 3em;
-	}
-	.doclist__number + .doclist__item {
-		margin-left: 5em;
-	}
-	.doclist__item + .doclist__item {
-		margin-top: 2em;
-	}
-
-}
-*/
 .doclist-item {
 	background-color: @minor-color-2;
 	overflow: hidden;
@@ -52,5 +33,51 @@
 		min-height: 8em;
 		line-height: 1.5em;
 		text-align: justify;
+	}
+}
+
+.userdocs {
+	.userdocs__doclist {
+		background-color: @minor-color-2;
+		padding: 5%;
+	}
+	.doclist-item + .doclist-item {
+		margin-top: 2em;
+	}
+	.pagination {
+		margin-top: 3%;
+	}
+}
+
+.search-result {
+	@number-width: 4em;
+
+	max-width: 800px;
+	margin: 10% auto;
+
+	.search-result__item + .search-result__item {
+		margin-top: 3em;
+	}
+	.search-result__number {
+		float: left;
+		width: @number-width;
+		text-align: right;
+	}
+	.search-result__number span {
+		font-size: 3em;
+	}
+	.search-result__number + div {
+		margin-left: @number-width + 1em;
+		padding: 3%;
+		background-color: @minor-color-2;
+	}
+	.doclist-item {
+		padding: 1em;
+	}
+	.doclist-item + .doclist-item {
+		margin-top: 2em;
+	}
+	.pagination {
+		margin-top: 3%;
 	}
 }
