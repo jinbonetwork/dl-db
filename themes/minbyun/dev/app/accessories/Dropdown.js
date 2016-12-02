@@ -1,4 +1,5 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
+import jQ from 'jquery';
 
 class DdItem extends Component {
 	handleClick(){
@@ -64,9 +65,14 @@ class Dropdown extends Component {
 		}
 	}
 	setSize(){
+		if(!this.refs.invisible) return;
 		let rect = this.refs.invisible.getBoundingClientRect();
 		if(rect.width != this.state.width){
 			this.setState({width: rect.width});
+			if(this.props.onResize){
+				let extraWidth = jQ(this.refs.headwrap).outerWidth() - jQ(this.refs.headwrap).width();
+				this.props.onResize({width: rect.width + extraWidth});
+			}
 		}
 	}
 	handleClick(which){
@@ -88,7 +94,7 @@ class Dropdown extends Component {
 
 		return (
 			<div className={className}>
-				<div className="dropdown__headwrap" onClick={this.handleClick.bind(this, 'head')}>
+				<div className="dropdown__headwrap" ref="headwrap" onClick={this.handleClick.bind(this, 'head')}>
 					<div className="dropdown__head" style={{width: this.state.width}}>
 						{head}
 					</div>
@@ -109,7 +115,8 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
 	className: PropTypes.string,
 	unfolded: PropTypes.string,
-	handleClick: PropTypes.func
+	handleClick: PropTypes.func,
+	onResize: PropTypes.func
 };
 
 export {Dropdown, DdHead, DdItem, DdArrow};

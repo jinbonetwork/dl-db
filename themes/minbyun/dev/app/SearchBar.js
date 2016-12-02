@@ -1,10 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
-import DoctypeSelect from './searchBar/DoctypeSelect';
-
+//import DoctypeSelect from './searchBar/DoctypeSelect';
 import DdSelect from './accessories/DdSelect';
 import {DdItem, DdHead, DdArrow} from './accessories/Dropdown';
-
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
@@ -15,15 +13,21 @@ class SearchBar extends Component {
 	constructor(){
 		super();
 		this.state = {
-			style: {keyword: {marginLeft: null}}
+			keywordMarginLeft: null
 		};
 	}
-	doctypeOptions(){
-		let options = {};
-		this.props.docData.taxonomy.doctype.forEach((value) => {
-			options[value] = this.props.docData.terms[value];
-		});
-		return options;
+	componentDidMount(){
+		this.setSize();
+	}
+	componentDidUpdate(prevProps, prevState){
+		this.setSize();
+	}
+	setSize(){
+		if(!this.refs.select) return;
+		let rect = this.refs.select.getBoundingClientRect(); console.log(rect.width);
+		if(rect.width != this.state.keywordMarginLeft){
+			this.setState({keywordMarginLeft: rect.width});
+		}
 	}
 	period(){
 		let period=[];
@@ -90,16 +94,27 @@ class SearchBar extends Component {
 			if(urlParams) this.props.router.push('/search'+urlParams);
 		}
 	}
+	handleResize(which, size){
+		if(which == 'select'){
+			this.setState({keywordMarginLeft: size.width});
+		}
+	}
 	render(){
 		let className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
+		let doctypeItems = this.props.docData.taxonomy.doctype.map((value) => (
+			<DdItem key={value} value={value}><span>{this.props.docData.terms[value]}</span></DdItem>
+		));
 		let searchBar = (
 			<div className="searchbar__bar">
 				<div>
-					<DoctypeSelect displayName={_fieldAttrs['doctype'].displayName}
-						values={this.props.query.doctypes} options={this.doctypeOptions()}
-						handleChange={this.handleChange.bind(this, 'doctype')} handleResize={this.handleResize.bind(this, 'doctype')}
-					/>
-					<div className="searchbar__keyword" style={this.state.style.keyword}>
+					<DdSelect onResize={this.handleResize.bind(this, 'select')}>
+						<DdHead>
+							<span>{_fieldAttrs['doctype'].displayName}</span>
+							<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
+						</DdHead>
+						{doctypeItems}
+					</DdSelect>
+					<div className="searchbar__keyword" style={{marginLeft: this.state.keywordMarginLeft}}>
 						<div><i className="pe-7f-search pe-va"></i></div>
 						<div>
 							<input type="text" value={this.props.query.keyword} placeholder="검색어를 입력하세요"
@@ -153,19 +168,6 @@ class SearchBar extends Component {
 							</Table>
 						</div>
 					</div>
-
-
-					<DdSelect>
-						<DdHead>
-							<i className="pe-7s-note2 pe-va"></i>{' '}<span>게시판</span>
-							<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
-						</DdHead>
-						<DdItem value="1"><span>Q & A</span></DdItem>
-						<DdItem value="2"><span>이주의 변론</span></DdItem>
-						<DdItem value="3"><span>소송도우미</span></DdItem>
-					</DdSelect>
-
-
 				</div>
 			);
 		} else {
