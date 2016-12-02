@@ -5,6 +5,7 @@ import SearchBar from './SearchBar';
 import LinkIf from './accessories/LinkIf';
 import Message from './accessories/Message';
 import {_isEmpty, _isCommon} from './accessories/functions';
+import jQ from 'jquery';
 
 const _childProps = {
 	'/login': {
@@ -40,8 +41,20 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
+	constructor(){
+		super();
+		this.state = {
+			rerender: false
+		};
+	}
 	componentWillMount(){
 		this.props.router.push('/login');
+	}
+	componentDidMount(){
+		jQ(window).on('resize', () => {this.setState({rerender: true})});
+	}
+	componentWillUnmount(){
+		jQ(window).off('resize');
 	}
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
@@ -90,7 +103,7 @@ class DigitalLibrary extends Component {
 			);
 		}
 		return(
-			<div className="digital-library">
+			<div className="digital-library" onClick={() => {this.setState({rerender: true})}}>
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
@@ -116,7 +129,6 @@ DigitalLibrary.propTypes = {
 	fetchData: PropTypes.func,
 	updateSearchQuery: PropTypes.func,
 	message: PropTypes.element,
-	handleResize: PropTypes.func,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

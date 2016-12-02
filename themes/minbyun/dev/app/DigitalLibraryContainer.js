@@ -8,7 +8,6 @@ import Overlay from './accessories/Overlay';
 import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './schema/docSchema';
 import {_role, _convertToUser, _emptyUser, _usCustomFieldAttrs, _usCustomFields} from './schema/userSchema';
 import {_isEmpty} from './accessories/functions';
-import jQ from 'jquery';
 
 class DigitalLibraryContainer extends Component {
 	constructor(){
@@ -33,16 +32,11 @@ class DigitalLibraryContainer extends Component {
 				customFieldAttrs: null
 			},
 			message: null,
-			openedDocuments: null,
-			windowResize: false
+			openedDocuments: null
 		};
 	}
 	componentDidMount(){
 		this.fetchContData();
-		jQ(window).on('resize', () => {this.setState({windowResize: true})});
-	}
-	componentWillUnmount(){
-		jQ(window).off('resize');
 	}
 	fetchData(method, url, arg2, arg3){
 		let data = (method == 'get' ? null : arg2);

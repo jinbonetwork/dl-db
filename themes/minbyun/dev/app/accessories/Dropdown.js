@@ -2,31 +2,38 @@ import React, {Component, PropTypes, Children, cloneElement} from 'react';
 
 class DdItem extends Component {
 	handleClick(){
-		if(this.props.handleClick) this.props.handleClick();
+		if(this.props.onClick) this.props.onClick();
 	}
 	render(){
-		return <li className="dditem" onClick={this.handleClick.bind(this)}>{this.props.children}</li>
+		let className = (this.props.className ? 'dditem '+this.props.className : 'dditem');
+		return <li className={className} onClick={this.handleClick.bind(this)}>{this.props.children}</li>
 	}
 }
 DdItem.propTypes = {
-	handleClick: PropTypes.func
+	className: PropTypes.string,
+	onClick: PropTypes.func
 };
 
 class DdHead extends Component {
+	handleClick(){
+		if(this.props.onClick) this.props.onClick();
+	}
 	render(){
 		let arrow, children = [];
 		Children.forEach(this.props.children, (child) => {
 			if(child.type == DdArrow) arrow = child;
 			else children.push(child);
 		});
+		let className = (this.props.className ? 'ddhead '+this.props.className : 'ddhead');
 		return (
-			<div className="ddhead">
-				{children}
-				{arrow}
-			</div>
+			<div className={className} onClick={this.handleClick.bind(this)}>{children}{arrow}</div>
 		);
 	}
 }
+DdHead.propTypes = {
+	className: PropTypes.string,
+	onClick: PropTypes.func
+};
 
 class DdArrow extends Component {
 	render(){
@@ -45,13 +52,9 @@ class Dropdown extends Component {
 	componentDidMount(){
 		this.setSize();
 	}
-	componentWillReceiveProps(nextProps){
-		if(nextProps.hasOwnProperty('isUnfolded') && nextProps.isUnfolded != this.state.isUnfolded){
-			this.setState({isUnfolded: nextProps.isUnfolded});
-		}
-	}
-	componentDidUpdate(nextProps, nextState){
+	componentDidUpdate(prevProps, prevState){
 		this.setSize();
+		if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
 	}
 	setSize(){
 		let rect = this.refs.invisible.getBoundingClientRect();
@@ -61,11 +64,10 @@ class Dropdown extends Component {
 	}
 	handleClick(which){
 		this.setState({isUnfolded: !this.state.isUnfolded});
-		if(this.props.handleClick) this.props.handleClick(!this.state.isUnfolded);
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
-		className += (this.state.isUnfolded ? ' dropdown--unfolded' : '');
+		className += (this.state.isUnfolded || this.props.unfolded == 'unfolded' ? ' dropdown--unfolded' : '');
 
 		let head, items = [];
 		Children.forEach(this.props.children, (child, index) => { if(child){
@@ -73,7 +75,7 @@ class Dropdown extends Component {
 				head = cloneElement(child, {width: this.state.width});
 			}
 			else if(child.type == DdItem){
-				items.push(cloneElement(child, {key: index, handleClick: this.handleClick.bind(this, 'item')}));
+				items.push(child);
 			}
 		}});
 
@@ -99,7 +101,7 @@ class Dropdown extends Component {
 }
 Dropdown.propTypes = {
 	className: PropTypes.string,
-	isUnfolded: PropTypes.bool,
+	unfolded: PropTypes.string,
 	handleClick: PropTypes.func
 };
 
