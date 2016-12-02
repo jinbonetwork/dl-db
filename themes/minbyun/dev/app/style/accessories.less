@@ -60,6 +60,7 @@
 	.dropdown__invisible {
 		position: fixed;
 		top: 0; left: 0;
+		z-index: -9999;
 		visibility: hidden;
 	}
 	.dropdown__headwrap {
@@ -102,6 +103,12 @@
 	}
 	&:not(.dropdown--unfolded) .dropdown__items > ul {
 		height: 0;
+	}
+	.dditem__checkicon {
+		visibility: hidden;
+	}
+	.dditem--checked .dditem__checkicon {
+		visibility: visible;
 	}
 }
 
