@@ -52,9 +52,16 @@ class Dropdown extends Component {
 	componentDidMount(){
 		this.setSize();
 	}
+	componentWillMount(nextProps){
+		if(this.props.hasOwnProperty('isUnfolded')){
+			this.setState({isUnfolded: this.props.isUnfolded});
+		}
+	}
 	componentDidUpdate(prevProps, prevState){
 		this.setSize();
-		if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+		if(!this.props.hasOwnProperty('isUnfolded')){
+			if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+		}
 	}
 	setSize(){
 		let rect = this.refs.invisible.getBoundingClientRect();
@@ -67,7 +74,7 @@ class Dropdown extends Component {
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
-		className += (this.state.isUnfolded || this.props.unfolded == 'unfolded' ? ' dropdown--unfolded' : '');
+		className += (this.state.isUnfolded ? ' dropdown--unfolded' : '');
 
 		let head, items = [];
 		Children.forEach(this.props.children, (child, index) => { if(child){

@@ -9,7 +9,7 @@ class DdSelect extends Component {
 		super();
 		this.state = {
 			selected: [],
-			unfolded: 'auto'
+			isUnfolded: false
 		};
 	}
 	componentWillMount(){
@@ -34,10 +34,10 @@ class DdSelect extends Component {
 			if(this.props.onChange){
 				this.props.onChange(selected);
 			}
-			this.setState({selected: selected, unfolded: 'unfolded'});
+			this.setState({selected: selected});
 		}
 		else if(which == 'head'){
-			this.setState({unfolded: 'auto'});
+			this.setState({isUnfolded: !this.state.isUnfolded});
 		}
 
 	}
@@ -58,7 +58,7 @@ class DdSelect extends Component {
 				return child;
 			}
 		});
-		return <Dropdown className="ddselect" unfolded={this.state.unfolded}>{children}</Dropdown>
+		return <Dropdown className="ddselect" isUnfolded={this.state.isUnfolded}>{children}</Dropdown>
 	}
 }
 DdSelect.propTypes = {

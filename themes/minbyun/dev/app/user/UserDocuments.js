@@ -31,7 +31,7 @@ class UserDocuments extends Component {
 						numOfPages: data.result.total_page
 					});
 				} else {
-					this.props.setMessage('요청한 페이지가 존재하지 않습니다.', 'goBack');
+					//this.props.setMessage('요청한 페이지가 존재하지 않습니다.', 'goBack');
 				}
 			}
 		});
