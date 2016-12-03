@@ -81,3 +81,19 @@
 		margin-top: 3%;
 	}
 }
+
+.doclisthead {
+	.doctype-li {
+		display: inline-block;
+		border: solid 1px @main-color;
+		padding: 0.5em;
+		cursor: pointer;
+	}
+	.doctype-li--checked {
+		background-color: @main-color;
+		color: @minor-color-2;
+	}
+	.doctype-li + .doctype-li {
+		margin-left: 5px;
+	}
+}

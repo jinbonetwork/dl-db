@@ -1,9 +1,11 @@
 import React, {Component, PropTypes} from 'react';
+import {withRouter} from 'react-router';
 import DocListItem from './documentList/DocListItem';
+import DocListHead from './documentList/DocListHead';
 import Pagination from './accessories/Pagination';
-import {Table, Row, Column} from './accessories/Table';
-import {_convertToDoc, _fname} from './schema/docSchema';
-import {_params} from './accessories/functions';
+import {_convertToDoc} from './schema/docSchema';
+import {_searchQuery, _searchQueryEach, _query} from './schema/searchSchema';
+import {_params, _isEmpty} from './accessories/functions';
 
 const _convertToSearchedDoc = (ssDoc) => { if(ssDoc){
 	let doc = _convertToDoc(ssDoc._source);
@@ -16,57 +18,57 @@ class SearchResult extends Component {
 		super();
 		this.state = {
 			documents: null,
-			numOfPages: 20
+			numOfPages: 1
 		};
 	}
 	componentDidMount(){
-		this.fetchData(_params(this.props.location.query));
+		if(!_isEmpty(this.props.location.query)){
+			let sQuery = _searchQuery(this.props.location.query, true);
+			this.props.updateSearchQuery(sQuery);
+			this.fetchData(_params(_query(sQuery)));
+		};
 	}
 	componentWillReceiveProps(nextProps){
 		let thisUrlParams = _params(this.props.location.query);
 		let nextUrlParams = _params(nextProps.location.query);
 		if(thisUrlParams != nextUrlParams){
 			this.fetchData(nextUrlParams);
-			this.updateSearchQuery(nextProps.location.query);
 		}
 	}
 	fetchData(params){
 		let unsetProcessing = this.props.setMessage(null);
 		this.props.fetchData('get', '/api/search'+params, (data) => { unsetProcessing(); if(data){
+			if(typeof data === 'string'){
+				this.setState({documents: null, numOfPages: 1}); return;
+			}
 			if(data.result.cnt > 0){
 				this.setState({
 					documents: data.documents.map((doc) => _convertToSearchedDoc(doc)),
 					numOfPages: data.result.total_page
 				});
 			} else {
-				this.setState({documents: null, numOfPages:1});
+				this.setState({documents: null, numOfPages: 1});
+				this.props.setMessage('검색결과가 없습니다', 'goTo', '/');
 			}
 		}});
 	}
-	updateSearchQuery(query){
-		let searchQuery = {};
-		for(let prop in query){
-			if(prop == 'q'){
-				searchQuery.keyword = decodeURIComponent(query[prop]);
-			}
-			else if(_fname[prop] == 'doctype'){
-				let doctypes = query[prop].replace('{', '').replace('}', '');
-				doctypes = doctype.split(',');
-				searchQuery.doctypes = doctypes;
-			}
-			else if(_fname[prop] == 'date'){
-				let period = decodeURIComponent(query[prop]).split('-');
-				searchQuery.from = period[0];
-				searchQuery.to = period[1];
+	handleChange(which, arg1st, arg2nd){
+		if(which == 'dochead'){
+			which = arg1st; let value = arg2nd;
+			if(which == 'doctypes'){
+				this.props.updateSearchQuery('doctypes', value);
+				let sQuery = _searchQuery(this.props.location.query);
+				sQuery.doctypes = value;
+				this.props.router.push('/search/'+_params(_query(sQuery)));
+
 			}
 		}
-		console.log(searchQuery);
 	}
 	render(){
 		const query = this.props.location.query;
 		const page = (query.page ? parseInt(query.page) : 1);
+		const doctypes = _searchQueryEach('doctypes', query);
 
-		if(!this.state.documents) return null;
 		let documents = this.state.documents && this.state.documents.map((doc, index) => (
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
@@ -78,6 +80,10 @@ class SearchResult extends Component {
 
 		return (
 			<div className="search-result">
+				<DocListHead
+					docData={this.props.docData} doctypes={doctypes}
+					onChange={this.handleChange.bind(this, 'dochead')}
+				/>
 				<div className="search-result__doclist">
 					{documents}
 				</div>
@@ -92,7 +98,8 @@ SearchResult.propTypes = {
 	searchQuery: PropTypes.object,
 	fetchData: PropTypes.func,
 	updateSearchQuery: PropTypes.func,
-	setMessage: PropTypes.func
+	setMessage: PropTypes.func,
+	router: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired
 };
 
-export default SearchResult;
+export default withRouter(SearchResult);

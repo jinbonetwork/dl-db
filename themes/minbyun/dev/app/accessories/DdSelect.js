@@ -1,6 +1,6 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 import {Dropdown, DdHead, DdItem, DdArrow} from './Dropdown';
-import {_isCommon} from './functions';
+import {_isCommon, _pushpull} from './functions';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
@@ -24,13 +24,7 @@ class DdSelect extends Component {
 	}
 	handleClick(which, value){
 		if(which == 'item'){
-			let selected = [];
-			this.state.selected.forEach((v) => {
-				if(v != value) selected.push(v);
-			});
-			if(selected.length === this.state.selected.length){
-				selected.push(value);
-			}
+			let selected = _pushpull(this.state.selected, value);
 			if(this.props.onChange){
 				this.props.onChange(selected);
 			} else {

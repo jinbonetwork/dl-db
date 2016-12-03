@@ -140,4 +140,12 @@ const _terms = (taxonomyData) => {
 	return terms;
 };
 
-export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms};
+const _termsOf = (fname, docData) => {
+	let terms = {};
+	docData.taxonomy[fname].forEach((tid) => {
+		terms[tid] = docData.terms[tid];
+	});
+	return terms;
+}
+
+export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms, _termsOf};

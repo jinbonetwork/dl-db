@@ -59,5 +59,25 @@ const _params = (params, removePage) => {
 	if(array.length) return '?'+array.join('&');
 	return '';
 }
+const _mapO = (obj, callBack) => {
+	let array = [];
+	for(let prop in obj){
+		array.push(callBack(prop, obj[prop]));
+	}
+	return array;
+};
+const _forIn = (obj, callBack) => {
+	let newObj = {};
+	for(let prop in obj){
+		newObj[prop] = callBack(prop, obj[prop]);
+	}
+	return newObj;
+}
+const _pushpull = (array, value) => {
+	let newArray = [];
+	array.forEach((v) => { if(v != value) newArray.push(v); });
+	if(array.length === newArray.length) newArray.push(value);
+	return newArray;
+};
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _isCommon, _params};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _isCommon, _params, _mapO, _forIn, _pushpull};

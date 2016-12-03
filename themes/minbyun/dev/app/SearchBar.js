@@ -1,13 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
-//import DoctypeSelect from './searchBar/DoctypeSelect';
 import DdSelect from './accessories/DdSelect';
 import {DdItem, DdHead, DdArrow} from './accessories/Dropdown';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
-import {_fieldAttrs, _sFname} from './schema/docSchema';
-import {_isEmpty, _params} from './accessories/functions';
+import {_fieldAttrs, _sFname, _termsOf} from './schema/docSchema';
+import {_query, _period} from './schema/searchSchema';
+import {_isEmpty, _params, _mapO} from './accessories/functions';
 
 class SearchBar extends Component {
 	constructor(){
@@ -15,32 +15,6 @@ class SearchBar extends Component {
 		this.state = {
 			keywordMarginLeft: null
 		};
-	}
-	period(){
-		let period=[];
-		if(this.props.query.from == '.') period.push(''); else period.push(this.props.query.from);
-		if(this.props.query.to && this.props.query.to != '.') period.push(this.props.query.to);
-		period = period.map((date, index) => {
-			date = date.split('.');
-			date = {year: date[0], month: date[1]};
-			if(date.year && date.year < 1900) date.year = '1900';
-			if(date.month){
-				if(date.month.length < 2) date.month = '0'+date.month;
-			} else if(date.year) {
-				if(index == 0) date.month = '01';
-				else if(index == 1) date.month = '12';
-			}
-			return date;
-		});
-		if(period.length > 1){
-			if((period[0].year > period[1].year) || (period[0].year == period[1].year && period[0].month > period[1].month)){
-				let temp = period[0];
-				period[0] = period[1];
-				period[1] = temp;
-			}
-		}
-		period = period.map((date) => (!_isEmpty(date) ? date.year+'.'+date.month : ''));
-		return period;
 	}
 	handleChange(which, arg){
 		switch(which){
@@ -65,15 +39,14 @@ class SearchBar extends Component {
 	}
 	handleclick(which, arg){
 		if(which == 'search'){
-			let period = this.period();
-			let params = {
-				q: encodeURIComponent(this.props.query.keyword),
-				[_sFname['doctype']]: (this.props.query.doctypes.length ? '{'+this.props.query.doctypes.join(',')+'}' : ''),
-				[_sFname['date']]: encodeURIComponent(period.join('-'))
-			};
-			this.setState({from: period[0], to: (period[1] ? period[1] : '')});
-			let urlParams = _params(params);
-			if(urlParams) this.props.router.push('/search'+urlParams);
+			let period = _period(this.props.query.from, this.props.query.to);
+			let from = (period[0] ? period[0] : '');
+			let to = (period[1] ? period[1] : '');
+			this.props.update({from: from, to: to});
+
+			let query = _query({keyword: this.props.query.keyword, doctypes: this.props.query.doctypes, from: from, to: to });
+			let params = _params(query);
+			if(params) this.props.router.push('/search'+params);
 		}
 	}
 	handleResize(which, size){
@@ -83,8 +56,8 @@ class SearchBar extends Component {
 	}
 	render(){
 		let className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
-		let doctypeItems = this.props.docData.taxonomy.doctype.map((value) => (
-			<DdItem key={value} value={value}><span>{this.props.docData.terms[value]}</span></DdItem>
+		let doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
+			<DdItem key={tid} value={tid}><span>{tname}</span></DdItem>
 		));
 		let searchBar = (
 			<div className="searchbar__bar">
