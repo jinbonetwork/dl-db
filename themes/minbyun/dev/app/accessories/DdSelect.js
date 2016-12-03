@@ -9,7 +9,7 @@ class DdSelect extends Component {
 		super();
 		this.state = {
 			selected: [],
-			unfolded: 'auto'
+			isUnfolded: false
 		};
 	}
 	componentWillMount(){
@@ -18,8 +18,8 @@ class DdSelect extends Component {
 		}
 	}
 	componentWillReceiveProps(nextProps){
-		if(this.props.selected){
-			this.setState({selected: this.props.selected});
+		if(nextProps.selected){
+			this.setState({selected: nextProps.selected});
 		}
 	}
 	handleClick(which, value){
@@ -34,15 +34,15 @@ class DdSelect extends Component {
 			if(this.props.onChange){
 				this.props.onChange(selected);
 			}
-			this.setState({selected: selected, unfolded: 'unfolded'});
+			this.setState({selected: selected});
 		}
 		else if(which == 'head'){
-			this.setState({unfolded: 'auto'});
+			this.setState({isUnfolded: !this.state.isUnfolded});
 		}
 
 	}
 	render(){
-		let children = Children.map(this.props.children, (child) => {
+		let children = Children.map(this.props.children, (child) => { if(child){
 			if(child.type == DdItem){
 				let className = (_isCommon(this.state.selected, [child.props.value]) ? 'dditem--checked' : '');
 				let children = [];
@@ -57,13 +57,18 @@ class DdSelect extends Component {
 			} else {
 				return child;
 			}
-		});
-		return <Dropdown className="ddselect" unfolded={this.state.unfolded}>{children}</Dropdown>
+		}});
+		return (
+			<Dropdown className="ddselect" isUnfolded={this.state.isUnfolded} onResize={this.props.onResize}>
+				{children}
+			</Dropdown>
+		);
 	}
 }
 DdSelect.propTypes = {
 	selected: PropTypes.array,
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
+	onResize: PropTypes.func
 };
 
 export default DdSelect;

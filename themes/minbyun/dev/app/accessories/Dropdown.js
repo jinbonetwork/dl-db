@@ -1,4 +1,5 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
+import jQ from 'jquery';
 
 class DdItem extends Component {
 	handleClick(){
@@ -52,14 +53,26 @@ class Dropdown extends Component {
 	componentDidMount(){
 		this.setSize();
 	}
+	componentWillMount(nextProps){
+		if(this.props.hasOwnProperty('isUnfolded')){
+			this.setState({isUnfolded: this.props.isUnfolded});
+		}
+	}
 	componentDidUpdate(prevProps, prevState){
 		this.setSize();
-		if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+		if(!this.props.hasOwnProperty('isUnfolded')){
+			if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+		}
 	}
 	setSize(){
+		if(!this.refs.invisible) return;
 		let rect = this.refs.invisible.getBoundingClientRect();
 		if(rect.width != this.state.width){
 			this.setState({width: rect.width});
+			if(this.props.onResize){
+				let extraWidth = jQ(this.refs.headwrap).outerWidth() - jQ(this.refs.headwrap).width();
+				this.props.onResize({width: rect.width + extraWidth});
+			}
 		}
 	}
 	handleClick(which){
@@ -67,7 +80,7 @@ class Dropdown extends Component {
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
-		className += (this.state.isUnfolded || this.props.unfolded == 'unfolded' ? ' dropdown--unfolded' : '');
+		className += (this.state.isUnfolded ? ' dropdown--unfolded' : '');
 
 		let head, items = [];
 		Children.forEach(this.props.children, (child, index) => { if(child){
@@ -81,7 +94,7 @@ class Dropdown extends Component {
 
 		return (
 			<div className={className}>
-				<div className="dropdown__headwrap" onClick={this.handleClick.bind(this, 'head')}>
+				<div className="dropdown__headwrap" ref="headwrap" onClick={this.handleClick.bind(this, 'head')}>
 					<div className="dropdown__head" style={{width: this.state.width}}>
 						{head}
 					</div>
@@ -102,7 +115,8 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
 	className: PropTypes.string,
 	unfolded: PropTypes.string,
-	handleClick: PropTypes.func
+	handleClick: PropTypes.func,
+	onResize: PropTypes.func
 };
 
 export {Dropdown, DdHead, DdItem, DdArrow};
