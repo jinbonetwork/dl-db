@@ -44,12 +44,12 @@ const _defaultTerms = {
 	1: '판결문', 7: '기타', 32: '열람', 33: '다운로드'
 }
 const _fname = {
-	id: 'id', uid: 'uid', created: 'created', owner: 'owner', subject: 'title', content: 'content',
+	id: 'id', uid: 'uid', created: 'created', owner: 'owner', subject: 'title', content: 'content', memo: 'memo',
 	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'number', f5: 'judge', f6: 'prosecutor', f7: 'lawyer', f8: 'commitee', f10: 'date',
 	f11: 'access', f12: 'author', f13: 'name', f14: 'class', f15: 'email', f16: 'phone', f17: 'image', f18: 'file'
 };
 const _sFname = {
-	id: 'id', uid: 'uid', created: 'created', owner: 'owner', title: 'subject', content: 'content',
+	id: 'id', uid: 'uid', created: 'created', owner: 'owner', title: 'subject', content: 'content', memo: 'memo',
 	doctype: 'f1', trial: 'f2', court: 'f3', number: 'f4', judge: 'f5', prosecutor: 'f6', lawyer: 'f7', commitee: 'f8', date: 'f10',
 	access: 'f11', author: 'f12', name: 'f13', class: 'f14', email: 'f15', phone: 'f16', image: 'f17', file: 'f18'
 };

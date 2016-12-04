@@ -3,6 +3,9 @@ import DocListItem from '../documentList/DocListItem';
 import Pagination from '../accessories/Pagination';
 import {Table, Row, Column} from '../accessories/Table';
 import {_convertToDoc} from '../schema/docSchema';
+import {_displayDate} from '../accessories/functions';
+import update from 'react-addons-update';  // for update()
+import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
 class UserDocuments extends Component {
 	constructor(){
@@ -27,7 +30,7 @@ class UserDocuments extends Component {
 			if(data){
 				if(data.result.cnt > 0){
 					this.setState({
-						documents: data.documents.map((doc) => _convertToDoc(doc)),
+						documents: data.documents.map((doc) => this.userDoc(_convertToDoc(doc))),
 						numOfPages: data.result.total_page
 					});
 				} else {
@@ -35,6 +38,13 @@ class UserDocuments extends Component {
 				}
 			}
 		});
+	}
+	userDoc(doc){
+		return update(doc, {$merge: {
+			doctype: this.props.docData.terms[doc.doctype],
+			date: _displayDate(doc.date),
+			commitee: this.props.docData.terms[doc.commitee],
+		}});
 	}
 	render(){
 		if(!this.state.documents) return null;

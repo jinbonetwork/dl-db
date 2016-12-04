@@ -3,24 +3,18 @@ import {withRouter} from 'react-router';
 import DocListItem from './documentList/DocListItem';
 import DocListHead from './documentList/DocListHead';
 import Pagination from './accessories/Pagination';
-import {_convertToDoc, _sFname} from './schema/docSchema';
+import {_convertToDoc, _sFname, _fname} from './schema/docSchema';
 import {_searchQuery, _query, _queryOf} from './schema/searchSchema';
 import {_params, _isEmpty} from './accessories/functions';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
-
-const _convertToSearchedDoc = (ssDoc) => { if(ssDoc){
-	let doc = _convertToDoc(ssDoc._source);
-	doc.id = parseInt(ssDoc._id);
-	return doc;
-}};
 
 class SearchResult extends Component {
 	constructor(){
 		super();
 		this.state = {
 			documents: null,
-			numOfPages: 20
+			numOfPages: 1
 		};
 	}
 	componentDidMount(){
@@ -53,7 +47,7 @@ class SearchResult extends Component {
 			}
 			if(data.result.cnt > 0){
 				this.setState({
-					documents: data.documents.map((doc) => _convertToSearchedDoc(doc)),
+					documents: data.documents.map((doc) => this.searched(doc)),
 					numOfPages: data.result.total_page
 				});
 			} else {
@@ -74,6 +68,17 @@ class SearchResult extends Component {
 			}
 			this.props.router.push('/search'+_params(query));
 		}
+	}
+	searched(sSearched){
+		let searched = {};
+		for(let fn in sSearched._source){
+			let value = sSearched._source[fn];
+			let fname = _fname[fn];
+			if(fname == 'date') value = value.replace('-', '/');
+			searched[fname] = value;
+		}
+		searched.id = parseInt(sSearched._id);
+		return searched;
 	}
 	keywords(query){
 		let keywords = [];
