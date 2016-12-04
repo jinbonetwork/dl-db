@@ -29,11 +29,11 @@ class DocListItem extends Component {
 			}
 		}
 	}
-	tagged(text){
-		const keywords = this.props.keywords;
-		let matches = text.match(new RegExp(keywords, 'gm'));
-		let texts = text.split(new RegExp(keywords));
+	tagged(text){ if(!text) return text;
 		let tagged = [];
+		const keywords = this.props.keywords;
+		let matches = text.match(new RegExp(keywords, 'gm')); if(!matches) return text;
+		let texts = text.split(new RegExp(keywords));
 		matches.forEach((kw, index) => {
 			tagged.push(<span key={index}>{texts[index]}</span>, <span key={'kw'+index} className="doclist-item__accented">{kw}</span>);
 		});
