@@ -1,5 +1,7 @@
 @import "variables";
 
+@search-result-number-width: 4em;
+
 .doclist-item {
 	background-color: @minor-color-2;
 	overflow: hidden;
@@ -34,6 +36,9 @@
 		line-height: 1.5em;
 		text-align: justify;
 	}
+	.doclist-item__accented {
+		background-color: @accent-color
+	}
 }
 
 .userdocs {
@@ -50,8 +55,6 @@
 }
 
 .search-result {
-	@number-width: 4em;
-
 	max-width: 800px;
 	margin: 10% auto;
 
@@ -60,14 +63,14 @@
 	}
 	.search-result__number {
 		float: left;
-		width: @number-width;
+		width: @search-result-number-width;
 		text-align: right;
 	}
 	.search-result__number span {
 		font-size: 3em;
 	}
 	.search-result__number + div {
-		margin-left: @number-width + 1em;
+		margin-left: @search-result-number-width + 1em;
 		padding: 3%;
 		background-color: @minor-color-2;
 	}
@@ -83,6 +86,12 @@
 }
 
 .doclisthead {
+	margin-left: @search-result-number-width + 1em;
+
+	& + .search-result__doclist {
+		padding-top: 1em;
+		margin-top: 3%;
+	}
 	.doctype-li {
 		display: inline-block;
 		border: solid 1px @main-color;
@@ -95,5 +104,20 @@
 	}
 	.doctype-li + .doctype-li {
 		margin-left: 5px;
+	}
+	ul + .radio {
+		margin-top: 1em;
+	}
+	.rditem__check, .rditem__uncheck {
+		width: 1.5em;
+	}
+	.rditem__check i, .rditem__uncheck i {
+		font-size: 1.5em;
+	}
+	.rditem--checked {
+		color:  @main-color;
+	}
+	.rditem--checked .doclisthead__orderby {
+		font-weight: @font-bold;
 	}
 }

@@ -29,54 +29,51 @@ const _period = (from, to) => {
 	return period;
 };
 const _query = (sQuery) => {
-	let period = [];
-	if(sQuery.from) period.push(sQuery.from); else period.push('');
-	if(sQuery.to) period.push(sQuery.to);
-	let query = {
-		q: encodeURIComponent(sQuery.keyword),
-		[_sFname['doctype']]: (sQuery.doctypes.length ? '{'+sQuery.doctypes.join(',')+'}' : ''),
-		[_sFname['date']]: encodeURIComponent(period.join('-'))
-	};
+	let query = {};
+	for(let prop in sQuery){ if(sQuery[prop]){
+		switch(prop){
+			case 'keyword': query.q = encodeURIComponent(sQuery[prop]); break;
+			case 'doctypes': query[_sFname['doctype']] = (sQuery[prop].length ? '{'+sQuery[prop].join(',')+'}' : ''); break;
+		}
+	}}
+	let period;
+	if(sQuery.from && sQuery.to) period = sQuery.from+'-'+sQuery.to;
+	else if(sQuery.from && !sQuery.to) period = sQuery.from;
+	else if(!sQuery.from && sQuery.to) period = '-'+sQuery.to;
+	if(period) query[_sFname['date']] = encodeURIComponent(period);
+
 	return query;
-};
-const _searchQuery = (query, correct) => {
-	let searchQuery = {keyword: '', doctypes: [], from: '', to: ''};
-	let period = _searchQueryEach('period', query, correct);
-	return _forIn(searchQuery, (prop, value) => {
-		if(prop == 'from') return period[0];
-		else if(prop == 'to') return period[1];
-		else return _searchQueryEach(prop, query, correct);
-	});
-};
-const _searchQueryEach = (prop, query, correct) => {
-	let value;
-	switch(prop){
-		case 'keyword':
-			value = query['q'];
-			if(value) return decodeURIComponent(value);
-			return '';
-		case 'doctypes':
-			value = query[_sFname['doctype']];
-			let doctypes = [];
-			if(value){
-				value.replace('{', '').replace('}', '').split(',').forEach((dt) => {
-					if(dt > 0) doctypes.push(dt);
-				});
-			}
-			return doctypes;
-		case 'period': case 'from': case 'to':
-			value = query[_sFname['date']];
-			let period = (value ? decodeURIComponent(value).split('-') : []);
-			if(correct) period = _period(period[0], period[1]);
-			if(prop == 'period'){
-				if(period.length < 2) period.push('');
-				return period;
-			}
-			else if(prop == 'from') return (period[0] ? period[0] : '');
-			else if(prop == 'to') return (period[1] ? period[1] : '');
-		default:
-			return null;
-	}
 }
 
-export {_query, _searchQuery, _searchQueryEach, _period};
+const _queryOf = (propOfSQuery, query) => {
+	switch(propOfSQuery){
+		case 'keyword': return {q: query.q};
+		case 'doctypes': return {[_sFname['doctype']]: query[_sFname['doctype']]};
+		case 'period': return {[_sFname['date']]: query[_sFname['date']]};
+	}
+}
+const _searchQuery = (query, correct) => {
+	let sQuery = {};
+	let value;
+	for(let prop in query){ let value = query[prop]; if(value){
+		if(prop == 'q'){
+			if(value) sQuery.keyword = decodeURIComponent(value);
+		}
+		else if(_fname[prop] == 'doctype'){
+			let doctypes = []
+			value.replace('{', '').replace('}', '').split(',').forEach((dt) => {
+				if(dt > 0) doctypes.push(dt);
+			});
+			if(doctypes.length) sQuery.doctypes = doctypes;
+		}
+		else if(_fname[prop] == 'date'){
+			let period = decodeURIComponent(value).split('-');
+			if(correct) period = _period(period[0], period[1]);
+			sQuery.from = (period[0] ? period[0] : '');
+			sQuery.to = (period[1] ? period[1] : '');
+		}
+	}}
+	return sQuery;
+};
+
+export {_query, _queryOf, _searchQuery, _period};

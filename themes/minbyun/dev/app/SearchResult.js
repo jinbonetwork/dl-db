@@ -3,9 +3,11 @@ import {withRouter} from 'react-router';
 import DocListItem from './documentList/DocListItem';
 import DocListHead from './documentList/DocListHead';
 import Pagination from './accessories/Pagination';
-import {_convertToDoc} from './schema/docSchema';
-import {_searchQuery, _searchQueryEach, _query} from './schema/searchSchema';
+import {_convertToDoc, _sFname} from './schema/docSchema';
+import {_searchQuery, _query, _queryOf} from './schema/searchSchema';
 import {_params, _isEmpty} from './accessories/functions';
+import update from 'react-addons-update';  // for update()
+import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
 const _convertToSearchedDoc = (ssDoc) => { if(ssDoc){
 	let doc = _convertToDoc(ssDoc._source);
@@ -18,14 +20,20 @@ class SearchResult extends Component {
 		super();
 		this.state = {
 			documents: null,
-			numOfPages: 1
+			numOfPages: 20
 		};
 	}
 	componentDidMount(){
 		if(!_isEmpty(this.props.location.query)){
-			let sQuery = _searchQuery(this.props.location.query, true);
+			const query = this.props.location.query;
+			let sQuery = _searchQuery(query, true);
 			this.props.updateSearchQuery(sQuery);
-			this.fetchData(_params(_query(sQuery)));
+
+			let params = _params(update(_query(sQuery), {$merge: {
+				orderby: query.orderby, page: query.page
+			}}));
+			this.fetchData(params);
+			if(params != _params(query)) this.props.router.push('/search'+params);
 		};
 	}
 	componentWillReceiveProps(nextProps){
@@ -39,7 +47,9 @@ class SearchResult extends Component {
 		let unsetProcessing = this.props.setMessage(null);
 		this.props.fetchData('get', '/api/search'+params, (data) => { unsetProcessing(); if(data){
 			if(typeof data === 'string'){
-				this.setState({documents: null, numOfPages: 1}); return;
+				this.setState({documents: null, numOfPages: 1});
+				this.props.setMessage(data, 'unset');
+				return;
 			}
 			if(data.result.cnt > 0){
 				this.setState({
@@ -48,32 +58,46 @@ class SearchResult extends Component {
 				});
 			} else {
 				this.setState({documents: null, numOfPages: 1});
-				this.props.setMessage('검색결과가 없습니다', 'goTo', '/');
+				this.props.setMessage('검색결과가 없습니다', 'unset');
 			}
 		}});
 	}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'dochead'){
-			which = arg1st; let value = arg2nd;
+			which = arg1st; let value = arg2nd, query;
 			if(which == 'doctypes'){
 				this.props.updateSearchQuery('doctypes', value);
-				let sQuery = _searchQuery(this.props.location.query);
-				sQuery.doctypes = value;
-				this.props.router.push('/search/'+_params(_query(sQuery)));
-
+				query = update(this.props.location.query, {$merge: _query({doctypes: value})});
 			}
+			else if(which == 'orderby'){
+				query = update(this.props.location.query, {$merge: {orderby: value}});
+			}
+			this.props.router.push('/search'+_params(query));
 		}
+	}
+	keywords(query){
+		let keywords = [];
+		let kwd = _searchQuery(_queryOf('keyword', query)).keyword.replace(/[\&\!\+\"]/g, '');
+		kwd.split(' ').forEach((k) => {
+			if(k && kwd.match(new RegExp(k, 'g')).length === 1) keywords.push(k);
+		});
+		return keywords.join('|');
 	}
 	render(){
 		const query = this.props.location.query;
 		const page = (query.page ? parseInt(query.page) : 1);
-		const doctypes = _searchQueryEach('doctypes', query);
+		const paginationUrl = '/search'+_params(query, ['page'])+'&page=';
+		const doctypes = _searchQuery(_queryOf('doctypes', query)).doctypes || [];
+		const orderby = (query.orderby ? query.orderby : 'accurate');
+		const keywords = this.keywords(query);
 
 		let documents = this.state.documents && this.state.documents.map((doc, index) => (
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
 				<div>
-					<DocListItem key={doc.id} document={doc} docData={this.props.docData} userRole={this.props.userData.role} />
+					<DocListItem key={doc.id} docData={this.props.docData} userRole={this.props.userData.role}
+						document={doc} keywords={keywords}
+					/>
 				</div>
 			</div>
 		));
@@ -81,13 +105,13 @@ class SearchResult extends Component {
 		return (
 			<div className="search-result">
 				<DocListHead
-					docData={this.props.docData} doctypes={doctypes}
+					docData={this.props.docData} doctypes={doctypes} orderby={orderby}
 					onChange={this.handleChange.bind(this, 'dochead')}
 				/>
 				<div className="search-result__doclist">
 					{documents}
 				</div>
-				<Pagination url={'/search'+_params(query, false)+'&page='} page={page} numOfPages={this.state.numOfPages} />
+				<Pagination url={paginationUrl} page={page} numOfPages={this.state.numOfPages} />
 			</div>
 		);
 	}
@@ -95,7 +119,6 @@ class SearchResult extends Component {
 SearchResult.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
-	searchQuery: PropTypes.object,
 	fetchData: PropTypes.func,
 	updateSearchQuery: PropTypes.func,
 	setMessage: PropTypes.func,

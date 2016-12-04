@@ -10,7 +10,7 @@ const _sideDispNames = {
 }
 
 class DocListItem extends Component {
-	render(){
+	side(){
 		let side = [];
 		for(let fn in _sideDispNames){
 			let value;
@@ -28,18 +28,34 @@ class DocListItem extends Component {
 				);
 			}
 		}
+	}
+	tagged(text){
+		const keywords = this.props.keywords;
+		let matches = text.match(new RegExp(keywords, 'gm'));
+		let texts = text.split(new RegExp(keywords));
+		let tagged = [];
+		matches.forEach((kw, index) => {
+			tagged.push(<span key={index}>{texts[index]}</span>, <span key={'kw'+index} className="doclist-item__accented">{kw}</span>);
+		});
+		tagged.push(<span key={tagged.length}>{texts[texts.length-1]}</span>);
+		return tagged;
+	}
+	render(){
+		const side = this.side();
+		const title = this.tagged(this.props.document.title);
+		const content = this.tagged(this.props.document.content);
+
 		return (
 			<div className="doclist-item">
 				<div className="doclist-item__header">
 					<span>{'['+this.props.docData.terms[this.props.document.doctype]+']'}</span>
 					<LinkIf className="doclist-item__title" to={'/document/'+this.props.document.id} if={_isCommon(['admin', 'view'], this.props.userRole)} isVisible={true}>
-						{this.props.document.title}
+						{title}
 					</LinkIf>
-
 				</div>
 				<div className="doclist-item__content">
 					<ul className="doclist-item__side">{side}</ul>
-					<p>{this.props.document.content}</p>
+					<p>{content}</p>
 				</div>
 			</div>
 		);
@@ -48,6 +64,7 @@ class DocListItem extends Component {
 DocListItem.propTypes = {
 	document: PropTypes.object.isRequired,
 	userRole: PropTypes.array.isRequired,
-	docData: PropTypes.object
+	docData: PropTypes.object,
+	keywords: PropTypes.string
 }
 export default DocListItem;

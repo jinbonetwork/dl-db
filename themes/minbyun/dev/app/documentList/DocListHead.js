@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {Radio, RdItem} from '../accessories/Radio';
 import {_termsOf} from '../schema/docSchema';
 import {_mapO, _pushpull} from '../accessories/functions';
 
@@ -7,7 +8,11 @@ class DoctypeList extends Component {
 		if(which == 'doctypes'){
 			this.props.onChange(which, _pushpull(this.props.doctypes, arg));
 		}
-
+	}
+	handleChange(which, arg){
+		if(which == 'orderby'){
+			this.props.onChange(which, arg);
+		}
 	}
 	render(){
 		let doctypes = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => {
@@ -17,12 +22,17 @@ class DoctypeList extends Component {
 		return (
 			<div className="doclisthead">
 				<ul>{doctypes}</ul>
+				<Radio selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}>
+					<RdItem value="accurate"><span className="doclisthead__orderby">관련도순</span></RdItem>
+					<RdItem value="latest"><span className="doclisthead__orderby">최신순</span></RdItem>
+				</Radio>
 			</div>
 		);
 	}
 }
 DoctypeList.propTypes = {
-	doctypes: PropTypes.array.isRequired,
+	doctypes: PropTypes.array,
+	orderby: PropTypes.string.isRequired,
 	docData: PropTypes.object,
 	onChange: PropTypes.func.isRequired
 };

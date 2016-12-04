@@ -49,10 +49,10 @@ const _isCommon = (array1, array2) => {
 	}
 	return false;
 }
-const _params = (params, removePage) => {
+const _params = (params, excepts) => {
 	let array = [];
 	for(let p in params){
-		if(!removePage || p != 'page'){
+		if(!excepts || !excepts.length || excepts.indexOf(p) < 0){
 			if(params[p]) array.push(p+'='+params[p]);
 		}
 	}

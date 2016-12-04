@@ -140,3 +140,23 @@
 		background-color: transparent;
 	}
 }
+
+.radio {
+	.rditem {
+		display: inline-block;
+		cursor: pointer;
+	}
+	.rditem + .rditem {
+		margin-left: 1em;
+	}
+	.rditem__check, .rditem__uncheck {
+		display: inline-block;
+		margin-right: 0.2em;
+	}
+	.rditem:not(.rditem--checked) .rditem__check {
+		display: none;
+	}
+	.rditem--checked .rditem__uncheck {
+		display: none;
+	}
+}

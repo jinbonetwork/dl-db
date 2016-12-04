@@ -36,7 +36,7 @@ const _childProps = {
 	'/search**': {
 		role: ['admin', 'write', 'view'],
 		required: ['userData', 'fetchData', 'updateSearchQuery', 'setMessage'],
-		elective: ['docData', 'searchQuery']
+		elective: ['docData']
 	}
 }
 
