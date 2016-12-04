@@ -5,14 +5,19 @@ class DBM extends \DLDB\Objects {
 	private static $fields;
 	private static $cids;
 	private static $taxonomy;
+	private static $taxonomy_terms;
+	private static $que;
 	private static $errmsg;
 
 	public static function instance() {
 		return self::_instance(__CLASS__);
 	}
 
-	public static function setFields($fields,$taxonomy) {
-		self::$fields = \DLDB\Fields::getFields('documents');
+	public static function setFields($fields=null,$taxonomy=null,$taxonomy_terms=null) {
+		self::$fields = $fields;
+		if(!self::$fields) {
+			self::$fields = \DLDB\Fields::getFields('documents');
+		}
 
 		foreach( self::$fields as $f => $field ) {
 			if( $field['type'] == 'taxonomy' ) {
@@ -21,6 +26,14 @@ class DBM extends \DLDB\Objects {
 		}
 
 		self::$taxonomy = $taxonomy;
+		if(!self::$taxonomy) {
+			self::$taxonomy =  \DLDB\Taxonomy::getTaxonomy(self::$cids);
+		}
+
+		self::$taxonomy_terms = $taxonomy_terms;
+		if(!self::$taxonomy_terms) {
+			self::$taxonomy_terms =  \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
+		}
 	}
 
 	public static function totalCnt($q,$args=null) {
@@ -35,8 +48,9 @@ class DBM extends \DLDB\Objects {
 		if(!$page) $page = 1;
 		$dbm = \DLDB\DBM::instance();
 
-		$que = self::makeQuery($q,$args,"d.*, match(d.subject,d.content,d.memo) against('".$q."' IN NATURAL LANGUAGE MODE) AS score");
+		$que = self::makeQuery($q,$args,"d.*, ".self::makeMatch($q)." AS score");
 		$que .= " ORDER BY ".$order." DESC LIMIT ".( ($page - 1) * $limit ).",".$limit;
+		self::$que = $que;
 
 		$documents = array();
 		while($row = $dbm->getFetchArray($que)) {
@@ -45,10 +59,39 @@ class DBM extends \DLDB\Objects {
 		return $documents;
 	}
 
+	private static function makeMatch($q) {
+		$n_mode = $b_mode = '';
+		foreach($q as $type => $que) {
+			if($que) {
+				switch($type) {
+					case 'string':
+						$n_mode .= ($n_mode ? " " : "").'"'.$q['string'].'"';
+						break;
+					case 'or':
+						$n_mode .= ($n_mode ? " " : "").implode( " ", $que);
+						break;
+					case 'and':
+						$b_mode .= ($b_mode ? " " : "").implode( " +", $que);
+						break;
+					case 'not':
+						$b_mode .= ($b_mode ? " " : "").implode( " -", $que);
+						break;
+				}
+			}
+		}
+		if($n_mode) {
+			$query = "match(d.subject,d.content,d.memo) against('".$n_mode."' IN NATURAL LANGUAGE MODE)";
+		}
+		if($b_mode) {
+			$query .= ($query ? " AND " : "")."match(d.subject,d.content,d.memo) against('".$b_mode."' IN BOOLEAN MODE)";
+		}
+		return $query;
+	}
+
 	private static function makeQuery($q,$args=null,$result) {
 		$select_que = "SELECT ".$result." FROM ";
 		$taxonomy_que = $que."{taxonomy_term_relative} AS t LEFT JOIN {documents} AS d ON t.did = d.id WHERE ";
-		$document_que = $que."{documents} AS d WHERE "
+		$document_que = $que."{documents} AS d WHERE ";
 		$que = "";
 		$taxonomy_exist = false;
 		if($args) {
@@ -77,11 +120,15 @@ class DBM extends \DLDB\Objects {
 				}
 			}
 		}
-		$que .= ($que ? " AND " : "")."match(d.subject,d.content,d.memo) against('".$q."' IN NATURAL LANGUAGE MODE)";
+		$que .= ($que ? " AND " : "").self::makeMatch($q);
 
 		$query = $select_que.($taxonomy_exist ? $taxonomy_que : $document_que).$que;
 
 		return $query;
+	}
+	
+	public static function getQue() {
+		return self::$que;
 	}
 
 	private static function fetchDocument($row) {
@@ -94,7 +141,18 @@ class DBM extends \DLDB\Objects {
 		}
 		if( $document['custom'] && is_array($document['custom']) ) {
 			foreach($document['custom'] as $k => $v) {
-				$document["f".$k] = $v;
+				if($v) {
+					if($fields[$k]['sefield'] && $fields[$k]['type'] == 'taxonomy') {
+						$c = 0;
+						if(is_array($v)) {
+							foreach( $v as $t => $vv ) {
+								$document['f'.$k] .= ($c++ ? "," : "").self::$taxonomy_terms[$vv['cid']][$t]['name'];
+							}
+						}
+					} else {
+						$document["f".$k] = $v;
+					}
+				}
 			}
 		}
 		if($document['uid'] == $_SESSION['user']['uid']) {
@@ -104,6 +162,8 @@ class DBM extends \DLDB\Objects {
 		} else {
 			$document['owner'] = 0;
 		}
+
+		return $document;
 	}
 }
 ?>

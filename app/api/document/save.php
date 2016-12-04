@@ -13,6 +13,7 @@ class save extends \DLDB\Controller {
 		$fields = \DLDB\Document::getFields();
 		$this->fields = array();
 		$this->taxonomy = \DLDB\Document::getTaxonomy();
+		$this->taxonomy_terms = \DLDB\Document::getTaxonomyTerms();
 
 		/* check field type */
 		if($this->params['mode'] != 'add') {
@@ -45,12 +46,12 @@ class save extends \DLDB\Controller {
 				if( $v['type'] == 'taxonomy' ) {
 					if( is_array($this->params['document']['f'.$fid]) ) {
 						foreach( $this->params['document']['f'.$fid] as $tx ) {
-							if(!$this->taxonomy[$v['cid']][$tx]) {
+							if(!$this->taxonomy_terms[$v['cid']][$tx]) {
 								\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].'에 지정된 분류값은 존재하지 않습니다.') );
 							}
 						}
 					} else if( $this->params['document']['f'.$fid] ) {
-						if(!$this->taxonomy[$v['cid']][$this->params['document']['f'.$fid]]) {
+						if(!$this->taxonomy_terms[$v['cid']][$this->params['document']['f'.$fid]]) {
 							\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].'에 지정된 분류값은 존재하지 않습니다.') );
 						}
 					}

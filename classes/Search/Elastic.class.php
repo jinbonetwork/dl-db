@@ -58,7 +58,7 @@ class Elastic extends \DLDB\Objects {
 							if( $this->taxonomy[$this->fields[$key]['cid']]['skey'] ) {
 								if(!is_array($v)) $v = array($v);
 								foreach($v as $_t) {
-									$types[] = 't'.$t;
+									$types[] = 't'.$_t;
 								}
 								$taxonomy_exists = true;
 							}
@@ -78,7 +78,7 @@ class Elastic extends \DLDB\Objects {
 				} /* end of if($t=='f') */
 			} /* end of foreach */
 		}
-		if(!$taxonomy_exist) {
+		if(!$taxonomy_exists) {
 			$types = array('main');
 		}
 
@@ -86,54 +86,41 @@ class Elastic extends \DLDB\Objects {
 		$q_params['should'] = [];
 		$q_params['must_not'] = [];
 
-		foreach($q as $que) {
-			switch($que['type']) {
-				case 'string':
-					if(preg_match("/^\"(.+)\"$/i",$que['que'])) {
-						$q_params['must'][] = [
-							"query_string" => [
+		foreach($q as $type => $que) {
+			if($que) {
+				switch($type) {
+					case 'string':
+						$q_params['must'][] = array(
+							"match_phrase" => array( "_all" => $que )
+						);
+						break;
+					case 'or':
+						$q_params['should'][] = array(
+							"match" => array( "_all" => implode(" ", $que) )
+						);
+						break;
+					case 'and':
+						$q_params['must'][] = array(
+							"match" => array(
+								"_all" => array(
+									"query" => implode(" ",$que),
+									"operator" => "and"
+								)
+							)
+						);
+						break;
+					case 'not':
+						$q_params['must_not'][] = array(
+							"query_string" => array(
 								"default_field" => "_all",
-								"query" => $que['que']
-							]
-						]; 
-					} else {
-						$q_params['should'][] = [
-							"query_string" => [
-								"default_field" => "_all",
-								"query" => $que['que']
-							]
-						];
-					}
-					break;
-				case 'and':
-					$q_params['must'][] = [
-						"match" => [
-							"_all" => [
-								"query" => implode(" ",$que['que']),
-								"operator" => "and"
-							]
-						]
-					];
-					break;
-				case 'not':
-					$q_params['must'][] = [
-						"query_string" => [
-							"default_field" => "_all",
-							"query" => $que['que'][0]
-						]
-					];
-					for($i=1; $i<@count($que[$i]); $i++) {
-						$q_params['must_not'][] = [
-							"query_string" => [
-								"default_field" => "_all",
-								"query" => $_q
-							]
-						];
-					}
-					break;
-				default:
-					break;
-			} /* end of switch */
+								"query" => implode(" ", $que)
+							)
+						);
+						break;
+					default:
+						break;
+				} /* end of switch */
+			} /* end of que */
 		} /* end of foreach */
 
 		$params = array(
@@ -172,7 +159,7 @@ class Elastic extends \DLDB\Objects {
 		return $this->client->search($params);
 	}
 	
-	public function create($type) {
+	public function create($types) {
 		$context = \DLDB\Model\Context::instance();
 
 		$index = $context->getProperty('service.elastic_index');
@@ -182,7 +169,23 @@ class Elastic extends \DLDB\Objects {
 
 		$this->setFields();
 
-		$default_properties = array();
+		$default_properties = array(
+			'subject' => array(
+				'type' => 'string',
+				'analyzer' => 'korean',
+				'term_vector' => 'yes'
+			),
+			'content' => array(
+				'type' => 'string',
+				'analyzer' => 'korean',
+				'term_vector' => 'yes'
+			),
+			'memo' => array(
+				'type' => 'string',
+				'analyzer' => 'korean',
+				'term_vector' => 'yes'
+			)
+		);
 		foreach( $this->fields as $fid => $field ) {
 			if($field['sefield']) {
 				switch($field['type']) {
@@ -194,13 +197,13 @@ class Elastic extends \DLDB\Objects {
 						break;
 				}
 				if( $field['type'] != 'date') {
-					$default_properties['subject'] => array(
+					$default_properties['f'.$fid] = array(
 						'type' => $property_type,
 						'analyzer' => 'korean',
 						'term_vector' => 'yes'
 					);
 				} else {
-					$default_properties['subject'] => array(
+					$default_properties['f'.$fid] = array(
 						'type' => $property_type,
 						'index' => 'not_analyzed'
 					);
@@ -210,7 +213,6 @@ class Elastic extends \DLDB\Objects {
 	
 		$params = array(
 		    'index' => $index,
-		    'type' => $type,
 			'body' => array(
 				'settings' => array(
 					'number_of_shards' => $shards,
@@ -226,12 +228,18 @@ class Elastic extends \DLDB\Objects {
 					)
 				),
 				'mappings' => array(
-					$type => array(
+					'main' => array(
 						'properties' => $default_properties
 					)
 				)
 			)
 		);
+
+		if( is_array($types) ) {
+			foreach( $types as $type ) {
+				$params['body']['mappings'][$type] = array( 'properties' => $default_properties );
+			}
+		}
 
 		$this->client->indices()->create($params);
 	}
@@ -244,23 +252,29 @@ class Elastic extends \DLDB\Objects {
 		$response = $this->client->indices()->delete($params);
 	}
 
-	public function check($type) {
+	public function check($type=null) {
 		$context = \DLDB\Model\Context::instance();
 		$index = $context->getProperty('service.elastic_index');
 
-		$params = array(
-			'index' => $index,
-			'type' => $type
-		);
+		if($type) {
+			$params = array(
+				'index' => $index,
+				'type' => $type
+			);
+		} else {
+			$params = array(
+				'index' => $index
+			);
+		}
 
-		$response = $client->indices()->getMapping($params);
+		$response = $this->client->indices()->getMapping($params);
 		if(!$response[$index]) {
 			return false;
 		}
 		return true;
 	}
 
-	public function update($id,$args,$memo) {
+	public function update($id,$args,$memo,$mode='index') {
 		$context = \DLDB\Model\Context::instance();
 		$index = $context->getProperty('service.elastic_index');
 
@@ -273,7 +287,18 @@ class Elastic extends \DLDB\Objects {
 		foreach( $this->fields as $fid => $field ) {
 			if( $field['type'] == 'taxonomy' && $this->taxonomy[$field['cid']]['skey'] ) {
 				if( $args['f'.$fid] ) {
-					$types[] = 't'.$field['cid'];
+					if( !is_array( $args['f'.$fid] ) ) {
+						$v = array( $args['f'.$fid] );
+					} else {
+						$v = $args['f'.$fid];
+					}
+					foreach($v as $t => $vv) {
+						if( is_array($vv) ) {
+							$types[] = 't'.$t;
+						} else {
+							$types[] = 't'.$vv;
+						}
+					}
 				}
 			}
 			if( $field['sefield'] ) {
@@ -310,33 +335,55 @@ class Elastic extends \DLDB\Objects {
 				}
 			}
 		}
-		if($this->check($type) != true) {
-			$this->create($index,'main');
+		if($mode == 'index') {
+			$params = array(
+				'index' => $index,
+				'type' => 'main',
+				'id' => $id,
+				'body' => $doc
+			);
+		} else {
+			$params = array(
+				'index' => $index,
+				'type' => 'main',
+				'id' => $id,
+				'body' => array(
+					'doc' => $doc
+				)
+			);
 		}
-		$params = array(
-			'index' => $index,
-			'type' => 'main',
-			'id' => $id,
-			'body' => array(
-				'doc' => $doc
-			)
-		);
-		$response = $this->client->update($params);
+		$fp = fopen("/tmp/dldb.log","a+");
+		fputs($fp,serialize($params));
+		fputs($fp,"\n");
+		fclose($fp);
+		if($mode == 'index')
+			$response = $this->client->index($params);
+		else
+			$response = $this->client->update($params);
 
 		if( is_array( $types ) ) {
 			foreach( $types as $type ) {
-				if($this->check($type) != true) {
-					$this->create($index,$type);
+				if($mode == 'index') {
+					$params = array(
+						'index' => $index,
+						'type' => $type,
+						'id' => $id,
+						'body' => $doc
+					);
+				} else {
+					$params = array(
+						'index' => $index,
+						'type' => $type,
+						'id' => $id,
+						'body' => array(
+							'doc' => $doc
+						)
+					);
 				}
-				$params = array(
-					'index' => $index,
-					'type' => $type,
-					'id' => $id,
-					'body' => array(
-						'doc' => $doc
-					)
-				);
-				$response = $this->client->update($params);
+				if($mode == 'index')
+					$response = $this->client->index($params);
+				else
+					$response = $this->client->update($params);
 			}
 		}
 	}

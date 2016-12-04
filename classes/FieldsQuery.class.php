@@ -270,7 +270,7 @@ class FieldsQuery extends \DLDB\Objects {
 												$else = \DLDB\Search\Elastic::instance();
 												$else->setFields($this->fields, $this->taxonomy, $this->taxonomy_terms);
 											}
-											$else->remove($id, 't'.$cid);
+											$else->remove($id, 't'.$tid);
 										}
 									}
 								}

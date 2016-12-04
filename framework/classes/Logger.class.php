@@ -104,7 +104,12 @@ class Logger extends \DLDB\Objects {
 		}
 		if($action == DLDB_ERROR_ACTION_AJAX){
 			$this->last->action = 'ajax';
-			echo DLDB_ERROR_AJAX_MSG;
+			if($errorMsg) {
+				header("Content-Type:  application/json; charset=utf-8");
+				print json_encode(array('error'=>-999999,'message'=>$errorMsg));
+			} else {
+				echo DLDB_ERROR_AJAX_MSG;
+			}
 		}
 
 		return;

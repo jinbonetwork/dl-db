@@ -55,6 +55,27 @@ class search extends \DLDB\Controller {
 	}
 	
 	function do_dbm_search() {
+		\DLDB\Search\DBM::setFields($this->fields,$this->taxonomies,$this->taxonomy);
+		$this->total_cnt = \DLDB\Search\DBM::totalCnt($this->que, $this->params);
+		if($this->total_cnt) {
+			$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;
+		} else {
+			$this->total_page = 0;
+		}
+		$this->documents = \DLDB\Search\DBM::getList($this->que, $this->params, $this->params['order'], $this->params['page'], $this->params['limit']);
+		$this->query = \DLDB\Search\DBM::getQue();
+		$this->result = array(
+			'error' => 0,
+			'result' => array(
+				'total_cnt' => $this->total_cnt,
+				'total_page' => $this->total_page,
+				'page' => $this->params['page'],
+				'cnt' => @count($this->documents)
+			),
+			'fields' => $this->ofields,
+			'query' => $this->query,
+			'documents' => $this->documents
+		);
 	}
 
 	function do_elastic_search() {
@@ -69,6 +90,7 @@ class search extends \DLDB\Controller {
 		}
 		$this->query = $else->getParams();
 		$this->result = array(
+			'error' => 0,
 			'result' => array(
 				'total_cnt' => $this->total_cnt,
 				'total_page' => $this->total_page,
@@ -80,11 +102,11 @@ class search extends \DLDB\Controller {
 			'documents' => $this->documents['hits']['hits']
 		);
 
-//		require_once DLDB_CONTRIBUTE_PATH."/elasticsearch/vendor/autoload.php";
-//		$client = \Elasticsearch\ClientBuilder::create()->build();
+/*		require_once DLDB_CONTRIBUTE_PATH."/elasticsearch/vendor/autoload.php";
+		$client = \Elasticsearch\ClientBuilder::create()->build();
 
-/*		$params = [
-		    'index' => 'dldb',
+		$params = [
+		    'index' => 'dldb1',
     		'type' => 'main',
     		'body' => [
         		'query' => [
@@ -98,17 +120,24 @@ class search extends \DLDB\Controller {
 							],
 							[
 								"match" => [ "memo" => $this->params['q'] ]
+							],
+							[
+								"match" => [ "f13" => $this->params['q'] ]
 							]
 						]
 					]
         		]
     		]
-		]; */
+		];
 
-//		$this->results = $client->search($params);
+		$this->result = $client->search($params); */
 	}
 
 	function do_solr_search() {
+		$this->result = array(
+			'error' => 0,
+			'message' => '준비중입니다.'
+		);
 	}
 }
 ?>

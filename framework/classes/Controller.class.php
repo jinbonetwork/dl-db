@@ -319,4 +319,10 @@ abstract class Controller {
 			$this->breadcrumbs_class .= ($this->breadcrumbs_class ? " " : "").implode("-",array_slice($breadcrumbs,0,$i+1));
 		}
 	}
+
+	public function get_error_action() {
+		if($this->params['output'] == 'json') return DLDB_ERROR_ACTION_AJAX;
+		else if($this->contentType == 'json') return DLDB_ERROR_ACTION_AJAX;
+		else return DLDB_ERROR_ACTION_URL;
+	}
 }

@@ -36,6 +36,13 @@ class Document extends \DLDB\Objects {
 		self::$fields = $fields;
 	}
 
+	public static function getTaxonomy() {
+		if( self::$cids && !self::$taxonomy ) {
+			self::$taxonomy = \DLDB\Taxonomy::getTaxonomy(self::$cids);
+		}
+		return self::$taxonomy;
+	}
+
 	public static function getTaxonomyTerms() {
 		if( self::$cids && !self::$taxonomy_terms ) {
 			self::$taxonomy_terms = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
@@ -151,9 +158,9 @@ class Document extends \DLDB\Objects {
 				$dbm->execute($que,array("dd", $insert_id, $file['fid']));
 			}
 		}
-		if(trim($memo)) {
+//		if(trim($memo)) {
 			\DLDB\Parser::insert($insert_id,$args,$memo);
-		}
+//		}
 		if( is_array($taxonomy_map) ) {
 			if( $fieldquery->reBuildTaxonomy('documents', $insert_id, $taxonomy_map) < 0 ) {
 				self::setErrorMsg( $fieldquery->getErrorMsg() );
@@ -206,9 +213,9 @@ class Document extends \DLDB\Objects {
 				\DLDB\Files::unlinkFile(DLDB_DA_PATH.$d_file['filepath']);
 			}
 		}
-		if(trim($memo) && $new_parse) {
-			\DLDB\Parser::insert($args['id'],$memo);
-		}
+//		if(trim($memo) && $new_parse) {
+			\DLDB\Parser::insert($args['id'],$args,$memo);
+//		}
 
 		if( is_array($taxonomy_map) ) {
 			if( $fieldquery->reBuildTaxonomy('documents', $args['id'], $taxonomy_map) < 0 ) {
@@ -252,7 +259,7 @@ class Document extends \DLDB\Objects {
 		self::$errmsg = $msg;
 	}
 
-	private static function fetchDocument($row,$mode='') {
+	public static function fetchDocument($row,$mode='') {
 		$fields = self::getFields();
 		if(!$row) return null;
 		foreach($row as $k => $v) {
