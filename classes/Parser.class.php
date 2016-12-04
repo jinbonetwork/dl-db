@@ -4,16 +4,19 @@ namespace DLDB;
 class Parser extends \DLDB\Objects {
 	private static $filter;
 
-	public static function insert($did,$memo) {
+	public static function insert($did,$args,$memo) {
 		$context = \DLDB\Model\Context::instance();
 
+		$dbm = \DLDB\DBM::instance();
+		$que = "UPDATE {documents} SET `memo` = ? WHERE id = ?";
+		$dbm->execute($que,array("sd",$memo,$did));
 		switch($context->getProperty('service.search_type')) {
-			case 'db':
-				$dbm = \DLDB\DBM::instance();
-				$que = "UPDATE {documents} SET `memo` = ? WHERE id = ?";
-				$dbm->execute($que,array("sd",$memo,$did));
-				break;
 			case 'elastic':
+				$else = \DLDB\Search\Elastic::instance();
+				$else->setFields();
+				$else->update($did,$args,$memo);
+				break;
+			default:
 				break;
 		}
 	}

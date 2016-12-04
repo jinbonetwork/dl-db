@@ -85,6 +85,6 @@ try {
 	$dbm->release();
 } catch(Exception $e) {
 	$logger = \DLDB\Logger::instance();
-	$logger->Error($e);
+	$logger->Error($e,$controller->get_error_action());
 }
 ?>

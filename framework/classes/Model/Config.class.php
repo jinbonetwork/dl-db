@@ -17,10 +17,8 @@ final class Config extends \DLDB\Objects {
 		$this->settings = array();
 		if(file_exists(DLDB_PATH."/config/settings.php")) {
 			@include(DLDB_PATH."/config/settings.php");
-			$this->userdatabase = $userdatabase;
 			$this->database = $database;
 			$this->service = $service;
-			$this->timeline = $timeline;
 			$this->session = $session;
 		}
 		$this->updateContext();

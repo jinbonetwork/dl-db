@@ -9,30 +9,36 @@ class ParseQue extends \DLDB\Objects {
 	}
 
 	public static function parse($q) {
-		self::$que = array();
+		self::$que = array(
+			'and'=>array(),
+			'not'=>array(),
+			'or'=>array(),
+			'string'=>''
+		);
 		$ques = array();
-		$ques = preg_split("/[\+ ]+/i",$q);
+		if( preg_match("/^\"(.+)\"$/i", trim($q), $matched ) ) {
+			self::$que['string'] = $matched[1];
+			return self::$que;
+		}
+		$ques = preg_split("/[\+ ]+/i", trim($q) );
 		if( is_array( $ques ) ) {
 			foreach( $ques as $que ) {
 				if(trim($que)) {
 					$_and_que = explode("&",$que);
 					if(@count($_and_que) > 1) {
-						self::$que[] = array(
-							'type'=>'and',
-							'que' => $_and_que
-						);
+						foreach($_and_que as $q) {
+							self::$que['and'][] = trim($q);
+						}
 					} else {
-						$_not_que = explode("!",$que);
-						if(@count($_not_que) > 1) {
-							self::$que[] = array(
-								'type'=>'not',
-								'que' => $_not_que
-							);
+						$_not_que = explode("!",trim($que));
+						if(@count($_not_que) > 0) {
+							if(trim($_not_que[0]))
+								self::$que['or'][] = trim($_not_que[0]);
+							for($i=1; $i<@count($_not_que); $i++) {
+								self::$que['not'][] = trim($_not_que);
+							}
 						} else {
-							self::$que[] = array(
-								'type'=>'string',
-								'que' => trim($que)
-							);
+							self::$que['or'][] = trim($que);
 						}
 					}
 				}

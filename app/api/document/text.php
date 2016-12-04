@@ -11,7 +11,7 @@ class text extends \DLDB\Controller {
 		if(!$this->params['id']) {
 			\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 입력하세요') );
 		}
-		$this->document = \DLDB\Document::getTexts($this->params['id']);
+		$this->document = \DLDB\Document::get($this->params['id']);
 		$acl = \DLDB\Acl::instance();
 		if(!$acl->imMaster() && !$this->document['uid'] != $this->user['uid']) {
 			\DLDB\RespondJson::ResultPage( array( -2, '권한이 없습니다') );
@@ -37,6 +37,15 @@ class text extends \DLDB\Controller {
 				}
 				if(trim($memo) > 0) {
 					\DLDB\Document::modifyText( $this->params['id'], trim($memo) );
+					switch($context->getProperty('service.search_type')) {
+						case 'elastic':
+							$else = \DLDB\Search\Elastci::instance();
+							$else->setFields();
+							$else->update( $this->params['id'], $this->document, $memo);
+							break;
+						default:
+							break;
+					}
 				}
 				$this->result = array(
 					'error' => 0,
@@ -47,6 +56,15 @@ class text extends \DLDB\Controller {
 					\DLDB\RespondJson::ResultPage( array( -3, '텍스트내용이 없습니다') );
 				}
 				\DLDB\Document::modifyText($this->params['id'], $this->params['memo']);
+				switch($context->getProperty('service.search_type')) {
+					case 'elastic':
+						$else = \DLDB\Search\Elastci::instance();
+						$else->setFields();
+						$else->update( $this->params['id'], $this->document, $memo);
+						break;
+					default:
+						break;
+				}
 				$this->result = array(
 					'error' => 0,
 					'did' => $this->params['id']
