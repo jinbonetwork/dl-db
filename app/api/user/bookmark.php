@@ -16,7 +16,7 @@ class bookmark extends \DLDB\Controller {
 				if($bookmark) {
 					\DLDB\RespondJson::ResultPage( array( -1, '이미 북마크된 문서입니다') );
 				}
-				$this->bid = \DLDB\insert($this->user['uid'], $this->params['did']);
+				$this->bid = \DLDB\Bookmark::insert($this->user['uid'], $this->params['did']);
 				if(!$this->bid) {
 					\DLDB\RespondJson::ResultPage( array( -1, '북마크 하는 도중 데이터베이스 장애가 발생했습니다') );
 				}

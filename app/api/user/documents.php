@@ -42,7 +42,7 @@ class documents extends \DLDB\Controller {
 				$this->documents = array();
 			}
 			$this->result = array(
-				'arror' => 0,
+				'error' => 0,
 				'result' => array(
 					'total_cnt' => $this->total_cnt,
 					'total_page' => $this->total_page,
