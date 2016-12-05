@@ -45,10 +45,21 @@ class Document extends Component {
 	}
 	handleClick(which){
 		if(which == 'bookmark'){
+			this.setState({document: update(this.state.document, {bookmark: {$set: -1}})});
 			this.props.fetchData('post', '/api/user/bookmark?mode=add&did='+this.state.document.id, null, (data) => {
 				if(data){
-					console.log(data);
+					this.setState({document: update(this.state.document, {bookmark: {$set: data.bid}})});
+				} else {
+					this.setState({bookmark: 0});
+					this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
 				}
+			});
+		}
+		else if(which == 'removeBookmark'){
+			let prevBookmark = this.state.document.bookmark;
+			this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
+			this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+this.state.document.bookmark, null, (data) => {
+				if(!data) this.setState({document: update(this.state.document, {bookmark: {$set: prevBookmark}})});
 			});
 		}
 	}
@@ -69,13 +80,19 @@ class Document extends Component {
 	}
 	bookmark(){
 		if(!this.state.document.bookmark){ return (
-			<button type="button" className="document__bookmark" onClick={this.handleClick.bind(this, 'bookmark')}>
-				<i className="pe-7f-bookmarks pe-va"></i>{' '}북마크
-			</button>
+			<div className="document__bookmark">
+				<i className="pe-7s-bookmarks pe-va"></i>
+				<button type="button" onClick={this.handleClick.bind(this, 'bookmark')}>
+					<span>북마크</span>
+				</button>
+			</div>
 		);} else { return (
-			<button type="button" className="document__bookmarked" onClick={this.handleClick.bind(this, 'bookmark')}>
-				<i className="pe-7f-ribbon pe-va"></i>{' '}북마크 해제
-			</button>
+			<div className="document__bookmark document__remove-bookmark">
+				<i className="pe-7f-bookmarks pe-va"></i>
+				<button type="button" onClick={this.handleClick.bind(this, 'removeBookmark')}>
+					<span>북마크 해제</span>
+				</button>
+			</div>
 		);}
 	}
 	render(){

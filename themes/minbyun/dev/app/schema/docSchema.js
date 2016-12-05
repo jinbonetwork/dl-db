@@ -62,7 +62,6 @@ const _convertToDoc = (sDoc) => {
 			switch(fAttr.type){
 				case 'meta':
 					if(fn == 'owner') document[fn] = (sValue == 1 ? true : false);
-					else if(fn == 'bookmark') document[fn] = sValue;
 					else document[fn] = parseInt(sValue); break;
 				case 'char': case 'date':
 					document[fn] = sValue; break;

@@ -78,13 +78,15 @@ class Bookmarks extends Component {
 		));
 		return (
 			<div className="bookmarks">
-				<Table>
-					<Row>
-						<Column>저장일</Column>
-						<Column>{_fieldAttrs['title'].displayName}</Column>
-					</Row>
-					{rows}
-				</Table>
+				<div className="bookmarks__content">
+					<Table>
+						<Row>
+							<Column>저장일</Column>
+							<Column>{_fieldAttrs['title'].displayName}</Column>
+						</Row>
+						{rows}
+					</Table>
+				</div>
 				<Pagination url="/user/bookmarks/page/" page={page} numOfPages={this.state.numOfPages} />
 			</div>
 		);

@@ -43,17 +43,6 @@
 		border-bottom: solid 2px @main-color;
 		color: @main-color;
 	}
-	.document__bookmarked {
-		display: inline-block;
-		line-height: 2em;
-		width: 2em;
-		border: solid 1px @main-color;
-		color: @main-color;
-		text-align: center;
-	}
-	.document__bookmarked i {
-		font-size: 1.5em;
-	}
 	.document__buttons {
 		margin: 2em 0;
 		a, a:visited, a:link, a:hover, a:active {
@@ -74,12 +63,23 @@
 			padding: 0 1em;
 			cursor: pointer;
 		}
-		button i {
-			font-size: 1.2em;
+		.document__bookmark {
+			display: inline-block;
 		}
-		button:first-child {
-			color: #ffffff;
-			background-color: @main-color
+		.document__bookmark i {
+			font-size: 2em;
+			color: @main-color;
+		}
+		.document__bookmark i + button {
+			margin-left: 0.5em;
+		}
+		.document__bookmark button {
+			color: @minor-color-2;
+			background-color: @main-color;
+		}
+		.document__remove-bookmark button {
+			color: @main-color;
+			background-color: @minor-color-2;
 		}
 	}
 	.document__header .table {
