@@ -55,12 +55,9 @@ class Bookmarks extends Component {
 			const bid = arg;
 			let prevBookmarks = this.state.bookmarks;
 			let nextBookmarks = this.state.bookmarks.filter((bmk) => (bmk.bid != bid));
-			//this.setState({bookmarks: nextBookmarks});
+			this.setState({bookmarks: nextBookmarks});
 			this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+bid, null, (data) => {
-				if(data){
-					//this.setState({bookmarks: prevBookmarks});
-					this.props.router.push('/');
-				}
+				if(!data) this.setState({bookmarks: prevBookmarks});
 			});
 		}
 	}

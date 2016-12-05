@@ -43,6 +43,17 @@
 		border-bottom: solid 2px @main-color;
 		color: @main-color;
 	}
+	.document__bookmarked {
+		display: inline-block;
+		line-height: 2em;
+		width: 2em;
+		border: solid 1px @main-color;
+		color: @main-color;
+		text-align: center;
+	}
+	.document__bookmarked i {
+		font-size: 1.5em;
+	}
 	.document__buttons {
 		margin: 2em 0;
 		a, a:visited, a:link, a:hover, a:active {
@@ -70,7 +81,6 @@
 			color: #ffffff;
 			background-color: @main-color
 		}
-
 	}
 	.document__header .table {
 		.table__row + .table__row {

@@ -67,12 +67,22 @@ class Document extends Component {
 			}
 		});
 	}
+	bookmark(){
+		if(!this.state.document.bookmark){ return (
+			<button type="button" className="document__bookmark" onClick={this.handleClick.bind(this, 'bookmark')}>
+				<i className="pe-7f-bookmarks pe-va"></i>{' '}북마크
+			</button>
+		);} else { return (
+			<button type="button" className="document__bookmarked" onClick={this.handleClick.bind(this, 'bookmark')}>
+				<i className="pe-7f-ribbon pe-va"></i>{' '}북마크 해제
+			</button>
+		);}
+	}
 	render(){
 		if(!this.state.document) return null;
-		let userRole = this.props.userData.role;
-
-		let fieldsInHeader = {image: null, file: null, date: null};
-		let fieldsInContents = [];
+		const userRole = this.props.userData.role;
+		const fieldsInHeader = {image: null, file: null, date: null};
+		const fieldsInContents = [];
 		for(let fn in this.state.document){
 			let fAttr = _fieldAttrs[fn];
 			if(!fAttr.parent && fn != 'title'){
@@ -97,9 +107,7 @@ class Document extends Component {
 						<div className={(fieldsInHeader.image ? 'document__column' : '')}>
 							<h1>{this.state.document.title}</h1>
 							<div className="document__buttons">
-								<button type="button" onClick={this.handleClick.bind(this, 'bookmark')}>
-									<i className="pe-7f-bookmarks pe-va"></i>{' '}북마크
-								</button>
+								{this.bookmark()}
 								<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
 									수정하기
 								</LinkIf>
