@@ -106,6 +106,37 @@ class search extends \DLDB\Controller {
 			'documents' => $this->documents['hits']['hits']
 		);
 	}
+/*	function do_elastic_search() {
+		require_once DLDB_CONTRIBUTE_PATH."/elasticsearch/vendor/autoload.php";
+		$client = \Elasticsearch\ClientBuilder::create()->build();
+
+		$params = [
+			'index' => 'dldb1',
+			'type' => 'main',
+			'body' => [
+				'query' => [
+					"bool" => [
+						"should" => [
+							[
+								"match" => [ "subject" => $this->params['q'] ]
+							],
+							[
+								"match" => [ "content" => $this->params['q'] ]
+							],
+							[
+								"match" => [ "memo" => $this->params['q'] ]
+							],
+							[
+								"match" => [ "f13" => $this->params['q'] ]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$this->result = $client->search($params);
+	} */
 
 	function do_solr_search() {
 		$this->result = array(
