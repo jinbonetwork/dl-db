@@ -45,13 +45,11 @@ class Document extends Component {
 	}
 	handleClick(which){
 		if(which == 'bookmark'){
-			/*
 			this.props.fetchData('post', '/api/user/bookmark?mode=add&did='+this.state.document.id, null, (data) => {
 				if(data){
-
+					console.log(data);
 				}
 			});
-			*/
 		}
 	}
 	submitFileText(fileId, text){

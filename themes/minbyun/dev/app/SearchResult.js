@@ -64,7 +64,7 @@ class SearchResult extends Component {
 				query = update(this.props.location.query, {$merge: _query({doctypes: value})});
 			}
 			else if(which == 'orderby'){
-				query = update(this.props.location.query, {$merge: {orderby: value}});
+				query = update(this.props.location.query, {$merge: {order: value}});
 			}
 			this.props.router.push('/search'+_params(query));
 		}
@@ -82,7 +82,8 @@ class SearchResult extends Component {
 	}
 	keywords(query){
 		let keywords = [];
-		let kwd = _searchQuery(_queryOf('keyword', query)).keyword.replace(/[\&\!\+\"]/g, '');
+		let kwd = _searchQuery(_queryOf('keyword', query)).keyword; if(!kwd) return '';
+		kwd = kwd.replace(/[\&\!\+\"]/g, '');
 		kwd.split(' ').forEach((k) => {
 			if(k && kwd.match(new RegExp(k, 'g')).length === 1) keywords.push(k);
 		});
@@ -93,7 +94,7 @@ class SearchResult extends Component {
 		const page = (query.page ? parseInt(query.page) : 1);
 		const paginationUrl = '/search'+_params(query, ['page'])+'&page=';
 		const doctypes = _searchQuery(_queryOf('doctypes', query)).doctypes || [];
-		const orderby = (query.orderby ? query.orderby : 'accurate');
+		const orderby = (query.order ? query.order : 'score');
 		const keywords = this.keywords(query);
 
 		let documents = this.state.documents && this.state.documents.map((doc, index) => (

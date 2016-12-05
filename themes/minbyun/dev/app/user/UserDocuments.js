@@ -24,6 +24,7 @@ class UserDocuments extends Component {
 		}
 	}
 	fetchData(page){
+		if(!page) page = 1;
 		let unsetProcessing = this.props.setMessage(null);
 		this.props.fetchData('get', '/api/user/documents?page='+page, (data) => {
 			unsetProcessing();
@@ -34,7 +35,7 @@ class UserDocuments extends Component {
 						numOfPages: data.result.total_page
 					});
 				} else {
-					this.setState({documents: null, numOfPages:1});
+					this.setState({documents: null, numOfPages: 1});
 				}
 			}
 		});
@@ -47,7 +48,8 @@ class UserDocuments extends Component {
 		}});
 	}
 	render(){
-		if(!this.state.documents) return null;
+		const page = (this.props.params.page ? parseInt(this.props.params.page) : 1);
+
 		let documents = this.state.documents && this.state.documents.map((doc) => (
 			<DocListItem key={doc.id} document={doc} docData={this.props.docData} userRole={this.props.userData.role} />
 		));
@@ -56,7 +58,7 @@ class UserDocuments extends Component {
 				<div className="userdocs__doclist">
 					{documents}
 				</div>
-				<Pagination url="/user/documents/page/" page={parseInt(this.props.params.page)} numOfPages={this.state.numOfPages} />
+				<Pagination url="/user/documents/page/" page={page} numOfPages={this.state.numOfPages} />
 			</div>
 		);
 	}
