@@ -52,6 +52,8 @@ class search extends \DLDB\Controller {
 				$this->do_solr_search();
 				break;
 		}
+
+		$this->search_history();
 	}
 	
 	function do_dbm_search() {
@@ -101,36 +103,6 @@ class search extends \DLDB\Controller {
 			'query' => $this->query,
 			'documents' => $this->documents['hits']['hits']
 		);
-
-/*		require_once DLDB_CONTRIBUTE_PATH."/elasticsearch/vendor/autoload.php";
-		$client = \Elasticsearch\ClientBuilder::create()->build();
-
-		$params = [
-		    'index' => 'dldb1',
-    		'type' => 'main',
-    		'body' => [
-        		'query' => [
-					"bool" => [
-						"should" => [
-							[
-								"match" => [ "subject" => $this->params['q'] ]
-							],
-							[
-								"match" => [ "content" => $this->params['q'] ]
-							],
-							[
-								"match" => [ "memo" => $this->params['q'] ]
-							],
-							[
-								"match" => [ "f13" => $this->params['q'] ]
-							]
-						]
-					]
-        		]
-    		]
-		];
-
-		$this->result = $client->search($params); */
 	}
 
 	function do_solr_search() {
@@ -138,6 +110,39 @@ class search extends \DLDB\Controller {
 			'error' => 0,
 			'message' => '준비중입니다.'
 		);
+	}
+
+	function search_history() {
+		$hash = \DLDB\History::getQueryHash();
+		$last = \DLDB\History::getLast($this->user['uid']);
+		if($last['hash'] == $hash) {
+			return;
+		}
+		$options = array();
+		foreach($this->params as $k => $v) {
+			if( substr($k,0,1) == 'f' ) {
+				$key = (int)substr($k,1);
+				if($v) {
+					switch( $this->fields[$key] ) {
+						case 'taxonomy':
+							if(!is_array($v)) {
+								$v = array($v);
+							}
+							$c = 0;
+							foreach($v as $t) {
+								$options[$k] .= ($c++ ? "," : "").$this->taxonomy_terms[$this->fields[$key]['cid']][$t]['name'];
+							}
+							break;
+						case 'date':
+							$_date = explode("-",$v);
+							$options[$k]['from'] = $_date[0];
+							$options[$k]['to'] = $_date[1];
+							break;
+					}
+				}
+			}
+		}
+		\DLDB\History::insert($this->user['uid'],$this->params['q'],$options,$hash);
 	}
 }
 ?>

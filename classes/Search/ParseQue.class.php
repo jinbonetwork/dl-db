@@ -20,7 +20,9 @@ class ParseQue extends \DLDB\Objects {
 			self::$que['string'] = $matched[1];
 			return self::$que;
 		}
-		$ques = preg_split("/[\+ ]+/i", trim($q) );
+		$q = preg_replace("/([ ]*)\!([ ]*)/i","!",trim($q));
+		$q = preg_replace("/([ ]*)\&([ ]*)/i","&",$q);
+		$ques = preg_split("/[\+ ]+/i", $q );
 		if( is_array( $ques ) ) {
 			foreach( $ques as $que ) {
 				if(trim($que)) {
@@ -30,12 +32,12 @@ class ParseQue extends \DLDB\Objects {
 							self::$que['and'][] = trim($q);
 						}
 					} else {
-						$_not_que = explode("!",trim($que));
+						$_not_que = preg_split("/\!/i",trim($que));
 						if(@count($_not_que) > 0) {
 							if(trim($_not_que[0]))
 								self::$que['or'][] = trim($_not_que[0]);
 							for($i=1; $i<@count($_not_que); $i++) {
-								self::$que['not'][] = trim($_not_que);
+								self::$que['not'][] = trim($_not_que[$i]);
 							}
 						} else {
 							self::$que['or'][] = trim($que);
