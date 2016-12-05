@@ -28,6 +28,12 @@ class index extends \DLDB\Controller {
 			if(!$this->document) {
 				$this->result = array('error' => -1,'message' => '존재하지 않는 문서입니다');
 			} else {
+				$bookmark = \DLDB\Bookmark::getByDID($this->user['uid'], $this->params['id']);
+				if($bookmark) {
+					$this->document['bookmark'] = true;
+				} else {
+					$this->document['bookmark'] = false;
+				}
 				$this->result = array('error' => 0, 'fields' => $this->fields, 'document' => $this->document);
 			}
 		} else {

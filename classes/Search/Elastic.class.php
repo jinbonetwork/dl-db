@@ -135,10 +135,8 @@ class Elastic extends \DLDB\Objects {
 			)
 		);
 		if($order != 'score') {
-			$params['body']['sort'] = array(
-				array (
-					$order => array("order","desc")
-				)
+			$params['body']['sort'] = array (
+				$order => array("order" => "desc")
 			);
 		}
 		if($filter) {

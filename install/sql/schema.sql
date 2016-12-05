@@ -89,11 +89,12 @@ DROP TABLE IF EXISTS `dldb_history`;
 CREATE TABLE `dldb_history` (
 	`hid`			bigint(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`uid`			bigint(11) NOT NULl DEFAULT 0,
+	`hash`			char(128) NOT NULL DEFAULT '',
 	`query`			char(255),
 	`options`		text,
 	`search_date`	int(10),
 
-	KEY `UID`(`uid`)
+	KEY `UID`(`uid`,`hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_log`;
