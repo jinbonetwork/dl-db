@@ -219,8 +219,7 @@ class Elastic extends \DLDB\Objects {
 						'analyzer' => array(
 							'korean' => array(
 								'type' => 'custom',
-								'tokenizer' => $tokenizer,
-								'filter' => ['lowercase', 'stop', 'kstem']
+								'tokenizer' => $tokenizer
 							)
 						)
 					)
