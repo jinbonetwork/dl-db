@@ -41,6 +41,13 @@ const _displayDate = (date) => {
 	if(date.date) items.push(date.date);
 	return items.join('/');
 }
+const _displayDateOfMilliseconds = (milliseconds) => {
+	let regDate = new Date(milliseconds);
+	let year = regDate.getFullYear();
+	let month = regDate.getMonth()+1; if(month < 10) month = '0'+month;
+	let date = regDate.getDate(); if(date < 10) date = '0'+date;
+	return  year+'/'+month+'/'+date;
+}
 const _isCommon = (array1, array2) => {
 	for(let i in array1){
 		for(let j in array2){
@@ -80,4 +87,4 @@ const _pushpull = (array, value) => {
 	return newArray;
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _isCommon, _params, _mapO, _forIn, _pushpull};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _params, _mapO, _forIn, _pushpull};

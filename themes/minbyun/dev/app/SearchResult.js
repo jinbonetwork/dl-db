@@ -52,7 +52,7 @@ class SearchResult extends Component {
 				});
 			} else {
 				this.setState({documents: null, numOfPages: 1});
-				this.props.setMessage('검색결과가 없습니다', 'unset');
+				//this.props.setMessage('검색결과가 없습니다', 'unset');
 			}
 		}});
 	}

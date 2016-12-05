@@ -12,13 +12,11 @@ class User extends Component {
 			switch(path){
 				case 'profile':
 					props = {userProfile: this.props.userProfile}; break;
-				case 'bookmarks':
+				case 'bookmarks': case 'history':
 					props = {
 						fetchData: this.props.fetchData,
 						setMessage: this.props.setMessage
 					}; break;
-				case 'history':
-					props = {}; break;
 				case 'documents':
 					props = {
 						userData: this.props.userData,
