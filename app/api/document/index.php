@@ -30,9 +30,9 @@ class index extends \DLDB\Controller {
 			} else {
 				$bookmark = \DLDB\Bookmark::getByDID($this->user['uid'], $this->params['id']);
 				if($bookmark) {
-					$this->document['bookmark'] = true;
+					$this->document['bookmark'] = $bookmark->bid;
 				} else {
-					$this->document['bookmark'] = false;
+					$this->document['bookmark'] = 0;
 				}
 				$this->result = array('error' => 0, 'fields' => $this->fields, 'document' => $this->document);
 			}
