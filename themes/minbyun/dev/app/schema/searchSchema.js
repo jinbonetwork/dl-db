@@ -33,7 +33,7 @@ const _query = (sQuery) => {
 	for(let prop in sQuery){ if(sQuery[prop]){
 		switch(prop){
 			case 'keyword': query.q = encodeURIComponent(sQuery[prop]); break;
-			case 'doctypes': query[_sFname['doctype']] = (sQuery[prop].length ? '{'+sQuery[prop].join(',')+'}' : ''); break;
+			case 'doctypes': query[_sFname['doctype']] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
 		}
 	}}
 	let period;
@@ -61,7 +61,7 @@ const _searchQuery = (query, correct) => {
 		}
 		else if(_fname[prop] == 'doctype'){
 			let doctypes = []
-			value.replace('{', '').replace('}', '').split(',').forEach((dt) => {
+			value.replace('[', '').replace(']', '').split(',').forEach((dt) => {
 				if(dt > 0) doctypes.push(dt);
 			});
 			if(doctypes.length) sQuery.doctypes = doctypes;

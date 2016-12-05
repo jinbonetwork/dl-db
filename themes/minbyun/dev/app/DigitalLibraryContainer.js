@@ -118,8 +118,9 @@ class DigitalLibraryContainer extends Component {
 				})});
 				this.props.router.push('/login'); break;
 			case 'goTo':
-				let path = arg;
-				if(path) this.props.router.push(path); break;
+				if(arg) this.props.router.push(arg); break;
+			case 'replace':
+				if(arg) this.props.router.replace(arg); break;
 			default:
 		}
 	}

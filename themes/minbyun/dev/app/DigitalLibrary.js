@@ -88,6 +88,7 @@ class DigitalLibrary extends Component {
 				docData={this.props.docData}
 				query={this.props.searchQuery}
 				update={this.props.updateSearchQuery}
+				setMessage={this.props.setMessage}
 			/>
 		);
 	}

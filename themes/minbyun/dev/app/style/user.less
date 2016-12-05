@@ -79,6 +79,12 @@
 	}
 }
 .bookmarks {
+	padding: 1em;
+	background-color: @minor-color-2;
+
+	.table {
+		margin: 3%;
+	}
 	.table__row:first-child {
 		text-align: center;
 		font-weight: bold;
@@ -98,7 +104,21 @@
 		margin-left: @bookmarks-col-width;
 	}
 	.table__row + .table__row .table__col + .table__col {
+		position: relative;
 		color: @main-color;
+		padding-right: 2em;
 	}
-
+	.bookmarks__btnwrap {
+		position: absolute;
+		top: 0; right: 0;
+		line-height: inherit;
+	}
+	.bookmarks__remove {
+		padding: 0;
+		border: 0;
+		background-color: transparent;
+	}
+	.bookmarks__remove i {
+		font-size: 2em;
+	}
 }
