@@ -93,6 +93,7 @@ CREATE TABLE `dldb_history` (
 	`query`			char(255),
 	`options`		text,
 	`search_date`	int(10),
+	`query_string`	text,
 
 	KEY `UID`(`uid`,`hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

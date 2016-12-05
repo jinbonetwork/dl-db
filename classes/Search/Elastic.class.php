@@ -395,7 +395,7 @@ class Elastic extends \DLDB\Objects {
 			'type' => $type,
 			'id' => $id
 		);
-		$response = $this->client->update($params);
+		$response = $this->client->delete($params);
 	}
 
 	public function getParams() {

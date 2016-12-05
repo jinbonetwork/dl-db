@@ -53,7 +53,9 @@ class search extends \DLDB\Controller {
 				break;
 		}
 
-		$this->search_history();
+		if( $this->total_cnt ) {
+			$this->search_history();
+		}
 	}
 	
 	function do_dbm_search() {
@@ -113,7 +115,8 @@ class search extends \DLDB\Controller {
 	}
 
 	function search_history() {
-		$hash = \DLDB\History::getQueryHash();
+		$query_string = \DLDB\History::getQuery();
+		$hash = \DLDB\History::getQueryHash($query_string);
 		$last = \DLDB\History::getLast($this->user['uid']);
 		if($last['hash'] == $hash) {
 			return;
@@ -142,7 +145,7 @@ class search extends \DLDB\Controller {
 				}
 			}
 		}
-		\DLDB\History::insert($this->user['uid'],$this->params['q'],$options,$hash);
+		\DLDB\History::insert($this->user['uid'],$this->params['q'],$options,$query_string);
 	}
 }
 ?>

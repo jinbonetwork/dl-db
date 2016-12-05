@@ -41,20 +41,27 @@ class History extends \DLDB\Objects {
 		return $history;
 	}
 
-	public static function getQueryHash() {
+	public static function getQuery() {
 		$query_string = preg_replace("/&page=[0-9]{1,}/i","",$_SERVER['QUERY_STRING']);
 		$query_string = preg_replace("/&limit=[0-9]{1,}/i","",$query_string);
 		$query_string = preg_replace("/&order=[^&]+/i","",$query_string);
 
+		return $query_string;
+	}
+
+	public static function getQueryHash($que='') {
+		if(!$que) $que = self::getQuery();
+
 		return hash('sha256',$query_string);
 	}
 
-	public static function insert($uid,$q,$options,$hash='') {
+	public static function insert($uid,$q,$options,$query_string='') {
 		$dbm = \DLDB\DBM::instance();
 
-		if(!$hash) $hash = self::getQueryHash();
-		$que = "INSERT INTO {history} (`uid`,`hash`,`query`,`options`,`search_date`) VALUES (?,?,?,?,?)";
-		$dbm->execute($que,array("dsssd",$uid,$hash,$q,serialize($options),time()));
+		if(!$query_string) $query_string = self::getQuery();
+		$hash = self::getQueryHash($query_string);
+		$que = "INSERT INTO {history} (`uid`,`hash`,`query`,`options`,`search_date`,`query_string`) VALUES (?,?,?,?,?,?)";
+		$dbm->execute($que, array("dsssds",$uid,$hash,$q,serialize($options),time(),$query_string) );
 
 		$insert_hid = $dbm->getLastInsertId();
 
