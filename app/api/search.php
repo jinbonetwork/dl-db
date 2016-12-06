@@ -55,6 +55,7 @@ class search extends \DLDB\Controller {
 
 		if( $this->total_cnt ) {
 			$this->search_history();
+			$this->result['query_hash'] = $this->query_hash;
 		}
 	}
 	
@@ -147,9 +148,9 @@ class search extends \DLDB\Controller {
 
 	function search_history() {
 		$query_string = \DLDB\History::getQuery();
-		$hash = \DLDB\History::getQueryHash($query_string);
+		$this->query_hash = \DLDB\History::getQueryHash($query_string);
 		$last = \DLDB\History::getLast($this->user['uid']);
-		if($last['hash'] == $hash) {
+		if($last['hash'] == $this->query_hash) {
 			return;
 		}
 		$options = array();
@@ -157,7 +158,7 @@ class search extends \DLDB\Controller {
 			if( substr($k,0,1) == 'f' ) {
 				$key = (int)substr($k,1);
 				if($v) {
-					switch( $this->fields[$key] ) {
+					switch( $this->fields[$key]['type'] ) {
 						case 'taxonomy':
 							if(!is_array($v)) {
 								$v = array($v);
