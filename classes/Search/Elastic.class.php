@@ -163,6 +163,7 @@ class Elastic extends \DLDB\Objects {
 		$index = $context->getProperty('service.elastic_index');
 		$shards = $context->getProperty('service.elastic_shards');
 		$replicas = $context->getProperty('service.elastic_replicas');
+		$analyzer = $context->getProperty('service.elastic_analyzer');
 		$tokenizer = $context->getProperty('service.elastic_tokenizer');
 
 		$this->setFields();
@@ -219,7 +220,12 @@ class Elastic extends \DLDB\Objects {
 						'analyzer' => array(
 							'korean' => array(
 								'type' => 'custom',
-								'tokenizer' => $tokenizer
+								'tokenizer' => $analyzer
+							)
+						),
+						'tokenizer' => array(
+							$analyzer => array(
+								'type' => $tokenizer
 							)
 						)
 					)
