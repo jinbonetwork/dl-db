@@ -42,7 +42,8 @@ class History extends Component {
 			searchDate: _displayDateOfMilliseconds(item.search_date*1000),
 			keyword: item.query,
 			doctypes: '판결문, 기타',
-			period: ['2015.01', '2016.07']
+			from: '2015.01',
+			to: '2016.07'
 		}
 	}
 	handleClick(which, arg){
@@ -66,9 +67,9 @@ class History extends Component {
 							<span>{item.doctypes}</span>
 						</span>
 						<span className="history__period">
-							<span>{item.period[0]}</span>
+							<span>{item.from}</span>
 							<span><i className="pe-7s-right-arrow pe-va"></i></span>
-							<span>{item.period[1]}</span>
+							<span>{item.to}</span>
 						</span>
 					</div>
 					<div className="history__btnwrap">

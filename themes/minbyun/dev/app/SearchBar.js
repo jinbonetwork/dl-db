@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
-import DdSelect from './accessories/DdSelect';
-import {DdItem, DdHead, DdArrow} from './accessories/Dropdown';
+import {DdSelect, DdItem, DdHead, DdArrow} from './accessories/DdSelect';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';

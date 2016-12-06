@@ -70,4 +70,4 @@ DdSelect.propTypes = {
 	onResize: PropTypes.func
 };
 
-export default DdSelect;
+export {DdSelect, DdHead, DdItem, DdArrow};

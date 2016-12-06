@@ -5,6 +5,7 @@ import Textarea from './Textarea';
 import DateForm from './DateForm';
 import FileInput from '../accessories/FileInput';
 import {Table} from '../accessories/Table';
+import {Select, Option} from '../accessories/Select';
 import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
 
 class DocumentInputForm extends Component {
@@ -43,11 +44,21 @@ class DocumentInputForm extends Component {
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
 					options.push(<option key={tid} value={tid}>{this.props.docData.terms[tid]}</option>);
 				}});
+
 				return (
 					<select value={this.props.value} onChange={this.handleChange.bind(this)}>
 						{options}
 					</select>
 				);
+
+				/*
+				return (
+					<Select>
+						<Option value="1">test</Option>
+					</Select>
+				);
+				*/
+
 			case 'radio':
 				let radioButtons = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
