@@ -1,7 +1,7 @@
 import {_isEmpty} from '../accessories/functions';
 
 const _emptyDocument = {
-	id: 0, uid: 0, created: 0, owner: false,
+	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
 	title: '',
 	doctype: 1,
 	trial: undefined, court: '', number: '', judge: '', prosecutor: '', lawyer: '',
@@ -14,14 +14,14 @@ const _emptyDocument = {
 	file: [{filename: ''}]
 };
 const _fieldAttrs = {
-	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'},
+	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
 	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
 	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
 	trial: {type: 'group', displayName: '재판정보', children: ['court', 'number', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
 	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: true},
 	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: true},
 	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: true},
-	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: true},
+	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
 	lawyer: {type: 'char', displayName: '변호사', form: 'text', parent: 'trial', multiple: false, required: true},
 	commitee: {type: 'taxonomy', displayName: '위원회', form: 'select', parent: '', multiple: true, required: true},
 	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
@@ -44,12 +44,12 @@ const _defaultTerms = {
 	1: '판결문', 7: '기타', 32: '열람', 33: '다운로드'
 }
 const _fname = {
-	id: 'id', uid: 'uid', created: 'created', owner: 'owner', subject: 'title', content: 'content',
+	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content', memo: 'memo',
 	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'number', f5: 'judge', f6: 'prosecutor', f7: 'lawyer', f8: 'commitee', f10: 'date',
 	f11: 'access', f12: 'author', f13: 'name', f14: 'class', f15: 'email', f16: 'phone', f17: 'image', f18: 'file'
 };
 const _sFname = {
-	id: 'id', uid: 'uid', created: 'created', owner: 'owner', title: 'subject', content: 'content',
+	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', title: 'subject', content: 'content', memo: 'memo',
 	doctype: 'f1', trial: 'f2', court: 'f3', number: 'f4', judge: 'f5', prosecutor: 'f6', lawyer: 'f7', commitee: 'f8', date: 'f10',
 	access: 'f11', author: 'f12', name: 'f13', class: 'f14', email: 'f15', phone: 'f16', image: 'f17', file: 'f18'
 };

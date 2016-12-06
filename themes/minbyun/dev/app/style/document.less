@@ -63,14 +63,24 @@
 			padding: 0 1em;
 			cursor: pointer;
 		}
-		button i {
-			font-size: 1.2em;
+		.document__bookmark {
+			display: inline-block;
 		}
-		button:first-child {
-			color: #ffffff;
-			background-color: @main-color
+		.document__bookmark i {
+			font-size: 2em;
+			color: @main-color;
 		}
-
+		.document__bookmark i + button {
+			margin-left: 0.5em;
+		}
+		.document__bookmark button {
+			color: @minor-color-2;
+			background-color: @main-color;
+		}
+		.document__remove-bookmark button {
+			color: @main-color;
+			background-color: @minor-color-2;
+		}
 	}
 	.document__header .table {
 		.table__row + .table__row {
@@ -194,17 +204,13 @@
 		margin-top: 1em;
 		text-align: right;
 	}
-	a:visited, a:link, a:hover, a:active {
-		text-decoration: none;
-		color: @main-color;
-	}
-	.file-text-editor__buttons a, button {
+	button {
 		padding: 0.5em 1em;
 		background-color: @main-color;
 		color: @minor-color-2;
 		border: solid 1px @main-color;
 	}
-	.file-text-editor__buttons a, button.reverse-color {
+	button.reverse-color {
 		background-color: @minor-color-2;
 		color: @main-color;
 	}
@@ -212,7 +218,7 @@
 		position: absolute;
 		top: 0; left: 0;
 	}
-	button + a {
+	button + button {
 		margin-left: 1em;
 	}
 }

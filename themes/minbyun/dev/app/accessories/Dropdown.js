@@ -58,6 +58,11 @@ class Dropdown extends Component {
 			this.setState({isUnfolded: this.props.isUnfolded});
 		}
 	}
+	componentWillReceiveProps(nextProps){
+		if(nextProps.hasOwnProperty('isUnfolded')){
+			this.setState({isUnfolded: nextProps.isUnfolded});
+		}
+	}
 	componentDidUpdate(prevProps, prevState){
 		this.setSize();
 		if(!this.props.hasOwnProperty('isUnfolded')){
@@ -114,7 +119,7 @@ class Dropdown extends Component {
 }
 Dropdown.propTypes = {
 	className: PropTypes.string,
-	unfolded: PropTypes.string,
+	isUnfolded: PropTypes.bool,
 	handleClick: PropTypes.func,
 	onResize: PropTypes.func
 };

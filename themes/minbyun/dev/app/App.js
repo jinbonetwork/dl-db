@@ -35,12 +35,9 @@ render((
 				<Route path="/user" component={User}>
 					<IndexRedirect to="/user/profile" />
 					<Route path="profile" component={UserProfile} />
-					<Route path="bookmarks" component={Bookmarks} />
-					<Route path="history" component={History} />
-					<Route path="documents" component={UserDocuments}>
-						<IndexRedirect to="/user/documents/page/1" />
-						<Route path="page/:page" component={UserDocuments} />
-					</Route>
+					<Route path="bookmarks(/page/:page)" component={Bookmarks} />
+					<Route path="history(/page/:page)" component={History} />
+					<Route path="documents(/page/:page)" component={UserDocuments} />
 				</Route>
 				<Route path="/document/new" component={NewDocument} />
 				<Route path="/document/:did" component={Document}>

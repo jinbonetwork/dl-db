@@ -12,26 +12,21 @@ const _sideDispNames = {
 class DocListItem extends Component {
 	side(){
 		let side = [];
-		for(let fn in _sideDispNames){
-			let value;
-			switch(fn){
-				case 'date': value = _displayDate(this.props.document[fn]); break;
-				case 'commitee': value = this.props.docData.terms[this.props.document[fn]]; break;
-				case 'name': case 'number': value = this.props.document[fn]; break;
-			}
-			if(value){
-				side.push(
-					<li key={fn}>
-						<span>{_sideDispNames[fn]}: </span>
-						<span>{value}</span>
-					</li>
-				);
-			}
-		}
+		for(let fn in _sideDispNames){ if(this.props.document[fn]){
+			side.push(
+				<li key={fn}>
+					<span>{_sideDispNames[fn]}: </span>
+					<span>{this.props.document[fn]}</span>
+				</li>
+			);
+		}}
+		return side;
 	}
-	tagged(text){ if(!text) return text;
-		let tagged = [];
+	tagged(text){
 		const keywords = this.props.keywords;
+		if(!keywords || !text) return text;
+
+		let tagged = [];
 		let matches = text.match(new RegExp(keywords, 'gm')); if(!matches) return text;
 		let texts = text.split(new RegExp(keywords));
 		matches.forEach((kw, index) => {
@@ -48,7 +43,7 @@ class DocListItem extends Component {
 		return (
 			<div className="doclist-item">
 				<div className="doclist-item__header">
-					<span>{'['+this.props.docData.terms[this.props.document.doctype]+']'}</span>
+					<span>{'['+this.props.document.doctype+']'}</span>
 					<LinkIf className="doclist-item__title" to={'/document/'+this.props.document.id} if={_isCommon(['admin', 'view'], this.props.userRole)} isVisible={true}>
 						{title}
 					</LinkIf>

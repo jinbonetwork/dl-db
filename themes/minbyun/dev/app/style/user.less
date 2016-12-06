@@ -2,6 +2,8 @@
 
 @user-menu-width: 13em;
 @user-profile-col-width: 8em;
+@bookmarks-col-width: 8em;
+@history-col-width: 8em;
 
 .user {
 	margin-top: 10%;
@@ -75,5 +77,119 @@
 	}
 	.table__row:first-child .table__col {
 		border-top-width: 1px;
+	}
+}
+.bookmarks {
+	.bookmarks__content {
+		background-color: @minor-color-2;
+		padding: 1em;
+		margin-bottom: 3%;
+	}
+	.table {
+		margin: 3%;
+	}
+	.table__row:first-child {
+		text-align: center;
+		font-weight: bold;
+		border-bottom: solid 2px @main-color;
+	}
+	.table__row + .table__row {
+		border-bottom: solid 1px @main-color;
+	}
+	.table__col {
+		line-height: 3.3em;
+	}
+	.table__col:first-child {
+		width: @bookmarks-col-width;
+		text-align: center;
+	}
+	.table__col + .table__col {
+		margin-left: @bookmarks-col-width;
+	}
+	.table__row + .table__row .table__col + .table__col {
+		position: relative;
+		color: @main-color;
+		padding-right: 2em;
+	}
+	.bookmarks__btnwrap {
+		position: absolute;
+		top: 0; right: 0;
+		line-height: inherit;
+	}
+	.bookmarks__remove {
+		padding: 0;
+		border: 0;
+		background-color: transparent;
+	}
+	.bookmarks__remove i {
+		font-size: 2em;
+	}
+}
+
+.history {
+	.history__content {
+		background-color: @minor-color-2;
+		padding: 1em;
+		margin-bottom: 3%;
+	}
+	.table {
+		margin: 3%;
+	}
+	.table__row:first-child {
+		text-align: center;
+		font-weight: bold;
+		line-height: 3.3em;
+		border-bottom: solid 2px @main-color;
+	}
+	.table__row + .table__row {
+		border-bottom: solid 1px @main-color;
+	}
+	.table__col:first-child {
+		width: @history-col-width;
+		text-align: center;
+	}
+	.table__row + .table__row {
+		padding: 0.5em 0;
+	}
+	.table__row + .table__row .table__col {
+		line-height: 2em;
+	}
+	.table__col + .table__col {
+		margin-left: @history-col-width;
+	}
+	.table__row + .table__row .table__col + .table__col {
+		position: relative;
+		padding-right: 2em;
+	}
+	.history__keyword {
+		color: @main-color;
+	}
+	.history__doctypes i, .history__period i {
+		font-size: 1.5em;
+	}
+	.history__doctypes {
+		margin-right: 2em;
+	}
+	.history__doctypes span {
+		margin-left: 0.5em;
+	}
+	.history__period {
+		display: inline-block;
+	}
+	.history__period span + span {
+		margin-left: 0.5em;
+	}
+	.history__btnwrap {
+		position: absolute;
+		top: 0; right: 0;
+		line-height: inherit;
+	}
+	.history__remove {
+		padding: 0;
+		border: 0;
+		background-color: transparent;
+	}
+	.history__remove i {
+		font-size: 2em;
 	}
 }

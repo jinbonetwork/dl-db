@@ -8,14 +8,15 @@ class User extends Component {
 		const child = this.props.children;
 		let path, props;
 		if(child){
-			path = child.props.route.path;
+			path = child.props.route.path.replace('(/page/:page)', '');
 			switch(path){
 				case 'profile':
 					props = {userProfile: this.props.userProfile}; break;
-				case 'bookmarks':
-					props = {}; break;
-				case 'history':
-					props = {}; break;
+				case 'bookmarks': case 'history':
+					props = {
+						fetchData: this.props.fetchData,
+						setMessage: this.props.setMessage
+					}; break;
 				case 'documents':
 					props = {
 						userData: this.props.userData,

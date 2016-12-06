@@ -22,6 +22,10 @@ class DdSelect extends Component {
 			this.setState({selected: nextProps.selected});
 		}
 	}
+	componentDidUpdate(prevProps, prevState){
+	
+		if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+	}
 	handleClick(which, value){
 		if(which == 'item'){
 			let selected = _pushpull(this.state.selected, value);
@@ -34,7 +38,6 @@ class DdSelect extends Component {
 		else if(which == 'head'){
 			this.setState({isUnfolded: !this.state.isUnfolded});
 		}
-
 	}
 	render(){
 		let children = Children.map(this.props.children, (child) => { if(child){

@@ -36,7 +36,9 @@ class DigitalLibraryContainer extends Component {
 		};
 	}
 	componentDidMount(){
-		this.fetchContData();
+		this.fetchContData((data) => {
+			if(!data.role) this.props.router.push('/login');
+		});
 	}
 	fetchData(method, url, arg2, arg3){
 		let data = (method == 'get' ? null : arg2);
@@ -107,19 +109,23 @@ class DigitalLibraryContainer extends Component {
 			return this.handleOfMessage.bind(this, 'unset');
 		}
 	}
+	unsetUserData(){
+		this.setState({userData: update(this.state.userData, {
+			user: {$set: {uid: 0}}, role: {$set: null}
+		})});
+	}
 	handleOfMessage(actOnClick, arg){
 		this.setState({message: null});
 		switch(actOnClick){
 			case 'goBack':
 				this.props.router.goBack(); break;
 			case 'goToLogin':
-				this.setState({userData: update(this.state.userData, {
-					user: {$set: {uid: 0}}, role: {$set: null}
-				})});
+				this.unsetUserData();
 				this.props.router.push('/login'); break;
 			case 'goTo':
-				let path = arg;
-				if(path) this.props.router.push(path); break;
+				if(arg) this.props.router.push(arg); break;
+			case 'replace':
+				if(arg) this.props.router.replace(arg); break;
 			default:
 		}
 	}
@@ -142,6 +148,7 @@ class DigitalLibraryContainer extends Component {
 			message: this.state.message,
 			fetchContData: this.fetchContData.bind(this),
 			setMessage: this.setMessage.bind(this),
+			unsetUserData: this.unsetUserData.bind(this),
 			fetchData: this.fetchData.bind(this),
 			updateSearchQuery: this.updateSearchQuery.bind(this)
 		});

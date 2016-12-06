@@ -39,6 +39,7 @@ class SearchBar extends Component {
 	}
 	handleclick(which, arg){
 		if(which == 'search'){
+			if(!this.props.query.keyword){ this.props.setMessage('검색어를 입력하세요.', 'unset'); return; }
 			let period = _period(this.props.query.from, this.props.query.to);
 			let from = (period[0] ? period[0] : '');
 			let to = (period[1] ? period[1] : '');
@@ -139,7 +140,8 @@ SearchBar.propTypes = {
 	query: PropTypes.object.isRequired,
 	update: PropTypes.func.isRequired,
 	docData: PropTypes.object.isRequired,
-	router: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired
+	router: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired,
+	setMessage: PropTypes.func.isRequired
 }
 
 export default withRouter(SearchBar);

@@ -11,12 +11,6 @@ class Login extends Component {
 			password: ''
 		}
 	}
-	componentWillMount(){
-		if(this.props.userData.role) this.props.router.goBack();
-	}
-	componentWillReceiveProps(nextProps){
-		if(nextProps.userData.role) nextProps.router.goBack();
-	}
 	submit(){ if(this.props.userData.type){
 		let data, loginUri;
 		if(this.props.userData.type == 'xe'){
@@ -43,9 +37,13 @@ class Login extends Component {
 
 		this.props.fetchData('post', loginUri, formData, (response) => {
 			if(response){
-				this.props.fetchContData(({role}) => { if(!role){
-					this.props.setMessage('로그인 정보가 잘못되었습니다.', 'unset');
-				}});
+				this.props.fetchContData((data) => {
+					if(data.role){
+						this.props.router.goBack();
+					} else {
+						this.props.setMessage('로그인 정보가 잘못되었습니다.', 'unset');
+					}
+				});
 			}
 		});
 	}}
@@ -66,7 +64,7 @@ class Login extends Component {
 		}
 	}
 	render(){
-		if(!this.props.userData.user) return null;
+		//if(!this.props.userData.role) return null;
 		return(
 			<div className="login">
 				<div className="login__header">
