@@ -108,10 +108,10 @@ class DBM extends \DLDB\Objects {
 						case 'date':
 							$period = explode("-",$v);
 							if($period[0]) {
-								$que .= ($que ? " AND " : "")."d.".$k." >= '".str_replace(".","-",$v)."'";
+								$que .= ($que ? " AND " : "")."d.".$k." >= '".str_replace(".","-",$period[0])."'";
 							}
 							if($period[1]) {
-								$que .= ($que ? " AND " : "")."d.".$k." <= '".str_replace(".","-",$v)."'";
+								$que .= ($que ? " AND " : "")."d.".$k." <= '".str_replace(".","-",$period[1])."'";
 							}
 							break;
 						default:
