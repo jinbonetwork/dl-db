@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {withRouter} from 'react-router';
 import DocListItem from '../documentList/DocListItem';
 import Pagination from '../accessories/Pagination';
 import {Table, Row, Column} from '../accessories/Table';
@@ -11,27 +12,28 @@ class UserDocuments extends Component {
 	constructor(){
 		super();
 		this.state = {
-			documents: null,
+			sDocuments: [],
 			numOfPages: 1
 		};
 	}
 	componentDidMount(){
-		this.fetchData(this.props.params.page);
+		if(!this.props.params.page) this.props.router.push('/user/documents/page/1');
+		else this.fetchData(this.props.params.page);
 	}
 	componentWillReceiveProps(nextProps){
-		if(nextProps.params.page != this.props.params.page){
+		if(!nextProps.params.page) nextProps.router.push('/user/documents/page/1');
+		else if(nextProps.params.page != this.props.params.page){
 			this.fetchData(nextProps.params.page);
 		}
 	}
 	fetchData(page){
-		if(!page) page = 1;
 		let unsetProcessing = this.props.setMessage(null);
 		this.props.fetchData('get', '/api/user/documents?page='+page, (data) => {
 			unsetProcessing();
 			if(data){
 				if(data.result.cnt > 0){
 					this.setState({
-						documents: data.documents.map((doc) => this.userDoc(_convertToDoc(doc))),
+						sDocuments: data.documents,
 						numOfPages: data.result.total_page
 					});
 				} else {
@@ -48,17 +50,19 @@ class UserDocuments extends Component {
 		}});
 	}
 	render(){
-		const page = (this.props.params.page ? parseInt(this.props.params.page) : 1);
-
-		let documents = this.state.documents && this.state.documents.map((doc) => (
+		const documents =  this.state.sDocuments.map((doc) => this.userDoc(_convertToDoc(doc)));
+		const page = parseInt(this.props.params.page);
+		const numOfPages = this.state.numOfPages;
+		
+		const documentList = documents.map((doc) => (
 			<DocListItem key={doc.id} document={doc} docData={this.props.docData} userRole={this.props.userData.role} />
 		));
 		return (
 			<div className="userdocs">
 				<div className="userdocs__doclist">
-					{documents}
+					{documentList}
 				</div>
-				<Pagination url="/user/documents/page/" page={page} numOfPages={this.state.numOfPages} />
+				<Pagination url="/user/documents/page/" page={page} numOfPages={numOfPages} />
 			</div>
 		);
 	}
@@ -67,7 +71,11 @@ UserDocuments.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
 	fetchData: PropTypes.func,
-	setMessage: PropTypes.func
+	setMessage: PropTypes.func,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
+	}).isRequired
 };
 
-export default UserDocuments;
+export default withRouter(UserDocuments);

@@ -21,7 +21,7 @@ const _fieldAttrs = {
 	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: true},
 	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: true},
 	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: true},
-	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: true},
+	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
 	lawyer: {type: 'char', displayName: '변호사', form: 'text', parent: 'trial', multiple: false, required: true},
 	commitee: {type: 'taxonomy', displayName: '위원회', form: 'select', parent: '', multiple: true, required: true},
 	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},

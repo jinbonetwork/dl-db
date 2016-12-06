@@ -8,17 +8,15 @@ class History extends Component {
 	constructor(){
 		super();
 		this.state = {
-			history: null,
+			history: [],
 			numOfPages: 1
 		};
 	}
 	componentDidMount(){
-		if(!this.props.params.page) this.props.router.push('/user/history/page/1');
-		else this.fetchData(this.props.params.page);
+		this.fetchData(this.props.params.page ? this.props.params.page : 1);
 	}
 	componentWillReceiveProps(nextProps){
-		if(!nextProps.params.page) nextProps.router.push('/user/history/page/1');
-		else if(nextProps.params.page != this.props.params.page){
+		if(nextProps.params.page != this.props.params.page){
 			this.fetchData(nextProps.params.page);
 		}
 	}
@@ -51,13 +49,13 @@ class History extends Component {
 		if(which == 'remove'){
 			const hid = arg;
 			this.props.fetchData('post', '/api/user/history?mode=delete&hid='+hid, null, (data) => { if(data){
-				this.props.router.push('/user/history');
+				this.fetchData(this.props.params.page ? this.props.params.page : 1);
 			}});
 		}
 	}
 	render(){
-		const page = parseInt(this.props.params.page);
-		const rows = this.state.history && this.state.history.map((item) => (
+		const page = (this.props.params.page ?  parseInt(this.props.params.page) : 1);
+		const rows = this.state.history.map((item) => (
 			<Row key={item.hid}>
 				<Column><span>{item.searchDate}</span></Column>
 				<Column>

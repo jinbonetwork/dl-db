@@ -14,7 +14,7 @@ class Document extends Component {
 	constructor(){
 		super();
 		this.state = {
-			document: null,
+			document: {},
 			fileText: {}
 		};
 	}
@@ -96,8 +96,8 @@ class Document extends Component {
 		);}
 	}
 	render(){
-		if(!this.state.document) return null;
 		const userRole = this.props.userData.role;
+
 		const fieldsInHeader = {image: null, file: null, date: null};
 		const fieldsInContents = [];
 		for(let fn in this.state.document){
@@ -113,9 +113,14 @@ class Document extends Component {
 				}
 			}
 		};
+
+		const children = this.props.children && cloneElement(this.props.children, {
+			document: this.state.document,  fileText: this.state.fileText, submit: this.submitFileText.bind(this)
+		})
+
 		return (
 			<div className="document">
-				<div className="document--back" onClick={this.props.router.goBack.bind(this)}>
+				<div className="document--back" onClick={this.props.router.goBack}>
 					<i className="pe-7f-back pe-va"></i> <span>이전 페이지로</span>
 				</div>
 				<div className="document__wrap">
@@ -126,7 +131,7 @@ class Document extends Component {
 							<div className="document__buttons">
 								{this.bookmark()}
 								<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
-									수정하기
+									<span>수정하기</span>
 								</LinkIf>
 							</div>
 							<Table>
@@ -139,9 +144,7 @@ class Document extends Component {
 						{fieldsInContents}
 					</Table>
 				</div>
-				{this.props.children && cloneElement(this.props.children, {
-					document: this.state.document,  fileText: this.state.fileText, submit: this.submitFileText.bind(this)
-				})}
+				{children}
 			</div>
 		);
 	}

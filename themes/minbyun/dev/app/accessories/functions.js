@@ -48,13 +48,24 @@ const _displayDateOfMilliseconds = (milliseconds) => {
 	let date = regDate.getDate(); if(date < 10) date = '0'+date;
 	return  year+'/'+month+'/'+date;
 }
-const _isCommon = (array1, array2) => {
-	for(let i in array1){
-		for(let j in array2){
-			if(array1[i] == array2[j]) return true;
+const _isCommon = (array1, array2, equal) => {
+	if(!equal){
+		for(let i in array1){
+			for(let j in array2){
+				if(array1[i] == array2[j]) return true;
+			}
+		}
+		return false;
+	} else {
+		if(array1.length != array2.length) return false;
+		for(let i in array1){
+			let isEqual = false;
+			for(let j in array2){
+				if(array1[i] == array2[j])break;
+			}
 		}
 	}
-	return false;
+
 }
 const _params = (params, excepts) => {
 	let array = [];

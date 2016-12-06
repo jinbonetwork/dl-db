@@ -48,11 +48,15 @@ class FileTextEditor extends Component {
 	handleClick(which, event){ switch(which){
 		case 'submit':
 			this.props.submit(this.props.params.fid, this.state.text);
-			this.props.router.push('/document/'+this.props.document.id);
+			this.props.router.goBack('/document/'+this.props.document.id);
+			break;
+		case 'cancel':
+			this.props.router.goBack('/document/'+this.props.document.id);
 			break;
 		case 'alterScreen':
 			this.setState({isFullScreen: !this.state.isFullScreen});
 			break;
+		default:
 	}}
 	fileMeta(header){
 		let meta = [];
@@ -64,7 +68,7 @@ class FileTextEditor extends Component {
 	render(){
 		let className = (this.state.isFullScreen ? 'file-text-editor file-text-editor__full-screen' : 'file-text-editor');
 		const fid = this.props.params.fid;
-		const filename = this.props.document && this.props.document.file.find((f) => f.fid == fid).filename;
+		const filename = this.props.document.file && this.props.document.file.find((f) => f.fid == fid).filename;
 		const fileMeta = (!_isEmpty(this.props.fileText) ? this.fileMeta(this.props.fileText[fid].header) : null);
 		return (
 			<div>
@@ -80,7 +84,7 @@ class FileTextEditor extends Component {
 							{(this.state.isFullScreen ? '화면축소' : '화면확대')}
 						</button>
 						<button type="button" onClick={this.handleClick.bind(this, 'submit')}>저장</button>
-						<Link className="reverse-color" to={'/document/'+this.props.document.id}>취소</Link>
+						<button type="button" className="reverse-color" onClick={this.handleClick.bind(this, 'cancel')}>취소</button>
 					</div>
 				</div>
 			</div>
@@ -93,7 +97,8 @@ FileTextEditor.propType = {
 	submit: PropTypes.func,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
-		goBack: PropTypes.func.isRequired
+		goBack: PropTypes.func.isRequired,
+		replace: PropTypes.func.isRequired
 	}).isRequired
 };
 

@@ -204,17 +204,13 @@
 		margin-top: 1em;
 		text-align: right;
 	}
-	a:visited, a:link, a:hover, a:active {
-		text-decoration: none;
-		color: @main-color;
-	}
-	.file-text-editor__buttons a, button {
+	button {
 		padding: 0.5em 1em;
 		background-color: @main-color;
 		color: @minor-color-2;
 		border: solid 1px @main-color;
 	}
-	.file-text-editor__buttons a, button.reverse-color {
+	button.reverse-color {
 		background-color: @minor-color-2;
 		color: @main-color;
 	}
@@ -222,7 +218,7 @@
 		position: absolute;
 		top: 0; left: 0;
 	}
-	button + a {
+	button + button {
 		margin-left: 1em;
 	}
 }

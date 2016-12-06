@@ -14,12 +14,10 @@ class Bookmarks extends Component {
 		};
 	}
 	componentDidMount(){
-		if(!this.props.params.page) this.props.router.push('/user/bookmarks/page/1');
-		else this.fetchData(this.props.params.page);
+		this.fetchData(this.props.params.page ? this.props.params.page : 1);
 	}
 	componentWillReceiveProps(nextProps){
-		if(!nextProps.params.page) nextProps.router.push('/user/bookmarks/page/1');
-		else if(nextProps.params.page != this.props.params.page){
+		if(nextProps.params.page != this.props.params.page){
 			this.fetchData(nextProps.params.page);
 		}
 	}
@@ -51,12 +49,12 @@ class Bookmarks extends Component {
 		if(which == 'remove'){
 			const bid = arg;
 			this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+bid, null, (data) => {if(data){
-				this.props.router.push('/user/bookmarks');
+				this.fetchData(this.props.params.page ? this.props.params.page : 1);
 			}});
 		}
 	}
 	render(){
-		const page = parseInt(this.props.params.page);
+		const page = (this.props.params.page ?  parseInt(this.props.params.page) : 1);
 		const rows = this.state.bookmarks && this.state.bookmarks.map((bmk) => (
 			<Row key={bmk.id}>
 				<Column><span>{bmk.regDate}</span></Column>
@@ -91,7 +89,8 @@ Bookmarks.propTypes = {
 	setMessage: PropTypes.func,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
-		goBack: PropTypes.func.isRequired
+		goBack: PropTypes.func.isRequired,
+		replace: PropTypes.func.isRequired
 	}).isRequired
 };
 
