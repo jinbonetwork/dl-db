@@ -1,8 +1,9 @@
 import React, {Component, PropTypes} from 'react';
-import {withRouter} from 'react-router';
+import {withRouter, Link} from 'react-router';
 import Pagination from '../accessories/Pagination';
 import {Table, Row, Column} from '../accessories/Table';
 import {_displayDateOfMilliseconds} from '../accessories/functions';
+import {_sFname} from '../schema/docSchema';
 
 class History extends Component {
 	constructor(){
@@ -37,13 +38,15 @@ class History extends Component {
 		});
 	}
 	history(item){
+		const period = item.options[_sFname['date']];
 		return {
 			hid: item.hid,
 			searchDate: _displayDateOfMilliseconds(item.search_date*1000),
 			keyword: item.query,
-			doctypes: '판결문, 기타',
-			from: '2015.01',
-			to: '2016.07'
+			doctypes: item.options[_sFname['doctype']],
+			from: (period && period.from ? period.from : ''),
+			to: (period && period.to ? period.to : ''),
+			params: item.query_string
 		}
 	}
 	handleClick(which, arg){
@@ -60,17 +63,19 @@ class History extends Component {
 			<Row key={item.hid}>
 				<Column><span>{item.searchDate}</span></Column>
 				<Column>
-					<div className="history__keyword"><span>{item.keyword}</span></div>
+					<div className="history__keyword">
+						<Link to={'/search?'+item.params}>{item.keyword}</Link>
+					</div>
 					<div>
-						<span className="history__doctypes">
+						{item.doctypes && <span className="history__doctypes">
 							<i className="pe-7s-edit pe-va"></i>
 							<span>{item.doctypes}</span>
-						</span>
-						<span className="history__period">
-							<span>{item.from}</span>
+						</span>}
+						{(item.from || item.to) && <span className="history__period">
+							<span>{item.from || '_'}</span>
 							<span><i className="pe-7s-right-arrow pe-va"></i></span>
-							<span>{item.to}</span>
-						</span>
+							<span>{item.to || '_'}</span>
+						</span>}
 					</div>
 					<div className="history__btnwrap">
 						<button type="button" className="history__remove" onClick={this.handleClick.bind(this, 'remove', item.hid)}>
