@@ -64,12 +64,12 @@ class Elastic extends \DLDB\Objects {
 							}
 							break;
 						case 'date':
-							$period = explode("-",$v);
+							$period = preg_split("/-/i",$v);
 							if($period[0]) {
-								$filter[$k]['from'] = str_replace(".","-",$v);
+								$filter[$k]['from'] = str_replace(".","-",$period[0]);
 							}
 							if($period[1]) {
-								$filter[$k]['to'] = str_replace(".","-",$v);
+								$filter[$k]['to'] = str_replace(".","-",$period[1]);
 							}
 							break;
 						default:
@@ -148,7 +148,7 @@ class Elastic extends \DLDB\Objects {
 				)
 			);
 			foreach($filter as $fk => $_v) {
-				$params['body']['filter']['and']['filters']['range'][$fk] = $_v;
+				$params['body']['filter']['and']['filters'][0]['range'][$fk] = $_v;
 			}
 		}
 
