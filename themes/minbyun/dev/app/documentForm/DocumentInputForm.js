@@ -9,8 +9,14 @@ import {Select, Option} from '../accessories/Select';
 import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
 
 class DocumentInputForm extends Component {
-	handleChange(event){
-		let value = (_fieldAttrs[this.props.fname].form != 'file' ? event.target.value : event.target.files[0]);
+	handleChange(arg){
+		//let value = (form != 'file' ? event.target.value : event.target.files[0]);
+		let value;
+		switch(_fieldAttrs[this.props.fname].form){
+			case 'file': value = arg.target.files[0]; break;
+			case 'select': value = arg; break;
+			default: value = arg.target.value;
+		}
 		this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
 	}
 	render(){
@@ -40,6 +46,7 @@ class DocumentInputForm extends Component {
 					/>
 				)
 			case 'select':
+			/*
 				let options = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
 					options.push(<option key={tid} value={tid}>{this.props.docData.terms[tid]}</option>);
@@ -50,14 +57,18 @@ class DocumentInputForm extends Component {
 						{options}
 					</select>
 				);
+				*/
 
-				/*
+				let options = [];
+				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
+					options.push(<Option key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Option>);
+				}});
 				return (
-					<Select>
-						<Option value="1">test</Option>
+					<Select selected={this.props.value} onChange={this.handleChange.bind(this)}>
+						{options}
 					</Select>
 				);
-				*/
+
 
 			case 'radio':
 				let radioButtons = [];
