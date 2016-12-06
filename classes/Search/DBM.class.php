@@ -6,6 +6,7 @@ class DBM extends \DLDB\Objects {
 	private static $cids;
 	private static $taxonomy;
 	private static $taxonomy_terms;
+	private static $types;
 	private static $que;
 	private static $errmsg;
 
@@ -45,8 +46,10 @@ class DBM extends \DLDB\Objects {
 	}
 	
 	public static function getList($q,$args=null,$order="score",$page=1,$limit=20) {
-		if(!$page) $page = 1;
 		$dbm = \DLDB\DBM::instance();
+		$context = \DLDB\Model\Context::instance();
+
+		if(!$page) $page = 1;
 
 		$que = self::makeQuery($q,$args,"d.*, ".self::makeMatch($q)." AS score");
 		$que .= " ORDER BY ".$order." DESC LIMIT ".( ($page - 1) * $limit ).",".$limit;
@@ -54,7 +57,14 @@ class DBM extends \DLDB\Objects {
 
 		$documents = array();
 		while($row = $dbm->getFetchArray($que)) {
-			$documents[] = self::fetchDocument($row);
+			$d = self::fetchDocument($row);
+			$documents[] = array(
+				'_index' => $context->getProperty('database.DB'),
+				'_type' => (self::$types ? self::$types : 'main'),
+				'_id' => $d['id'],
+				'_score' => $d['score'],
+				'_source' => $d
+			);
 		}
 		return $documents;
 	}
@@ -103,6 +113,7 @@ class DBM extends \DLDB\Objects {
 						case 'taxonomy':
 							if(!is_array($v)) $v = array($v);
 							$que .= ($que ? " AND " : "")."t.tid IN (".implode(',',$v).")";
+							self::$types = implode(",",$v);
 							$taxonomy_exist = true;
 							break;
 						case 'date':
@@ -162,6 +173,7 @@ class DBM extends \DLDB\Objects {
 		} else {
 			$document['owner'] = 0;
 		}
+		unset($document['custom']);
 
 		return $document;
 	}

@@ -10,7 +10,7 @@ CREATE TABLE dldb_bookmark (
 	KEY `UID`(`uid`,`regdate`),
 	KEY `DID`(`did`,`regdate`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_documents`;
 CREATE TABLE `dldb_documents` (
@@ -22,9 +22,10 @@ CREATE TABLE `dldb_documents` (
 	`uid`		bigint(11) NOT NULL DEFAULT 0,
 	`created`	int(10) NOT NULL DEFAULT 0,
 
-	KEY `UID`(`uid`)
+	KEY `UID`(`uid`),
+	FULLTEXT `skey` (`subject`,`content`,`memo`) WITH PARSER mecab
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_options`;
 CREATE TABLE `dldb_options` (
@@ -34,7 +35,7 @@ CREATE TABLE `dldb_options` (
 
 	KEY `NAME` (`name`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_fields`;
 CREATE TABLE `dldb_fields` (
@@ -56,7 +57,7 @@ CREATE TABLE `dldb_fields` (
 
 	KEY `IDX` (`tables`,`parent`,`idx`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_files`;
 CREATE TABLE `dldb_files` (
@@ -78,7 +79,7 @@ CREATE TABLE `dldb_files` (
 	KEY `DID`(`did`),
 	KEY `FILENAME`(`filename`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_history`;
 CREATE TABLE `dldb_history` (
@@ -91,7 +92,7 @@ CREATE TABLE `dldb_history` (
 	`query_string`	text,
 
 	KEY `UID`(`uid`,`hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_log`;
 CREATE TABLE `dldb_log` (
@@ -107,7 +108,7 @@ CREATE TABLE `dldb_log` (
 	KEY `Action` (`action`,`nid`),
 	KEY `Editor` (`editor`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS dldb_user_roles;
 CREATE TABLE dldb_user_roles (
@@ -116,7 +117,7 @@ CREATE TABLE dldb_user_roles (
 
 	KEY  `UID` (`uid`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_searchlog`;
 CREATE TABLE `dldb_searchlog` (
@@ -129,7 +130,7 @@ CREATE TABLE `dldb_searchlog` (
 
 	KEY `UID`(`uid`,`sdate`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_taxonomy`;
 CREATE TABLE `dldb_taxonomy` (
@@ -139,7 +140,7 @@ CREATE TABLE `dldb_taxonomy` (
 	`active`	char(1) DEFAULT 1,
 
 	KEY `SKEY` (`skey`,`cid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_taxonomy_terms`;
 CREATE TABLE `dldb_taxonomy_terms` (
@@ -156,7 +157,7 @@ CREATE TABLE `dldb_taxonomy_terms` (
 	KEY `TID` (`tid`,`idx`),
 	KEY `PID` (`parent`,`idx`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_taxonomy_term_relative`;
 CREATE TABLE `dldb_taxonomy_term_relative` (
@@ -165,7 +166,7 @@ CREATE TABLE `dldb_taxonomy_term_relative` (
 
 	PRIMARY KEY `TID` (`tid`,`did`)
 
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_members`;
 CREATE TABLE `dldb_members` (
@@ -180,7 +181,7 @@ CREATE TABLE `dldb_members` (
 	KEY `UID` (`uid`),
 	KEY `NAME` (`name`),
 	KEY `CLASS` (`class`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `dldb_file_filter`;
 CREATE TABLE `dldb_file_filter` (
@@ -190,4 +191,4 @@ CREATE TABLE `dldb_file_filter` (
 	`pattern`	char(256),
 
 	KEY `EXT` (`ext`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
