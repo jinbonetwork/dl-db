@@ -23,8 +23,9 @@ class DdSelect extends Component {
 		}
 	}
 	componentDidUpdate(prevProps, prevState){
-	
-		if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+		if(_isCommon(prevState.selected, this.state.selected, true) && prevState.isUnfolded && this.state.isUnfolded){
+			this.setState({isUnfolded: false});
+		}
 	}
 	handleClick(which, value){
 		if(which == 'item'){

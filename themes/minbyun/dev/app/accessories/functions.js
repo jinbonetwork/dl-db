@@ -61,11 +61,12 @@ const _isCommon = (array1, array2, equal) => {
 		for(let i in array1){
 			let isEqual = false;
 			for(let j in array2){
-				if(array1[i] == array2[j])break;
+				if(array1[i] == array2[j]){isEqual = true; break;}
 			}
+			if(!isEqual) return false;
 		}
+		return true;
 	}
-
 }
 const _params = (params, excepts) => {
 	let array = [];
