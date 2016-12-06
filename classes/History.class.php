@@ -52,7 +52,7 @@ class History extends \DLDB\Objects {
 	public static function getQueryHash($que='') {
 		if(!$que) $que = self::getQuery();
 
-		return hash('sha256',$query_string);
+		return hash('sha256',$que);
 	}
 
 	public static function insert($uid,$q,$options,$query_string='') {

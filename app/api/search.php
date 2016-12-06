@@ -165,7 +165,7 @@ class search extends \DLDB\Controller {
 							}
 							$c = 0;
 							foreach($v as $t) {
-								$options[$k] .= ($c++ ? "," : "").$this->taxonomy_terms[$this->fields[$key]['cid']][$t]['name'];
+								$options[$k] .= ($c++ ? "," : "").$this->taxonomy[$this->fields[$key]['cid']][$t]['name'];
 							}
 							break;
 						case 'date':
