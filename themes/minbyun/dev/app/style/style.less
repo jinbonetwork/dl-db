@@ -11,7 +11,7 @@ body, html {
 	background-color: @minor-color-1;
 	margin: 0;
 }
-input[type=text], input[type=password], select, textarea, button {
+input[type=text], input[type=password], textarea, button {
 	font-family:'Nanum Barun Gothic';
 	font-size: @font-size;
 	color: @font-color;
@@ -29,9 +29,6 @@ input::placeholder {
 }
 input[type=text], input[type=password], button {
 	appearance: none;
-}
-select {
-	height: 3em;
 }
 button {
 	cursor: pointer;
@@ -55,6 +52,36 @@ a, a:visited, a:link, a:hover, a:active {
 	color: inherit;
 	text-decoration: none;
 }
+.select.dropdown {
+	.dropdown__headwrap {
+		border: solid 1px @main-color;
+	}
+	&.dropdown--unfolded .dropdown__headwrap {
+		border-bottom-color: @minor-color-2;
+	}
+	.ddhead {
+		background-color: @minor-color-2;
+		text-align: left;
+		padding-left: 1em;
+		line-height: 3em;
+	}
+	.ddarrow i {
+		color: @main-color;
+		font-weight: bold;
+		font-size: 2em;
+		width: 1em;
+	}
+	.dropdown__items {
+		background-color: @minor-color-2;
+		border: solid 1px @main-color;
+		text-align: left;
+	}
+	.dditem {
+		line-height: 2.5em;
+		cursor: pointer;
+	}
+}
+
 .textarea {
 	textarea {
 		line-height: 1.5em;

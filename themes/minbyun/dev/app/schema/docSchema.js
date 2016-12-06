@@ -4,7 +4,7 @@ const _emptyDocument = {
 	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
 	title: '',
 	doctype: 1,
-	trial: undefined, court: '', number: '', judge: '', prosecutor: '', lawyer: '',
+	trial: undefined, court: '', sentence: '', number: '', trialname: '', judge: '', prosecutor: '', lawyer: '',
 	commitee: [7],
 	content: '',
 	date: {year: '', month: ''},
@@ -17,15 +17,17 @@ const _fieldAttrs = {
 	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
 	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
 	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
-	trial: {type: 'group', displayName: '재판정보', children: ['court', 'number', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
+	trial: {type: 'group', displayName: '사건정보', children: ['court', 'number', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
 	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: true},
+	sentence: {type: 'date', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: true},
 	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: true},
+	trialname: {type: 'char', displayName: '사건명', form: 'text', parent: 'trial', multiple: false, required: true},
 	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: true},
 	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
 	lawyer: {type: 'char', displayName: '변호사', form: 'text', parent: 'trial', multiple: false, required: true},
 	commitee: {type: 'taxonomy', displayName: '위원회', form: 'select', parent: '', multiple: true, required: true},
 	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
-	date: {type: 'date', displayName: '자료 실제 작성 년월', form: 'Ym', parent: '', multiple: false, required: true},
+	date: {type: 'date', displayName: '자료 작성 시점', form: 'Ym', parent: '', multiple: false, required: true},
 	access: {type: 'taxonomy', displayName: '자료 제공 방식', form: 'radio', parent: '', multiple: false, required: true},
 	author: {type: 'group', displayName: '담당자/작성자', children: ['name', 'class', 'email', 'phone'], form: 'fieldset', required: true},
 	name: {type: 'char', displayName: '이름', form: 'search', parent: 'author', multiple: false, required: true},
@@ -45,13 +47,13 @@ const _defaultTerms = {
 }
 const _fname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content', memo: 'memo',
-	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'number', f5: 'judge', f6: 'prosecutor', f7: 'lawyer', f8: 'commitee', f10: 'date',
-	f11: 'access', f12: 'author', f13: 'name', f14: 'class', f15: 'email', f16: 'phone', f17: 'image', f18: 'file'
+	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'sentence', f5: 'number', f6: 'trialname', f7: 'judge', f8: 'prosecutor', f9: 'lawyer', f10: 'commitee', f12: 'date',
+	f13: 'access', f14: 'author', f15: 'name', f16: 'class', f17: 'email', f18: 'phone', f19: 'image', f20: 'file'
 };
 const _sFname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', title: 'subject', content: 'content', memo: 'memo',
-	doctype: 'f1', trial: 'f2', court: 'f3', number: 'f4', judge: 'f5', prosecutor: 'f6', lawyer: 'f7', commitee: 'f8', date: 'f10',
-	access: 'f11', author: 'f12', name: 'f13', class: 'f14', email: 'f15', phone: 'f16', image: 'f17', file: 'f18'
+	doctype: 'f1', trial: 'f2', court: 'f3', sentence: 'f4', number: 'f5', trialname: 'f6', judge: 'f7', prosecutor: 'f8', lawyer: 'f9', commitee: 'f10', date: 'f12',
+	access: 'f13', author: 'f14', name: 'f15', class: 'f16', email: 'f17', phone: 'f18', image: 'f19', file: 'f20'
 };
 const _convertToDoc = (sDoc) => {
 	let document = {};

@@ -19,7 +19,7 @@ class Document extends Component {
 		};
 	}
 	componentDidMount(){
-		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){
+		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){ console.log(data.document);
 			let document = _convertToDoc(data.document);
 			this.setState({
 				document: document

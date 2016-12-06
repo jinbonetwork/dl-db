@@ -46,19 +46,6 @@ class DocumentInputForm extends Component {
 					/>
 				)
 			case 'select':
-			/*
-				let options = [];
-				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
-					options.push(<option key={tid} value={tid}>{this.props.docData.terms[tid]}</option>);
-				}});
-
-				return (
-					<select value={this.props.value} onChange={this.handleChange.bind(this)}>
-						{options}
-					</select>
-				);
-				*/
-
 				let options = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
 					options.push(<Option key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Option>);
@@ -68,8 +55,6 @@ class DocumentInputForm extends Component {
 						{options}
 					</Select>
 				);
-
-
 			case 'radio':
 				let radioButtons = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
