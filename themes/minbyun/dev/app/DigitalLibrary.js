@@ -107,7 +107,7 @@ class DigitalLibrary extends Component {
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
-					<MainMenu userRole={userRole} fetchData={this.props.fetchData} setMessage={this.props.setMessage} />
+					<MainMenu userRole={userRole} fetchData={this.props.fetchData} setMessage={this.props.setMessage} unsetUserData={this.props.unsetUserData} />
 				</div>
 				<div className="digital-library__content">
 					{child || this.searchBar('content')}
@@ -121,12 +121,13 @@ DigitalLibrary.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
 	searchQuery: PropTypes.object,
+	openedDocuments: PropTypes.object,
+	message: PropTypes.element,
 	fetchContData: PropTypes.func.isRequired,
 	setMessage: PropTypes.func.isRequired,
-	openedDocuments: PropTypes.object,
-	fetchData: PropTypes.func,
-	updateSearchQuery: PropTypes.func,
-	message: PropTypes.element,
+	unsetUserData: PropTypes.func.isRequired,
+	fetchData: PropTypes.func.isRequired,
+	updateSearchQuery: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

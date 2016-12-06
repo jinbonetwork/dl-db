@@ -109,15 +109,18 @@ class DigitalLibraryContainer extends Component {
 			return this.handleOfMessage.bind(this, 'unset');
 		}
 	}
+	unsetUserData(){
+		this.setState({userData: update(this.state.userData, {
+			user: {$set: {uid: 0}}, role: {$set: null}
+		})});
+	}
 	handleOfMessage(actOnClick, arg){
 		this.setState({message: null});
 		switch(actOnClick){
 			case 'goBack':
 				this.props.router.goBack(); break;
 			case 'goToLogin':
-				this.setState({userData: update(this.state.userData, {
-					user: {$set: {uid: 0}}, role: {$set: null}
-				})});
+				this.unsetUserData();
 				this.props.router.push('/login'); break;
 			case 'goTo':
 				if(arg) this.props.router.push(arg); break;
@@ -145,6 +148,7 @@ class DigitalLibraryContainer extends Component {
 			message: this.state.message,
 			fetchContData: this.fetchContData.bind(this),
 			setMessage: this.setMessage.bind(this),
+			unsetUserData: this.unsetUserData.bind(this),
 			fetchData: this.fetchData.bind(this),
 			updateSearchQuery: this.updateSearchQuery.bind(this)
 		});

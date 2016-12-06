@@ -9,7 +9,8 @@ class MainMenu extends Component {
 	handleClick(which, arg){
 		if(which == 'logout'){
 			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
-				this.props.setMessage('로그아웃되었습니다.', 'goToLogin');
+				this.props.unsetUserData();
+				this.props.router.push('/login');
 			}});
 		}
 	}
@@ -61,6 +62,6 @@ MainMenu.propTypes = {
 	userRole: PropTypes.array,
 	fetchData: PropTypes.func,
 	setMessage: PropTypes.func,
-	handleResize: PropTypes.func
+	unsetUserData: PropTypes.func
 }
 export default withRouter(MainMenu);
