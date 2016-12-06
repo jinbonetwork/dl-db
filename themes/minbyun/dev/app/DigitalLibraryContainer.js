@@ -36,7 +36,9 @@ class DigitalLibraryContainer extends Component {
 		};
 	}
 	componentDidMount(){
-		this.fetchContData();
+		this.fetchContData((data) => {
+			if(!data.role) this.props.router.push('/login');
+		});
 	}
 	fetchData(method, url, arg2, arg3){
 		let data = (method == 'get' ? null : arg2);

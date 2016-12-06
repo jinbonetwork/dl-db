@@ -47,9 +47,6 @@ class DigitalLibrary extends Component {
 			rerender: false
 		};
 	}
-	componentWillMount(){
-		this.props.router.push('/login');
-	}
 	componentDidMount(){
 		jQ(window).on('resize', () => {this.setState({rerender: true})});
 	}

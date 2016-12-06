@@ -5,7 +5,7 @@ import DocListHead from './documentList/DocListHead';
 import Pagination from './accessories/Pagination';
 import {_convertToDoc, _sFname, _fname} from './schema/docSchema';
 import {_searchQuery, _query, _queryOf} from './schema/searchSchema';
-import {_params, _isEmpty} from './accessories/functions';
+import {_params, _isEmpty, _displayDate} from './accessories/functions';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
@@ -47,12 +47,11 @@ class SearchResult extends Component {
 			}
 			if(data.result.cnt > 0){
 				this.setState({
-					documents: data.documents.map((doc) => this.searched(doc)),
+					documents: data.documents.map((doc) => this.searched(doc, 'db')),
 					numOfPages: data.result.total_page
 				});
 			} else {
 				this.setState({documents: null, numOfPages: 1});
-				//this.props.setMessage('검색결과가 없습니다', 'unset');
 			}
 		}});
 	}
@@ -69,15 +68,17 @@ class SearchResult extends Component {
 			this.props.router.push('/search'+_params(query));
 		}
 	}
-	searched(sSearched){
+	searched(sSearched, method){
 		let searched = {};
-		for(let fn in sSearched._source){
-			let value = sSearched._source[fn];
+		if(!method || method == 'elastic') searched.id = parseInt(sSearched._id);
+		if(!method || method == 'elastic') sSearched = sSearched._source;
+
+		for(let fn in sSearched){
+			let value = sSearched[fn];
 			let fname = _fname[fn];
 			if(fname == 'date') value = value.replace('-', '/');
 			searched[fname] = value;
 		}
-		searched.id = parseInt(sSearched._id);
 		return searched;
 	}
 	keywords(query){
