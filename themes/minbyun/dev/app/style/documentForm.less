@@ -153,9 +153,20 @@
 
 .searchinput {
 	display: inline-block;
+	position: relative;
 	.searchinput__result {
 		position: relative;
 		width: 100%;
+	}
+	.searchinput__spinner {
+		display: block;
+		position: absolute;
+		top: 0; right: 0.5em;
+		line-height: 3em;
+		color: @main-color;
+	}
+	.searchinput__spinner i {
+		font-size: 1.5em;
 	}
 	input[type=text] {
 		width: 100%;

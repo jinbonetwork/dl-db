@@ -5,7 +5,20 @@ class SearchInput extends Component {
 	componentWillMount(){
 		this.setState({
 			fieldsToPut: _fieldAttrs[_fieldAttrs[this.props.fname].parent].children,
-			results: undefined
+			results: undefined,
+			isSearching: false
+		});
+	}
+	componentWillReceiveProps(nextProps){
+		if(!this.state.isSearching){
+			this.setState({results: undefined});
+		}
+	}
+	search(keyword){
+		this.setState({isSearching: true});
+		keyword = encodeURIComponent(keyword);
+		this.props.fetchData('get', this.props.api+keyword, (data) => {
+			this.setState({results: data.members, isSearching: false});
 		});
 	}
 	handleChange(event){
@@ -13,14 +26,13 @@ class SearchInput extends Component {
 		if(event.target.value){
 			this.search(event.target.value);
 		} else {
-			this.setState({results: undefined});
+			this.setState({results: undefined, isSearching: false});
 		}
 	}
-	search(keyword){
-		keyword = encodeURIComponent(keyword);
-		this.props.fetchData('get', this.props.api+keyword, (data) => {
-			this.setState({results: data.members});
-		});
+	handleKeyDown(event){
+		if(event.key === 'Enter'){
+			this.search(event.target.value);
+		}
 	}
 	handleClick(result){
 		let fields = {};
@@ -28,10 +40,10 @@ class SearchInput extends Component {
 			fields[f] = result[f];
 		});
 		this.props.updateFields(fields);
-		this.setState({results: undefined});
+		this.setState({results: undefined, isSearching: false});
 	}
 	render(){
-		let	displayResults = (this.state.results !== undefined && this.state.results.length > 0) && (
+		const displayResults = (this.state.results && this.state.results.length > 0) && (
 			<div className="searchinput__result">
 				<ul>{
 					this.state.results.map((result) => (
@@ -43,9 +55,15 @@ class SearchInput extends Component {
 				</ul>
 			</div>
 		);
+		const spinner = (this.state.isSearching &&
+			<span className="searchinput__spinner">
+				<i className="pe-7s-config pe-spin pe-va"></i>
+			</span>
+		);
 		return(
 			<div className="searchinput">
-				<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)}/>
+				<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
+				{spinner}
 				{displayResults}
 			</div>
 		);
