@@ -25,11 +25,15 @@ function Logout() {
 	session_destroy();
 }
 
-function requireLogin() {
+function requireLogin($output) {
 	$context = \DLDB\Model\Context::instance();
 	$service = $context->getProperty('service.*');
 	$requestURI = ($_SERVER['HTTPS'] == 'on' ? "https://" : "http://").$service['domain'].$_SERVER['REQUEST_URI'];
-	\DLDB\Lib\RedirectURL('login',array('ssl'=>true,'query'=>array('requestURI'=>$requestURI)));
+	if($output == DLDB_ERROR_ACTION_AJAX) {
+		\DLDB\RespondJson::ResultPage(array(-9999,'로그인 후 사용해주세요')); 
+	} else {
+		\DLDB\Lib\RedirectURL('login',array('ssl'=>true,'query'=>array('requestURI'=>$requestURI)));
+	}
 }
 
 function doesHaveMembership() {
@@ -39,13 +43,13 @@ function doesHaveMembership() {
 	return $__Acl->getIdentity($domain) !== null;
 }
 
-function requireMembership() {
+function requireMembership($output) {
 	$context = \DLDB\Model\Context::instance();
 	$domain = $context->getProperty('service.domain');
 	$__Acl = \DLDB\Acl::instance();
 	if($__Acl->getIdentity($domain) !== null) {
 		return true;
 	}
-	\DLDB\Lib\requireLogin();
+	\DLDB\Lib\requireLogin($output);
 }
 ?>

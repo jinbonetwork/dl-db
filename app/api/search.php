@@ -29,7 +29,8 @@ class search extends \DLDB\Controller {
 				'multiple' => $field['multiple'],
 				'required' => $field['required'],
 				'cid' => $field['cid'],
-				'form' => $field['form']
+				'form' => $field['form'],
+				'sefield' => $field['sefield'],
 			);
 		}
 		if($cids && is_array($cids) ) {

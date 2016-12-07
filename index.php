@@ -70,6 +70,8 @@ try {
 		\DLDB\Lib\session\init_session();
 	}
 
+	$controller = new $controller_class;
+
 	/*
 	 * @brief Acl(Access Controll Logic
 	**/
@@ -77,9 +79,9 @@ try {
 	$__Acl->getPrivilege();
 	$__Acl->setAcl($Acl);
 	/* login check */
-	$__Acl->check();
+	$__Acl->check($controller->get_error_action());
 
-	$controller = new $controller_class;
+//	$controller = new $controller_class;
 	$controller->handle($uri->params);
 
 	$dbm->release();

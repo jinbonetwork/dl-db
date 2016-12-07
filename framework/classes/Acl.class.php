@@ -28,16 +28,16 @@ class Acl extends \DLDB\Objects {
 		return $this->acl;
 	}
 
-	public function check() {
+	public function check($output) {
 		if($this->role < BITWISE_ANONYMOUS && !$_SESSION['user']['uid']) {
 			\DLDB\Lib\importLibrary('auth');
-			\DLDB\Lib\requireMembership();
+			\DLDB\Lib\requireMembership($output);
 		}
 		if($this->role == BITWISE_AUTHENTICATED && !$_SESSION['user']['uid']) {
-			\DLDB\Lib\Error('접근 권한이 없습니다.');
+			\DLDB\Lib\Error('접근 권한이 없습니다.',$output);
 			exit;
 		} else if( $_SESSION['user']['uid'] && !in_array( BITWISE_ADMINISTRATOR, $this->acl ) && !in_array( $this->role, $this->acl ) ) {
-			\DLDB\Lib\Error('접근 권한이 없습니다.');
+			\DLDB\Lib\Error('접근 권한이 없습니다.',$output);
 			exit;
 		}
 	}
