@@ -47,7 +47,7 @@ class SearchResult extends Component {
 			}
 			if(data.result.cnt > 0){
 				this.setState({
-					documents: data.documents.map((doc) => this.searched(doc._source)),
+					documents: data.documents.map((doc) => this.searched(doc)),
 					numOfPages: data.result.total_page
 				});
 			} else {
@@ -70,8 +70,9 @@ class SearchResult extends Component {
 	}
 	searched(sSearched){
 		let searched = {};
-		for(let fn in sSearched){
-			let value = sSearched[fn];
+		searched.id = sSearched._id;
+		for(let fn in sSearched._source){
+			let value = sSearched._source[fn];
 			let fname = _fname[fn];
 			if(fname == 'date') value = value.replace('-', '/');
 			searched[fname] = value;
