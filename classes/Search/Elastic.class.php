@@ -42,10 +42,65 @@ class Elastic extends \DLDB\Objects {
 		}
 	}
 
+	public function taxonomyCnt($q,$args) {
+		$context = \DLDB\Model\Context::instance();
+		$index = $context->getProperty('service.elastic_index');
+
+		list($types, $q_params, $f_params) = $this->makeParams($q,$args);
+
+		foreach($this->taxonomy as $cid => $taxo) {
+			if( $taxo['skey'] ) {
+				foreach($this->taxonomy_terms[$cid] as $tid => $term) {
+
+					$params = array(
+						'index' => $index,
+						'type' => 't'.$tid,
+						'body' => array(
+							'query' => array(
+								"bool" => $q_params
+							)
+						)
+					);
+					$response = $this->client->count($params);
+					$taxonomy_cnt[$tid] = $response['count'];
+				}
+			}
+		}
+		return $taxonomy_cnt;
+	}
+
 	public function getList($q,$args=null,$order="score",$page=1,$limit=20) {
 		$context = \DLDB\Model\Context::instance();
 		$index = $context->getProperty('service.elastic_index');
 
+		list($types, $q_params, $f_params) = $this->makeParams($q,$args);
+
+		$params = array(
+			'index' => $index,
+			'type' => implode(',',$types),
+			'body' => array(
+				'query' => array(
+					"bool" => $q_params
+				),
+				'from' => ( ( $page - 1 ) * $limit ),
+				'size' => $limit
+			)
+		);
+		if($order != 'score') {
+			$params['body']['sort'] = array (
+				$order => array("order" => "desc")
+			);
+		}
+		if($f_params) {
+			$params['body']['filter'] = $f_params;
+		}
+
+		$this->params = $params;
+
+		return $this->client->search($params);
+	}
+
+	public function makeParams($q,$args=null) {
 		$taxonomy_exist = false;
 		$types = array();
 		if( $args ) {
@@ -123,24 +178,8 @@ class Elastic extends \DLDB\Objects {
 			} /* end of que */
 		} /* end of foreach */
 
-		$params = array(
-			'index' => $index,
-			'type' => implode(',',$types),
-			'body' => array(
-				'query' => array(
-					"bool" => $q_params
-				),
-				'from' => ( ( $page - 1 ) * $limit ),
-				'size' => $limit
-			)
-		);
-		if($order != 'score') {
-			$params['body']['sort'] = array (
-				$order => array("order" => "desc")
-			);
-		}
 		if($filter) {
-			$params['body']['filter'] = array(
+			$f_params = array(
 				"and" => array(
 					"filters" => array(
 						array("range" => array())
@@ -148,15 +187,17 @@ class Elastic extends \DLDB\Objects {
 				)
 			);
 			foreach($filter as $fk => $_v) {
-				$params['body']['filter']['and']['filters'][0]['range'][$fk] = $_v;
+				$f_params['and']['filters'][0]['range'][$fk] = $_v;
 			}
 		}
 
-		$this->params = $params;
-
-		return $this->client->search($params);
+		return array(
+			$types,
+			$q_params,
+			$f_params
+		);
 	}
-	
+
 	public function create($types) {
 		$context = \DLDB\Model\Context::instance();
 

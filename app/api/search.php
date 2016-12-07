@@ -65,6 +65,7 @@ class search extends \DLDB\Controller {
 		$this->total_cnt = \DLDB\Search\DBM::totalCnt($this->que, $this->params);
 		if($this->total_cnt) {
 			$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;
+			$this->taxonomy_cnt = \DLDB\Search\DBM::taxonomyCnt($this->que, $this->params);
 		} else {
 			$this->total_page = 0;
 		}
@@ -74,6 +75,7 @@ class search extends \DLDB\Controller {
 			'error' => 0,
 			'result' => array(
 				'total_cnt' => $this->total_cnt,
+				'taxonomy_cnt' => $this->taxonomy_cnt,
 				'total_page' => $this->total_page,
 				'page' => $this->params['page'],
 				'cnt' => @count($this->documents)
@@ -91,6 +93,7 @@ class search extends \DLDB\Controller {
 		$this->total_cnt = ( $this->documents['hits']['total'] ? $this->documents['hits']['total'] : 0 );
 		if($this->total_cnt) {
 			$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;
+			$this->taxonomy_cnt = $else->taxonomyCnt($this->que,$this->params);
 		} else {
 			$this->total_page = 0;
 		}
@@ -99,6 +102,7 @@ class search extends \DLDB\Controller {
 			'error' => 0,
 			'result' => array(
 				'total_cnt' => $this->total_cnt,
+				'taxonomy_cnt' => $this->taxonomy_cnt,
 				'total_page' => $this->total_page,
 				'page' => $this->params['page'],
 				'cnt' => @count($this->documents['hits']['hits'])

@@ -45,6 +45,30 @@ class DBM extends \DLDB\Objects {
 		return ($row['cnt'] ? $row['cnt'] : 0);
 	}
 	
+	public static function taxonomyCnt($q,$args=null) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = self::makeQuery($q,$args,'t.tid, count(t.tid) AS cnt');
+		$que .= " GROUP BY t.tid";
+
+		while($row = $dbm->getFetchArray($que)) {
+			$tx_cnt[$row['tid']] = $row['cnt'];
+		}
+		$c = 0;
+		foreach(self::$taxonomy as $cid => $taxo) {
+			if($taxo['skey']) {
+				foreach(self::$taxonomy_terms[$cid] as $tid => $term) {
+					if($tx_cnt[$tid]) {
+						$taxonomy_cnt[$tid] = $tx_cnt[$tid];
+					} else {
+						$taxonomy_cnt[$tid] = 0;
+					}
+				}
+			}
+		}
+		return $taxonomy_cnt;
+	}
+	
 	public static function getList($q,$args=null,$order="score",$page=1,$limit=20) {
 		$dbm = \DLDB\DBM::instance();
 		$context = \DLDB\Model\Context::instance();
@@ -98,12 +122,29 @@ class DBM extends \DLDB\Objects {
 		return $query;
 	}
 
-	private static function makeQuery($q,$args=null,$result) {
+	private static function makeQuery($q,$args=null,$result,$opt='list') {
 		$select_que = "SELECT ".$result." FROM ";
-		$taxonomy_que = $que."{taxonomy_term_relative} AS t LEFT JOIN {documents} AS d ON t.did = d.id WHERE ";
+		$taxonomy_que = $que."{taxonomy_term_relative} AS t LEFT JOIN {documents} AS d ON t.did = d.id AND t.`tables` = 'documents' WHERE ";
 		$document_que = $que."{documents} AS d WHERE ";
 		$que = "";
 		$taxonomy_exist = false;
+		if($opt == 'count') {
+			$que = "t.tid IN (";
+			$c = 0;
+			foreach(self::$taxonomy as $cid => $taxo) {
+				if($taxo['skey']) {
+					foreach(self::$taxonomy_terms[$cid] as $tid => $term) {
+						$que .= ($c++ ? "," : "").$tid;
+					}
+				}
+			}
+			if($c) {
+				$que .= ')';
+				$taxonomy_exist = true;
+			} else {
+				$que = '';
+			}
+		}
 		if($args) {
 			foreach( $args as $k => $v ) {
 				$t = substr($k,0,1);
@@ -111,10 +152,12 @@ class DBM extends \DLDB\Objects {
 				if($t == 'f') {
 					switch(self::$fields[$key]['type']) {
 						case 'taxonomy':
-							if(!is_array($v)) $v = array($v);
-							$que .= ($que ? " AND " : "")."t.tid IN (".implode(',',$v).")";
-							self::$types = implode(",",$v);
-							$taxonomy_exist = true;
+							if( $opt != 'count' || !self::$taxonomy[self::$fields[$key]['cid']]['skey'] ) {
+								if(!is_array($v)) $v = array($v);
+								$que .= ($que ? " AND " : "")."t.tid IN (".implode(',',$v).")";
+								self::$types = implode(",",$v);
+								$taxonomy_exist = true;
+							}
 							break;
 						case 'date':
 							$period = explode("-",$v);
