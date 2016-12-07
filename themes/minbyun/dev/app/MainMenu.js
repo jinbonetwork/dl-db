@@ -51,8 +51,8 @@ class MainMenu extends Component {
 						<i className="pe-7s-star pe-va"></i>{' '}<span>바로<br/>가기</span>
 						<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
 					</DdHead>
-					<DdItem><span>민변</span></DdItem>
-					<DdItem><span>대법원</span></DdItem>
+					<DdItem><a href="http://minbyun.org/" target="_blank"><span>민변</span></a></DdItem>
+					<DdItem><a href="http://www.scourt.go.kr/" target="_blank"><span>대법원</span></a></DdItem>
 				</Dropdown>
 			</div>
 		);

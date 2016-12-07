@@ -32,7 +32,8 @@ const _query = (sQuery) => {
 	let query = {};
 	for(let prop in sQuery){ if(sQuery[prop]){
 		switch(prop){
-			case 'keyword': query.q = encodeURIComponent(sQuery[prop]); break;
+			//case 'keyword': query.q = encodeURIComponent(sQuery[prop]); break;
+			case 'keyword': query.q = sQuery[prop]; break;
 			case 'doctypes': query[_sFname['doctype']] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
 		}
 	}}
@@ -40,7 +41,7 @@ const _query = (sQuery) => {
 	if(sQuery.from && sQuery.to) period = sQuery.from+'-'+sQuery.to;
 	else if(sQuery.from && !sQuery.to) period = sQuery.from;
 	else if(!sQuery.from && sQuery.to) period = '-'+sQuery.to;
-	if(period) query[_sFname['date']] = encodeURIComponent(period);
+	if(period) query[_sFname['date']] = period;
 
 	return query;
 }
@@ -57,7 +58,7 @@ const _searchQuery = (query, correct) => {
 	let value;
 	for(let prop in query){ let value = query[prop]; if(value){
 		if(prop == 'q'){
-			if(value) sQuery.keyword = decodeURIComponent(value);
+			if(value) sQuery.keyword = value;
 		}
 		else if(_fname[prop] == 'doctype'){
 			let doctypes = []
@@ -67,7 +68,7 @@ const _searchQuery = (query, correct) => {
 			if(doctypes.length) sQuery.doctypes = doctypes;
 		}
 		else if(_fname[prop] == 'date'){
-			let period = decodeURIComponent(value).split('-');
+			let period = value.split('-');
 			if(correct) period = _period(period[0], period[1]);
 			sQuery.from = (period[0] ? period[0] : '');
 			sQuery.to = (period[1] ? period[1] : '');
@@ -76,4 +77,19 @@ const _searchQuery = (query, correct) => {
 	return sQuery;
 };
 
-export {_query, _queryOf, _searchQuery, _period};
+const _params = (params, excepts) => {
+	let array = [];
+	for(let p in params){
+		if(params[p] && (!excepts || !excepts.length || excepts.indexOf(p) < 0)){
+			if(p == 'q' || p == _sFname['date']){
+				array.push(p+'='+encodeURIComponent(params[p]));
+			} else {
+				array.push(p+'='+params[p]);
+			}
+		}
+	}
+	if(array.length) return '?'+array.join('&');
+	return '';
+}
+
+export {_query, _queryOf, _searchQuery, _period, _params};

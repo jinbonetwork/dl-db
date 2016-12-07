@@ -74,6 +74,7 @@ const _isCommon = (array1, array2, equal) => {
 		return true;
 	}
 }
+/*
 const _params = (params, excepts) => {
 	let array = [];
 	for(let p in params){
@@ -84,6 +85,7 @@ const _params = (params, excepts) => {
 	if(array.length) return '?'+array.join('&');
 	return '';
 }
+*/
 const _mapO = (obj, callBack) => {
 	let array = [];
 	for(let prop in obj){
@@ -105,4 +107,4 @@ const _pushpull = (array, value) => {
 	return newArray;
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _params, _mapO, _forIn, _pushpull};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _forIn, _pushpull};
