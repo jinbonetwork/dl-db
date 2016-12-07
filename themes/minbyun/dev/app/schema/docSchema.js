@@ -160,5 +160,8 @@ const _isHiddenField = (fname, doc, where) => {
 	}
 	return false;
 };
+const _isAccessDownload = (access) => {
+	return (access == _defaultTaxonomy.access[1]);
+}
 
-export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms, _termsOf, _isHiddenField};
+export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms, _termsOf, _isHiddenField, _isAccessDownload};

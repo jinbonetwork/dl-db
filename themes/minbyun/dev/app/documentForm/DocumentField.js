@@ -8,7 +8,7 @@ class DocumentField extends Component {
 		switch(_fieldAttrs[this.props.fname].form){
 			case 'file':
 				let accept = (_fieldAttrs[this.props.fname].type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
-				return <div>{`* 파일형식: ${accept}`}</div>;
+				return <div className="document-form__fileformat">{`* 파일형식: ${accept}`}</div>;
 		}
 	}
 	handleClickToAddInputForm(){

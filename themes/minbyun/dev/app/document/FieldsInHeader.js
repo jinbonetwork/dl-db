@@ -3,14 +3,14 @@ import {Link} from 'react-router';
 import ImageWrap from './ImageWrap';
 import LinkIf from '../accessories/LinkIf';
 import {Table, Row, Column} from '../accessories/Table';
-import {_fieldAttrs} from '../schema/docSchema';
+import {_fieldAttrs, _isAccessDownload} from '../schema/docSchema';
 import {_displayDate, _isCommon} from '../accessories/functions';
 
 class FieldsInHeader extends Component {
 	date(){
 		return (
 			<Row>
-				<Column className="table__label">{_fieldAttrs[this.props.fname].displayName}</Column>
+				<Column>{_fieldAttrs[this.props.fname].displayName}</Column>
 				<Column>{_displayDate(this.props.document[this.props.fname])}</Column>
 			</Row>
 		);
@@ -18,18 +18,22 @@ class FieldsInHeader extends Component {
 	files(){
 		let areYouOwner = _isCommon(['admin'], this.props.userRole) || this.props.document.owner;
 		let canYouDownload = _isCommon(['download'], this.props.userRole) || areYouOwner;
-		let isItDownload = (this.props.document['access'] == 34); // 34: 다운로드
+		let isAccessDownload = _isAccessDownload(this.props.document['access']); // 34: 다운로드
 
 		let fileList = this.props.document[this.props.fname].map((file, i) => (
 			<li key={i}>
-				<LinkIf tag="a" to={file.fileuri} if={isItDownload && canYouDownload} notIf="visible">{file.filename}</LinkIf>
-				{(file.status != 'parsed' && areYouOwner) && <i className="document__attention pe-7f-attention pe-va"></i>}
-				{areYouOwner && <Link className="document__filetext" to={'/document/'+this.props.document.id+'/text/'+file.fid}><span>TEXT</span></Link>}
+				<LinkIf tag="a" to={file.fileuri} if={isAccessDownload && canYouDownload} notIf="visible">{file.filename}</LinkIf>
+				{(file.status != 'parsed' && areYouOwner) && <i className="document__attention pe-7s-attention pe-va"></i>}
+				{areYouOwner &&
+					<Link className="document__filetext" to={'/document/'+this.props.document.id+'/text/'+file.fid}>
+						<span>TEXT</span>
+					</Link>
+				}
 			</li>
 		));
 		return (
 			<Row>
-				<Column className="table__label">
+				<Column>
 					<i className="pe-7s-download pe-va"></i> {_fieldAttrs[this.props.fname].displayName}
 				</Column>
 				<Column><ol>{fileList}</ol></Column>
