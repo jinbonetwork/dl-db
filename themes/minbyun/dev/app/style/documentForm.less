@@ -1,5 +1,7 @@
 @import "variables";
 
+@document-from-button-width: 2.5em;
+
 .document-form {
 	max-width: 38em;
 	margin: 3em auto;
@@ -8,20 +10,16 @@
 		text-align: center;
 		color: @accent-font-color;
 	}
-	h2 {
-		font-size: 1.25em;
-		margin: 1em 0;
+	.table__row.document-form__section-title {
+		line-height: 3em;
 	}
-	h2.document-form__accented_title {
-		color: #c2000b;
+	h2 {
+		font-weight: @font-bold;
+		font-size: 1.25em;
+		margin: 0;
 	}
 	input[type=text] {
 		width: 100%;
-	}
-	textarea {
-		width: 100%;
-		height: 11em;
-		padding: 0.5em;
 	}
 	.select {
 		min-width: 50%;
@@ -41,9 +39,12 @@
 	.document-form__input-with-buttons {
 		position: relative;
 	}
+	.document-form__input-with-buttons + .document-form__input-with-buttons,
+	.document-form__input-with-buttons + .document-form__fileformat {
+		margin-top: 0.5em;
+	}
 	.document-form__middle {
-		margin-right: 6.25em;
-		margin-bottom: 0.5em;
+		margin-right: @document-from-button-width * 2 + 0.5em;
 	}
 	.document-form__middle > * {
 		width: 100%;
@@ -51,22 +52,19 @@
 	.document-from__buttons {
 		position: absolute;
 		top: 0; right: 0;
+		height: 100%;
 	}
 	.document-from__buttons button {
 		float: left;
-		height: 1em;
-		font-size: 3em;
+		width: @document-from-button-width; height: 100%;
 		background-color: transparent;
 		color: @main-color;
 		border: 0;
 		padding: 0;
 		cursor: pointer;
 	}
-	.radio-wrap {
-		line-height: 3em;
-	}
-	.radio-wrap label + label {
-		margin-left: 1em;
+	.document-from__buttons button i {
+		font-size: @document-from-button-width;
 	}
 	.searchinput {
 		width: 100%;
@@ -95,6 +93,7 @@
 	.inner-table .table__col {
 		border: solid 1px @main-color;
 		border-width: 0 1px 1px 0;
+		line-height: 3em;
 	}
 	.inner-table input[type=text] {
 		border: 0;
@@ -117,5 +116,88 @@
 		padding: 0 0.5em;
 		cursor: pointer;
 		margin-top: 2em;
+	}
+}
+
+.textarea {
+	textarea {
+		display: block;
+		width: 100%;
+		height: 11em;
+		padding: 0.5em;
+		line-height: 1.5em;
+	}
+	textarea + .textarea__footer {
+		position: relative;
+		margin-top: 0.5em;
+	}
+	.textarea__num-of-words {
+		position: absolute;
+		top: 0; right: 0;
+	}
+}
+
+.dateform {
+	display: inline-block;
+	input[type=text] {
+		margin-right: 1em;
+		text-align: center;
+	}
+	input[type=text].dateform__year {
+		width: 5em;
+	}
+	.dateform__year + span {
+		margin-right: 1em;
+	}
+	input[type=text].dateform_month {
+		width: 4em;
+	}
+}
+
+.searchinput {
+	display: inline-block;
+	position: relative;
+	.searchinput__result {
+		position: relative;
+		width: 100%;
+	}
+	.searchinput__spinner {
+		display: block;
+		position: absolute;
+		top: 0; right: 0.5em;
+		line-height: 3em;
+		color: @main-color;
+	}
+	.searchinput__spinner i {
+		font-size: 1.5em;
+	}
+	input[type=text] {
+		width: 100%;
+	}
+	ul {
+		position: absolute;
+		z-index: 2;
+		top: 0; left: 0;
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		background-color: @main-color;
+		color: @minor-color-2;
+	}
+	li {
+		padding: 0 1em;
+		list-style-type: none;
+		cursor: pointer;
+		line-height: 2.5em;
+		margin: 0;
+	}
+	li:hover {
+		background-color: @main-color * 1.2;
+	}
+	li span {
+		display: inline-block;
+	}
+	.searchinput__col-0 {
+		width: 4em;
 	}
 }

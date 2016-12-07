@@ -14,7 +14,7 @@
 		cursor: pointer;
 	}
 	.document__wrap {
-		background-color: #ffffff;
+		background-color: @minor-color-2;
 		padding: 3em;
 	}
 	.document__header {
@@ -89,14 +89,14 @@
 		.table__col {
 			line-height: 1.5em;
 		}
-		.table__label {
-			color: #555555;
+		.table__col:first-child {
+			color: @accent-font-color;
 			width: 10em;
 			text-align: right;
 			font-weight: 700;
 			padding-right: 1em;
 		}
-		.table__col:not(.table__label){
+		.table__col + .table__col{
 			margin-left: 10em;
 			padding-left: 1em;
 		}
@@ -116,9 +116,10 @@
 			color: @main-color;
 		}
 		i.document__attention {
-			color: #b40404;
+			color: @striking-color;
 			font-size: 1.3em;
 			margin-left: 0.5em;
+			font-weight: bold;
 		}
 	}
 	.document__contents {
@@ -171,7 +172,7 @@
 	width: 100%; height: 100%;
 	transform: translate(-50%, -50%);
 	padding: 1em;
-	background-color: #ffffff;
+	background-color: @minor-color-2;
 	border: solid 1px @main-color;
 
 	&:not(.file-text-editor__full-screen){
@@ -222,5 +223,12 @@
 	}
 	button + button {
 		margin-left: 1em;
+	}
+}
+
+.imagewrap {
+	img {
+		width: 100%;
+		display: block;
 	}
 }

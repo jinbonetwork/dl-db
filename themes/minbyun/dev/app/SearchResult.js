@@ -4,8 +4,8 @@ import DocListItem from './documentList/DocListItem';
 import DocListHead from './documentList/DocListHead';
 import Pagination from './accessories/Pagination';
 import {_convertToDoc, _sFname, _fname} from './schema/docSchema';
-import {_searchQuery, _query, _queryOf} from './schema/searchSchema';
-import {_params, _isEmpty, _displayDate} from './accessories/functions';
+import {_searchQuery, _query, _queryOf, _params} from './schema/searchSchema';
+import {_isEmpty, _displayDate} from './accessories/functions';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
@@ -20,7 +20,7 @@ class SearchResult extends Component {
 	componentDidMount(){
 		if(!_isEmpty(this.props.location.query)){
 			const query = this.props.location.query;
-			let sQuery = _searchQuery(query, true);
+			const sQuery = _searchQuery(query, true);
 			this.props.updateSearchQuery(sQuery);
 
 			let params = _params(update(_query(sQuery), {$merge: {
@@ -47,7 +47,7 @@ class SearchResult extends Component {
 			}
 			if(data.result.cnt > 0){
 				this.setState({
-					documents: data.documents.map((doc) => this.searched(doc._source)),
+					documents: data.documents.map((doc) => this.searched(doc)),
 					numOfPages: data.result.total_page
 				});
 			} else {
@@ -70,8 +70,9 @@ class SearchResult extends Component {
 	}
 	searched(sSearched){
 		let searched = {};
-		for(let fn in sSearched){
-			let value = sSearched[fn];
+		searched.id = sSearched._id;
+		for(let fn in sSearched._source){
+			let value = sSearched._source[fn];
 			let fname = _fname[fn];
 			if(fname == 'date') value = value.replace('-', '/');
 			searched[fname] = value;

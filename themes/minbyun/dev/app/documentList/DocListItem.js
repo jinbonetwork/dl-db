@@ -1,12 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import LinkIf from '../accessories/LinkIf';
+import {_fieldAttrs} from '../schema/docSchema';
 import {_displayDate, _isCommon} from '../accessories/functions';
 
 const _sideDispNames = {
 	date: '작성일',
-	number: '사건번호',
-	commitee: '위원회',
-	name: '작성자'
+	number: _fieldAttrs.number.displayName,
+	commitee: _fieldAttrs.commitee.displayName,
+	name: _fieldAttrs.name.displayName
 }
 
 class DocListItem extends Component {
@@ -16,7 +17,7 @@ class DocListItem extends Component {
 			side.push(
 				<li key={fn}>
 					<span>{_sideDispNames[fn]}: </span>
-					<span>{this.props.document[fn]}</span>
+					<span>{this.tagged(this.props.document[fn])}</span>
 				</li>
 			);
 		}}

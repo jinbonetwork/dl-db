@@ -100,14 +100,12 @@ class DocumentForm extends Component {
 			<div className="document-form">
 				<h1>{this.props.formAttr.header}</h1>
 				<Table>
-					<Row>
+					<Row className="document-form__section-title">
 						<Column></Column>
-						<Column>
-							<h2 className="document-form__accented_title">필수입력사항</h2>
-						</Column>
+						<Column><h2>필수입력사항</h2></Column>
 					</Row>
 					{requiredFields}
-					<Row>
+					<Row className="document-form__section-title">
 						<Column></Column>
 						<Column><h2>선택입력사항</h2></Column>
 					</Row>

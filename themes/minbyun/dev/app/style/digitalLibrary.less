@@ -32,7 +32,7 @@
 		cursor: pointer;
 	}
 	a:visited, a:link, a:hover, a:active {
-		color: #808080;
+		color: @font-color;
 		text-decoration: none;
 	}
 	.dropdown {
@@ -77,6 +77,9 @@
 	}
 	.main-menu__link .dropdown__items {
 		border-right: 0;
+	}
+	.main-menu__link .dditem a {
+		text-align: center;
 	}
 	.dropdown .dditem {
 		line-height: 2.5em;

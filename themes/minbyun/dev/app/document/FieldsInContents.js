@@ -38,7 +38,7 @@ class FieldsInContents extends Component {
 		if(content){
 			return (
 				<Row>
-					<Column className="table__label">{_fieldAttrs[this.props.fname].displayName}</Column>
+					<Column>{_fieldAttrs[this.props.fname].displayName}</Column>
 					<Column>{content}</Column>
 				</Row>
 			);

@@ -5,8 +5,8 @@ import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
 import {_fieldAttrs, _sFname, _termsOf} from './schema/docSchema';
-import {_query, _period} from './schema/searchSchema';
-import {_isEmpty, _params, _mapO} from './accessories/functions';
+import {_query, _period, _params} from './schema/searchSchema';
+import {_isEmpty, _mapO} from './accessories/functions';
 
 class SearchBar extends Component {
 	constructor(){

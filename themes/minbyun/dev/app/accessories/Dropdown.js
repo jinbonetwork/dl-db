@@ -71,12 +71,13 @@ class Dropdown extends Component {
 	}
 	setSize(){
 		if(!this.refs.invisible) return;
-		let rect = this.refs.invisible.getBoundingClientRect();
-		if(rect.width != this.state.width){
-			this.setState({width: rect.width});
+		const rect = this.refs.invisible.getBoundingClientRect();
+		const width = rect.width + 1;
+		if(width != this.state.width){
+			this.setState({width: width});
 			if(this.props.onResize){
 				let extraWidth = jQ(this.refs.headwrap).outerWidth() - jQ(this.refs.headwrap).width();
-				this.props.onResize({width: rect.width + extraWidth});
+				this.props.onResize({width: width + extraWidth});
 			}
 		}
 	}
