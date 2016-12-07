@@ -133,38 +133,40 @@
 		& > .table__row > .table__col {
 			line-height: 2em;
 		}
-		& > .table__row > .table__label {
+		& > .table__row > .table__col:first-child {
 			width: @label-width;
 			padding-right: 2em;
 			text-align: right;
 			font-weight: 700;
 		}
-		& > .table__row > .table__col:not(.table__label) {
+		& > .table__row > .table__col + .table__col {
 			margin-left: @label-width;
 		}
 		.inner-table {
 			border-top: solid 1px @main-color;
 		}
+		.inner-table .table__row {
+			border-bottom: solid 1px @main-color;
+		}
 		.inner-table .table__col {
 			line-height: 2.5em;
 		}
-		.inner-table .table__label {
+		.inner-table .table__col:first-child {
 			width: 6em;
 			padding-right: 1em;
 			text-align: right;
 			font-weight: 700;
-			border-bottom: solid 1px @main-color;
 		}
-		.inner-table .table__col:not(.table__label){
+		.inner-table .table__col + .table__col{
 			margin-left: 6em;
 			padding-left: 1em;
-			border: solid 1px @main-color;
-			border-width: 0 0 1px 1px;
+			border-left: solid 1px @main-color;
 		}
 	}
 }
 .file-text-editor {
 	position: fixed;
+	z-index: 2;
 	top: 50%; left: 50%;
 	width: 100%; height: 100%;
 	transform: translate(-50%, -50%);

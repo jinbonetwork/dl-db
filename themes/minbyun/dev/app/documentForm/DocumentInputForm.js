@@ -6,25 +6,46 @@ import DateForm from './DateForm';
 import FileInput from '../accessories/FileInput';
 import {Table} from '../accessories/Table';
 import {Select, Option} from '../accessories/Select';
+import {Radio, RdItem} from '../accessories/Radio';
 import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
 
 class DocumentInputForm extends Component {
+	isValid(value, fAttr){
+		if(fAttr.type == 'date' && fAttr.form == 'text'){
+			let dateArray = value.split('-');
+			if(dateArray.length > 3) return false;
+			let today = new Date();
+			for(let index in dateArray){
+				if(index == 0){
+					if(0 <= dateArray[0] && dateArray[0] <= today.getFullYear()); else return false;
+				} else {
+					if(0 <= dateArray[index] && dateArray[index] <= 31); else return false;
+				}
+			}
+			return true;
+		} else {
+			return true;
+		}
+	}
 	handleChange(arg){
-		//let value = (form != 'file' ? event.target.value : event.target.files[0]);
 		let value;
-		switch(_fieldAttrs[this.props.fname].form){
+		const fAttr = _fieldAttrs[this.props.fname];
+		switch(fAttr.form){
 			case 'file': value = arg.target.files[0]; break;
-			case 'select': value = arg; break;
+			case 'select': case 'radio': value = arg; break;
 			default: value = arg.target.value;
 		}
-		this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
+		if(this.isValid(value, fAttr)){
+			this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
+		}
 	}
 	render(){
-		let fAttr = _fieldAttrs[this.props.fname];
+		const fAttr = _fieldAttrs[this.props.fname];
 		switch(fAttr.form){
 			case 'text':
+				const placeholder = (fAttr.type == 'date' ? '2015-12-07' : '');
 				return (
-					<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} />
+					<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} placeholder={placeholder} />
 				);
 			case 'search':
 				let api;
@@ -56,17 +77,14 @@ class DocumentInputForm extends Component {
 					</Select>
 				);
 			case 'radio':
-				let radioButtons = [];
-				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
-					let checked = (this.props.value == tid ? true : false);
-					radioButtons.push(
-						<label key={tid}>
-							<input type="radio" name={'taxonomy_'+this.props.fname} value={tid} checked={checked} onChange={this.handleChange.bind(this)} />
-							{this.props.docData.terms[tid]}
-						</label>
-					);
-				}});
-				return <div className="radio-wrap">{radioButtons}</div>
+				const radioItems =  this.props.docData.taxonomy[this.props.fname].map((tid) => (
+					<RdItem key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></RdItem>
+				));
+				return (
+					<Radio selected={this.props.value} onChange={this.handleChange.bind(this)}>
+						{radioItems}
+					</Radio>
+				)
 			case 'Ym':
 				return (
 					<DateForm fname={this.props.fname} value={this.props.value} index={this.props.index}

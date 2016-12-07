@@ -47,7 +47,7 @@ class SearchResult extends Component {
 			}
 			if(data.result.cnt > 0){
 				this.setState({
-					documents: data.documents.map((doc) => this.searched(doc, 'db')),
+					documents: data.documents.map((doc) => this.searched(doc._source)),
 					numOfPages: data.result.total_page
 				});
 			} else {
@@ -68,11 +68,8 @@ class SearchResult extends Component {
 			this.props.router.push('/search'+_params(query));
 		}
 	}
-	searched(sSearched, method){
+	searched(sSearched){
 		let searched = {};
-		if(!method || method == 'elastic') searched.id = parseInt(sSearched._id);
-		if(!method || method == 'elastic') sSearched = sSearched._source;
-
 		for(let fn in sSearched){
 			let value = sSearched[fn];
 			let fname = _fname[fn];

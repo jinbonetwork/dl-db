@@ -21,10 +21,10 @@ class DdHead extends Component {
 	}
 	render(){
 		let arrow, children = [];
-		Children.forEach(this.props.children, (child) => {
+		Children.forEach(this.props.children, (child) => { if(child){
 			if(child.type == DdArrow) arrow = child;
 			else children.push(child);
-		});
+		}});
 		let className = (this.props.className ? 'ddhead '+this.props.className : 'ddhead');
 		return (
 			<div className={className} onClick={this.handleClick.bind(this)}>{children}{arrow}</div>

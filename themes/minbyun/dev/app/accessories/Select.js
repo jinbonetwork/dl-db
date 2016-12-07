@@ -35,10 +35,11 @@ class Select extends Component {
 			if(child.type == Option){
 				if(child.props.value == this.state.selected){
 					head = child.props.children;
+				} else {
+					return <DdItem onClick={this.handleClick.bind(this, child.props.value)}>
+						{child.props.children}
+					</DdItem>
 				}
-				return <DdItem onClick={this.handleClick.bind(this, child.props.value)}>
-					{child.props.children}
-				</DdItem>
 			}
 		});
 		return (

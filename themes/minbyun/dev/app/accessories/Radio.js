@@ -22,8 +22,8 @@ class RdItem extends Component {
 }
 RdItem.propTypes = {
 	className: PropTypes.string,
-	value: PropTypes.string,
-	selected: PropTypes.string,
+	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	onClick: PropTypes.func
 };
 
@@ -60,7 +60,7 @@ class Radio extends Component {
 }
 Radio.propTypes = {
 	className: PropTypes.string,
-	selected: PropTypes.string,
+	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	onChange: PropTypes.func
 }
 

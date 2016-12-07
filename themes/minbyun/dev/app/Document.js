@@ -7,7 +7,7 @@ import FieldsInContents from './document/FieldsInContents';
 import LinkIf from './accessories/LinkIf';
 import Message from  './accessories/Message';
 import {Table, Row, Column} from './accessories/Table';
-import {_fieldAttrs, _convertToDoc} from './schema/docSchema';
+import {_fieldAttrs, _convertToDoc, _isHiddenField} from './schema/docSchema';
 import {_isEmpty, _isCommon} from './accessories/functions';
 
 class Document extends Component {
@@ -19,7 +19,7 @@ class Document extends Component {
 		};
 	}
 	componentDidMount(){
-		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){ console.log(data.document);
+		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){
 			let document = _convertToDoc(data.document);
 			this.setState({
 				document: document
@@ -34,14 +34,6 @@ class Document extends Component {
 				}});
 			}});
 		}});
-	}
-	isHiddenField(fname){
-		if(fname == 'trial'){
-			if(this.state.document.doctype == 1) return false;
-			else return true;
-		}
-		else if(fname == 'access') return true;
-		return false;
 	}
 	handleClick(which){
 		if(which == 'bookmark'){
@@ -108,7 +100,7 @@ class Document extends Component {
 						<FieldsInHeader fname={fn} document={this.state.document} userRole={userRole} />
 					);
 				}
-				else if(!this.isHiddenField(fn)){
+				else if(!_isHiddenField(fn, this.state.document, 'view')){
 					fieldsInContents.push(<FieldsInContents key={fn} fname={fn} docData={this.props.docData} document={this.state.document} />);
 				}
 			}

@@ -8,7 +8,7 @@ const _emptyDocument = {
 	commitee: [7],
 	content: '',
 	date: {year: '', month: ''},
-	access: 32,
+	access: 33,
 	author: undefined, name: '', class: '', email: '', phone: '',
 	image: {filename: ''},
 	file: [{filename: ''}]
@@ -17,7 +17,7 @@ const _fieldAttrs = {
 	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
 	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
 	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
-	trial: {type: 'group', displayName: '사건정보', children: ['court', 'number', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
+	trial: {type: 'group', displayName: '사건정보', children: ['court', 'sentence', 'number', 'trialname', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
 	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: true},
 	sentence: {type: 'date', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: true},
 	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: true},
@@ -25,7 +25,7 @@ const _fieldAttrs = {
 	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: true},
 	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
 	lawyer: {type: 'char', displayName: '변호사', form: 'text', parent: 'trial', multiple: false, required: true},
-	commitee: {type: 'taxonomy', displayName: '위원회', form: 'select', parent: '', multiple: true, required: true},
+	commitee: {type: 'taxonomy', displayName: '담당', form: 'select', parent: '', multiple: true, required: true},
 	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
 	date: {type: 'date', displayName: '자료 작성 시점', form: 'Ym', parent: '', multiple: false, required: true},
 	access: {type: 'taxonomy', displayName: '자료 제공 방식', form: 'radio', parent: '', multiple: false, required: true},
@@ -40,10 +40,10 @@ const _fieldAttrs = {
 const _defaultTaxonomy = {
 	doctype: [1],
 	commitee: [7],
-	access: [32, 33]
+	access: [33, 34]
 };
 const _defaultTerms = {
-	1: '판결문', 7: '기타', 32: '열람', 33: '다운로드'
+	1: '판결문', 7: '기타', 33: '열람', 34: '다운로드'
 }
 const _fname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content', memo: 'memo',
@@ -126,7 +126,7 @@ const _taxonomy = (sTaxonomy, sFields) => {
 			let fn = _fname['f'+sFAttr.fid];
 			taxonomy[fn] = [];
 			sTaxonomy[sFAttr.cid].forEach((sTerm) => {
-				taxonomy[fn][sTerm.idx] = parseInt(sTerm.tid);
+				taxonomy[fn][sTerm.idx-1] = parseInt(sTerm.tid);
 			});
 		}
 	});
@@ -141,13 +141,24 @@ const _terms = (taxonomyData) => {
 	}
 	return terms;
 };
-
 const _termsOf = (fname, docData) => {
 	let terms = {};
 	docData.taxonomy[fname].forEach((tid) => {
 		terms[tid] = docData.terms[tid];
 	});
 	return terms;
-}
+};
+const _isHiddenField = (fname, doc, where) => {
+	if(fname == 'trial' && (where == 'form' || where == 'view')){
+		if(doc.doctype == 1 || doc.doctype == 2){ // 판결문,  서면
+			return false;
+		}
+		else return true;
+	}
+	else if(fname == 'access' && where == 'view'){
+		return true;
+	}
+	return false;
+};
 
-export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms, _termsOf};
+export {_emptyDocument, _fieldAttrs, _defaultTaxonomy, _defaultTerms, _fname, _sFname, _convertToDoc, _convertDocToSave, _customFields, _customFieldAttrs, _taxonomy, _terms, _termsOf, _isHiddenField};

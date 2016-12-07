@@ -8,16 +8,12 @@ import DateForm from './DateForm';
 import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../accessories/Table';
 import Message from '../accessories/Message';
-import {_fieldAttrs, _sFname, _convertDocToSave} from '../schema/docSchema';
+import {_fieldAttrs, _sFname, _convertDocToSave, _isHiddenField} from '../schema/docSchema';
 import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../accessories/functions';
 
 class DocumentForm extends Component {
 	isHiddenField(fname){
-		if(fname == 'trial'){
-			if(this.props.document.doctype == 1) return false;
-			else return true;
-		}
-		return false;
+		return _isHiddenField(fname, this.props.document, 'form');
 	}
 	validationCheck(){
 		for(let fn in this.props.document){
@@ -84,7 +80,7 @@ class DocumentForm extends Component {
 		for(let fn in this.props.document){
 			let fAttr = _fieldAttrs[fn];
 			let value = this.props.document[fn];
-			if(fAttr.type != 'meta' && !fAttr.parent && !this.isHiddenField(fn)){
+			if(fAttr.type != 'meta' && !fAttr.parent && !_isHiddenField(fn, this.props.document, 'form')){
 				let documentField = (
 					<DocumentField
 						key={fn} fname={fn} value={value} docData={this.props.docData} callBacks={this.props.callBacks}

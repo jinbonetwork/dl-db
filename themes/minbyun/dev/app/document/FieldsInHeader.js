@@ -18,7 +18,7 @@ class FieldsInHeader extends Component {
 	files(){
 		let areYouOwner = _isCommon(['admin'], this.props.userRole) || this.props.document.owner;
 		let canYouDownload = _isCommon(['download'], this.props.userRole) || areYouOwner;
-		let isItDownload = (this.props.document['access'] == 33); // 33: 다운로드
+		let isItDownload = (this.props.document['access'] == 34); // 34: 다운로드
 
 		let fileList = this.props.document[this.props.fname].map((file, i) => (
 			<li key={i}>
