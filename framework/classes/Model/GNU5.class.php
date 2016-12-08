@@ -41,5 +41,19 @@ class GNU5 extends \DLDB\Objects {
 		}
 		return $member;
 	}
+
+	public function getMenu() {
+		$context = \DLDB\Model\Context::instance();
+		$dbm = \DLDB\DBM::instance();
+					        
+		$menu_srl = $context->getProperty('service.xe_menu_srl');
+
+		$menu = array();
+		$que = "SELECT * FROM ".$context->getProperty('service.gnu5_prefix')."menu WHERE me_use = 1 ORDER BY me_order ASC";
+		while($row = $dbm->getFetchArray($que)) {
+			$menu[$row['me_id'] = $row;
+		}
+		return $menu;
+	}
 }
 ?>

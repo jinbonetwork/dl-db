@@ -12,6 +12,7 @@ class index extends \DLDB\Controller {
 		$acl = \DLDB\Acl::instance();
 		$this->role = $acl->getAcl();
 		$this->sessiontype = $context->getProperty('session.type');
+		$this->menu = \DLDB\Menu::getMenu();
 	}
 }
 ?>

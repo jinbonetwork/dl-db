@@ -41,5 +41,28 @@ class XE extends \DLDB\Objects {
 		}
 		return $member;
 	}
+
+	public function getMenu() {
+		$context = \DLDB\Model\Context::instance();
+		$dbm = \DLDB\DBM::instance();
+
+		$menu_srl = $context->getProperty('service.xe_menu_srl');
+
+		$menu = array();
+		$que = "SELECT * FROM `".$context->getProperty('service.xe_prefix')."menu_item` WHERE menu_srl = ".$menu_srl." ORDER BY parent_srl ASC, listorder DESC";
+		while($row = $dbm->getFetchArray($que)) {
+			if($row['url'] == 'index') continue;
+			if(!preg_match("/^http:\/\//i",$row['url'])) {
+				$row['url'] = \DLDB\Lib\base_uri()."xe/".$row['url'];
+			}
+			if($row['parent_srl']) {
+				$menu[$row['parent_srl']]['sub'][] = $row;
+			} else {
+				$row['sub'] = array();
+				$menu[$row['menu_item_srl']] = $row;
+			}
+		}
+		return $menu;
+	}
 }
 ?>
