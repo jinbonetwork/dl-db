@@ -2,8 +2,8 @@
 namespace DLDB\Lib;
 
 function Error($msg,$errorcode=505) {
-	if($_GET['output'] == "xml" || $_POST['output'] == "xml") {
-		\DLDB\Respond::ResultPage(array(1,$msg));
+	if($errorcode == DLDB_ERROR_ACTION_AJAX || $_GET['output'] == "json" || $_POST['output'] == "json") {
+		\DLDB\Respond::ResultPageJson(array(1,$msg));
 	} else {
 		\DLDB\Respond::MessagePage($errcode,$msg);
 	}
