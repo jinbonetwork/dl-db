@@ -173,20 +173,6 @@
 .searchinput {
 	display: inline-block;
 	position: relative;
-	.searchinput__result {
-		position: relative;
-		width: 100%;
-	}
-	.searchinput__spinner {
-		display: block;
-		position: absolute;
-		top: 0; right: 0.5em;
-		line-height: 3em;
-		color: @main-color;
-	}
-	.searchinput__spinner i {
-		font-size: 1.5em;
-	}
 	input[type=text] {
 		width: 100%;
 	}
@@ -213,7 +199,33 @@
 	li span {
 		display: inline-block;
 	}
+	.searchinput__result {
+		position: relative;
+		width: 100%;
+	}
 	.searchinput__col:first-child {
 		width: 4em;
+	}
+	.searchinput__spinner {
+		display: block;
+		position: absolute;
+		top: 0; right: 0.5em;
+		line-height: 3em;
+		color: @main-color;
+	}
+	.searchinput__spinner i {
+		font-size: 1.5em;
+	}
+	.searchinput__button {
+		position: absolute;
+		top: 0; right: 0.2em;
+		background-color: transparent;
+		border: 0;
+		height: 100%;
+		line-height: inherit;
+		color: @main-color;
+	}
+	.searchinput__button i {
+		font-size: 1.5em;
 	}
 }

@@ -16,38 +16,35 @@ class SearchInput extends Component {
 	componentWillReceiveProps(nextProps){
 		if(nextProps.value) this.setState({value: nextProps.value});
 	}
+	componentDidUpdate(prevProps, prevState){
+	}
 	search(keyword){
 		this.setState({isSearching: true});
 		this.props.search(keyword, (result) => {
 			if(result){
 				this.setState({result: result, isSearching: false});
+			} else {
+				this.setState({result: [], isSearching: false});
 			}
 		});
 	}
-	/*
 	handleChange(event){
 		this.setState({value: event.target.value});
-		if(this.props.onChange) this.props.onChange( event.target.value);
-		if(event.target.value){
-			this.setState({value: event.target.value, isSearching: true});
+		if(this.props.onChange) this.props.onChange(event.target.value);
+	}
+	handleKeyDown(event){
+		if(event.key == 'Enter'){
 			this.search(event.target.value);
-		} else {
-			this.setState({value: '', isSearching: false});
 		}
 	}
-	*/
-	handleChange(event){
-		this.setState({value: event.target.value});
-		if(this.props.onChange) this.props.onChange( event.target.value);
-	}
-	handleKeyUp(event){
-		if(this.state.value){
+	handleClick(which, value, item){
+		if(which == 'item'){
+			this.setState({value: value, result: []});
+			if(this.props.onChange) this.props.onChange(item);
+		}
+		else if(which == 'search'){
 			this.search(this.state.value);
 		}
-	}
-	handleClick(value, item){
-		this.setState({value: value, result: []});
-		if(this.props.onChange) this.props.onChange(item);
 	}
 	render(){
 		const result = this.state.result.map((item, index) => {
@@ -56,7 +53,7 @@ class SearchInput extends Component {
 				const pn = this.props.resultFNames[i];
 				itemContent.push(<span key={pn} className="searchinput__col">{item[pn]}</span>);
 			}
-			return <li key={index} onClick={this.handleClick.bind(this, item[this.props.resultFNames[0]], item)}>
+			return <li key={index} onClick={this.handleClick.bind(this, 'item',item[this.props.resultFNames[0]], item)}>
 				{itemContent}
 			</li>
 		});
@@ -70,11 +67,15 @@ class SearchInput extends Component {
 				<i className="pe-7s-config pe-spin pe-va"></i>
 			</span>
 		);
+		const searchButton = (!this.state.isSearching) &&
+			<button className="searchinput__button" onClick={this.handleClick.bind(this, 'search')}>
+				<i className="pe-7s-search pe-va"></i>
+			</button>
 		return(
 			<div className="searchinput">
-				{/*<TextInput value={this.state.value} onChange={this.handleChange.bind(this)} />*/}
-				<input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} onKeyUp={this.handleKeyUp.bind(this)} />
+				<input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} />
 				{spinner}
+				{searchButton}
 				{displayResults}
 			</div>
 		);
