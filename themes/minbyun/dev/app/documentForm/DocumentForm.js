@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import {withRouter} from 'react-router';
 import 'babel-polyfill'; // for update(), find() ...
-import SearchInput from './SearchInput';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
 import DocumentField from './DocumentField';
@@ -19,20 +18,19 @@ class DocumentForm extends Component {
 		for(let fn in this.props.document){
 			let value = this.props.document[fn];
 			let fAttr = _fieldAttrs[fn];
-			if(fAttr.type != 'meta' && fAttr.type != 'group'){
-				if(fAttr.required && _isEmpty(value) && !this.isHiddenField(fn) && !this.isHiddenField(fAttr.parent)){
-					return {fname: fn, message: fAttr.displayName+'을(를) 입력하세요.'};
-				}
-				if(fAttr.multiple === false) value = [value];
-				for(let j in value){
-					let v = value[j];
-					if(
-						(fAttr.type == 'email' && !_isEmailValid(v)) ||
-						(fAttr.type == 'phone' && !_isPhoneValid(v)) ||
-						(fAttr.type == 'date' && !_isDateValid(v, fAttr.form))
-					){
-						return {fname: fn, message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
-					}
+			if(fAttr.type == 'meta' || fAttr.type == 'group' || this.isHiddenField(fn) || this.isHiddenField(fAttr.parent)) continue;
+			if(fAttr.required && _isEmpty(value)){
+				return {fname: fn, message: fAttr.displayName+'을(를) 입력하세요.'};
+			}
+			if(fAttr.multiple === false) value = [value];
+			for(let j in value){
+				let v = value[j];
+				if(
+					(fAttr.type == 'email' && !_isEmailValid(v)) ||
+					(fAttr.type == 'phone' && !_isPhoneValid(v)) ||
+					(fAttr.type == 'date' && !_isDateValid(v, fAttr.form))
+				){
+					return {fname: fn, message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
 				}
 			}
 		}

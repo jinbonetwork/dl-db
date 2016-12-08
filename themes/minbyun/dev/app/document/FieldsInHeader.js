@@ -23,7 +23,7 @@ class FieldsInHeader extends Component {
 		let fileList = this.props.document[this.props.fname].map((file, i) => (
 			<li key={i}>
 				<LinkIf tag="a" to={file.fileuri} if={isAccessDownload && canYouDownload} notIf="visible">{file.filename}</LinkIf>
-				{(file.status != 'parsed' && areYouOwner) && <i className="document__attention pe-7s-attention pe-va"></i>}
+				{(file.status != 'parsed' && areYouOwner) && <span className="document__attention"><span>&#9888;</span></span>}
 				{areYouOwner &&
 					<Link className="document__filetext" to={'/document/'+this.props.document.id+'/text/'+file.fid}>
 						<span>TEXT</span>

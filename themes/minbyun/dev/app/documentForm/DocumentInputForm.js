@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
-import SearchInput from './SearchInput';
+import SearchInput from '../accessories/SearchInput';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
 import FileInput from '../accessories/FileInput';
@@ -8,6 +8,7 @@ import {Table} from '../accessories/Table';
 import {Select, Option} from '../accessories/Select';
 import {Radio, RdItem} from '../accessories/Radio';
 import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
+import {_mapAO} from '../accessories/functions';
 
 class DocumentInputForm extends Component {
 	isValid(value, fAttr){
@@ -39,6 +40,18 @@ class DocumentInputForm extends Component {
 			this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
 		}
 	}
+	handleChangeOfSearch(fnames, result){
+		if(typeof result !== 'object'){
+			this.props.callBacks.updateSingleField(this.props.fname, this.props.index, result);
+		} else {
+			this.props.callBacks.updateFields(_mapAO(fnames, (fn) => result[fn]));
+		}
+	}
+	searchMember(name, callBack){
+		this.props.callBacks.fetchData('get', '/api/members?q='+encodeURIComponent(name), (data) => {
+			if(data && callBack) callBack(data.members);
+		});
+	}
 	render(){
 		const fAttr = _fieldAttrs[this.props.fname];
 		switch(fAttr.form){
@@ -48,13 +61,10 @@ class DocumentInputForm extends Component {
 					<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} placeholder={placeholder} />
 				);
 			case 'search':
-				let api;
-				if(this.props.fname == 'name') api = '/api/members?q=';
+				const fnames = _fieldAttrs[_fieldAttrs[this.props.fname].parent].children;
 				return (
-					<SearchInput value={this.props.value} fname={this.props.fname} api={api}
-						updateFields={this.props.callBacks.updateFields.bind(this)}
-						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
-						fetchData={this.props.callBacks.fetchData}
+					<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames}
+						onChange={this.handleChangeOfSearch.bind(this, fnames)}
 					/>
 				);
 			case 'file':

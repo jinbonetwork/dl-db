@@ -169,3 +169,51 @@
 		display: none;
 	}
 }
+
+.searchinput {
+	display: inline-block;
+	position: relative;
+	.searchinput__result {
+		position: relative;
+		width: 100%;
+	}
+	.searchinput__spinner {
+		display: block;
+		position: absolute;
+		top: 0; right: 0.5em;
+		line-height: 3em;
+		color: @main-color;
+	}
+	.searchinput__spinner i {
+		font-size: 1.5em;
+	}
+	input[type=text] {
+		width: 100%;
+	}
+	ul {
+		position: absolute;
+		z-index: 2;
+		top: 0; left: 0;
+		width: 100%;
+		margin: 0;
+		list-style-type: none;
+		background-color: @main-color;
+		color: @minor-color-2;
+	}
+	li {
+		padding: 0 1em;
+		list-style-type: none;
+		cursor: pointer;
+		line-height: 2.5em;
+		margin: 0;
+	}
+	li:hover {
+		background-color: @main-color * 1.2;
+	}
+	li span {
+		display: inline-block;
+	}
+	.searchinput__col:first-child {
+		width: 4em;
+	}
+}
