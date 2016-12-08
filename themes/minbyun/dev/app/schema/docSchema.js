@@ -150,7 +150,7 @@ const _termsOf = (fname, docData) => {
 };
 const _isHiddenField = (fname, doc, where) => {
 	if(fname == 'trial' && (where == 'form' || where == 'view')){
-		if(doc.doctype == 1 || doc.doctype == 2){ // 판결문,  서면
+		if(doc.doctype == 1 || doc.doctype == 2){ // 판결문, 서면
 			return false;
 		}
 		else return true;

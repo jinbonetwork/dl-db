@@ -13,7 +13,8 @@ class SearchResult extends Component {
 	constructor(){
 		super();
 		this.state = {
-			documents: null,
+			documents: [],
+			distribution: {},
 			numOfPages: 1
 		};
 	}
@@ -48,10 +49,11 @@ class SearchResult extends Component {
 			if(data.result.cnt > 0){
 				this.setState({
 					documents: data.documents.map((doc) => this.searched(doc)),
+					distribution: data.result.taxonomy_cnt,
 					numOfPages: data.result.total_page
 				});
 			} else {
-				this.setState({documents: null, numOfPages: 1});
+				this.setState({documents: [], distribution: {}, numOfPages: 1});
 			}
 		}});
 	}
@@ -96,7 +98,7 @@ class SearchResult extends Component {
 		const orderby = (query.order ? query.order : 'score');
 		const keywords = this.keywords(query);
 
-		let documents = this.state.documents && this.state.documents.map((doc, index) => (
+		let documents = this.state.documents.map((doc, index) => (
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
 				<div>
@@ -110,7 +112,7 @@ class SearchResult extends Component {
 		return (
 			<div className="search-result">
 				<DocListHead
-					docData={this.props.docData} doctypes={doctypes} orderby={orderby}
+					docData={this.props.docData} distribution={this.state.distribution} doctypes={doctypes} orderby={orderby}
 					onChange={this.handleChange.bind(this, 'dochead')}
 				/>
 				<div className="search-result__doclist">

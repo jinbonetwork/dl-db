@@ -15,9 +15,14 @@ class DoctypeList extends Component {
 		}
 	}
 	render(){
-		let doctypes = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => {
+		const doctypes = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => {
 			let className = (this.props.doctypes.indexOf(tid) >= 0 ? 'doctype-li doctype-li--checked' : 'doctype-li');
-			return <li key={tid} className={className} onClick={this.handleClick.bind(this, 'doctypes', tid)}><span>{tname}</span></li>
+			let count = (this.props.distribution[tid] ? this.props.distribution[tid] : 0);
+			return (
+				<li key={tid} className={className} onClick={this.handleClick.bind(this, 'doctypes', tid)}>
+					<span>{tname} ({count})</span>
+				</li>
+			);
 		});
 		return (
 			<div className="doclisthead">
@@ -31,9 +36,10 @@ class DoctypeList extends Component {
 	}
 }
 DoctypeList.propTypes = {
-	doctypes: PropTypes.array,
+	doctypes: PropTypes.array.isRequired,
 	orderby: PropTypes.string.isRequired,
 	docData: PropTypes.object,
+	distribution: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired
 };
 

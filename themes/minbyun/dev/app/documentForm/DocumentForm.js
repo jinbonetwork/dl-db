@@ -23,6 +23,9 @@ class DocumentForm extends Component {
 				if(fAttr.required && _isEmpty(value) && !this.isHiddenField(fn) && !this.isHiddenField(fAttr.parent)){
 					return {fname: fn, message: fAttr.displayName+'을(를) 입력하세요.'};
 				}
+				if(this.isHiddenField(fn) || this.isHiddenField(fAttr.parent)){
+					return null;
+				}
 				if(fAttr.multiple === false) value = [value];
 				for(let j in value){
 					let v = value[j];
