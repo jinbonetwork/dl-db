@@ -32,7 +32,6 @@ const _query = (sQuery) => {
 	let query = {};
 	for(let prop in sQuery){ if(sQuery[prop]){
 		switch(prop){
-			//case 'keyword': query.q = encodeURIComponent(sQuery[prop]); break;
 			case 'keyword': query.q = sQuery[prop]; break;
 			case 'doctypes': query[_sFname['doctype']] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
 		}

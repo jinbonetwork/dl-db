@@ -74,26 +74,21 @@ const _isCommon = (array1, array2, equal) => {
 		return true;
 	}
 }
-/*
-const _params = (params, excepts) => {
-	let array = [];
-	for(let p in params){
-		if(!excepts || !excepts.length || excepts.indexOf(p) < 0){
-			if(params[p]) array.push(p+'='+params[p]);
-		}
-	}
-	if(array.length) return '?'+array.join('&');
-	return '';
-}
-*/
-const _mapO = (obj, callBack) => {
+const _mapO = (obj, callBack) => { // object -> array
 	let array = [];
 	for(let prop in obj){
 		array.push(callBack(prop, obj[prop]));
 	}
 	return array;
 };
-const _forIn = (obj, callBack) => {
+const _mapAO = (array, callBacks) => { // array -> object
+	let object = {};
+	for(let i in array){
+		object[array[i]] = callBacks(array[i]);
+	}
+	return object;
+}
+const _forIn = (obj, callBack) => { // object -> object
 	let newObj = {};
 	for(let prop in obj){
 		newObj[prop] = callBack(prop, obj[prop]);
@@ -107,4 +102,4 @@ const _pushpull = (array, value) => {
 	return newArray;
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _forIn, _pushpull};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _pushpull};

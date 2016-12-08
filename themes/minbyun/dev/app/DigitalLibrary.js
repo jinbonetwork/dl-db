@@ -53,6 +53,9 @@ class DigitalLibrary extends Component {
 	componentWillUnmount(){
 		jQ(window).off('resize');
 	}
+	handleClick(){
+		this.setState({rerender: true});
+	}
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
 		let childProp = _childProps[child.props.route.path];
@@ -101,7 +104,7 @@ class DigitalLibrary extends Component {
 			);
 		}
 		return(
-			<div className="digital-library" onClick={() => {this.setState({rerender: true})}}>
+			<div className="digital-library" onClick={this.handleClick.bind(this)}>
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
