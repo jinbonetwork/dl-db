@@ -41,7 +41,11 @@ class DocumentInputForm extends Component {
 		}
 	}
 	handleChangeOfSearch(fnames, result){
-		this.props.callBacks.updateFields(_mapAO(fnames, (fn) => result[fn]));
+		if(typeof result !== 'object'){
+			this.props.callBacks.updateSingleField(this.props.fname, this.props.index, result);
+		} else {
+			this.props.callBacks.updateFields(_mapAO(fnames, (fn) => result[fn]));
+		}
 	}
 	searchMember(name, callBack){
 		this.props.callBacks.fetchData('get', '/api/members?q='+encodeURIComponent(name), (data) => {

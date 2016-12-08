@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react';
-import jQ from 'jquery';
 
 class TextInput extends Component {
 	constructor(){
@@ -11,9 +10,6 @@ class TextInput extends Component {
 	}
 	componentWillMount(){
 		if(this.props.value) this.setState({value: this.props.value});
-	}
-	componentDidMount(){
-		jQ(this.refs.input).keyup((event) => {console.log('----')});
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.value) this.setState({value: nextProps.value});
@@ -32,12 +28,16 @@ class TextInput extends Component {
 	handleKeyDown(event){ console.log('key down');
 		if(!this.state.firstKeyDown) this.setState({firstKeyDown: true});
 	}
+	handKeyPress(event){
+		console.log('press', event.key);
+	}
 	render(){
 		return (
 			<input type="text" value={this.state.value} ref="input"
 				onChange={this.handleChange.bind(this)}
 				onKeyDown={this.handleKeyDown.bind(this)}
 				onKeyUp={this.handleKeyUp.bind(this)}
+				onKeyPress={this.handKeyPress.bind(this)}
 			/>
 		);
 	}

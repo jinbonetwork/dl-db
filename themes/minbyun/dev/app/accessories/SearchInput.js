@@ -24,32 +24,30 @@ class SearchInput extends Component {
 			}
 		});
 	}
-
-	handleChange(value){
-		this.setState({value: value});
-		if(value){
-			this.setState({value: value, isSearching: true});
-			this.search(value);
+	/*
+	handleChange(event){
+		this.setState({value: event.target.value});
+		if(this.props.onChange) this.props.onChange( event.target.value);
+		if(event.target.value){
+			this.setState({value: event.target.value, isSearching: true});
+			this.search(event.target.value);
 		} else {
-			this.setState({value: value, isSearching: false});
+			this.setState({value: '', isSearching: false});
 		}
 	}
-	/*
-	handleChange(event){ console.log('change');
+	*/
+	handleChange(event){
 		this.setState({value: event.target.value});
+		if(this.props.onChange) this.props.onChange( event.target.value);
 	}
 	handleKeyUp(event){
-		console.log(event.key, event.target.value);
 		if(this.state.value){
 			this.search(this.state.value);
 		}
 	}
-	*/
-	handleClick(searchFName, item){
-		this.setState({result: []});
-		if(this.props.onChange){
-			this.props.onChange(item);
-		}
+	handleClick(value, item){
+		this.setState({value: value, result: []});
+		if(this.props.onChange) this.props.onChange(item);
 	}
 	render(){
 		const result = this.state.result.map((item, index) => {
@@ -74,8 +72,8 @@ class SearchInput extends Component {
 		);
 		return(
 			<div className="searchinput">
-				<TextInput value={this.state.value} onChange={this.handleChange.bind(this)} />
-				{/*<input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} onKeyUp={this.handleKeyUp.bind(this)} />*/}
+				{/*<TextInput value={this.state.value} onChange={this.handleChange.bind(this)} />*/}
+				<input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} onKeyUp={this.handleKeyUp.bind(this)} />
 				{spinner}
 				{displayResults}
 			</div>
