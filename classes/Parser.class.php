@@ -63,30 +63,35 @@ class Parser extends \DLDB\Objects {
 		include_once DLDB_CONTRIBUTE_PATH."/pdfparser/vendor/autoload.php";
 		$parser = new \Smalot\PdfParser\Parser();
 		$filename = \DLDB\Files::getFilePath($file_info);
-		$pdf = $parser->parseFile($filename);
+		try {
+			$pdf = $parser->parseFile($filename);
 
-		$details  = $pdf->getDetails();
-		if ( is_array($details) ) {
-			foreach( $details as $property => $value ) {
-				if ( is_array( $value ) ) {
-					$value = implode(', ', $value);
+			$details  = $pdf->getDetails();
+			if ( is_array($details) ) {
+				foreach( $details as $property => $value ) {
+					if ( is_array( $value ) ) {
+						$value = implode(', ', $value);
+					}
+					$header[$property] = $value;
 				}
-				$header[$property] = $value;
 			}
-		}
 
-		$errmsg = self::validPDF( $header );
+			$errmsg = self::validPDF( $header );
 
-		if(!$errmsg) {
-			$pages = $pdf->getPages();
+			if(!$errmsg) {
+				$pages = $pdf->getPages();
 
-			foreach( $pages as $page ) {
-				$text .= $page->getText()."\n";
+				foreach( $pages as $page ) {
+					$text .= $page->getText()."\n";
+				}
+			} else {
+				$header['error'] = $errmsg;
 			}
-		} else {
-			$header['error'] = $errmsg;
+		} catch(Exception $e) {
+			$header['error'] = $e;
+		} finally {
+			return array('text'=>trim($text),'header'=>$header);
 		}
-		return array('text'=>trim($text),'header'=>$header);
 	}
 
 	public static function parseDoc($file_info) {
