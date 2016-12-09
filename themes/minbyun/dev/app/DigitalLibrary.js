@@ -9,7 +9,7 @@ import {_isEmpty, _isCommon} from './accessories/functions';
 const _childProps = {
 	'/login': {
 		role: null,
-		required: ['fetchData', 'fetchContData', 'setMessage'],
+		required: ['fetchData', 'fetchContData', 'setMessage', 'window'],
 		elective: ['userData']
 	},
 	'/user': {

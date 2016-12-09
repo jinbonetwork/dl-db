@@ -2,6 +2,8 @@ import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import {Table, Row, Column} from './accessories/Table';
 import Message from './accessories/Message';
+import {_screen} from './schema/screenSchema';
+import {_interpolate} from './accessories/functions';
 
 class Login extends Component {
 	constructor(){
@@ -63,32 +65,59 @@ class Login extends Component {
 			this.submit();
 		}
 	}
+	propsForReactivity(){
+		const window = this.props.window;
+		return {
+			style: {
+				title0: {
+					fontSize: _interpolate(window.width, 24, 28.8, 320, 500),
+					textAlign: 'left'
+				},
+				title1: {
+					fontSize: _interpolate(window.width, 28.8, 57.6, 320, 500),
+					textAlign: 'left'
+				}
+			},
+			placeholder: {
+				id: (window.width <= _screen.small ? '아이디' : null),
+				password: (window.width <= _screen.small ? '비밀번호' : null)
+			}
+		};
+	}
 	render(){
-		//if(!this.props.userData.role) return null;
+		const prsRct = this.propsForReactivity();
 		return(
 			<div className="login">
 				<div className="login__header">
 					<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
 					<div className="login__title">
-						<span>민주사회를 위한 변호사모임</span>
-						<span>디지털 도서관</span>
+						<span style={prsRct.style.title0}>민주사회를 위한 변호사모임</span>
+						<span style={prsRct.style.title1}>디지털 도서관</span>
 					</div>
 				</div>
 				<Table className="login__body">
 					<Row>
-						<Column className="table__label">아이디</Column>
-						<Column><input type="text" value={this.state.id} onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')} /></Column>
+						<Column>아이디</Column>
+						<Column>
+							<input type="text" value={this.state.id} placeholder={prsRct.placeholder.id}
+								onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
+							/>
+						</Column>
 					</Row>
 					<Row>
-						<Column className="table__label">비밀번호</Column>
-						<Column><input type="password" value={this.state.password} onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')} /></Column>
+						<Column>비밀번호</Column>
+						<Column>
+							<input type="password" value={this.state.password} placeholder={prsRct.placeholder.password}
+								onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')}
+							/>
+						</Column>
 					</Row>
 					<Row>
-						<Column className="table__label"></Column>
+						<Column></Column>
 						<Column><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></Column>
 					</Row>
 					<Row>
-						<Column className="table__label"></Column>
+						<Column></Column>
 						<Column><span>※ 아이디 개설 문의: 민변 사무국</span></Column>
 					</Row>
 				</Table>
@@ -101,6 +130,7 @@ class Login extends Component {
 }
 Login.propTypes = {
 	userData: PropTypes.object,
+	window: PropTypes.object.isRequired,
 	fetchData:  PropTypes.func.isRequired,
 	fetchContData: PropTypes.func.isRequired,
 	setMessage:  PropTypes.func.isRequired,

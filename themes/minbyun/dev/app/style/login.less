@@ -1,3 +1,7 @@
+@import "variables";
+
+@lable-width: 5em;
+
 .login {
 	width: 100%;
 	max-width: 600px;
@@ -27,8 +31,8 @@
 	}
 	.login__title span:last-child {
 		font-size: 3.6em;
-		color: #989cff;
-		font-weight: 700;
+		color: @main-color;
+		font-weight: @font-bold;
 	}
 
 	.login__header + .login__body {
@@ -40,20 +44,27 @@
 		max-width: 400px;
 		margin: 0 auto;
 	}
-	.login__body .table__label {
-		width: 5em;
+	.login__body .table__col:first-child {
+		width: @lable-width;
 		padding-right: 1em;
 		line-height: 3.5em;
 		text-align: right;
-		font-weight: 700;
-		color: #989cff;
+		font-weight: @font-bold;
+		color: @main-color;
+		@media screen and (max-width: @small-screen) {
+			display: none;
+		}
 	}
-	.login__body .table__col:not(.table__label){
+	.login__body .table__col + .table__col{
 		height: 3.5em;
-		margin-left: 5em;
-		border: solid 1px #989cff;
+		margin-left: @lable-width;
+		border: solid 1px @main-color;
 		border-bottom: 0;
+		@media screen and (max-width: @small-screen) {
+			margin-left: 0;
+		}
 	}
+
 	.login__body .table__row:last-child .table__col {
 		border: 0;
 		height: auto;
@@ -66,9 +77,8 @@
 		border: 0;
 	}
 	button {
-		background-color: #989cff;
-		color: #ffffff;
-		font-weight: 700;
+		background-color: @main-color;
+		color: @minor-color-2;
+		font-weight: @font-bold;
 	}
-
 }

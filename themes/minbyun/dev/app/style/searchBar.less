@@ -1,17 +1,19 @@
 @import "variables";
 
+@second-part-width: 20em;
+
 .searchbar {
 	.searchbar__bar {
 		position: relative;
 		background-color: @minor-color-2;
 	}
 	.searchbar__bar > div:first-child {
-		margin-right: 20em;
+		margin-right: @second-part-width;
 	}
 	.searchbar__bar > div:last-child {
 		position: absolute;
 		top: 0; right: 0;
-		width: 20em;
+		width: @second-part-width;
 	}
 	.searchbar__keyword {
 		border: solid 3px @main-color;
@@ -91,11 +93,27 @@
 	}
 	.searchbar__header span {
 		font-size: 3.4em;
-		font-weight: 700;
+		font-weight: @font-bold;
 		color: @main-color;
 	}
 	.searchbar__header + .searchbar__bar {
-		margin-top: 10%;
+		margin: 10% 1em 0 1em;
+	}
+	.searchbar__bar {
+		@media screen and (max-width: @medium-screen){
+			max-width: 600px;
+		}
+	}
+	.searchbar__bar > div:first-child {
+		@media screen and (max-width: @medium-screen){
+			margin-right: 0;
+		}
+	}
+	.searchbar__bar > div:last-child {
+		@media screen and (max-width: @medium-screen){
+			position: relative;
+			width: 100%;
+		}
 	}
 	.searchbar__bar + .searchbar__helper {
 		margin-top: 1em;
