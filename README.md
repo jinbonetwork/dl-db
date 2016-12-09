@@ -27,8 +27,15 @@ ElasticSearch를 사용할 경우 ElasticSearch 2.4.0 을 설치하셔야 합니
 * MySQL Fulltext 검색을 사용할 경우: MySQL 5.7.0 이상
 * ElasticSearch를 검색엔진으로 사용할 경우: ElasticSearch 2.4.0 설치에 필요한 OpenJDK-1.8
 
+3. 브라우저 호환성
+=================
+|       | Firefox | Chrome | IE | Edge | Safari | Opera | Android | Chrome for Android |
+|:-----:|:------:|:-----:|:------:|:------:|:-----:|:-----:|:------:|:-----:|
+| axios | 45 | 48 | 9, 10, 11 |14 | 9 |
+| formData | 4 | 7 | 10 | | 5 |12 | 3 | yes |
 
-3. 설치
+
+4. 설치
 ======
 
 이 이스슽은 다른 오픈소스 프로젝트들을 서브모듀로 가지고 있습니다. 따라서 gil clone으로 소스를 다운받을 시, --recursive 옵션으로 설치하셔야 합니다.
