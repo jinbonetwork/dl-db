@@ -188,6 +188,7 @@ class DBM extends \DLDB\Objects {
 	private static function fetchDocument($row) {
 		$fields = self::$fields;
 		if(!$row) return null;
+		$acl = \DLDB\Acl::instance();
 		foreach($row as $k => $v) {
 			if($k == 'custom') $v = unserialize($v);
 			else if(is_string($v)) $v = stripslashes($v);
@@ -211,7 +212,7 @@ class DBM extends \DLDB\Objects {
 		}
 		if($document['uid'] == $_SESSION['user']['uid']) {
 			$document['owner'] = 1;
-		} else if( \DLDB\Acl::isMaster() ) {
+		} else if( $acl->imMaster() ) {
 			$document['owner'] = 1;
 		} else {
 			$document['owner'] = 0;
