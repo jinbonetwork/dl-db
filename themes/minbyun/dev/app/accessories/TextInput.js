@@ -5,7 +5,7 @@ class TextInput extends Component {
 		super();
 		this.state = {
 			value: '',
-			firstKeyDown: false
+			firstFocused: false
 		};
 	}
 	componentWillMount(){
@@ -15,29 +15,34 @@ class TextInput extends Component {
 		if(nextProps.value) this.setState({value: nextProps.value});
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.state.firstKeyDown && prevState.value != this.state.value && this.props.onChange){
-			this.props.onChange(this.state.value);
+		if(this.state.firstFocused && prevState.value != this.state.value && this.props.onChange){
+			this.props.onChange({target: {value: this.state.value}});
 		}
 	}
 	handleChange(event){
 		this.setState({value: event.target.value});
 	}
+	handleKeyDown(event){
+		if(this.props.onKeyDown) this.props.onKeyDown(event);
+	}
 	handleKeyUp(event){
-		console.log('key up');
+		if(this.props.onKeyUp) this.props.onKeyUp(event);
 	}
-	handleKeyDown(event){ console.log('key down');
-		if(!this.state.firstKeyDown) this.setState({firstKeyDown: true});
+	handleFocus(event){
+		if(!this.state.firstFocused) this.setState({firstFocused: true});
+		if(this.props.onFocus) this.props.onFocus(event);
 	}
-	handKeyPress(event){
-		console.log('press', event.key);
+	handleBlur(event){
+		if(this.props.onBlur) this.props.onBlur(event);
 	}
 	render(){
 		return (
-			<input type="text" value={this.state.value} ref="input"
+			<input type="text" value={this.state.value}
 				onChange={this.handleChange.bind(this)}
 				onKeyDown={this.handleKeyDown.bind(this)}
 				onKeyUp={this.handleKeyUp.bind(this)}
-				onKeyPress={this.handKeyPress.bind(this)}
+				onFocus={this.handleFocus.bind(this)}
+				onBlur={this.handleBlur.bind(this)}
 			/>
 		);
 	}
@@ -47,6 +52,8 @@ TextInput.propTypes = {
 	onChange: PropTypes.func,
 	onKeyDown: PropTypes.func,
 	onKeyUp: PropTypes.func,
+	onFocus: PropTypes.func,
+	onBlur: PropTypes.func
 };
 
 export default TextInput;

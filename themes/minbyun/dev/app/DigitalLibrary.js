@@ -5,7 +5,6 @@ import SearchBar from './SearchBar';
 import LinkIf from './accessories/LinkIf';
 import Message from './accessories/Message';
 import {_isEmpty, _isCommon} from './accessories/functions';
-import jQ from 'jquery';
 
 const _childProps = {
 	'/login': {
@@ -44,17 +43,11 @@ class DigitalLibrary extends Component {
 	constructor(){
 		super();
 		this.state = {
-			rerender: false
+			clicked: false
 		};
 	}
-	componentDidMount(){
-		jQ(window).on('resize', () => {this.setState({rerender: true})});
-	}
-	componentWillUnmount(){
-		jQ(window).off('resize');
-	}
 	handleClick(){
-		this.setState({rerender: true});
+		this.setState({clicked: true});
 	}
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
@@ -93,8 +86,8 @@ class DigitalLibrary extends Component {
 		);
 	}
 	render(){
-		let userRole = this.props.userData.role;
-		let child = this.cloneChild(this.props.children, this.props.userData);
+		const userRole = this.props.userData.role;
+		const child = this.cloneChild(this.props.children, this.props.userData);
 		if(!userRole){
 			return (
 				<div className="digital-library">
@@ -110,7 +103,9 @@ class DigitalLibrary extends Component {
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
-					<MainMenu userRole={userRole} fetchData={this.props.fetchData} setMessage={this.props.setMessage} unsetUserData={this.props.unsetUserData} />
+					<MainMenu userRole={userRole} menuData={this.props.menuData}
+						fetchData={this.props.fetchData} setMessage={this.props.setMessage} unsetUserData={this.props.unsetUserData}
+					/>
 				</div>
 				<div className="digital-library__content">
 					{child || this.searchBar('content')}
@@ -121,11 +116,13 @@ class DigitalLibrary extends Component {
 	}
 }
 DigitalLibrary.propTypes = {
-	userData: PropTypes.object,
-	docData: PropTypes.object,
-	searchQuery: PropTypes.object,
-	openedDocuments: PropTypes.object,
+	userData: PropTypes.object.isRequired,
+	menuData: PropTypes.array.isRequired,
+	docData: PropTypes.object.isRequired,
+	searchQuery: PropTypes.object.isRequired,
+	openedDocuments: PropTypes.array.isRequired,
 	message: PropTypes.element,
+	window: PropTypes.object.isRequired,
 	fetchContData: PropTypes.func.isRequired,
 	setMessage: PropTypes.func.isRequired,
 	unsetUserData: PropTypes.func.isRequired,

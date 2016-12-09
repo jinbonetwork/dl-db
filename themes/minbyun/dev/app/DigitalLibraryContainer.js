@@ -7,13 +7,16 @@ import Message from './accessories/Message';
 import Overlay from './accessories/Overlay';
 import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './schema/docSchema';
 import {_role, _convertToUser, _emptyUser, _usCustomFieldAttrs, _usCustomFields} from './schema/userSchema';
+import {_menuData} from './schema/menuSchema';
 import {_isEmpty} from './accessories/functions';
+import jQ from 'jquery';
 
 class DigitalLibraryContainer extends Component {
 	constructor(){
 		super();
 		this.state = {
 			userData: {user: null, role: null, type: null},
+			menuData: [],
 			docData: {
 				taxonomy: _defaultTaxonomy,
 				terms: _defaultTerms,
@@ -32,13 +35,29 @@ class DigitalLibraryContainer extends Component {
 				customFieldAttrs: null
 			},
 			message: null,
-			openedDocuments: null
+			openedDocuments: [],
+			window: {width: 100, height: 100}
 		};
 	}
 	componentDidMount(){
 		this.fetchContData((data) => {
-			if(!data.role) this.props.router.push('/login');
+			if(!data.role){
+				if(this.props.location.pathname != '/login'){
+					this.props.router.push('/login');
+				} else {
+					this.props.router.push('/');
+					this.props.router.push('/login');
+				}
+			}
 		});
+		this.handleResize();
+		jQ(window).on('resize', this.handleResize.bind(this));
+	}
+	componentWillUnmount(){
+		jQ(window).off('resize');
+	}
+	handleResize(){
+		this.setState({window: {width: jQ(window).width(), height: jQ(window).height()}});
 	}
 	fetchData(method, url, arg2, arg3){
 		let data = (method == 'get' ? null : arg2);
@@ -68,11 +87,14 @@ class DigitalLibraryContainer extends Component {
 	}
 	fetchContData(callBack){
 		this.fetchData('get', '/api', (data) => {
-			this.setState({userData: {
-				user: data.user,
-				role: _role(data.role),
-				type: data.sessiontype
-			}});
+			this.setState({
+				userData: {
+					user: data.user,
+					role: _role(data.role),
+					type: data.sessiontype
+				},
+				menuData: _menuData(data.menu)
+			});
 			if(data.role){
 				this.fetchData('get', '/api/fields', (data) => {
 					this.setState({docData: {
@@ -141,11 +163,13 @@ class DigitalLibraryContainer extends Component {
 	render(){
 		let digitalLibrary = this.props.children && React.cloneElement(this.props.children, {
 			userData: this.state.userData,
+			menuData: this.state.menuData,
 			userProfile: this.state.userProfile,
 			docData: this.state.docData,
 			searchQuery: this.state.searchQuery,
 			openedDocuments: this.state.openedDocuments,
 			message: this.state.message,
+			window: this.state.window,
 			fetchContData: this.fetchContData.bind(this),
 			setMessage: this.setMessage.bind(this),
 			unsetUserData: this.unsetUserData.bind(this),

@@ -1,3 +1,5 @@
+import {_mapO} from '../accessories/functions';
+
 const _userMenu = [
 	{
 		path: 'profile',
@@ -18,4 +20,17 @@ const _userMenu = [
 	}
 ];
 
-export {_userMenu};
+const _menuData = (data) => {
+	return _mapO(data, (key, value) => {
+		const items = value.sub.map((item) => { return {
+			displayName: item.name,
+			url: item.url
+		}});
+		return {
+			displayName: value.name,
+			items: items
+		}
+	});
+};
+
+export {_userMenu, _menuData};
