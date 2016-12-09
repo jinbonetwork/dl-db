@@ -19,6 +19,15 @@ $service['timezone'] = 'Asia/Seoul';
 $service['encoding'] = 'UTF-8';
 $service['LOG_TYPE'] = 1;
 $service['search_type'] = 'elastic';
+$service['permit'] = "hwp|hwpx|pdf|jpg|jpeg|gif|bmp|png";
+$service['elastic_index'] = 'index';
+$service['elastic_shards'] = 6;
+$service['elastic_replicas'] = 0;
+$service['elastic_analyzer'] = 'seunjeon_default_tokenizer';
+$service['elastic_tokenizer'] = 'seunjeon_tokenizer';
+$service['gnu5_prefix'] = 'g5_';
+$service['xe_prefix'] = 'xe_';
+$service['xe_menu_srl'] = 62;
 
 $session['type'] = 'xe';
 $session['server'] = '127.0.0.1';

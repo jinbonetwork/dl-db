@@ -1,7 +1,16 @@
 # dl-db
 민변디지털도서관 데이터베이스
 
-3. 소개
+1. 소개
+======
+
+이 프로젝트는 React + PHP 로 제작되었습니다.
+
+이 시스템은 자체 회원시스템(회원가입 / 로그인) 을 가지지 않습니다. 대신 Xpress Engine(Xe) 또는 GNU Board 5(gnu5) 회원시스템과 연동합니다.
+
+검색은 MySQL 5.7 이상에서 지원하는 fulltext(mecab plugin 설치) 또는 ElasticSearch 두가지를 지원합니다. ElasticSearch를 사용할 경우 ElasticSearch 2.4.0 을 설치하셔야 합니다.
+
+2. 설치
 ======
 
 이 이스슽은 다른 오픈소스 프로젝트들을 서브모듀로 가지고 있습니다. 따라서 gil clone으로 소스를 다운받을 시, --recursive 옵션으로 설치하셔야 합니다.
@@ -22,6 +31,20 @@
 --------------------
 * config 폴더에 있는 settings.dist.php 파일을 settings.php 로 복사한후, DB 접속정보와 도>메인 정보등 필요한 정보를 수정/저장합니다.
 * 정확한 settings.php 의 위치는 config/settings.php
+* 인증시스템을 어떤 것으로 사용할지 설정
+```vim
+$session['type'] = 'xe'; /* xe를 사용할 시 xe, gnu5를 사용할경우 gnu5 */
+```
+* 검색 방식 지정을 지정하셔야 합니다.
+```vim
+$session['search_type'] = 'elastic'; /* elasticsearch를 사용할 시 elastic, mysql fulltext를 사용할경우 db */
+/* elasticsearch를 사용하는 경우 아래 옵션 정보를 입력해주셔야 합니다. */
+$service['elastic_index'] = 'index';
+$service['elastic_shards'] = 6;
+$service['elastic_replicas'] = 0;
+$service['elastic_analyzer'] = 'seunjeon_default_tokenizer';
+$service['elastic_tokenizer'] = 'seunjeon_tokenizer';
+```
 * files 폴더를 웹서버가 접근할 수 있도록 707 권한 부여.
 
 4) XE 설치
@@ -46,4 +69,6 @@ php ~/bin/composer.phar install --dev
 
 7) Elastic Search 설치
 ---------------------
-* 검색엔진 설치
+* 현재는 Elastic 2.4.0 버젼을 사용합니다. 한국 형태소 분석기인 '은전한닢 프로젝트' mecab-ko가 지원하고, Elastic 5.0을 사용하기에는 아직 검증되지 않았기에 일단 2.4.0 버젼으로 시작합니다. 향후 ElasticSearch 프로젝트 진행상황에 따라 향후 업그레이드 할 예정입니다.
+
+* elasticsearch-2.4.0 설치
