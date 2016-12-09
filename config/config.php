@@ -97,6 +97,7 @@ $AclPreDefinedRole = array(
 	'write'=>BITWISE_WRITE,
 	'download'=>BITWISE_DOWNLOAD,
 	'view'=>BITWISE_VIEW,
+	'authenticated'=>BITWISE_AUTHENTICATED,
 	'anonymous'=>BITWISE_ANONYMOUS
 );
 

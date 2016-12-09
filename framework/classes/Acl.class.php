@@ -37,11 +37,9 @@ class Acl extends \DLDB\Objects {
 			\DLDB\Lib\requireMembership($output);
 		}
 		if($this->role == BITWISE_AUTHENTICATED && !$_SESSION['user']['uid']) {
-			echo 'test1';
 			\DLDB\Lib\Error('접근 권한이 없습니다.',$output);
 			exit;
-		} else if( $_SESSION['user']['uid'] && !in_array( BITWISE_ADMINISTRATOR, $this->acl ) && !in_array( $this->role, $this->acl ) ) {
-			echo 'test2';
+		} else if( $this->role < BITWISE_AUTHENTICATED && $_SESSION['user']['uid'] && !in_array( BITWISE_ADMINISTRATOR, $this->acl ) && !in_array( $this->role, $this->acl ) ) {
 			\DLDB\Lib\Error('접근 권한이 없습니다.',$output);
 			exit;
 		}
