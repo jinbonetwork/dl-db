@@ -32,7 +32,7 @@ class History extends Component {
 						numOfPages: data.result.total_page
 					});
 				} else {
-					this.setState({history: null, numOfPages: 1});
+					this.setState({history: [], numOfPages: 1});
 				}
 			}
 		});

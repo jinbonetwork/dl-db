@@ -86,7 +86,7 @@ class DigitalLibraryContainer extends Component {
 		*/
 	}
 	fetchContData(callBack){
-		this.fetchData('get', '/api', (data) => { console.log(data);
+		this.fetchData('get', '/api', (data) => {
 			this.setState({
 				userData: {
 					user: data.user,

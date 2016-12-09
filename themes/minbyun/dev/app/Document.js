@@ -108,7 +108,9 @@ class Document extends Component {
 
 		const children = this.props.children && cloneElement(this.props.children, {
 			document: this.state.document,  fileText: this.state.fileText, submit: this.submitFileText.bind(this)
-		})
+		});
+
+		console.log(userRole);
 
 		return (
 			<div className="document">
