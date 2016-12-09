@@ -5,15 +5,16 @@
 .searchbar {
 	.searchbar__bar {
 		position: relative;
-		background-color: @minor-color-2;
 	}
 	.searchbar__bar > div:first-child {
 		margin-right: @second-part-width;
+		background-color: @minor-color-2;
 	}
 	.searchbar__bar > div:last-child {
 		position: absolute;
 		top: 0; right: 0;
 		width: @second-part-width;
+		background-color: @minor-color-2;
 	}
 	.searchbar__keyword {
 		border: solid 3px @main-color;
@@ -106,13 +107,14 @@
 	}
 	.searchbar__bar > div:first-child {
 		@media screen and (max-width: @medium-screen){
-			margin-right: 0;
+			margin: 0 1em;
 		}
 	}
 	.searchbar__bar > div:last-child {
 		@media screen and (max-width: @medium-screen){
 			position: relative;
 			width: 100%;
+			margin: 0 1em;
 		}
 	}
 	.searchbar__bar + .searchbar__helper {
