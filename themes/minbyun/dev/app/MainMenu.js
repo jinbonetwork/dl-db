@@ -14,8 +14,16 @@ class MainMenu extends Component {
 			}});
 		}
 	}
+	menuItems(data){
+		return data.items.map((item, index) =>
+			<DdItem key={index}><a href={item.url} target="_blank"><span>{item.displayName}</span></a></DdItem>
+		);
+	}
 	render(){
-		let userMenuItems = _userMenu.map((item) => (
+		const boards = this.props.menuData[0];
+		const links = this.props.menuData[1];
+		const userDisplayName = (this.props.userRole.indexOf('admin') >= 0 ? '관리자' : '회원');
+		const userMenuItems = _userMenu.map((item) => (
 			<DdItem key={item.path}>
 				<Link to={'/user/'+item.path}><i className={item.icon+' pe-va'}></i><span>{item.name}</span></Link>
 			</DdItem>
@@ -27,7 +35,7 @@ class MainMenu extends Component {
 				</LinkIf>
 				<Dropdown className="main-menu__user">
 					<DdHead>
-						<i className="pe-7f-user pe-va"></i>{' '}<span>회원</span>
+						<i className="pe-7f-user pe-va"></i>{' '}<span>{userDisplayName}</span>
 						<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
 					</DdHead>
 					{userMenuItems}
@@ -37,31 +45,29 @@ class MainMenu extends Component {
 						</div>
 					</DdItem>
 				</Dropdown>
-				<Dropdown className="main-menu__board">
+				<Dropdown className="main-menu__boards">
 					<DdHead>
 						<i className="pe-7s-note2 pe-va"></i>{' '}<span>게시판</span>
 						<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
 					</DdHead>
-					<DdItem><span>Q & A</span></DdItem>
-					<DdItem><span>이주의 변론</span></DdItem>
-					<DdItem><span>소송도우미</span></DdItem>
+					{this.menuItems(boards)}
 				</Dropdown>
-				<Dropdown className="main-menu__link">
+				<Dropdown className="main-menu__links">
 					<DdHead>
 						<i className="pe-7s-star pe-va"></i>{' '}<span>바로<br/>가기</span>
 						<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
 					</DdHead>
-					<DdItem><a href="http://minbyun.org/" target="_blank"><span>민변</span></a></DdItem>
-					<DdItem><a href="http://www.scourt.go.kr/" target="_blank"><span>대법원</span></a></DdItem>
+					{this.menuItems(links)}
 				</Dropdown>
 			</div>
 		);
 	}
 }
 MainMenu.propTypes = {
-	userRole: PropTypes.array,
-	fetchData: PropTypes.func,
-	setMessage: PropTypes.func,
-	unsetUserData: PropTypes.func
+	userRole: PropTypes.array.isRequired,
+	menuData: PropTypes.array.isRequired,
+	fetchData: PropTypes.func.isRequired,
+	setMessage: PropTypes.func.isRequired,
+	unsetUserData: PropTypes.func.isRequired
 }
 export default withRouter(MainMenu);
