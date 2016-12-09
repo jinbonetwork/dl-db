@@ -48,7 +48,7 @@ class DBM extends \DLDB\Objects {
 	public static function taxonomyCnt($q,$args=null) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = self::makeQuery($q,$args,'t.tid, count(t.tid) AS cnt');
+		$que = self::makeQuery($q,$args,'t.tid, count(t.tid) AS cnt','count');
 		$que .= " GROUP BY t.tid";
 
 		while($row = $dbm->getFetchArray($que)) {
