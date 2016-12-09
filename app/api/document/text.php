@@ -13,7 +13,7 @@ class text extends \DLDB\Controller {
 		}
 		$this->document = \DLDB\Document::get($this->params['id']);
 		$acl = \DLDB\Acl::instance();
-		if(!$acl->imMaster() && !$this->document['uid'] != $this->user['uid']) {
+		if(!$acl->imMaster() && $this->document['uid'] != $this->user['uid']) {
 			\DLDB\RespondJson::ResultPage( array( -2, '권한이 없습니다') );
 		}
 		if($this->params['fid']) {
