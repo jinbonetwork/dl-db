@@ -146,18 +146,18 @@ class Elastic extends \DLDB\Objects {
 				switch($type) {
 					case 'string':
 						$q_params['must'][] = array(
-							"match_phrase" => array( "_all" => $que )
+							"match_phrase" => array( "combined" => $que )
 						);
 						break;
 					case 'or':
 						$q_params['should'][] = array(
-							"match" => array( "_all" => implode(" ", $que) )
+							"match" => array( "combined" => implode(" ", $que) )
 						);
 						break;
 					case 'and':
 						$q_params['must'][] = array(
 							"match" => array(
-								"_all" => array(
+								"combined" => array(
 									"query" => implode(" ",$que),
 									"operator" => "and"
 								)
@@ -167,7 +167,7 @@ class Elastic extends \DLDB\Objects {
 					case 'not':
 						$q_params['must_not'][] = array(
 							"query_string" => array(
-								"default_field" => "_all",
+								"default_field" => "combined",
 								"query" => implode(" ", $que)
 							)
 						);
@@ -213,17 +213,20 @@ class Elastic extends \DLDB\Objects {
 			'subject' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
-				'term_vector' => 'yes'
+				'term_vector' => 'yes',
+				'copy_to' => 'combined'
 			),
 			'content' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
-				'term_vector' => 'yes'
+				'term_vector' => 'yes',
+				'copy_to' => 'combined'
 			),
 			'memo' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
-				'term_vector' => 'yes'
+				'term_vector' => 'yes',
+				'copy_to' => 'combined'
 			)
 		);
 		foreach( $this->fields as $fid => $field ) {
@@ -240,7 +243,8 @@ class Elastic extends \DLDB\Objects {
 					$default_properties['f'.$fid] = array(
 						'type' => $property_type,
 						'analyzer' => 'korean',
-						'term_vector' => 'yes'
+						'term_vector' => 'yes',
+						'copy_to' => 'combined'
 					);
 				} else {
 					$default_properties['f'.$fid] = array(
@@ -250,6 +254,11 @@ class Elastic extends \DLDB\Objects {
 				}
 			}
 		}
+		$default_properties['combined'] = array(
+			'type' => 'string',
+			'analyzer' => 'korean',
+			'term_vector' => 'yes'
+		);
 	
 		$params = array(
 		    'index' => $index,
