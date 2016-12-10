@@ -260,6 +260,7 @@ class Document extends \DLDB\Objects {
 	}
 
 	public static function fetchDocument($row,$mode='') {
+		$acl = \DLDB\Acl::instance();
 		$fields = self::getFields();
 		if(!$row) return null;
 		foreach($row as $k => $v) {
@@ -275,7 +276,7 @@ class Document extends \DLDB\Objects {
 		}
 		if($document['uid'] == $_SESSION['user']['uid']) {
 			$document['owner'] = 1;
-		} else if( \DLDB\Acl::isMaster() ) {
+		} else if( $acl->imMaster() ) {
 			$document['owner'] = 1;
 		} else {
 			$document['owner'] = 0;

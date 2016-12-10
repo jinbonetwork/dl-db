@@ -266,7 +266,8 @@ class Elastic extends \DLDB\Objects {
 						),
 						'tokenizer' => array(
 							$analyzer => array(
-								'type' => $tokenizer
+								'type' => $tokenizer,
+								"pos_tagging" => false
 							)
 						)
 					)
