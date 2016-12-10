@@ -6,7 +6,8 @@ import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
 import {_fieldAttrs, _sFname, _termsOf} from './schema/docSchema';
 import {_query, _period, _params} from './schema/searchSchema';
-import {_isEmpty, _mapO} from './accessories/functions';
+import {_screen} from './schema/screenSchema';
+import {_isEmpty, _mapO, _interpolate} from './accessories/functions';
 
 class SearchBar extends Component {
 	constructor(){
@@ -54,14 +55,46 @@ class SearchBar extends Component {
 			this.setState({keywordMarginLeft: size.width});
 		}
 	}
+	propsForReactiviy(){
+		const wWidth = this.props.window.width;
+		const buttonWidth = _interpolate(wWidth, 4, 8, _screen.mmLarge, _screen.large, 'em');
+		const sndPartWidth = _interpolate(wWidth, 16, 20, _screen.mmLarge, _screen.large, 'em')
+		const inMenu = {
+			style: {
+				wrap: {
+					marginRight: _interpolate(wWidth, 14, 15.5, _screen.mmLarge, _screen.large, 'em')
+				},
+				button: {
+					width: buttonWidth
+				},
+				period: {
+					marginRight: buttonWidth
+				},
+				firstPart: {
+					marginRight: sndPartWidth
+				},
+				secondPart: {
+					width: sndPartWidth
+				}
+			}
+		};
+		const inContent = {
+			style: {
+				wrap: null,
+				button: null
+			}
+		};
+		return (this.props.mode == 'content' ? inContent : inMenu);
+	}
 	render(){
+		const prsRct = this.propsForReactiviy();
 		let className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
 		let doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
 			<DdItem key={tid} value={tid}><span>{tname}</span></DdItem>
 		));
 		let searchBar = (
 			<div className="searchbar__bar">
-				<div>
+				<div style={prsRct.style.firstPart}>
 					<DdSelect selected={this.props.query.doctypes} onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}>
 						<DdHead>
 							<span>{_fieldAttrs['doctype'].displayName}</span>
@@ -78,8 +111,8 @@ class SearchBar extends Component {
 						</div>
 					</div>
 				</div>
-				<div>
-					<div className="searchbar__period">
+				<div style={prsRct.style.secondPart}>
+					<div className="searchbar__period" style={prsRct.style.period}>
 						<input type="text" value={this.props.query.from} placeholder="1988.5"
 							onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
 						/>
@@ -88,13 +121,13 @@ class SearchBar extends Component {
 							onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
 						/>
 					</div>
-					<button className="searchbar__button" onClick={this.handleclick.bind(this, 'search')}>검색</button>
+					<button className="searchbar__button" style={prsRct.style.button} onClick={this.handleclick.bind(this, 'search')}>검색</button>
 				</div>
 			</div>
 		);
 		if(this.props.mode == 'content'){
 			return(
-				<div className={className}>
+				<div className={className} style={prsRct.style.wrap}>
 					<div className="searchbar__header"><span>민변 디지털 도서관</span></div>
 					{searchBar}
 					<div className="searchbar__helper">
@@ -127,7 +160,7 @@ class SearchBar extends Component {
 			);
 		} else {
 			return(
-				<div className={className}>
+				<div className={className} style={prsRct.style.wrap}>
 					{searchBar}
 				</div>
 			);
@@ -137,6 +170,7 @@ class SearchBar extends Component {
 SearchBar.propTypes = {
 	mode: PropTypes.string,
 	query: PropTypes.object.isRequired,
+	window: PropTypes.object.isRequired,
 	update: PropTypes.func.isRequired,
 	docData: PropTypes.object.isRequired,
 	router: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired,

@@ -62,7 +62,7 @@
 .dropdown {
 	display: inline-block;
 	text-align: center;
-	.dropdown__headwrap, .dropdown__head, .dropdown__items, .dropdown__items ul{
+	.dropdown__headwrap, .dropdown__head, .dropdown__items, .dropdown__items ul {
 		min-width: 100%;
 	}
 	.dropdown__invisible {
@@ -94,12 +94,15 @@
 		top: 0; left: 0;
 		z-index: 2;
 		border: solid 1px #fe9a2e;
-		border-top: transparent !important;
+		border-top: 0 !important;
 	}
 	.dropdown__items > ul {
 		margin: 0;
 		list-style-type: none;
 		overflow: hidden;
+	}
+	.dropdown__items-top-border {
+		height: 0;
 	}
 	.dditem {
 		padding: 0 1em;
@@ -110,7 +113,7 @@
 		}
 	}
 	&:not(.dropdown--unfolded) .dropdown__items {
-		border-bottom: transparent !important;
+		border: 0 !important;
 	}
 	&:not(.dropdown--unfolded) .dropdown__items > ul {
 		height: 0;
@@ -227,5 +230,69 @@
 	}
 	.searchinput__button i {
 		font-size: 1.5em;
+	}
+}
+
+.hamburger {
+	display: inline-block;
+	height: 100%;
+	border: 0;
+	border-left: solid 2px @main-color;
+
+	.hamburger__invisible {
+		visibility: hidden;
+		position: fixed;
+		z-index: -99999;
+		top: 0; left: 0;
+	}
+	.invisible i {
+		visibility: hidden;
+	}
+	&:not(.hamburger--unfolded) {
+		background-color: @main-color;
+	}
+	&.hamburger--unfolded {
+		background-color: transparent;
+	}
+	button {
+		height: 100%;
+		background-color: transparent;
+		border: 0;
+	}
+	button span {
+		width: 2em;
+	}
+	&:not(.hamburger--unfolded) button span {
+		color: @minor-color-2;
+	}
+	&.hamburger--unfolded button {
+		color: @main-color;
+	}
+	.hamburger__icon {
+		display: inline-block;
+	}
+	.hamburger__icon i {
+		font-size: 2em;
+	}
+	&:not(.hamburger--unfolded) .hamburger__child {
+		display: none;
+	}
+	.hamburger__child {
+		position: relative;
+	}
+	.hamburger__child > div {
+		position: absolute;
+		top: 0; right: 0;
+		z-index: 2;
+	}
+}
+
+.accordian {
+	.acditem__children {
+		overflow: hidden;
+	}
+	.acditem:not(.acditem--unfolded) .acditem__children {
+		height: 0;
+		border: 0;
 	}
 }

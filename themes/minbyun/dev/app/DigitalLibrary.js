@@ -80,6 +80,7 @@ class DigitalLibrary extends Component {
 				mode={mode}
 				docData={this.props.docData}
 				query={this.props.searchQuery}
+				window={this.props.window}
 				update={this.props.updateSearchQuery}
 				setMessage={this.props.setMessage}
 			/>
@@ -103,7 +104,7 @@ class DigitalLibrary extends Component {
 						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
-					<MainMenu userRole={userRole} menuData={this.props.menuData}
+					<MainMenu userRole={userRole} menuData={this.props.menuData} window={this.props.window}
 						fetchData={this.props.fetchData} setMessage={this.props.setMessage} unsetUserData={this.props.unsetUserData}
 					/>
 				</div>

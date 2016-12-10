@@ -98,16 +98,20 @@ class Dropdown extends Component {
 			}
 		}});
 
+		let headWidth = (this.props.hasOwnProperty('headWidth') ? this.props.headWidth : this.state.width);
+		let itemWidth = (this.props.hasOwnProperty('itemWidth') ? this.props.itemWidth : this.state.width);
+
 		return (
 			<div className={className}>
 				<div className="dropdown__headwrap" ref="headwrap" onClick={this.handleClick.bind(this, 'head')}>
-					<div className="dropdown__head" style={{width: this.state.width}}>
+					<div className="dropdown__head" style={{width: headWidth}}>
 						{head}
 					</div>
 				</div>
 				<div className="dropdown__innerwrap">
 					<div className="dropdown__items">
-						<ul style={{width: this.state.width}}>{items}</ul>
+						<div className="dropdown__items-top-border" style={{width: itemWidth}}></div>
+						<ul style={{width: itemWidth}}>{items}</ul>
 					</div>
 				</div>
 				<div className="dropdown__invisible" ref="invisible">
@@ -120,9 +124,11 @@ class Dropdown extends Component {
 }
 Dropdown.propTypes = {
 	className: PropTypes.string,
+	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	isUnfolded: PropTypes.bool,
 	handleClick: PropTypes.func,
-	onResize: PropTypes.func
+	onResize: PropTypes.func,
 };
 
 export {Dropdown, DdHead, DdItem, DdArrow};

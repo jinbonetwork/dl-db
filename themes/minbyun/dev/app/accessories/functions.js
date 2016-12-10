@@ -101,10 +101,11 @@ const _pushpull = (array, value) => {
 	if(array.length === newArray.length) newArray.push(value);
 	return newArray;
 };
-const _interpolate = (x, y0, y1, x0, x1) => {
+const _interpolate = (x, y0, y1, x0, x1, unit) => {
 	if(x > x1) return null;
 	else if(x < x0) x = x0;
-	return y0 + (y1 - y0)*(x - x0)/(x1 - x0);
+	let y = y0 + (y1 - y0)*(x - x0)/(x1 - x0);
+	return (unit ? y+unit : y);
 }
 
 export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _pushpull, _interpolate};

@@ -55,9 +55,7 @@ a, a:visited, a:link, a:hover, a:active {
 .select.dropdown {
 	.dropdown__headwrap {
 		border: solid 1px @main-color;
-	}
-	&.dropdown--unfolded .dropdown__headwrap {
-		border-bottom-color: @minor-color-2;
+		border-bottom: 0;
 	}
 	.ddhead {
 		background-color: @minor-color-2;
@@ -75,6 +73,9 @@ a, a:visited, a:link, a:hover, a:active {
 		background-color: @minor-color-2;
 		border: solid 1px @main-color;
 		text-align: left;
+	}
+	&:not(.dropwdown--unfolded) .dropdown__items {
+		border-bottom: solid 1px @main-color !important;
 	}
 	.dditem {
 		padding-right: 3em;

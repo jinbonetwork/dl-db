@@ -1,7 +1,8 @@
-const _screen = {
+const _screen = { //variables의 *-screen 값들과 동일하도록 설정
 	small: 400,
 	medium: 800,
-	large: 1024
+	mmLarge: 960,
+	large: 1300
 };
 
 export {_screen};

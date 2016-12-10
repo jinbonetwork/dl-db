@@ -1,5 +1,20 @@
 import {_mapO} from '../accessories/functions';
 
+const _mainMenu = [
+	{
+		name: 'user',
+		icon: 'pe-7f-user'
+	},
+	{
+		name: 'boards',
+		icon: 'pe-7s-note2'
+	},
+	{
+		name: 'links',
+		icon: 'pe-7s-star'
+	},
+];
+
 const _userMenu = [
 	{
 		path: 'profile',
@@ -33,4 +48,4 @@ const _menuData = (data) => {
 	});
 };
 
-export {_userMenu, _menuData};
+export {_mainMenu, _userMenu, _menuData};

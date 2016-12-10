@@ -2,9 +2,9 @@
 
 .digital-library__header {
 	position: relative;
-	border-bottom: solid 2px @main-color;
 	background-color: @minor-color-2;
 	line-height: 3.3em;
+	border-bottom: solid 2px @main-color;
 }
 .digital-library__logo {
 	display: block;
@@ -19,33 +19,84 @@
 	max-width: 900px;
 	margin: 0 auto;
 }
+.main-menu .dropdown {
+	height: 100%;
+	.dropdown__headwrap {
+		border: 0;
+		border-left: solid 2px @main-color;
+		height: 100%;
+	}
+	.dropdown__head {
+		@media screen and (max-width: @large-screen){
+			width: auto !important;
+		}
+	}
+	.ddhead {
+		padding-right: 2em;
+		height: 100%;
+		@media screen and (max-width: @large-screen){
+			padding-left: 0.7em;
+			padding-right: 0.7em;
+		}
+	}
+	.ddhead > i + span {
+		margin-left: 0.5em;
+	}
+	.ddarrow i {
+		color: @main-color;
+		font-weight: bold;
+	}
+	.ddhead span, .ddarrow {
+		@media screen and (max-width: @large-screen){
+			display: none;
+		}
+	}
+	.dropdown__items {
+		border: solid 2px @main-color;
+		text-align: left;
+	}
+	&.dropdown--unfolded .dropdown__items-top-border {
+		height: 2px;
+		background-color: @minor-color-2;
+		@media screen and (max-width: @large-screen){
+			width: 3.4em !important;
+		}
+	}
+	.dropdown__items ul {
+		background-color: @minor-color-2;
+	}
+	.dditem {
+		line-height: 2.5em;
+		text-align: center;
+		&:hover {
+			background-color: @main-color * 1.5;
+			font-weight: @font-bold;
+		}
+	}
+	.dditem a {
+		width: 100%; height: 100%; padding: 0; line-height: inherit; text-align: left;
+	}
+	.dditem > div {
+		cursor: pointer;
+	}
+}
 .main-menu {
 	position: absolute;
 	top: 0; right: 0;
 	width: @main-menu-width;
 	height: 100%;
 	text-align: right;
+	@media screen and (max-width: @large-screen){
+		width: @large-main-menu-width;
+	}
 	a {
 		display: inline-block;
 		line-height: 3.3em;
 		padding: 0 1.5em;
 		cursor: pointer;
 	}
-	a:visited, a:link, a:hover, a:active {
-		color: @font-color;
-		text-decoration: none;
-	}
-	.dropdown {
-		height: 100%;
-	}
-	.dropdown .dropdown__headwrap {
-		border: 0;
-		border-left: solid 2px @main-color;
-		height: 100%;
-	}
-	.dropdown .ddhead {
-		padding-right: 2em;
-		height: 100%;
+	.main-menu__write i + span {
+		margin-left: 0.5em;
 	}
 	.main-menu__write i, .dropdown .ddhead i {
 		font-size: 2em;
@@ -65,36 +116,26 @@
 		display: inline-block;
 		line-height: 1.2em;
 		vertical-align: middle;
-	}
-	.dropdown .ddarrow i {
-		color: @main-color;
-		font-weight: bold;
-	}
-	.dropdown .dropdown__items {
-		background-color: @minor-color-2;
-		border: solid 2px @main-color;
-		text-align: left;
+		@media screen and (max-width: @large-screen){
+			display: none;
+		}
 	}
 	.main-menu__links .dropdown__items {
 		border-right: 0;
+		@media screen and (max-width: @large-screen){
+			left: auto;
+			right: 0;
+		}
+	}
+	.main-menu__links .dropdown__items-top-border {
+		@media screen and (max-width: @large-screen){
+			position: relative;
+			left: 1.34em;
+		}
 	}
 	.main-menu__links .dditem a,
 	.main-menu__boards .dditem a {
 		text-align: center;
-	}
-	.dropdown .dditem {
-		line-height: 2.5em;
-		text-align: center;
-		&:hover {
-			background-color: @main-color * 1.5;
-			font-weight: @font-bold;
-		}
-	}
-	.dditem a {
-		width: 100%; height: 100%; padding: 0; line-height: inherit; text-align: left;
-	}
-	.dditem > div {
-		cursor: pointer;
 	}
 	.main-menu__user .dditem {
 		text-align: left;
@@ -111,11 +152,53 @@
 		padding: 0;
 	}
 }
-
-/*
-@media screen and (min-width: 800px){
-	.main-menu {
-		font-size: 20px;
+.main-menu .hamburger {
+	.accordian {
+		text-align: left;
+		background-color: @minor-color-2;
+	}
+	.accordian {
+		border: solid 2px @main-color;
+		border-width: 0 0 2px 2px;
+	}
+	.accordian i {
+		font-size: 2em;
+		width: 1em;
+		text-align: center;
+	}
+	.accordian i + span {
+		margin-left: 0.5em;
+	}
+	.acditem__head {
+		line-height: 2.5em;
+		padding-left: 0.5em;
+		color: @minor-color-2;
+		background-color: @main-color;
+		cursor: pointer;
+	}
+	.acditem__head:hover {
+		background-color: @main-color * 1.1;
+	}
+	.acditem__children li {
+		line-height: 2.5em;
+		padding-left: 0.5em;
+	}
+	.acditem__children li:hover {
+		background-color: @main-color * 1.5;
+	}
+	.acditem__children a {
+		display: block;
+		padding-left: 0;
+		padding-right: 0.5em;
+		line-height: inherit;
+	}
+	.acditem__children i {
+		color: @main-color;
+	}
+	.acditem__children i + span {
+		font-size: 0.8em;
+	}
+	.acditem + .acditem li {
+		padding-left: 0.8em;
 	}
 }
-*/
