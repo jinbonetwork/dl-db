@@ -10,11 +10,14 @@
 .fileinput {
 	display: inline-block;
 	position: relative;
+	border: solid 1px @main-color;
+	background-color: @minor-color-2;
 	.fileinput__filename-wrap {
 		margin-right: 5em;
 	}
 	.fileinput__filename-wrap input[type=text] {
 		width: 100%;
+		border: 0;
 	}
 	.fileinput--upload {
 		position: absolute;

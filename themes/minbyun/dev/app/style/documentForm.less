@@ -111,14 +111,13 @@
 			margin-left: 0;
 		}
 	}
-	.inner-table {
-		border: solid 1px @main-color;
-		border-width: 1px 0 0 1px;
+	.inner-table .table__row {
+		background-color: @minor-color-2;
+		border: solid @main-color;
+		border-width: 1px 1px 0 1px;
 	}
-	.inner-table .table__col {
-		border: solid 1px @main-color;
-		border-width: 0 1px 1px 0;
-		line-height: 3em;
+	.inner-table .table__row:last-child {
+		border-width: 1px;
 	}
 	.inner-table input[type=text] {
 		border: 0;
@@ -126,11 +125,11 @@
 	.inner-table .table__col:first-child {
 		width: 5em;
 		line-height: 3em;
-		background-color: @minor-color-2;
 		text-align: center;
 	}
 	.inner-table .table__col:last-child{
 		margin-left: 5em;
+		border-left: solid 1px @main-color
 	}
 	button.document-form--submit {
 		line-height: 3em;
