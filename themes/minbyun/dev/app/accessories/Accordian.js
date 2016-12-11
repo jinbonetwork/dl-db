@@ -1,17 +1,14 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 
 class AcdItem extends Component {
-	handleClick(){
-		this.props.onClick();
-	}
 	render(){
 		let className = (this.props.isUnfolded ? 'acditem acditem--unfolded' : 'acditem');
 		return (
 			<div className={className}>
-				<div className="acditem__head" onClick={this.handleClick.bind(this)}>
+				<div className="acditem__head" onClick={this.props.onClick}>
 					{this.props.head}
 				</div>
-				<div className="acditem__children">
+				<div className="acditem__children" onClick={this.props.onClickOfChildren}>
 					{this.props.children}
 				</div>
 			</div>
@@ -21,7 +18,8 @@ class AcdItem extends Component {
 AcdItem.propTypes = {
 	head: PropTypes.element,
 	isUnfolded: PropTypes.bool,
-	onClick: PropTypes.func
+	onClick: PropTypes.func,
+	onClickOfChildren: PropTypes.func
 }
 
 class Accordian extends Component {
@@ -31,13 +29,20 @@ class Accordian extends Component {
 			unfoldedItem: -1
 		};
 	}
-	handleClick(index){
-		this.setState({unfoldedItem: index});
+	handleClick(which, index){
+		if(which == 'head'){
+			this.setState({unfoldedItem: index});
+		}
+		this.props.onClick(which);
 	}
 	render(){
 		const children = Children.map(this.props.children, (child, index) => { if(child && child.type == AcdItem){
-			let isUnfolded = (this.state.unfoldedItem == index ? true : false); console.log(this.state.unfoldedItem, index);
-			return cloneElement(child, {isUnfolded: isUnfolded, onClick: this.handleClick.bind(this, index)});
+			let isUnfolded = (this.state.unfoldedItem == index ? true : false);
+			return cloneElement(child, {
+				isUnfolded: isUnfolded,
+				onClick: this.handleClick.bind(this, 'head', index),
+				onClickOfChildren: this.handleClick.bind(this, 'children')
+			});
 		}});
 		return (
 			<div className="accordian">
@@ -46,5 +51,8 @@ class Accordian extends Component {
 		);
 	}
 }
+Accordian.propTypes = {
+	onClick: PropTypes.func
+};
 
 export {Accordian, AcdItem};

@@ -106,6 +106,14 @@ const _interpolate = (x, y0, y1, x0, x1, unit) => {
 	else if(x < x0) x = x0;
 	let y = y0 + (y1 - y0)*(x - x0)/(x1 - x0);
 	return (unit ? y+unit : y);
-}
+};
+const _notNull = (values) => {
+	for(let i in values){
+		if(values[i] !== null && values[i] !== false && values[i] !== undefined){
+			return values[i];
+		}
+	}
+	return null;
+};
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _pushpull, _interpolate};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _pushpull, _interpolate, _notNull};

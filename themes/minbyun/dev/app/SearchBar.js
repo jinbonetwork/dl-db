@@ -7,13 +7,14 @@ import {Table, Row, Column} from './accessories/Table';
 import {_fieldAttrs, _sFname, _termsOf} from './schema/docSchema';
 import {_query, _period, _params} from './schema/searchSchema';
 import {_screen} from './schema/screenSchema';
-import {_isEmpty, _mapO, _interpolate} from './accessories/functions';
+import {_isEmpty, _mapO, _interpolate, _notNull} from './accessories/functions';
 
 class SearchBar extends Component {
 	constructor(){
 		super();
 		this.state = {
-			keywordMarginLeft: null
+			keywordMarginLeft: null,
+			isPeriodVisible: false
 		};
 	}
 	handleChange(which, arg){
@@ -34,10 +35,10 @@ class SearchBar extends Component {
 	}
 	handleKeyDown(event){
 		if(event.key === 'Enter'){
-			this.handleclick('search');
+			this.handleClick('search');
 		}
 	}
-	handleclick(which, arg){
+	handleClick(which, arg){
 		if(which == 'search'){
 			if(!this.props.query.keyword){ this.props.setMessage('검색어를 입력하세요.', 'unset'); return; }
 			let period = _period(this.props.query.from, this.props.query.to);
@@ -49,16 +50,68 @@ class SearchBar extends Component {
 			let params = _params(query);
 			if(params) this.props.router.push('/search'+params);
 		}
+		else if(which == 'togglePeriod'){
+			this.setState({isPeriodVisible: !this.state.isPeriodVisible});
+		}
 	}
 	handleResize(which, size){
 		if(which == 'doctypes'){
 			this.setState({keywordMarginLeft: size.width});
 		}
 	}
+	period(prsRct){
+		const period = (
+			<div className="searchbar__period" style={prsRct.style.period}>
+				<input type="text" value={this.props.query.from} placeholder="1988.5"
+					onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
+				/>
+				<div><i className="pe-7s-right-arrow pe-va"></i></div>
+				<input type="text" value={this.props.query.to} placeholder="2015.11"
+					onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
+				/>
+			</div>
+		);
+		if(this.props.window.width > _screen.medium){
+			return period;
+		} else {
+			if(this.props.mode == 'content'){
+				return period;
+			} else {
+				let className = (this.state.isPeriodVisible ? 'searchbar__period-wrap searchbar__period--visible' : 'searchbar__period-wrap');
+				return (
+					<div className={className}>
+						<div>{period}</div>
+						<div className="searchbar__toggle-period" onClick={this.handleClick.bind(this, 'togglePeriod')}>
+							<i className="pe-7s-date pe-va"></i>
+						</div>
+					</div>
+				);
+			}
+		}
+	}
+	doctypeHead(){
+		if(this.props.mode != 'content' && this.props.window.width <= _screen.medium){
+			return (
+				<DdHead>
+					<span><i className="pe-7s-edit pe-va"></i></span>
+				</DdHead>
+			);
+		} else {
+			return (
+				<DdHead>
+					<span>{_fieldAttrs['doctype'].displayName}</span>
+					<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
+				</DdHead>
+			);
+		}
+	}
 	propsForReactiviy(){
 		const wWidth = this.props.window.width;
 		const buttonWidth = _interpolate(wWidth, 4, 8, _screen.mmLarge, _screen.large, 'em');
-		const sndPartWidth = _interpolate(wWidth, 16, 20, _screen.mmLarge, _screen.large, 'em')
+		const sndPartWidth = _notNull([
+			(wWidth <= _screen.medium ? '8em' : null),
+			_interpolate(wWidth, 16, 20, _screen.mmLarge, _screen.large, 'em')
+		]);
 		const inMenu = {
 			style: {
 				wrap: {
@@ -68,7 +121,7 @@ class SearchBar extends Component {
 					width: buttonWidth
 				},
 				period: {
-					marginRight: buttonWidth
+					marginRight: _notNull([(wWidth <= _screen.medium ? 0 : null) ,buttonWidth])
 				},
 				firstPart: {
 					marginRight: sndPartWidth
@@ -88,18 +141,15 @@ class SearchBar extends Component {
 	}
 	render(){
 		const prsRct = this.propsForReactiviy();
-		let className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
-		let doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
+		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
+		const doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
 			<DdItem key={tid} value={tid}><span>{tname}</span></DdItem>
 		));
 		let searchBar = (
 			<div className="searchbar__bar">
 				<div style={prsRct.style.firstPart}>
 					<DdSelect selected={this.props.query.doctypes} onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}>
-						<DdHead>
-							<span>{_fieldAttrs['doctype'].displayName}</span>
-							<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
-						</DdHead>
+						{this.doctypeHead()}
 						{doctypeItems}
 					</DdSelect>
 					<div className="searchbar__keyword" style={{marginLeft: this.state.keywordMarginLeft}}>
@@ -112,16 +162,8 @@ class SearchBar extends Component {
 					</div>
 				</div>
 				<div style={prsRct.style.secondPart}>
-					<div className="searchbar__period" style={prsRct.style.period}>
-						<input type="text" value={this.props.query.from} placeholder="1988.5"
-							onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
-						/>
-						<div><i className="pe-7s-right-arrow pe-va"></i></div>
-						<input type="text" value={this.props.query.to} placeholder="2015.11"
-							onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
-						/>
-					</div>
-					<button className="searchbar__button" style={prsRct.style.button} onClick={this.handleclick.bind(this, 'search')}>검색</button>
+					{this.period(prsRct)}
+					<button className="searchbar__button" style={prsRct.style.button} onClick={this.handleClick.bind(this, 'search')}>검색</button>
 				</div>
 			</div>
 		);

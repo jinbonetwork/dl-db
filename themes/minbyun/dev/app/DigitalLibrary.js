@@ -5,6 +5,7 @@ import SearchBar from './SearchBar';
 import LinkIf from './accessories/LinkIf';
 import Message from './accessories/Message';
 import {_isEmpty, _isCommon} from './accessories/functions';
+import {_screen} from './schema/screenSchema';
 
 const _childProps = {
 	'/login': {
@@ -97,11 +98,12 @@ class DigitalLibrary extends Component {
 				</div>
 			);
 		}
+		const logo = (this.props.window.width <= _screen.medium ? 'logo.svg' : 'logo-text.svg');
 		return(
 			<div className="digital-library" onClick={this.handleClick.bind(this)}>
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
-						<img src={site_base_uri+'/themes/minbyun/images/logo-text.svg'} />
+						<img src={site_base_uri+'/themes/minbyun/images/'+logo} />
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
 					<MainMenu userRole={userRole} menuData={this.props.menuData} window={this.props.window}

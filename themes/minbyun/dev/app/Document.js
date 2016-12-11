@@ -110,8 +110,6 @@ class Document extends Component {
 			document: this.state.document,  fileText: this.state.fileText, submit: this.submitFileText.bind(this)
 		});
 
-		console.log(userRole);
-
 		return (
 			<div className="document">
 				<div className="document--back" onClick={this.props.router.goBack}>

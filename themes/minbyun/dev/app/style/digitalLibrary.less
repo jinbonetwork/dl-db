@@ -13,6 +13,9 @@
 	padding: 0.3em;
 	img {
 		height: 100%;
+		@media screen and (max-width: @medium-screen){
+			height: 2.7em; width: 3.03em;
+		}
 	}
 }
 .digital-library__content {
@@ -89,6 +92,9 @@
 	@media screen and (max-width: @large-screen){
 		width: @large-main-menu-width;
 	}
+	@media screen and (max-width: @m-m-large-screen){
+		width: @m-m-large-main-menu-width !important;
+	}
 	a {
 		display: inline-block;
 		line-height: 3.3em;
@@ -152,7 +158,23 @@
 		padding: 0;
 	}
 }
-.main-menu .hamburger {
+.main-menu .toggle {
+	height: 100%;
+	border-left: solid 2px @main-color;
+	button {
+		height: 100%;
+		background-color: transparent;
+		border: 0;
+	}
+	&:not(.toggle--unfolded) {
+		background-color: @main-color;
+	}
+	&:not(.toggle--unfolded) .toggle__icon {
+		color: @minor-color-2;
+	}
+	&.toggle--unfolded .toggle__icon {
+		color: @main-color;
+	}
 	.accordian {
 		text-align: left;
 		background-color: @minor-color-2;
@@ -182,6 +204,9 @@
 	.acditem__children li {
 		line-height: 2.5em;
 		padding-left: 0.5em;
+	}
+	.acditem__children li > div {
+		cursor: pointer;
 	}
 	.acditem__children li:hover {
 		background-color: @main-color * 1.5;

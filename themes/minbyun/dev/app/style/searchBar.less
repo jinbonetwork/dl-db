@@ -73,7 +73,13 @@
 }
 .searchbar:not(.searchbar--content){
 	margin-left: 7.4em;
+	@media screen and (max-width: @medium-screen){
+		margin-left: 4em;
+	}
 	margin-right: @main-menu-width;
+	@media screen and (max-width: @m-m-large-screen){
+		margin-right: @m-m-large-main-menu-width !important;
+	}
 	.searchbar__bar .ddselect .dropdown__headwrap {
 		border-width: 0 2px;
 	}
@@ -82,9 +88,39 @@
 	}
 	.searchbar__keyword {
 		border-width: 0 2px 0 0;
+		@media screen and (max-width: @medium-screen){
+			margin-left: 4em !important;
+			border-style: dotted;
+		}
 	}
 	.searchbar__period, .searchbar__button {
 		border: 0;
+	}
+	.searchbar__period-wrap > div:first-child {
+		position: absolute;
+		top: 0; right: 0;
+		border-left: dotted 2px @main-color;
+		border-right: solid 2px @minor-color-2;
+		margin-right: 8em;
+	}
+	.searchbar__period-wrap .searchbar__period {
+		width: 12em;
+		background-color: @minor-color-2;
+	}
+	.searchbar__period-wrap .searchbar__period input {
+		background-color: transparent;
+	}
+	.searchbar__period-wrap:not(.searchbar__period--visible) .searchbar__period{
+		display: none;
+	}
+	.searchbar__toggle-period {
+		width: 4em;
+		text-align: center;
+		color: @main-color;
+		cursor: pointer;
+	}
+	.searchbar__toggle-period i {
+		font-size: 2em;
 	}
 }
 .searchbar.searchbar--content {
@@ -188,7 +224,7 @@
 		border: solid 3px @main-color;
 	}
 	&.dropdown--unfolded .dropdown__headwrap {
-		border-bottom: transparent;
+		border-bottom: 0;
 	}
 	.ddhead {
 		color: @main-color;
@@ -202,9 +238,11 @@
 		width: 1em;
 	}
 	.dropdown__items {
-		background-color: @minor-color-2;
 		border: solid 3px @main-color;
 		text-align: left;
+	}
+	.dropdown__items ul {
+		background-color: @minor-color-2;
 	}
 	.dditem {
 		line-height: 2.5em;
@@ -223,5 +261,44 @@
 	}
 	.dditem--checked {
 		color: @main-color;
+	}
+}
+.searchbar:not(.searchbar--content) .searchbar__bar .ddselect {
+	.dropdown__headwrap {
+		@media screen and (max-width: @medium-screen){
+			width: 4em;
+			border-right-style: dotted;
+		}
+	}
+	.dropdown__head {
+		@media screen and (max-width: @medium-screen){
+			width: auto !important;
+		}
+	}
+	.dropdown__head i {
+		@media screen and (max-width: @medium-screen){
+			font-size: 2em;
+		}
+	}
+	.ddhead {
+		@media screen and (max-width: @medium-screen){
+			padding: 0;
+			text-align: center;
+		}
+	}
+	.addhead .ddarrow {
+		@media screen and (max-width: @medium-screen){
+			display: none;
+		}
+	}
+	&.dropdown--unfolded .dropdown__items-top-border {
+		@media screen and (max-width: @medium-screen){
+			height: 2px;
+			background-color: @minor-color-2;
+			width: 4em !important;
+			border: solid @main-color;
+			border-width: 0 2px;
+			margin-left: -2px;
+		}
 	}
 }

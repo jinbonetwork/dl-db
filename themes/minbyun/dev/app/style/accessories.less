@@ -233,6 +233,7 @@
 	}
 }
 
+/*
 .hamburger {
 	display: inline-block;
 	height: 100%;
@@ -281,6 +282,51 @@
 		position: relative;
 	}
 	.hamburger__child > div {
+		position: absolute;
+		top: 0; right: 0;
+		z-index: 2;
+	}
+}
+*/
+
+.toggle {
+	display: inline-block;
+	border: 0;
+	.toggle__invisible {
+		visibility: hidden;
+		position: fixed;
+		z-index: -99999;
+		top: 0; left: 0;
+	}
+	.invisible i {
+		visibility: hidden;
+	}
+	button {
+		height: 100%;
+		background-color: transparent;
+		border: 0;
+	}
+	.toggle__icon {
+		width: 2em;
+		display: inline-block;
+		text-align: center;
+	}
+	.toggle__icon i {
+		font-size: 2em;
+	}
+	&:not(.toggle--unfolded) .toggle__icon--on {
+		display: none;
+	}
+	&.toggle--unfolded .toggle__icon--off {
+		display: none;
+	}
+	&:not(.toggle--unfolded) .toggle__child {
+		display: none;
+	}
+	.toggle__child {
+		position: relative;
+	}
+	.toggle__child > div {
 		position: absolute;
 		top: 0; right: 0;
 		z-index: 2;

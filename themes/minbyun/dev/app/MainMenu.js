@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import {Dropdown, DdHead, DdItem, DdArrow} from './accessories/Dropdown';
-import Hamburger from './accessories/Hamburger';
+import Toggle from './accessories/Toggle';
 import {Accordian, AcdItem} from './accessories/Accordian';
 import LinkIf from './accessories/LinkIf';
 import {_isCommon, _interpolate} from './accessories/functions';
@@ -98,7 +98,14 @@ class MainMenu extends Component {
 				</AcdItem>
 			);
 		});
-		return <Hamburger><Accordian>{acditems}</Accordian></Hamburger>
+		return (
+			<Toggle notIf={(which) => (which == 'head')}
+				iconWhenOff={<i className="pe-7f-menu pe-va"></i>}
+				iconWhenOn={<i className="pe-7f-menu pe-va"></i>}
+			>
+				<Accordian>{acditems}</Accordian>
+			</Toggle>
+		);
 	}
 	propsForReactiviy(){
 		const wWidth = this.props.window.width;
