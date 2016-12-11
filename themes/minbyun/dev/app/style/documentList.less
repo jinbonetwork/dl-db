@@ -7,6 +7,9 @@
 	overflow: hidden;
 	.doclist-item__header {
 		padding-bottom: 1em;
+		@media screen and (max-width: @small-m-screen){
+			padding-bottom: 0.5em;
+		}
 	}
 	.doclist-item__header > span:first-child {
 		margin-right: 0.5em;
@@ -15,6 +18,9 @@
 		font-size: 1.5em;
 		font-weight: @font-bold;
 		line-height: 1.3em;
+		@media screen and (max-width: @small-m-screen){
+			font-size: 1.2em;
+		}
 	}
 	a, a:visited, a:link, a:hover, a:active {
 		color: @main-color;
@@ -27,6 +33,21 @@
 		margin: 0 1em 1em 0;
 		line-height: 1.5em;
 		background-color: @main-color * 1.5;
+		@media screen and (max-width: @small-m-screen){
+			float: none;
+			width: auto;
+			margin: 0 0 0.5em 0;
+		}
+	}
+	.doclist-item__side li {
+		@media screen and (max-width: @small-m-screen){
+			display: inline;
+		}
+	}
+	.doclist-item__side li + li {
+		@media screen and (max-width: @small-m-screen){
+			margin-left: 0.5em;
+		}
 	}
 	.doclist-item__side li > span:first-child {
 		font-weight: @font-bold;
@@ -35,6 +56,9 @@
 		min-height: 8em;
 		line-height: 1.5em;
 		text-align: justify;
+		@media screen and (max-width: @small-m-screen){
+			min-height: 0;
+		}
 	}
 	.doclist-item__accented {
 		background-color: @accent-color
@@ -45,9 +69,21 @@
 	.userdocs__doclist {
 		background-color: @minor-color-2;
 		padding: 5%;
+		@media screen and (max-width: @small-m-screen){
+			padding: 0;
+			background-color: transparent;
+		}
+	}
+	.doclist-item {
+		@media screen and (max-width: @small-m-screen){
+			padding: 1em;
+		}
 	}
 	.doclist-item + .doclist-item {
 		margin-top: 2em;
+		@media screen and (max-width: @small-m-screen){
+			margin-top: 1em;
+		}
 	}
 	.pagination {
 		margin-top: 3%;
@@ -57,14 +93,21 @@
 .search-result {
 	max-width: 800px;
 	margin: 10% auto;
+	padding: 0 1em;
 
 	.search-result__item + .search-result__item {
 		margin-top: 3em;
+		@media screen and (max-width: @s-medium-screen){
+			margin-top: 1em;
+		}
 	}
 	.search-result__number {
 		float: left;
 		width: @search-result-number-width;
 		text-align: right;
+		@media screen and (max-width: @s-medium-screen){
+			display: none;
+		}
 	}
 	.search-result__number span {
 		font-size: 3em;
@@ -73,6 +116,12 @@
 		margin-left: @search-result-number-width + 1em;
 		padding: 3%;
 		background-color: @minor-color-2;
+		@media screen and (max-width: @s-medium-screen){
+			margin-left: 0;
+		}
+		@media screen and (max-width: @small-m-screen){
+			padding: 0;
+		}
 	}
 	.doclist-item {
 		padding: 1em;
@@ -87,26 +136,32 @@
 
 .doclisthead {
 	margin-left: @search-result-number-width + 1em;
+	@media screen and (max-width: @s-medium-screen){
+		margin-left: 0;
+	}
 
 	& + .search-result__doclist {
 		padding-top: 1em;
 		margin-top: 3%;
 	}
+	ul {
+		margin-left: -0.5em;
+	}
 	.doctype-li {
 		display: inline-block;
 		border: solid 1px @main-color;
 		padding: 0.5em;
+		margin-left: 0.5em;
+		margin-bottom: 0.5em;
 		cursor: pointer;
 	}
 	.doctype-li--checked {
 		background-color: @main-color;
 		color: @minor-color-2;
 	}
-	.doctype-li + .doctype-li {
-		margin-left: 5px;
-	}
 	ul + .radio {
 		margin-top: 1em;
+		margin-left: 0.5em;
 	}
 	.rditem__check, .rditem__uncheck {
 		width: 1.5em;

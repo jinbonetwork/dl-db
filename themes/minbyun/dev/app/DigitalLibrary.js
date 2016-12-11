@@ -88,6 +88,7 @@ class DigitalLibrary extends Component {
 		);
 	}
 	render(){
+		const wWidth = this.props.window.width;
 		const userRole = this.props.userData.role;
 		const child = this.cloneChild(this.props.children, this.props.userData);
 		if(!userRole){
@@ -98,7 +99,7 @@ class DigitalLibrary extends Component {
 				</div>
 			);
 		}
-		const logo = (this.props.window.width <= _screen.medium ? 'logo.svg' : 'logo-text.svg');
+		const logo = (_screen.sMedium < wWidth && wWidth <= _screen.medium ? 'logo.svg' : 'logo-text.svg');
 		return(
 			<div className="digital-library" onClick={this.handleClick.bind(this)}>
 				<div className="digital-library__header">

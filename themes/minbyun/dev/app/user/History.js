@@ -96,7 +96,7 @@ class History extends Component {
 						{rows}
 					</Table>
 				</div>
-				<Pagination url="/user/hisotry/page/" page={page} numOfPages={this.state.numOfPages} />
+				<Pagination url="/user/history/page/" page={page} numOfPages={this.state.numOfPages} />
 			</div>
 		);
 	}
