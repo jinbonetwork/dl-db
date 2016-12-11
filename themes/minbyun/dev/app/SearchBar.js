@@ -62,11 +62,11 @@ class SearchBar extends Component {
 	period(prsRct){
 		const period = (
 			<div className="searchbar__period" style={prsRct.style.period}>
-				<input type="text" value={this.props.query.from} placeholder="1988.5"
+				<input type="text" value={this.props.query.from} placeholder="1988.5" style={prsRct.style.from}
 					onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 				<div><i className="pe-7s-right-arrow pe-va"></i></div>
-				<input type="text" value={this.props.query.to} placeholder="2015.11"
+				<input type="text" value={this.props.query.to} placeholder="2015.11" style={prsRct.style.to}
 					onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 			</div>
@@ -112,6 +112,10 @@ class SearchBar extends Component {
 			(wWidth <= _screen.medium ? '8em' : null),
 			_interpolate(wWidth, 16, 20, _screen.mmLarge, _screen.large, 'em')
 		]);
+		const fromMargin = _notNull([
+			_interpolate(wWidth, 1.5, 2.5, _screen.smallest, _screen.small, 'em'),
+			_interpolate(wWidth, 0.5, 4, _screen.small, _screen.medium, 'em')
+		]);
 		const inMenu = {
 			style: {
 				wrap: {
@@ -133,8 +137,12 @@ class SearchBar extends Component {
 		};
 		const inContent = {
 			style: {
-				wrap: null,
-				button: null
+				from: {
+					marginRight: fromMargin
+				},
+				to: {
+					marginLeft: fromMargin
+				}
 			}
 		};
 		return (this.props.mode == 'content' ? inContent : inMenu);

@@ -73,13 +73,17 @@
 }
 .searchbar:not(.searchbar--content){
 	margin-left: 7.4em;
+	margin-right: @main-menu-width;
 	@media screen and (max-width: @medium-screen){
 		margin-left: 4em;
 	}
-	margin-right: @main-menu-width;
 	@media screen and (max-width: @m-m-large-screen){
 		margin-right: @m-m-large-main-menu-width !important;
 	}
+	@media screen and (max-width: @s-medium-screen){
+		visibility: hidden;
+	}
+
 	.searchbar__bar .ddselect .dropdown__headwrap {
 		border-width: 0 2px;
 	}
@@ -146,23 +150,28 @@
 			margin: 0 1em;
 		}
 	}
-	/*
-	.searchbar__bar .ddselect {
-		@media screen and (max-width: @searchbar-small-screen){
-			display: none;
-		}
-	}
-	.searchbar__bar .searchbar__keyword {
-		@media scrren and (max-width: @searchbar-small-screen){
-			margin: 0 !important;
-		}
-	}
-	*/
 	.searchbar__bar > div:last-child {
 		@media screen and (max-width: @medium-screen){
 			position: relative;
 			width: auto;
 			margin: 0 1em;
+		}
+	}
+	.searchbar__bar .ddselect {
+		@media screen and (max-width: @small-screen){
+			float: none;
+			width: 100%;
+		}
+	}
+	.searchbar__bar .ddselect .dropdown__headwrap {
+		@media screen and (max-width: @small-screen){
+			border-bottom: 0;
+		}
+	}
+	.searchbar__keyword {
+		@media screen and (max-width: @small-screen){
+			margin-left: 0 !important;
+			border-left: solid 3px @main-color;
 		}
 	}
 	.searchbar__period {
@@ -171,11 +180,18 @@
 			border-left: solid 3px @main-color;
 			text-align: center;
 		}
-		/*
-		@media screen and (max-width: @searchbar-small-screen){
-			display: none;
+		@media screen and (max-width: @small-screen){
+			margin-right: 0;
+			border-right: solid 3px @main-color;
 		}
-		*/
+	}
+	.searchbar__button {
+		@media screen and (max-width: @small-screen){
+			position: static;
+			line-height: 3.3em;
+			width: 100%;
+			border-top: 0;
+		}
 	}
 	.searchbar__bar + .searchbar__helper {
 		margin-top: 1em;

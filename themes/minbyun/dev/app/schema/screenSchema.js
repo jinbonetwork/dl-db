@@ -1,4 +1,5 @@
 const _screen = { //variables의 *-screen 값들과 동일하도록 설정
+	smallest: 320,
 	small: 400,
 	medium: 800,
 	mmLarge: 960,
