@@ -20,7 +20,7 @@ const _childProps = {
 	},
 	'/document/:did': {
 		role: ['admin', 'view'],
-		required: ['userData', 'fetchData', 'setMessage'],
+		required: ['userData', 'fetchData', 'setMessage', 'window'],
 		elective: ['docData']
 	},
 	'/document/new':{

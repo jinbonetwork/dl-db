@@ -7,16 +7,19 @@
 	max-width: 39em;
 	padding-right: 1em;
 	margin: 3em auto;
-
-	@media screen and (max-width: @s-medium-screen){
+	@media screen and (max-width: @s-medium-screen) {
 		max-width: 500px;
 		padding-left: 1em;
+		margin: 1em auto;
 	}
 
 	h1 {
 		margin: 0 0 1em 0;
 		text-align: center;
 		color: @accent-font-color;
+		@media screen and (max-width: @s-medium-screen) {
+			margin: 0
+		}
 	}
 	.table__row.document-form__section-title {
 		line-height: 3em;
@@ -79,6 +82,9 @@
 	}
 	& > .table > .table__row {
 		padding: 0.5em 0;
+		@media screen and (max-width: @s-medium-screen){
+			padding: 0 0 0.5em 0;
+		}
 	}
 	& > .table > .table__row > .table__col:first-child {
 		width: @label-width;

@@ -8,7 +8,8 @@ import LinkIf from './accessories/LinkIf';
 import Message from  './accessories/Message';
 import {Table, Row, Column} from './accessories/Table';
 import {_fieldAttrs, _convertToDoc, _isHiddenField} from './schema/docSchema';
-import {_isEmpty, _isCommon} from './accessories/functions';
+import {_screen} from './schema/screenSchema';
+import {_isEmpty, _isCommon, _interpolate} from './accessories/functions';
 
 class Document extends Component {
 	constructor(){
@@ -87,11 +88,24 @@ class Document extends Component {
 			</div>
 		);}
 	}
+	propsForResponsivity(){ //prsRsp
+		const wWidth = this.props.window.width;
+		return {
+			style: {
+				h1: {
+					fontSize: _interpolate(wWidth, 1.3, 2.5, _screen.smallest, _screen.medium, 'em')
+				}
+			}
+		}
+	}
 	render(){
 		const userRole = this.props.userData.role;
 
 		const fieldsInHeader = {image: null, file: null, date: null};
 		const fieldsInContents = [];
+
+		const prsRsp = this.propsForResponsivity();
+
 		for(let fn in this.state.document){
 			let fAttr = _fieldAttrs[fn];
 			if(!fAttr.parent && fn != 'title'){
@@ -119,18 +133,18 @@ class Document extends Component {
 					<div className="document__header">
 						{fieldsInHeader.image}
 						<div className={(fieldsInHeader.image ? 'document__column' : '')}>
-							<h1>{this.state.document.title}</h1>
-							<div className="document__buttons">
-								{this.bookmark()}
-								<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
-									<span>수정하기</span>
-								</LinkIf>
-							</div>
-							<Table>
-								{fieldsInHeader.date}
-								{fieldsInHeader.file}
-							</Table>
+							<h1 style={prsRsp.style.h1}>{this.state.document.title}</h1>
 						</div>
+						<div className="document__buttons">
+							{this.bookmark()}
+							<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
+								<span>수정하기</span>
+							</LinkIf>
+						</div>
+						<Table>
+							{fieldsInHeader.date}
+							{fieldsInHeader.file}
+						</Table>
 					</div>
 					<Table className="document__contents">
 						{fieldsInContents}
@@ -144,6 +158,7 @@ class Document extends Component {
 Document.propTypes = {
 	userData: PropTypes.object,
 	docData: PropTypes.object,
+	window: PropTypes.object,
 	fetchData: PropTypes.func,
 	setMessage: PropTypes.func,
 	openedDocuments: PropTypes.object,

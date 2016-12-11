@@ -13,6 +13,9 @@ class Login extends Component {
 			password: ''
 		}
 	}
+	componentDidMount(){
+		this.refs.id.focus();
+	}
 	submit(){ if(this.props.userData.type){
 		let data, loginUri;
 		if(this.props.userData.type == 'xe'){
@@ -65,7 +68,7 @@ class Login extends Component {
 			this.submit();
 		}
 	}
-	propsForReactivity(){
+	propsForResponsivity(){
 		const window = this.props.window;
 		return {
 			style: {
@@ -85,21 +88,21 @@ class Login extends Component {
 		};
 	}
 	render(){
-		const prsRct = this.propsForReactivity();
+		const prsRsp = this.propsForResponsivity();
 		return(
 			<div className="login">
 				<div className="login__header">
 					<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
 					<div className="login__title">
-						<span style={prsRct.style.title0}>민주사회를 위한 변호사모임</span>
-						<span style={prsRct.style.title1}>디지털 도서관</span>
+						<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
+						<span style={prsRsp.style.title1}>디지털 도서관</span>
 					</div>
 				</div>
 				<Table className="login__body">
 					<Row>
 						<Column>아이디</Column>
 						<Column>
-							<input type="text" value={this.state.id} placeholder={prsRct.placeholder.id}
+							<input type="text" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id}
 								onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
 							/>
 						</Column>
@@ -107,7 +110,7 @@ class Login extends Component {
 					<Row>
 						<Column>비밀번호</Column>
 						<Column>
-							<input type="password" value={this.state.password} placeholder={prsRct.placeholder.password}
+							<input type="password" value={this.state.password} placeholder={prsRsp.placeholder.password}
 								onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')}
 							/>
 						</Column>

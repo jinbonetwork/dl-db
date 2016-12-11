@@ -3,7 +3,7 @@
 @label-width: 9.4em;
 
 .document {
-	margin-top: 3em;
+	margin-top: 5%;
 	padding: 1em;
 	.document--back{
 		color: @main-color;
@@ -16,6 +16,12 @@
 	.document__wrap {
 		background-color: @minor-color-2;
 		padding: 3em;
+		@media screen and (max-width: @medium-screen){
+			padding: 6vw;
+		}
+		@media screen and (max-width: @s-medium-screen){
+			padding: 1em;
+		}
 	}
 	.document__header {
 		overflow: hidden;
@@ -23,9 +29,31 @@
 	.imagewrap {
 		float: left;
 		width: 15em;
+		margin: 0 3em 3em 0;
+		background-color: @minor-color-2;
+		@media screen and (max-width: @medium-screen){
+			width: 28vw;
+			margin: 0 6vw 6vw 0;
+		}
+		@media screen and (max-width: @s-medium-screen){
+			width: 10em;
+			margin: 0 1em 1em 0;
+		}
+		@media screen and (max-width: @small-m-screen){
+			display: none;
+		}
 	}
 	.document__header > .document__column {
 		margin-left: 18em;
+		@media screen and (max-width: @medium-screen){
+			margin-left: 34vw;
+		}
+		@media screen and (max-width: @s-medium-screen){
+			margin-left: 11em;
+		}
+		@media screen and (max-width: @small-m-screen){
+			margin-left: 0;
+		}
 	}
 	.document__filetext {
 		margin-left: 0.5em;
@@ -40,11 +68,15 @@
 		margin: 0;
 		font-size: 2.5em;
 		padding-bottom: 0.5em;
-		border-bottom: solid 2px @main-color;
 		color: @main-color;
+		border-bottom: solid 2px @main-color;
 	}
 	.document__buttons {
 		margin: 2em 0;
+		@media screen and (max-width: @s-medium-screen){
+			margin: 1em 0;
+		}
+
 		a, a:visited, a:link, a:hover, a:active {
 			color: @main-color;
 			text-decoration: none;
@@ -93,16 +125,47 @@
 			color: @accent-font-color;
 			width: 10em;
 			text-align: right;
-			font-weight: 700;
+			font-weight: @font-bold;
 			padding-right: 1em;
+			@media screen and (max-width: @medium-screen) {
+				width: 8em;
+			}
+			@media screen and (max-width: @small-m-screen) {
+				text-align: left;
+				float: none;
+				width: auto;
+			}
 		}
-		.table__col + .table__col{
+		.table__row:first-child .table__col:first-child {
+			@media screen and (max-width: @small-m-screen) {
+				display: inline-block;
+			}
+		}
+		.table__col + .table__col {
 			margin-left: 10em;
 			padding-left: 1em;
+			@media screen and (max-width: @medium-screen) {
+				margin-left: 8em;
+			}
+			@media screen and (max-width: @small-m-screen) {
+				margin-left: 0;
+				padding-left: 0;
+			}
+		}
+		.table__row:first-child .table__col + .table__col {
+			@media screen and (max-width: @small-m-screen) {
+				display: inline-block;
+				padding-left: 0;
+			}
 		}
 		ol {
 			padding-left: 1em;
+			margin: 0;
+			@media screen and (max-width: @small-m-screen) {
+				margin-left: 0.5em;
+			}
 		}
+
 		li {
 			list-style: decimal;
 			padding-left: 0.5em;
@@ -129,11 +192,18 @@
 	.document__contents {
 		margin-top: 3em;
 		max-width: 37.5em;
+		@media screen and (max-width: @s-medium-screen){
+			margin-top: 1em;
+		}
+
 		& > .table__row {
 			padding: 0.5em 0;
 		}
 		& > .table__row + .table__row {
 			margin-top: 1em;
+			@media screen and (max-width: @s-medium-screen){
+				margin-top: 0;
+			}
 		}
 		& > .table__row > .table__col {
 			line-height: 2em;
@@ -142,10 +212,19 @@
 			width: @label-width;
 			padding-right: 2em;
 			text-align: right;
-			font-weight: 700;
+			font-weight: @font-bold;
+			@media screen and (max-width: @small-m-screen) {
+				float: none;
+				text-align: left;
+				width: auto;
+				padding-right: 0;
+			}
 		}
 		& > .table__row > .table__col + .table__col {
 			margin-left: @label-width;
+			@media screen and (max-width: @small-m-screen) {
+				margin-left: 0;
+			}
 		}
 		.inner-table {
 			border-top: solid 1px @main-color;
@@ -160,12 +239,18 @@
 			width: 6em;
 			padding-right: 1em;
 			text-align: right;
-			font-weight: 700;
+			font-weight: @font-bold;
+			@media screen and (max-width: @small-m-screen){
+				width: 5em;
+			}
 		}
 		.inner-table .table__col + .table__col{
 			margin-left: 6em;
 			padding-left: 1em;
 			border-left: solid 1px @main-color;
+			@media screen and (max-width: @small-m-screen){
+				margin-left: 5em;
+			}
 		}
 	}
 }

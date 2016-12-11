@@ -59,14 +59,14 @@ class SearchBar extends Component {
 			this.setState({keywordMarginLeft: size.width});
 		}
 	}
-	period(prsRct){
+	period(prsRsp){
 		const period = (
-			<div className="searchbar__period" style={prsRct.style.period}>
-				<input type="text" value={this.props.query.from} placeholder="1988.5" style={prsRct.style.from}
+			<div className="searchbar__period" style={prsRsp.style.period}>
+				<input type="text" value={this.props.query.from} placeholder="1988.5" style={prsRsp.style.from}
 					onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 				<div><i className="pe-7s-right-arrow pe-va"></i></div>
-				<input type="text" value={this.props.query.to} placeholder="2015.11" style={prsRct.style.to}
+				<input type="text" value={this.props.query.to} placeholder="2015.11" style={prsRsp.style.to}
 					onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
 				/>
 			</div>
@@ -105,7 +105,7 @@ class SearchBar extends Component {
 			);
 		}
 	}
-	propsForReactiviy(){
+	propsForResponsivity(){
 		const wWidth = this.props.window.width;
 		const buttonWidth = _interpolate(wWidth, 4, 8, _screen.mmLarge, _screen.large, 'em');
 		const sndPartWidth = _notNull([
@@ -151,14 +151,14 @@ class SearchBar extends Component {
 		return (this.props.mode == 'content' ? inContent : inMenu);
 	}
 	render(){
-		const prsRct = this.propsForReactiviy();
+		const prsRsp = this.propsForResponsivity();
 		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
 		const doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
 			<DdItem key={tid} value={tid}><span>{tname}</span></DdItem>
 		));
 		let searchBar = (
 			<div className="searchbar__bar">
-				<div style={prsRct.style.firstPart}>
+				<div style={prsRsp.style.firstPart}>
 					<DdSelect selected={this.props.query.doctypes} onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}>
 						{this.doctypeHead()}
 						{doctypeItems}
@@ -172,16 +172,16 @@ class SearchBar extends Component {
 						</div>
 					</div>
 				</div>
-				<div style={prsRct.style.secondPart}>
-					{this.period(prsRct)}
-					<button className="searchbar__button" style={prsRct.style.button} onClick={this.handleClick.bind(this, 'search')}>검색</button>
+				<div style={prsRsp.style.secondPart}>
+					{this.period(prsRsp)}
+					<button className="searchbar__button" style={prsRsp.style.button} onClick={this.handleClick.bind(this, 'search')}>검색</button>
 				</div>
 			</div>
 		);
 		if(this.props.mode == 'content'){
 			return(
-				<div className={className} style={prsRct.style.wrap}>
-					<div className="searchbar__header"><span style={prsRct.style.header}>민변 디지털 도서관</span></div>
+				<div className={className} style={prsRsp.style.wrap}>
+					<div className="searchbar__header"><span style={prsRsp.style.header}>민변 디지털 도서관</span></div>
 					{searchBar}
 					<div className="searchbar__helper">
 						<div>
@@ -213,7 +213,7 @@ class SearchBar extends Component {
 			);
 		} else {
 			return(
-				<div className={className} style={prsRct.style.wrap}>
+				<div className={className} style={prsRsp.style.wrap}>
 					{searchBar}
 				</div>
 			);

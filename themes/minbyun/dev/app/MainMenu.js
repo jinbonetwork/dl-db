@@ -107,7 +107,7 @@ class MainMenu extends Component {
 			</Toggle>
 		);
 	}
-	propsForReactiviy(){
+	propsForResponsivity(){
 		const wWidth = this.props.window.width;
 		let paddingOfWrite = _interpolate(wWidth, 0.7, 1.5, _screen.mmLarge, _screen.large, 'em');
 		return {
@@ -119,11 +119,11 @@ class MainMenu extends Component {
 		};
 	}
 	render(){
-		const prsRct = this.propsForReactiviy();
+		const prsRsp = this.propsForResponsivity();
 		const menu = (this.props.window.width <= _screen.mmLarge ? this.hamburgerMenu() : this.dropdownMenu());
 		return (
 			<div className="main-menu">
-				<LinkIf className="main-menu__write" to="/document/new" if={_isCommon(['admin', 'write'], this.props.userRole)} style={prsRct.style.write}>
+				<LinkIf className="main-menu__write" to="/document/new" if={_isCommon(['admin', 'write'], this.props.userRole)} style={prsRsp.style.write}>
 					<i className="pe-7f-note pe-va"></i><span>자료<br/>입력</span>
 				</LinkIf>
 				{menu}
