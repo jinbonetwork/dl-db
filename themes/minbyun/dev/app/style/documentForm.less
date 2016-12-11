@@ -1,10 +1,18 @@
 @import "variables";
 
 @document-from-button-width: 2.5em;
+@label-width: 8em;
 
 .document-form {
-	max-width: 38em;
+	max-width: 39em;
+	padding-right: 1em;
 	margin: 3em auto;
+
+	@media screen and (max-width: @s-medium-screen){
+		max-width: 500px;
+		padding-left: 1em;
+	}
+
 	h1 {
 		margin: 0 0 1em 0;
 		text-align: center;
@@ -73,18 +81,29 @@
 		padding: 0.5em 0;
 	}
 	& > .table > .table__row > .table__col:first-child {
-		width: 9em;
+		width: @label-width;
 		line-height: 1.2em;
 		padding-top: 0.9em;
 		padding-bottom: 0.9em;
 		padding-right: 1em;
 		text-align: right;
+		@media screen and (max-width: @s-medium-screen){
+			float: none;
+			text-align: left;
+			padding-bottom: 0.4em;
+		}
 	}
 	& > .table > .table__row > .table__col {
 		min-height: 3em;
+		@media screen and (max-width: @s-medium-screen){
+			min-height: 0;
+		}
 	}
 	& > .table > .table__row > .table__col:last-child {
-		margin-left: 10em;
+		margin-left: @label-width + 1em;
+		@media screen and (max-width: @s-medium-screen){
+			margin-left: 0;
+		}
 	}
 	.inner-table {
 		border: solid 1px @main-color;

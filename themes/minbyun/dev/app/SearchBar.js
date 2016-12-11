@@ -142,6 +142,9 @@ class SearchBar extends Component {
 				},
 				to: {
 					marginLeft: fromMargin
+				},
+				header: {
+					fontSize: _interpolate(wWidth, 2.4, 3.4, _screen.smallest, 460, 'em')
 				}
 			}
 		};
@@ -178,7 +181,7 @@ class SearchBar extends Component {
 		if(this.props.mode == 'content'){
 			return(
 				<div className={className} style={prsRct.style.wrap}>
-					<div className="searchbar__header"><span>민변 디지털 도서관</span></div>
+					<div className="searchbar__header"><span style={prsRct.style.header}>민변 디지털 도서관</span></div>
 					{searchBar}
 					<div className="searchbar__helper">
 						<div>
