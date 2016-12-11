@@ -179,6 +179,7 @@
 		color: @main-color;
 	}
 	.accordian {
+		margin-top: 2px;
 		text-align: left;
 		background-color: @minor-color-2;
 		border: solid 2px @main-color;
@@ -195,12 +196,16 @@
 	.acditem__head {
 		line-height: 2.5em;
 		padding-left: 0.5em;
-		color: @minor-color-2;
-		background-color: @main-color;
 		cursor: pointer;
 	}
 	.acditem__head:hover {
+		color: @minor-color-2;
 		background-color: @main-color * 1.1;
+	}
+	.acditem__children ul {
+		border: dotted @main-color;
+		border-width: 2px 0;
+		background-color: @main-color * 1.6;
 	}
 	.acditem__children li {
 		line-height: 2.5em;
@@ -226,5 +231,8 @@
 	}
 	.acditem + .acditem li {
 		padding-left: 0.8em;
+	}
+	.acditem:last-child ul {
+		border-width: 0;
 	}
 }
