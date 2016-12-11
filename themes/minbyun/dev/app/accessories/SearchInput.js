@@ -7,7 +7,8 @@ class SearchInput extends Component {
 		this.state = {
 			value: '',
 			result: [],
-			isSearching: false
+			isSearching: false,
+			signOfClick: false
 		};
 	}
 	componentWillMount(){
@@ -17,6 +18,8 @@ class SearchInput extends Component {
 		if(nextProps.value) this.setState({value: nextProps.value});
 	}
 	componentDidUpdate(prevProps, prevState){
+		//if(prevState.value != this.state.value && prevState.signOfClick === this.state.signOfClick) this.search(this.state.value);
+		//if(prevState.result.length && this.state.result.length && prevState.signOfClick === this.state.signOfClick) this.setState({result: []});
 	}
 	search(keyword){
 		this.setState({isSearching: true});
@@ -32,19 +35,26 @@ class SearchInput extends Component {
 		this.setState({value: event.target.value});
 		if(this.props.onChange) this.props.onChange(event.target.value);
 	}
+	handleKeyUp(event){
+		this.search(event.target.value);
+	}
 	handleKeyDown(event){
+		/*
 		if(event.key == 'Enter'){
 			this.search(event.target.value);
 		}
+		*/
 	}
 	handleClick(which, value, item){
 		if(which == 'item'){
-			this.setState({value: value, result: []});
+			this.setState({value: value, result: [], signOfClick: !this.state.signOfClick});
 			if(this.props.onChange) this.props.onChange(item);
 		}
+		/*
 		else if(which == 'search'){
 			this.search(this.state.value);
 		}
+		*/
 	}
 	render(){
 		const result = this.state.result.map((item, index) => {
@@ -73,7 +83,11 @@ class SearchInput extends Component {
 			</button>
 		return(
 			<div className="searchinput">
-				<input type="text" value={this.state.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} />
+				<input type="text" value={this.state.value}
+					onChange={this.handleChange.bind(this)}
+					onKeyDown={this.handleKeyDown.bind(this)}
+					onKeyUp={this.handleKeyUp.bind(this)}
+				/>
 				{spinner}
 				{searchButton}
 				{displayResults}
