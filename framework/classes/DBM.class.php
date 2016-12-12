@@ -48,7 +48,7 @@ final class DBM extends \DLDB\Objects {
 
 		$this->_is_connect = 1;
 		$this->_stmt = $this->_mysqli->stmt_init();
-		$this->_mysqli->query("set names ".($dbInfo['CHARSET'] ? $dbInfo['CHARSET'] : "utf8"));
+		$this->_mysqli->query("SET NAMES ".($dbInfo['CHARSET'] ? $dbInfo['CHARSET'] : "utf8"));
 	}
 
 	public function checkConnection($bReconnect = false) {

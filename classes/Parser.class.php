@@ -82,7 +82,7 @@ class Parser extends \DLDB\Objects {
 				$pages = $pdf->getPages();
 
 				foreach( $pages as $page ) {
-					$text .= $page->getText()."\n";
+					$text .= mb_convert_encoding($page->getText(), 'UTF-8', 'UTF-8')."\n";
 				}
 			} else {
 				$header['error'] = $errmsg;
