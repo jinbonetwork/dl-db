@@ -226,6 +226,7 @@ class Document extends \DLDB\Objects {
 	}
 
 	public static function delete($id) {
+		$context = \DLDB\Model\Context::instance();
 		$dbm = \DLDB\DBM::instance();
 
 		/* delete file */
@@ -245,9 +246,35 @@ class Document extends \DLDB\Objects {
 		$que = "DELETE FROM {documents} WHERE `id` = ?";
 		$dbm->execute($que,array("d",$id));
 
+		switch($context->getProperty('service.search_type')) {
+			case 'db':
+				break;
+			case 'elastic':
+				$else = \DLDB\Search\Elastic::instance();
+				$fields = self::getFields();
+				$taxonomy = self::getTaxonomy();
+				$taxonomy_terms = self::getTaxonomyTerms();
+				$else->setFields($fields,$taxonomy,$taxonomy_terms);
+				foreach( $taxonomy as $cid => $taxo ) {
+					if($taxo['skey']) {
+						$skey_taxonomy_terms = $taxonomy_terms[$cid];
+					}
+				}
+				$que = "SELECT * FROM {taxonomy_term_relative} WHERE `tables` = 'documents' AND `did` = ".$id;
+				while($row = $dbm->getFetchArray($que)) {
+					if($skey_taxonomy_terms[$row['tid']]) {
+						$else->remove($id,'t'.$row['tid']);
+					}
+				}
+				$else->remove($id,'main');
+				break;
+			default:
+				break;
+		}
+
 		/* delete term_relative */
-		$que = "DELETE FROM {taxonomy_term_relative} WHERE `did` = ?";
-		$dbm->execute($que,array("d",$id));
+		$que = "DELETE FROM {taxonomy_term_relative} WHERE `tables` = ? AND `did` = ?";
+		$dbm->execute($que,array("sd",'documents',$id));
 
 		/* delete bookmark */
 		$que = "DELETE FROM {bookmark} WHERE `did` = ?";
