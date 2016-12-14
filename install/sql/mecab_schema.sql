@@ -162,9 +162,11 @@ CREATE TABLE `dldb_taxonomy_terms` (
 DROP TABLE IF EXISTS `dldb_taxonomy_term_relative`;
 CREATE TABLE `dldb_taxonomy_term_relative` (
 	`tid`		int(10) NOT NULL DEFAULT 0,
+	`tables`	char(80) NOT NULL DEFAULT '',
 	`did`		int(10) NOT NULL DEFAULT 0,
 
-	PRIMARY KEY `TID` (`tid`,`did`)
+	PRIMARY KEY `TID` (`tid`,`tables`,`did`),
+	KEY `DID` (`tables`,`did`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

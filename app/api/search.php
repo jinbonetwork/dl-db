@@ -1,7 +1,7 @@
 <?php
 namespace DLDB\app\api;
 
-$Acl = 'view';
+$Acl = 'authenticated';
 
 class search extends \DLDB\Controller {
 	public function process() {

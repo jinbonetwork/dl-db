@@ -107,6 +107,16 @@ class Document extends \DLDB\Objects {
 
 		return ($row['cnt'] ? $row['cnt'] : 0);
 	}
+	
+	public static function totalTaxonomy($tid,$uid=0) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT t.tid, count(*) AS cnt FROM {taxonomy_term_relative} AS t".($uid ? " LEFT JOIN {documents} AS d ON t.`tables` = 'documents' AND t.did = d.id " : " ")."WHERE t.`tid` ".(is_array($tid) ? "IN (".implode(",",$tid).")" : "= ".$tid)." AND t.`tables` = 'documents' GROUP BY t.tid";
+		while( $row = $dbm->getFetchArray($que) ) {
+			$cnt[$row['tid']] = $row['cnt'];
+		}
+		return $cnt;
+	}
 
 	public static function getList($uid=0,$page,$limit) {
 		$dbm = \DLDB\DBM::instance();
