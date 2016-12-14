@@ -185,26 +185,6 @@ $ cd /usr/local/src
 $ wget https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/rpm/elasticsearch/2.4.0/elasticsearch-2.4.0.rpm
 $ rpm -ivh elasticsearch-2.4.0.rpm
 ```
-* libMeCab 설치
-```bash
-$ cd /usr/local/src
-$ wget https://bitbucket.org/eunjeon/mecab-java/downloads/mecab-java-0.996.tar.gz
-$ tar xzvpf mecab-java-0.996.tar.gz
-$ cd mecab-java-0.996
-$ vi Makefile
-```
-```vim
-/* java jdk 경로를 잡아준다. */
-INCLUDE=/usr/lib/jvm/java-1.8.0-openjdk.x86_64/include
-/* open-jdk의 경우 O3 -> O1 로 수정 */
-$(CXX) -O1 -c -fpic $(TARGET)_wrap.cxx  $(INC)
-/* -cp . 추가 */
-(JAVAC) -cp . test.java
-```
-```bash
-$ make
-$ cp libMeCab.so /usr/local/lib/.
-```
 * ElasticSearch Plugin 설치
 ```bash
 $ cd /usr/share/elasticsearch/
@@ -215,7 +195,6 @@ $ bin/plugin install org.bitbucket.eunjeon/elasticsearch-analysis-seunjeon/2.4.0
 ```
 * ElasticSearch Start
 ```bash
-$ export LD_LIBRARY_PATH=/usr/local/lib; ./bin/elasticsearch -Des.security.manager.enabled=false
+$ ./bin/elasticsearch -Des.security.manager.enabled=false
 ```
-
 

@@ -81,7 +81,7 @@ class Files extends \DLDB\Objects {
 
 	public static function unlinkFile($filename) {
 		if(!@unlink($filename)) {
-			self::$errmsg = '파일을 삭제할 수 없습니다.';
+			self::$errmsg = "[".$filename.'] 파일을 삭제할 수 없습니다.';
 			return -1;
 		}
 	}

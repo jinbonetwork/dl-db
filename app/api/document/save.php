@@ -17,6 +17,9 @@ class save extends \DLDB\Controller {
 
 		/* check field type */
 		if($this->params['mode'] != 'add') {
+			if( $this->params['mode'] == 'delete' && !$this->params['document']['id'] && $this->params['id'] ) {
+				$this->params['document']['id'] = $this->params['id'];
+			}
 			if(!$this->params['document']['id']) {
 				\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 입력하세요') );
 			}

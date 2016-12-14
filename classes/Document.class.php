@@ -232,23 +232,28 @@ class Document extends \DLDB\Objects {
 		$files = \DLDB\Files::getList($id);
 		if(is_array($files)) {
 			foreach( $files as $file ) {
-				$filename = \DLDB\Files::getFilePath($file['filepath']);
-				\DLDB\Files::unlinkFile($filename);
+				$filename = \DLDB\Files::getFilePath($file);
+				if(\DLDB\Files::unlinkFile($filename)) {
+					self::$errmsg = \DLDB\Files::errMsg();
+					return -1;
+				}
 				\DLDB\Files::deleteFile($file['fid']);
 			}
 		}
 
 		/* delete document */
-		$que = "DELETE FROM {document} WHERE `id` = ?";
-		$dbm->execute($que,$id);
+		$que = "DELETE FROM {documents} WHERE `id` = ?";
+		$dbm->execute($que,array("d",$id));
 
 		/* delete term_relative */
 		$que = "DELETE FROM {taxonomy_term_relative} WHERE `did` = ?";
-		$dbm->execute($que,$id);
+		$dbm->execute($que,array("d",$id));
 
 		/* delete bookmark */
 		$que = "DELETE FROM {bookmark} WHERE `did` = ?";
-		$dbm->execute($que,$id);
+		$dbm->execute($que,array("d",$id));
+
+		return 0;
 	}
 
 	public static function getErrorMsg() {
