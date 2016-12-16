@@ -56,7 +56,7 @@ class DigitalLibrary extends Component {
 		if(!userData.role && childProp.role) return null;
 		if(childProp.role && !_isCommon(childProp.role, userData.role)){
 			return (
-				<Message handleClick={this.props.router.goBack.bind(this)}>이 페이지에 접근할 권한이 없습니다.</Message>
+				<Message onClick={this.props.router.goBack.bind(this)}>이 페이지에 접근할 권한이 없습니다.</Message>
 			);
 		}
 		let props = {};

@@ -19,7 +19,7 @@ const _fieldAttrs = {
 	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
 	trial: {type: 'group', displayName: '사건정보', children: ['court', 'sentence', 'number', 'trialname', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
 	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: true},
-	sentence: {type: 'date', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: true},
+	sentence: {type: 'date', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: false},
 	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: true},
 	trialname: {type: 'char', displayName: '사건명', form: 'text', parent: 'trial', multiple: false, required: true},
 	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: true},

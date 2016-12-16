@@ -13,9 +13,6 @@ class Login extends Component {
 			password: ''
 		}
 	}
-	componentDidMount(){
-		this.refs.id.focus();
-	}
 	submit(){ if(this.props.userData.type){
 		let data, loginUri;
 		if(this.props.userData.type == 'xe'){
@@ -102,7 +99,7 @@ class Login extends Component {
 					<Row>
 						<Column>아이디</Column>
 						<Column>
-							<input type="text" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id}
+							<input type="text" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
 								onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
 							/>
 						</Column>
@@ -121,7 +118,7 @@ class Login extends Component {
 					</Row>
 					<Row>
 						<Column></Column>
-						<Column><span>※ 아이디 개설 문의: 민변 사무국</span></Column>
+						<Column><span>※ 아이디 개설 문의: 민변 사무처</span></Column>
 					</Row>
 				</Table>
 				<div className="login__agreement">

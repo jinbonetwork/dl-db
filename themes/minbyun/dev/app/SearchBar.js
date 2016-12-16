@@ -166,7 +166,7 @@ class SearchBar extends Component {
 					<div className="searchbar__keyword" style={{marginLeft: this.state.keywordMarginLeft}}>
 						<div><i className="pe-7f-search pe-va"></i></div>
 						<div>
-							<input type="text" value={this.props.query.keyword} placeholder="검색어를 입력하세요"
+							<input type="text" value={this.props.query.keyword} placeholder="검색어를 입력하세요" autoFocus={true}
 								onChange={this.handleChange.bind(this, 'keyword')} onKeyDown={this.handleKeyDown.bind(this)}
 							/>
 						</div>

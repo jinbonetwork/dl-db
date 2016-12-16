@@ -117,9 +117,9 @@ class DigitalLibraryContainer extends Component {
 	}
 	setMessage(message, arg1st, arg2nd){
 		if(message){
-			let actOnClick = arg1st;
+			let handleOfMessage = this.handleOfMessage.bind(this, arg1st, arg2nd)
 			this.setState({message: (
-				<Message handleClick={this.handleOfMessage.bind(this, actOnClick, arg2nd)}>{message}</Message>
+				<Message onClick={handleOfMessage} onKeyDown={handleOfMessage}>{message}</Message>
 			)});
 		} else {
 			this.setState({message: (

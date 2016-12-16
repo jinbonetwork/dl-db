@@ -51,14 +51,12 @@ class DdSelect extends Component {
 					onClick: this.handleClick.bind(this, 'item', child.props.value),
 					children: children
 				});
-			} else if(child.type == DdHead){
-				return cloneElement(child, {onClick: this.handleClick.bind(this, 'head')})
 			} else {
 				return child;
 			}
 		}});
 		return (
-			<Dropdown className="ddselect" isUnfolded={this.state.isUnfolded} onResize={this.props.onResize}>
+			<Dropdown className="ddselect" isUnfolded={this.state.isUnfolded} onResize={this.props.onResize} onClickHead={this.handleClick.bind(this, 'head')}>
 				{children}
 			</Dropdown>
 		);

@@ -33,7 +33,15 @@ input[type=text], input[type=password], button, textarea {
 	box-shadow: none;
 }
 button {
+	padding: 0;
 	cursor: pointer;
+}
+button:focus {
+	text-decoration: underline;
+}
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
 }
 ul {
 	margin: 0;

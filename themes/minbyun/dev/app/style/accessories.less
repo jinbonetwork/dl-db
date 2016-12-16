@@ -45,8 +45,8 @@
 	color: @main-color;
 	border: solid 1px @main-color;
 	background-color: @minor-color-2;
-	&.message--clickable {
-		cursor: pointer;
+	&:focus {
+		text-decoration: none;
 	}
 }
 
@@ -77,8 +77,8 @@
 		visibility: hidden !important;
 	}
 	.dropdown__headwrap {
-		display: inline-block;
 		border: solid 1px #fe9a2e;
+		background-color: transparent;
 		cursor: pointer;
 	}
 	.ddhead {

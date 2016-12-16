@@ -2,22 +2,28 @@ import React, {Component, PropTypes} from 'react';
 import Overlay from './Overlay';
 
 class Message extends Component {
+	handleClick(){
+		if(this.props.onClick) this.props.onClick();
+	}
+	handleKeyDown(){
+		if(this.props.onKeyDown) this.props.onKeyDown();
+	}
 	render(){
-		let className = (this.props.handleClick ? 'message message--clickable': 'message');
-		if(this.props.className) className += ' '+this.props.className;
+		let className = (this.props.className ? 'message '+this.props.className: 'message');
 		return (
 			<div>
-				<Overlay handleClick={this.props.handleClick.bind(this)} />
-				<div className={className} onClick={this.props.handleClick.bind(this)}>
+				<Overlay onClick={this.handleClick.bind(this)} />
+				<button type="button" className={className} autoFocus={true} onClick={this.handleClick.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}>
 					{this.props.children}
-				</div>
+				</button>
 			</div>
 		);
 	}
 }
 Message.propTypes = {
 	className: PropTypes.string,
-	handleClick: PropTypes.func.isRequired
+	onClick: PropTypes.func,
+	onKeyDown: PropTypes.func
 }
 
 export default Message;

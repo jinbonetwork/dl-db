@@ -47,7 +47,9 @@ class Dropdown extends Component {
 		super();
 		this.state = {
 			isUnfolded: false,
-			width: null
+			width: null,
+			signOfBlur: false,
+			signOfClickItem: false
 		};
 	}
 	componentDidMount(){
@@ -82,7 +84,10 @@ class Dropdown extends Component {
 		}
 	}
 	handleClick(which){
-		this.setState({isUnfolded: !this.state.isUnfolded});
+		if(which == 'head'){
+			if(this.props.onClickHead) this.props.onClickHead();
+			else this.setState({isUnfolded: !this.state.isUnfolded});
+		}
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
@@ -103,11 +108,11 @@ class Dropdown extends Component {
 
 		return (
 			<div className={className}>
-				<div className="dropdown__headwrap" ref="headwrap" onClick={this.handleClick.bind(this, 'head')}>
+				<button type="button" className="dropdown__headwrap" ref="headwrap" onClick={this.handleClick.bind(this, 'head')}>
 					<div className="dropdown__head" style={{width: headWidth}}>
 						{head}
 					</div>
-				</div>
+				</button>
 				<div className="dropdown__innerwrap">
 					<div className="dropdown__items">
 						<div className="dropdown__items-top-border" style={{width: itemWidth}}></div>
@@ -127,8 +132,8 @@ Dropdown.propTypes = {
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	isUnfolded: PropTypes.bool,
-	handleClick: PropTypes.func,
 	onResize: PropTypes.func,
+	onClickHead: PropTypes.func
 };
 
 export {Dropdown, DdHead, DdItem, DdArrow};
