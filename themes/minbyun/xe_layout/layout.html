@@ -1,0 +1,226 @@
+{Context::addHtmlHeader('<meta name="viewport" content="width=device-width,user-scalable=0,initial-scale=1">')}
+<load target="/themes/minbyun/contrib/NanumBarunGothic/nanumbarungothic.css" />
+<load target="/themes/minbyun/contrib/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+<load target="/themes/minbyun/contrib/pe-icon-7-stroke/css/helper.css" />
+<load target="/themes/minbyun/contrib/pe-icon-7-filled/css/pe-icon-7-filled.css" />
+<load target="/themes/minbyun/contrib/pe-icon-7-filled/css/helper.css" />
+<load target="/themes/minbyun/css/style.css" />
+<load target="minbyun_layout.css" />
+<load target="minbyun_layout.js" />
+<div id="root" class="minbyun_layout">
+	<div class="digital-library">
+		<div class="digital-library__header">
+			<a class="digital-library__logo" href="/"><img src="/themes/minbyun/images/logo-text.svg"></a>
+			<span>&nbsp;</span>
+			<div class="main-menu">
+				<div class="dropdown main-menu__user">
+					<div class="dropdown__headwrap">
+						<div class="dropdown__head">
+							<div class="ddhead">
+							<!--@if($is_logged)-->
+								<i class="pe-7f-user pe-va"></i><span>{$logged_info->nick_name}</span>
+								<div class="ddarrow">
+									<i class="pe-7s-angle-down pe-va"></i>
+									<i class="pe-7s-angle-up pe-va"></i>
+								</div>
+							<!--@else-->
+								<i class="pe-7f-user pe-va"></i><a href="/login"><span>로그인</span></a>
+							<!--@end-->
+							</div>
+						</div>
+					</div>
+					<div class="dropdown__innerwrap">
+						<div class="dropdown__items">
+							<div class="dropdown__items-top-border"></div>
+							<!--@if($is_logged)-->
+							<ul>
+								<li class="dditem"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+								<li class="dditem"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+								<li class="dditem"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+								<li class="dditem"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+								<li class="dditem" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+								<li class="dditem"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+							</ul>
+							<!--@end-->
+						</div>
+					</div>
+					<div class="dropdown__invisible">
+						<div>
+							<div class="ddhead">
+							<!--@if($is_logged)-->
+								<i class="pe-7f-user pe-va"></i><span>{$logged_info->nick_name}</span>
+								<div class="ddarrow">
+									<i class="pe-7s-angle-down pe-va"></i>
+								</div>
+							<!--@else-->
+								<i class="pe-7f-user pe-va"></i><a href="/login"><span>로그인</span></a>
+							<!--@end-->
+							</div>
+						</div>
+						<!--@if($is_logged)-->
+						<ul>
+							<li class="dditem"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+							<li class="dditem"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+							<li class="dditem"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+							<li class="dditem"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+							<li class="dditem" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+							<li class="dditem"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+						</ul>
+						<!--@end-->
+					</div>
+				</div><div loop="$global_menu->list=>$key1,$val1" class="dropdown main-menu__{$val1['desc']}" cond="$val1['list']">
+					<div class="dropdown__headwrap">
+						<div class="dropdown__head">
+							<div class="ddhead">
+								<i class="pe-7s-note2 pe-va"|cond="$val1['desc']=='boards'" class="pe-7s-star pe-va"|cond="$val1['desc']=='links'"></i><span>{preg_replace("/바로/i","바로<br>",$val1['link'])}</span>
+								<div class="ddarrow">
+									<i class="pe-7s-angle-down pe-va"></i>
+									<i class="pe-7s-angle-up pe-va"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="dropdown__innerwrap">
+						<div class="dropdown__items">
+							<div class="dropdown__items-top-border"></div>
+							<ul cond="$val1['list']">
+								<li loop="$val1['list']=>$key2,$val2" class="dditem"><a href="{$val2['href']}" target="_blank"|cond="$val2['open_window']=='Y'"><span>{$val2['link']}</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="dropdown__invisible">
+						<div>
+							<div class="ddhead">
+								<i class="pe-7s-note2 pe-va"|cond="$val1['desc']=='boards'" class="pe-7s-star pe-va"|cond="$val1['desc']=='links'"></i><span>{preg_replace("/바로/i","바로<br>",$val1['link'])}</span>
+								<div class="ddarrow">
+									<i class="pe-7s-angle-down pe-va"></i>
+								</div>
+							</div>
+						</div>
+						<ul cond="$val1['list']">
+							<li loop="$val1['list']=>$key2,$val2" class="dditem"><a href="{$val2['href']}" target="_blank"|cond="$val2['open_window']=='Y'"><span>{$val2['link']}</span></a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="toggle">
+					<button type="button">
+						<span class="toggle__icon">
+							<span class="toggle__icon--off"><i class="pe-7f-menu pe-va"></i></span>
+							<span class="toggle__icon--on"><i class="pe-7f-menu pe-va"></i></span>
+						</span>
+					</button>
+					<div class="toggle__child">
+						<div>
+							<div class="accordian">
+								<div class="acditem acditem__user" data-id="acditem__user">
+									<div class="acditem__head">
+										<div class="main-menu__user">
+										<!--@if($is_logged)-->
+											<i class="pe-7f-user pe-va"></i>
+											<span><span>{$logged_info->nick_name}</span></span>
+										<!--@else-->
+											<i class="pe-7f-user pe-va"></i>
+											<a href="/login/"><span>로그인</span></a>
+										<!--@end-->
+										</div>
+									</div>
+									<div class="acditem__children">
+										<!--@if($is_logged)-->
+										<ul>
+											<li><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+											<li><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+											<li><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+											<li><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+											<li cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+											<li><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+										</ul>
+										<!--@end-->
+									</div>
+								</div><div loop="$global_menu->list=>$key1,$val1" class="acditem acditem__{$val1['desc']}" cond="$val1['list']" data-id="acditem__{$val1['desc']}">
+									<div class="acditem__head">
+										<div class="main-menu__{$val1['desc']}">
+											<i class="pe-7s-note2 pe-va"|cond="$val1['desc']=='boards'" class="pe-7s-star pe-va"|cond="$val1['desc']=='links'"></i>
+											<span><span>{$val1['link']}</span></span>
+										</div>
+									</div>
+									<div class="acditem__children">
+										<ul>
+											<li loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="toggle__invisible">
+						<div class="accordian">
+							<div class="acditem acditem__user">
+								<div class="acditem__head">
+									<div class="main-menu__user">
+										<!--@if($is_logged)-->
+										<i class="pe-7f-user pe-va"></i>
+										<span><span>{$logged_info->nick_name}</span></span>
+										<!--@else-->
+										<i class="pe-7f-user pe-va"></i>
+										<a href="/login/"><span>로그인</span></a>
+										<!--@end-->
+									</div>
+								</div>
+								<div class="acditem__children">
+									<!--@if($is_logged)-->
+									<ul>
+										<li><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+										<li><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+										<li><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+										<li><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+										<li cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+										<li><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+									</ul>
+									<!--@end-->
+								</div>
+							</div>
+							<div loop="$global_menu->list=>$key1,$val1" class="acditem acditem__{$val1['desc']}" cond="$val1['list']">
+								<div class="acditem__head">
+									<div class="main-menu__{$val1['desc']}">
+										<i class="pe-7s-note2 pe-va"|cond="$val1['desc']=='boards'" class="pe-7s-star pe-va"|cond="$val1['desc']=='links'"></i>
+										<span><span>{$val1['link']}</span></span>
+									</div>
+								</div>
+								<div class="acditem__children">
+									<ul>
+										<li loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="digital-library__content">
+			<div class="xe-menus">
+				<h1>{$module_info->browser_title}</h1>
+				<div class="body">
+					<!-- LNB -->
+					<nav cond="$_selected_menu['list']" class="lnb">
+						<ul>
+							<li loop="$_selected_menu['list'] => $key1, $val1">
+								<a href="{$val1['href']}" target="_blank"|cond="$val1['open_window'] == 'Y'">{$val1['link']}</a>
+								<ul cond="$val1['list']">
+									<li loop="$val1['list'] => $key2, $val2" class="on"|cond="$val2['selected']">
+										<a href="{$val2['href']}" target="_blank"|cond="$val2['open_window'] == 'Y'">{$val2['link']}</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</nav>
+					<!-- /LNB -->
+					<hr />
+					<div class="content">{$content}</div>
+				</div>
+				<hr />
+			</div>
+			<div class="footer"></div>
+		</div>
+	</div>
+</div>
