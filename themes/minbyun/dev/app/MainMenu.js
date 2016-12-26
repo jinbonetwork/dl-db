@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
-import {Dropdown, DdHead, DdItem, DdArrow} from './accessories/Dropdown';
+import Dropdown from './accessories/Dropdown';
+import Item from './accessories/Item';
 import Toggle from './accessories/Toggle';
 import {Accordian, AcdItem} from './accessories/Accordian';
 import LinkIf from './accessories/LinkIf';
@@ -23,21 +24,21 @@ class MainMenu extends Component {
 			if(tag == 'li'){
 				return <li key={index}>{child}</li>
 			} else {
-				return <DdItem key={index}>{child}</DdItem>
+				return <Item key={index}>{child}</Item>
 			}
 		});
 	}
-	displayNameOfMenu(name, where){
+	displayNameOfMenu(name, where, key){
 		switch(name){
 			case 'user':
-				return <span>{(this.props.userRole.indexOf('admin') >= 0 ? '관리자' : '회원')}</span>
+				return <span key={key}>{(this.props.userRole.indexOf('admin') >= 0 ? '관리자' : '회원')}</span>
 			case 'boards':
-				return <span>게시판</span>
+				return <span key={key}>게시판</span>
 			case 'links':
 				if(where == 'hamburger'){
-					return <span>바로가기</span>
+					return <span key={key}>바로가기</span>
 				} else {
-					return <span>바로<br/>가기</span>
+					return <span key={key}>바로<br/>가기</span>
 				}
 			default:
 		}
@@ -50,7 +51,7 @@ class MainMenu extends Component {
 					if(tag == 'li'){
 						return <li key={item.path}>{child}</li>
 					} else {
-						return <DdItem key={item.path}>{child}</DdItem>
+						return <Item key={item.path}>{child}</Item>
 					}
 				});
 				const child = (
@@ -61,7 +62,7 @@ class MainMenu extends Component {
 				if(tag == 'li'){
 					items.push(<li key={items.length}>{child}</li>);
 				} else {
-					items.push(<DdItem key={items.length}>{child}</DdItem>);
+					items.push(<Item key={items.length}>{child}</Item>);
 				}
 				return items;
 			case 'boards':
@@ -73,12 +74,10 @@ class MainMenu extends Component {
 	dropdownMenu(){
 		return _mainMenu.map((item) => {
 			return (
-				<Dropdown key={item.name} className={'main-menu__'+item.name}>
-					<DdHead>
-						<i className={item.icon+' pe-va'}></i>
-						{this.displayNameOfMenu(item.name)}
-						<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
-					</DdHead>
+				<Dropdown key={item.name} className={'main-menu__'+item.name} window={this.props.window}
+					head={[<i key="head-icon" className={item.icon+' pe-va'}></i>, this.displayNameOfMenu(item.name, 'normal', 'display-name')]}
+					arrow={<i className="pe-7s-angle-down pe-va"></i>}
+				>
 					{this.childrenOfMenu(item.name)}
 				</Dropdown>
 			);
@@ -89,7 +88,7 @@ class MainMenu extends Component {
 			const head = (
 				<div className={'main-menu__'+item.name}>
 					<i className={item.icon+' pe-va'}></i>
-					<span>{this.displayNameOfMenu(item.name, 'hamburger')}</span>
+					{this.displayNameOfMenu(item.name, 'hamburger')}
 				</div>
 			);
 			return (

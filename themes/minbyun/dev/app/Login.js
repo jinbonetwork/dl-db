@@ -43,7 +43,9 @@ class Login extends Component {
 					if(data.role){
 						this.props.router.goBack();
 					} else {
-						this.props.setMessage('로그인 정보가 잘못되었습니다.', 'unset');
+						this.props.setMessage('로그인 정보가 잘못되었습니다.', () => {
+							this.refs.id.focus();
+						});
 					}
 				});
 			}
@@ -99,7 +101,7 @@ class Login extends Component {
 					<Row>
 						<Column>아이디</Column>
 						<Column>
-							<input type="text" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
+							<input type="text" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
 								onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
 							/>
 						</Column>

@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {Radio, RdItem} from '../accessories/Radio';
+import Check from '../accessories/Check';
+import Item from '../accessories/Item';
 import {_termsOf, _sFname} from '../schema/docSchema';
 import {_mapO, _pushpull} from '../accessories/functions';
 
@@ -27,10 +28,12 @@ class DoctypeList extends Component {
 		return (
 			<div className="doclisthead">
 				<ul>{doctypes}</ul>
-				<Radio selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}>
-					<RdItem value="score"><span className="doclisthead__orderby">관련도순</span></RdItem>
-					<RdItem value={_sFname['date']}><span className="doclisthead__orderby">최신순</span></RdItem>
-				</Radio>
+				<Check multiple={false} selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}
+					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
+				>
+					<Item value="score"><span className="doclisthead__orderby">관련도순</span></Item>
+					<Item value={_sFname['date']}><span className="doclisthead__orderby">최신순</span></Item>
+				</Check>
 			</div>
 		);
 	}

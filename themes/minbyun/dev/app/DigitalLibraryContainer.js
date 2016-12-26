@@ -117,9 +117,8 @@ class DigitalLibraryContainer extends Component {
 	}
 	setMessage(message, arg1st, arg2nd){
 		if(message){
-			let handleOfMessage = this.handleOfMessage.bind(this, arg1st, arg2nd)
 			this.setState({message: (
-				<Message onClick={handleOfMessage} onKeyDown={handleOfMessage}>{message}</Message>
+				<Message onClick={this.handleOfMessage.bind(this, arg1st, arg2nd)}>{message}</Message>
 			)});
 		} else {
 			this.setState({message: (
@@ -149,6 +148,7 @@ class DigitalLibraryContainer extends Component {
 			case 'replace':
 				if(arg) this.props.router.replace(arg); break;
 			default:
+				if(typeof actOnClick === 'function') actOnClick();
 		}
 	}
 	updateSearchQuery(arg0, arg1){

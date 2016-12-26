@@ -34,7 +34,6 @@
 		color: @main-color;
 		font-weight: @font-bold;
 	}
-
 	.login__header + .login__body {
 		margin-top: 10%;
 	}
@@ -64,7 +63,6 @@
 			margin-left: 0;
 		}
 	}
-
 	.login__body .table__row:last-child .table__col {
 		border: 0;
 		height: auto;
@@ -80,5 +78,9 @@
 		background-color: @main-color;
 		color: @minor-color-2;
 		font-weight: @font-bold;
+		border-bottom: solid 1px @main-color;
+	}
+	button:focus {
+		background-color: @focus-color-2;
 	}
 }

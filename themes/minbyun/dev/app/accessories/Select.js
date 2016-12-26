@@ -1,8 +1,7 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
-import {Dropdown, DdHead, DdItem, DdArrow} from './Dropdown';
+import Dropdown from './Dropdown';
 import {_isCommon, _pushpull} from './functions';
 
-class Option extends Component {}
 class Select extends Component {
 	constructor(){
 		super();
@@ -20,34 +19,31 @@ class Select extends Component {
 			this.setState({selected: nextProps.selected});
 		}
 	}
-	handleClick(value){
-		if(this.state.seleced != value){
-			if(this.props.onChange){
-				this.props.onChange(value);
-			} else {
-				this.setState({selected: value});
+	handleClick(which, value){
+		if(which == 'item'){
+			if(this.state.seleced != value){
+				if(this.props.onChange){
+					this.props.onChange(value);
+				} else {
+					this.setState({selected: value});
+				}
 			}
 		}
 	}
 	render(){
 		let head;
-		const children = Children.map(this.props.children, (child) => {
-			if(child.type == Option){
-				if(child.props.value == this.state.selected){
-					head = child.props.children;
-				} else {
-					return <DdItem onClick={this.handleClick.bind(this, child.props.value)}>
-						{child.props.children}
-					</DdItem>
-				}
+		const children = Children.map(this.props.children, (child) => { if(child){
+			if(child.props.value == this.state.selected){
+				head = child.props.children;
+			} else {
+				return child;
 			}
-		});
+		}});
 		return (
-			<Dropdown className="select" onResize={this.props.onResize}>
-				<DdHead>
-					{head}
-					<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
-				</DdHead>
+			<Dropdown className="select" head={head} arrow={<i className="pe-7s-angle-down pe-va"></i>}
+				onClick={this.handleClick.bind(this)}
+				onResize={this.props.onResize}
+			>
 				{children}
 			</Dropdown>
 		);
@@ -59,4 +55,4 @@ Select.propTypes = {
 	onResize: PropTypes.func
 };
 
-export {Select, Option};
+export default Select;

@@ -111,7 +111,7 @@ class DocumentForm extends Component {
 					<Row>
 						<Column></Column>
 						<Column>
-							<button type="button" className="document-form--submit"
+							<button type="button" className="document-form__submit"
 								onClick={this.handleClick.bind(this, 'submit')}>{this.props.formAttr.submit}
 							</button>
 						</Column>

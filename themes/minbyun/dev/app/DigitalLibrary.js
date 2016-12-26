@@ -41,15 +41,6 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
-	constructor(){
-		super();
-		this.state = {
-			clicked: false
-		};
-	}
-	handleClick(){
-		this.setState({clicked: true});
-	}
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
 		let childProp = _childProps[child.props.route.path];
@@ -101,7 +92,7 @@ class DigitalLibrary extends Component {
 		}
 		const logo = (_screen.sMedium < wWidth && wWidth <= _screen.medium ? 'logo.svg' : 'logo-text.svg');
 		return(
-			<div className="digital-library" onClick={this.handleClick.bind(this)}>
+			<div className="digital-library">
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
 						<img src={site_base_uri+'/themes/minbyun/images/'+logo} />

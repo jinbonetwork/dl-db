@@ -35,16 +35,19 @@
 	.select {
 		min-width: 50%;
 	}
-	.radio {
+	.check {
 		line-height: 3em;
 	}
-	.radio i {
+	.check .item {
+		line-height: 2em;
+	}
+	.check i {
 		font-size: 1.5em;
 	}
-	.rditem__check {
+	.check .item__checkicon {
 		color: @main-color;
 	}
-	.rditem__check, .rditem__uncheck {
+	.check .item__checkicon, .check .item__uncheckicon {
 		width: 1.5em;
 	}
 	.document-form__input-with-buttons {
@@ -74,11 +77,17 @@
 		padding: 0;
 		cursor: pointer;
 	}
+	.document-from__buttons button:focus i:before {
+		border-bottom: dotted 1px @main-color;
+	}
 	.document-from__buttons button i {
 		font-size: @document-from-button-width;
 	}
 	.searchinput {
 		width: 100%;
+	}
+	.searchinput__button:focus i {
+		border-bottom: dotted 1px @main-color;
 	}
 	& > .table > .table__row {
 		padding: 0.5em 0;
@@ -131,7 +140,7 @@
 		margin-left: 5em;
 		border-left: solid 1px @main-color
 	}
-	button.document-form--submit {
+	button.document-form__submit {
 		line-height: 3em;
 		width: 100%;
 		color: @minor-color-2;
@@ -140,6 +149,9 @@
 		padding: 0 0.5em;
 		cursor: pointer;
 		margin-top: 2em;
+	}
+	button.document-form__submit:focus {
+		background-color: @focus-color-2;
 	}
 }
 
@@ -150,6 +162,9 @@
 		height: 11em;
 		padding: 0.5em;
 		line-height: 1.5em;
+	}
+	textarea:focus {
+		background-color: @focus-color-1;
 	}
 	textarea + .textarea__footer {
 		position: relative;

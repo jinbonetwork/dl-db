@@ -19,18 +19,19 @@
 		width: 100%;
 		border: 0;
 	}
-	.fileinput--upload {
+	.fileinput__upload {
 		position: absolute;
 		top: 0; right: 0;
 		width: 5em;
 		height: 100%;
 		padding: 1px;
+		border-left: solid 1px @main-color;
 		background-color: @main-color;
 		color: @minor-color-2;
 		text-align: center;
 		cursor: pointer;
 	}
-	.fileinput--upload span {
+	.fileinput__upload span {
 		line-height: 3em;
 	}
 }
@@ -45,9 +46,7 @@
 	color: @main-color;
 	border: solid 1px @main-color;
 	background-color: @minor-color-2;
-	&:focus {
-		text-decoration: none;
-	}
+	cursor: pointer;
 }
 
 .overlay {
@@ -107,7 +106,7 @@
 	.dropdown__items-top-border {
 		height: 0;
 	}
-	.dditem {
+	.item {
 		padding: 0 1em;
 		list-style-type: none;
 		&:hover {
@@ -121,12 +120,7 @@
 	}
 	&:not(.dropdown--unfolded) .dropdown__items > ul {
 		height: 0;
-	}
-	.dditem__checkicon {
-		visibility: hidden;
-	}
-	.dditem--checked .dditem__checkicon {
-		visibility: visible;
+		display: none;
 	}
 }
 
@@ -157,22 +151,22 @@
 	}
 }
 
-.radio {
-	.rditem {
+.check {
+	.item {
 		display: inline-block;
 		cursor: pointer;
 	}
-	.rditem + .rditem {
+	.item + .item {
 		margin-left: 1em;
 	}
-	.rditem__check, .rditem__uncheck {
+	.item__checkicon, .item__uncheckicon {
 		display: inline-block;
 		margin-right: 0.2em;
 	}
-	.rditem:not(.rditem--checked) .rditem__check {
+	.item:not(.item--checked) .item__checkicon {
 		display: none;
 	}
-	.rditem--checked .rditem__uncheck {
+	.item.item--checked .item__uncheckicon {
 		display: none;
 	}
 }

@@ -1,8 +1,7 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
-import {Dropdown, DdHead, DdItem, DdArrow} from './Dropdown';
+import Dropdown from './Dropdown';
+import Item from './Item';
 import {_isCommon, _pushpull} from './functions';
-import update from 'react-addons-update';  // for update()
-import 'babel-polyfill'; // for update(), find(), findIndex() ...
 
 class DdSelect extends Component {
 	constructor(){
@@ -22,11 +21,6 @@ class DdSelect extends Component {
 			this.setState({selected: nextProps.selected});
 		}
 	}
-	componentDidUpdate(prevProps, prevState){
-		if(_isCommon(prevState.selected, this.state.selected, true) && prevState.isUnfolded && this.state.isUnfolded){
-			this.setState({isUnfolded: false});
-		}
-	}
 	handleClick(which, value){
 		if(which == 'item'){
 			let selected = _pushpull(this.state.selected, value);
@@ -36,27 +30,22 @@ class DdSelect extends Component {
 				this.setState({selected: selected});
 			}
 		}
-		else if(which == 'head'){
-			this.setState({isUnfolded: !this.state.isUnfolded});
-		}
+	}
+	handleFocus(which, value){
+		if(this.props.onFocus) this.props.onFocus(which, value);
 	}
 	render(){
-		let children = Children.map(this.props.children, (child) => { if(child){
-			if(child.type == DdItem){
-				let className = (_isCommon(this.state.selected, [child.props.value]) ? 'dditem--checked' : '');
-				let children = [];
-				children.push(<i key="checkicon" className="dditem__checkicon pe-7s-check pe-va"></i>, child.props.children);
-				return cloneElement(child, {
-					className: className,
-					onClick: this.handleClick.bind(this, 'item', child.props.value),
-					children: children
-				});
-			} else {
-				return child;
-			}
+		const children = Children.map(this.props.children, (child) => { if(child){
+			let className = (_isCommon(this.state.selected, [child.props.value]) ? 'item--checked' : '');
+			let children = [];
+			children.push(<i key="checkicon" className="item__checkicon pe-7s-check pe-va"></i>, child.props.children);
+			return cloneElement(child, {className: className, children: children});
 		}});
 		return (
-			<Dropdown className="ddselect" isUnfolded={this.state.isUnfolded} onResize={this.props.onResize} onClickHead={this.handleClick.bind(this, 'head')}>
+			<Dropdown className="ddselect" head={this.props.head} arrow={this.props.arrow} multiple={true} window={this.props.window}
+				onClick={this.handleClick.bind(this)} onFocus={this.handleFocus.bind(this)}
+				onResize={this.props.onResize}
+			>
 				{children}
 			</Dropdown>
 		);
@@ -64,8 +53,12 @@ class DdSelect extends Component {
 }
 DdSelect.propTypes = {
 	selected: PropTypes.array,
+	head: PropTypes.element,
+	arrow: PropTypes.element,
+	window: PropTypes.shape({width: PropTypes.number, height: PropTypes.number}),
 	onChange: PropTypes.func,
-	onResize: PropTypes.func
+	onResize: PropTypes.func,
+	onFocus: PropTypes.func
 };
 
-export {DdSelect, DdHead, DdItem, DdArrow};
+export default DdSelect;

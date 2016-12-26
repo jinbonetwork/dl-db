@@ -5,8 +5,9 @@ import Textarea from './Textarea';
 import DateForm from './DateForm';
 import FileInput from '../accessories/FileInput';
 import {Table} from '../accessories/Table';
-import {Select, Option} from '../accessories/Select';
-import {Radio, RdItem} from '../accessories/Radio';
+import Select from '../accessories/Select';
+import Item from '../accessories/Item';
+import Check from '../accessories/Check';
 import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
 import {_mapAO} from '../accessories/functions';
 
@@ -79,7 +80,7 @@ class DocumentInputForm extends Component {
 			case 'select':
 				let options = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
-					options.push(<Option key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Option>);
+					options.push(<Item key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Item>);
 				}});
 				return (
 					<Select selected={this.props.value} onChange={this.handleChange.bind(this)}>
@@ -88,13 +89,15 @@ class DocumentInputForm extends Component {
 				);
 			case 'radio':
 				const radioItems =  this.props.docData.taxonomy[this.props.fname].map((tid) => (
-					<RdItem key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></RdItem>
+					<Item key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Item>
 				));
 				return (
-					<Radio selected={this.props.value} onChange={this.handleChange.bind(this)}>
+					<Check multiple={false} selected={this.props.value} onChange={this.handleChange.bind(this)}
+						checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
+					>
 						{radioItems}
-					</Radio>
-				)
+					</Check>
+				);
 			case 'Ym':
 				return (
 					<DateForm fname={this.props.fname} value={this.props.value} index={this.props.index}
