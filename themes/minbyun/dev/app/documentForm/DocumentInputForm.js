@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
 import TextInput from '../accessories/TextInput';
 import SearchInput from '../accessories/SearchInput';
-import Textarea from './Textarea';
+import Textarea from '../accessories/Textarea';
 import DateForm from './DateForm';
 import FileInput from '../accessories/FileInput';
 import {Table} from '../accessories/Table';
@@ -24,6 +24,16 @@ class DocumentInputForm extends Component {
 				} else {
 					if(0 <= dateArray[index] && dateArray[index] <= 31); else return false;
 				}
+			}
+			return true;
+		}
+		else if(fAttr.type == 'phone'){
+			const phone = value.split('-');
+			if(phone.length > 3) return false;
+			for(let index in phone){
+				if(phone[index] >= 0); else return false;
+				if(phone.length > 1 && phone[index].length > 4) return false;
+				if(phone.length == 1 && phone[index].length > 11) return false;
 			}
 			return true;
 		} else {
@@ -95,12 +105,9 @@ class DocumentInputForm extends Component {
 			case 'Ym':
 				return <DateForm fname={this.props.fname} value={this.props.value} onChange={this.handleChange.bind(this)}/>;
 			case 'textarea':
-				let numOfWords;
-				if(this.props.fname == 'content') numOfWords = 200;
+				const message = (this.props.fname == 'content' ? '* 200자 내외로 작성해주세요.' : null);
 				return (
-					<Textarea fname={this.props.fname} value={this.props.value} focus={isWithFocus} numOfWords={numOfWords}
-						onChange={this.handleChange.bind(this)}
-					/>
+					<Textarea value={this.props.value} focus={isWithFocus} message={message} onChange={this.handleChange.bind(this)} />
 				);
 			case 'fieldset':
 				let subFormFields = [];

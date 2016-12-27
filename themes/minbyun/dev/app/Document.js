@@ -16,7 +16,8 @@ class Document extends Component {
 		super();
 		this.state = {
 			document: {},
-			fileText: {}
+			fileText: {},
+			dispBtnOfYesOrNo: false
 		};
 	}
 	componentDidMount(){
@@ -37,23 +38,37 @@ class Document extends Component {
 		}});
 	}
 	handleClick(which){
-		if(which == 'bookmark'){
-			this.setState({document: update(this.state.document, {bookmark: {$set: -1}})});
-			this.props.fetchData('post', '/api/user/bookmark?mode=add&did='+this.state.document.id, null, (data) => {
-				if(data){
-					this.setState({document: update(this.state.document, {bookmark: {$set: data.bid}})});
-				} else {
-					this.setState({bookmark: 0});
-					this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
-				}
-			});
-		}
-		else if(which == 'removeBookmark'){
-			let prevBookmark = this.state.document.bookmark;
-			this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
-			this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+this.state.document.bookmark, null, (data) => {
-				if(!data) this.setState({document: update(this.state.document, {bookmark: {$set: prevBookmark}})});
-			});
+		switch(which){
+			case 'bookmark':
+				this.setState({document: update(this.state.document, {bookmark: {$set: -1}})});
+				this.props.fetchData('post', '/api/user/bookmark?mode=add&did='+this.state.document.id, null, (data) => {
+					if(data){
+						this.setState({document: update(this.state.document, {bookmark: {$set: data.bid}})});
+					} else {
+						this.setState({bookmark: 0});
+						this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
+					}
+				});
+				break;
+			case 'removeBookmark':
+				const prevBookmark = this.state.document.bookmark;
+				this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
+				this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+this.state.document.bookmark, null, (data) => {
+					if(!data) this.setState({document: update(this.state.document, {bookmark: {$set: prevBookmark}})});
+				});
+				break;
+			case 'delete':
+				this.setState({dispBtnOfYesOrNo: true});
+				break;
+			case 'delete-yes':
+				this.props.fetchData('post', '/api/document/save?mode=delete&id='+this.state.document.id, null, (data) => { if(data){
+					this.props.router.goBack();
+				}});
+				break;
+			case 'delete-no':
+				this.setState({dispBtnOfYesOrNo: false});
+				break;
+			default:
 		}
 	}
 	submitFileText(fileId, text){
@@ -87,6 +102,26 @@ class Document extends Component {
 				</button>
 			</div>
 		);}
+	}
+	deleteDocument(){
+		if(_isCommon(['admin'], this.props.userData.role) || this.state.document.owner){
+			if(!this.state.dispBtnOfYesOrNo){
+				const className="document__delete";
+				return (
+					<div className={className}>
+						<button type="button" onClick={this.handleClick.bind(this, 'delete')}>삭제하기</button>
+					</div>
+				);
+			} else {
+				const className="document__delete document__delete--yes-or-no";
+				return (
+					<div className={className}>
+						<button type="button" onClick={this.handleClick.bind(this, 'delete-yes')}>예</button>
+						<button type="button" onClick={this.handleClick.bind(this, 'delete-no')}>아니오</button>
+					</div>
+				);
+			}
+		}
 	}
 	propsForResponsivity(){ //prsRsp
 		const wWidth = this.props.window.width;
@@ -126,7 +161,7 @@ class Document extends Component {
 
 		return (
 			<div className="document">
-				<div className="document--back" onClick={this.props.router.goBack}>
+				<div className="document__back" onClick={this.props.router.goBack}>
 					<i className="pe-7f-back pe-va"></i> <span>이전 페이지로</span>
 				</div>
 				<div className="document__wrap">
@@ -140,6 +175,7 @@ class Document extends Component {
 							<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
 								<span>수정하기</span>
 							</LinkIf>
+							{this.deleteDocument()}
 						</div>
 						<Table>
 							{fieldsInHeader.date}
