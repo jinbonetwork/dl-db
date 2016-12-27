@@ -9,6 +9,10 @@ class Item extends Component {
 				groupname: this.props.groupName
 			});
 		}
+		if(this.props.focus) this.refs.li.focus();
+	}
+	componentDidUpdate(prevProps, prevState){
+		if(this.props.focus) this.refs.li.focus();
 	}
 	handleClick(){
 		if(this.props.onClick) this.props.onClick();
@@ -32,6 +36,8 @@ class Item extends Component {
 	handleKeyDown(event){
 		if(event.key === 'Enter'){
 			jQ(this.refs.li).find('*').click();
+		} else {
+			if(this.props.onKeyDown) this.props.onKeyDown(event.key);
 		}
 	}
 	render(){
@@ -51,9 +57,11 @@ Item.propTypes = {
 	groupName: PropTypes.string,
 	className: PropTypes.string,
 	tabIndex: PropTypes.number,
+	focus: PropTypes.bool,
 	onBlur: PropTypes.func,
 	onFocus: PropTypes.func,
-	onClick: PropTypes.func
+	onClick: PropTypes.func,
+	onKeyDown: PropTypes.func
 };
 
 export default Item;

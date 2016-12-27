@@ -7,7 +7,8 @@ class Dropdown extends Component {
 		this.state = {
 			groupName: 'dropdown'+Date.now(),
 			isUnfolded: false,
-			width: null
+			width: null,
+			focused: -1
 		};
 	}
 	componentDidMount(){
@@ -15,6 +16,11 @@ class Dropdown extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		this.setSize();
+	}
+	componentDidUpdate(prevProps, prevState){
+		if(this.state.focused === 0){
+			this.refs.head.focus();
+		}
 	}
 	setSize(){
 		if(!this.refs.invisible) return;
@@ -29,29 +35,43 @@ class Dropdown extends Component {
 		}
 	}
 	handleClick(which, arg1st){
-		if(which == 'item'){
+		if(which == 'head'){
+			this.setState({isUnfolded: !this.state.isUnfolded});
+		}
+		else if(which == 'item'){
 			const value = arg1st;
-			if(!this.props.multiple) this.setState({isUnfolded: false});
+			if(!this.props.multiple) this.setState({isUnfolded: false, focused: 0});
 		}
 		if(this.props.onClick) this.props.onClick(which, arg1st);
 	}
 	handleFocus(which, arg1st){
-		if(which == 'head'){
-			this.setState({isUnfolded: !this.state.isUnfolded});
-		}
 		if(this.props.onFocus) this.props.onFocus(which, arg1st);
 	}
 	handleBlur(which, arg1st){
 		if(which == 'head'){
 			const event = arg1st;
 			if(!event.relatedTarget || this.state.groupName != event.relatedTarget.getAttribute('groupname')){
-				this.setState({isUnfolded: false});
+				this.setState({isUnfolded: false, focused: -1});
 			}
 		}
 		else if(which == 'item'){
 			const isUnfolded = arg1st;
-			if(!isUnfolded) this.setState({isUnfolded: false});
+			if(!isUnfolded) this.setState({isUnfolded: false, focused: -1});
 		}
+	}
+	handleKeyDown(which, arg1st, arg2nd){
+		if(which == 'head'){
+			const event = arg1st;
+			if(event.key == 'Enter') this.setState({isUnfolded: !this.state.isUnfolded});
+			else if(event.key == 'ArrowDown') this.setState({isUnfolded: true, focused: 1});
+		}
+		else if(which == 'item'){
+			const index = arg1st;
+			const key = arg2nd;
+			if(key == 'ArrowDown') this.setState({focused: index+1});
+			else if(key == 'ArrowUp') this.setState({focused: index-1})
+		}
+
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
@@ -64,12 +84,17 @@ class Dropdown extends Component {
 			</div>
 		);
 
+		let indexOfItem = 0;
 		const items = Children.map(this.props.children, (child) => { if(child){
+			const focus = (this.state.focused == ++indexOfItem);
 			return cloneElement(child, {
+				tabIndex: -1,
+				focus: focus,
 				groupName: this.state.groupName,
 				onBlur: this.handleBlur.bind(this, 'item'),
 				onFocus: this.handleFocus.bind(this, 'item', child.props.value),
-				onClick: this.handleClick.bind(this, 'item', child.props.value)
+				onClick: this.handleClick.bind(this, 'item', child.props.value),
+				onKeyDown: this.handleKeyDown.bind(this, 'item', indexOfItem)
 			});
 		}});
 
@@ -79,8 +104,9 @@ class Dropdown extends Component {
 		return (
 			<div className={className}>
 				<div className="dropdown__headwrap" ref="headwrap">
-					<div className="dropdown__head" tabIndex="0" style={{width: headWidth}}
+					<div className="dropdown__head" ref="head" tabIndex="0" style={{width: headWidth}}
 						onBlur={this.handleBlur.bind(this, 'head')} onClick={this.handleClick.bind(this, 'head')} onFocus={this.handleFocus.bind(this, 'head')}
+						onKeyDown={this.handleKeyDown.bind(this, 'head')}
 					>
 						{head}
 					</div>
