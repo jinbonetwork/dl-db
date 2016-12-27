@@ -101,7 +101,7 @@ class Login extends Component {
 					<Row>
 						<Column>아이디</Column>
 						<Column>
-							<input type="text" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
+							<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
 								onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
 							/>
 						</Column>

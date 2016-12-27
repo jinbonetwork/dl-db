@@ -20,7 +20,7 @@ class DocumentForm extends Component {
 			let fAttr = _fieldAttrs[fn];
 			if(fAttr.type == 'meta' || fAttr.type == 'group' || this.isHiddenField(fn) || this.isHiddenField(fAttr.parent)) continue;
 			if(fAttr.required && _isEmpty(value)){
-				return {fname: fn, message: fAttr.displayName+'을(를) 입력하세요.'};
+				return {fname: fn, index: (fAttr.multiple ? 0 : undefined), message: fAttr.displayName+'을(를) 입력하세요.'};
 			}
 			if(fAttr.multiple === false) value = [value];
 			for(let j in value){
@@ -30,7 +30,7 @@ class DocumentForm extends Component {
 					(fAttr.type == 'phone' && !_isPhoneValid(v)) ||
 					(fAttr.type == 'date' && !_isDateValid(v, fAttr.form))
 				){
-					return {fname: fn, message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
+					return {fname: fn, index: (fAttr.multiple ? j : undefined), message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
 				}
 			}
 		}
@@ -38,7 +38,9 @@ class DocumentForm extends Component {
 	submit(){
 		let error = this.validationCheck();
 		if(error){
-			this.props.callBacks.setMessage(error.message, 'unset');
+			this.props.callBacks.setMessage(error.message, () => {
+				this.props.callBacks.setFieldWithFocus(error.fname, error.index);
+			});
 			return false;
 		}
 
@@ -79,12 +81,10 @@ class DocumentForm extends Component {
 			let fAttr = _fieldAttrs[fn];
 			let value = this.props.document[fn];
 			if(fAttr.type != 'meta' && !fAttr.parent && !_isHiddenField(fn, this.props.document, 'form')){
-				let documentField = (
+				const documentField = (
 					<DocumentField
-						key={fn} fname={fn} value={value} docData={this.props.docData} callBacks={this.props.callBacks}
-						formCallBacks={{
-							isHiddenField: this.isHiddenField.bind(this)
-						}}
+						key={fn} fname={fn} value={value} docData={this.props.docData} fieldWithFocus={this.props.fieldWithFocus}
+						callBacks={this.props.callBacks} formCallBacks={{isHiddenField: this.isHiddenField.bind(this)}}
 					/>
 				);
 				if(fAttr.required){
@@ -125,6 +125,7 @@ DocumentForm.propTypes = {
 	formAttr: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	docData: PropTypes.object.isRequired,
+	fieldWithFocus: PropTypes.object.isRequired,
 	callBacks: PropTypes.object.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,

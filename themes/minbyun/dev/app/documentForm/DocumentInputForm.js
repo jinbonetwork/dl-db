@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
+import TextInput from '../accessories/TextInput';
 import SearchInput from '../accessories/SearchInput';
 import Textarea from './Textarea';
 import DateForm from './DateForm';
@@ -29,15 +30,8 @@ class DocumentInputForm extends Component {
 			return true;
 		}
 	}
-	handleChange(arg){
-		let value;
-		const fAttr = _fieldAttrs[this.props.fname];
-		switch(fAttr.form){
-			case 'file': value = arg.target.files[0]; break;
-			case 'select': case 'radio': value = arg; break;
-			default: value = arg.target.value;
-		}
-		if(this.isValid(value, fAttr)){
+	handleChange(value){
+		if(this.isValid(value, _fieldAttrs[this.props.fname])){
 			this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
 		}
 	}
@@ -55,16 +49,16 @@ class DocumentInputForm extends Component {
 	}
 	render(){
 		const fAttr = _fieldAttrs[this.props.fname];
+		const isWithFocus = (this.props.fieldWithFocus.fname === this.props.fname && this.props.fieldWithFocus.index === this.props.index);
 		switch(fAttr.form){
 			case 'text':
-				const placeholder = (fAttr.type == 'date' ? '2015-12-07' : '');
-				return (
-					<input type="text" value={this.props.value} onChange={this.handleChange.bind(this)} placeholder={placeholder} />
-				);
+				const placeholder = (fAttr.type == 'date' ? '2015-12-07' : null);
+				const type = (fAttr.type == 'email' ? 'email' : null);
+				return <TextInput type={type} value={this.props.value} focus={isWithFocus} placeholder={placeholder} onChange={this.handleChange.bind(this)} />;
 			case 'search':
 				const fnames = _fieldAttrs[_fieldAttrs[this.props.fname].parent].children;
 				return (
-					<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames}
+					<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames} focus={isWithFocus}
 						onChange={this.handleChangeOfSearch.bind(this, fnames)}
 					/>
 				);
@@ -73,10 +67,10 @@ class DocumentInputForm extends Component {
 				if(fAttr.type == 'file') accept = '.pdf, .hwp, .doc, .docx';
 				else if(fAttr.type == 'image') accept = '.jpg, .png';
 				return (
-					<FileInput value={this.props.value.name || this.props.value.filename}
-						accept={accept} handleChange={this.handleChange.bind(this)}
+					<FileInput value={this.props.value.name || this.props.value.filename} focus={isWithFocus}
+						accept={accept} onChange={this.handleChange.bind(this)}
 					/>
-				)
+				);
 			case 'select':
 				let options = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
@@ -99,17 +93,13 @@ class DocumentInputForm extends Component {
 					</Check>
 				);
 			case 'Ym':
-				return (
-					<DateForm fname={this.props.fname} value={this.props.value} index={this.props.index}
-						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
-					/>
-				);
+				return <DateForm fname={this.props.fname} value={this.props.value} onChange={this.handleChange.bind(this)}/>;
 			case 'textarea':
 				let numOfWords;
 				if(this.props.fname == 'content') numOfWords = 200;
 				return (
-					<Textarea fname={this.props.fname} value={this.props.value} index={this.props.index} numOfWords={numOfWords}
-						updateSingleField={this.props.callBacks.updateSingleField.bind(this)}
+					<Textarea fname={this.props.fname} value={this.props.value} focus={isWithFocus} numOfWords={numOfWords}
+						onChange={this.handleChange.bind(this)}
 					/>
 				);
 			case 'fieldset':
@@ -118,7 +108,7 @@ class DocumentInputForm extends Component {
 					if(this.props.formCallBacks.isHiddenField(fn) === false){
 						subFormFields.push(
 							<DocumentField
-								key={fn} fname={fn} value={this.props.callBacks.fieldValue(fn)}
+								key={fn} fname={fn} value={this.props.callBacks.fieldValue(fn)} fieldWithFocus={this.props.fieldWithFocus}
 								docData={this.props.docData} callBacks={this.props.callBacks}
 								formCallBacks={this.props.formCallBacks}
 							/>
@@ -133,6 +123,7 @@ DocumentInputForm.propTypes = {
 	fname: PropTypes.string.isRequired,
 	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
 	index: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	fieldWithFocus: PropTypes.object,
 	docData: PropTypes.object.isRequired,
 	callBacks: PropTypes.objectOf(PropTypes.func).isRequired,
 	formCallBacks: PropTypes.object.isRequired

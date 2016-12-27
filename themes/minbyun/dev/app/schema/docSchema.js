@@ -32,8 +32,8 @@ const _fieldAttrs = {
 	author: {type: 'group', displayName: '담당자/작성자', children: ['name', 'class', 'email', 'phone'], form: 'fieldset', required: true},
 	name: {type: 'char', displayName: '이름', form: 'search', parent: 'author', multiple: false, required: true},
 	class: {type: 'char', displayName: '기수', form: 'text', parent: 'author', multiple: false, required: true},
-	email: {type: 'char', displayName: '이메일', form: 'text', parent: 'author', multiple: false, required: false},
-	phone: {type: 'char', displayName: '전화번호', form: 'text', parent: 'author', multiple: false, required: false},
+	email: {type: 'email', displayName: '이메일', form: 'text', parent: 'author', multiple: false, required: false},
+	phone: {type: 'phone', displayName: '전화번호', form: 'text', parent: 'author', multiple: false, required: false},
 	image: {type: 'image', displayName: '표지이미지', form: 'file', multiple: false, required: false},
 	file: {type: 'file', displayName: '첨부파일', form: 'file', multiple: true, required: false}
 };
@@ -65,7 +65,7 @@ const _convertToDoc = (sDoc) => {
 				case 'meta':
 					if(fn == 'owner') document[fn] = (sValue == 1 ? true : false);
 					else document[fn] = parseInt(sValue); break;
-				case 'char': case 'date':
+				case 'char': case 'email': case 'phone': case 'date':
 					document[fn] = sValue; break;
 				case 'taxonomy':
 					document[fn] = [];
@@ -94,7 +94,7 @@ const _convertDocToSave = (doc) => {
 		let sFn = _sFname[fn];
 		if(!_isEmpty(value)){
 			switch(fAttr.type){
-				case 'meta': case 'char': case 'date': case 'taxonomy':
+				case 'meta': case 'char': case 'email': case 'phone': case 'date': case 'taxonomy':
 					sDocument[sFn] = value; break;
 				case 'image': case 'file':
 					if(fAttr.multiple){ value.forEach((file) => {

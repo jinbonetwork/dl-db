@@ -7,19 +7,20 @@ class SearchInput extends Component {
 		this.state = {
 			value: '',
 			result: [],
-			isSearching: false,
-			signOfClick: false
+			isSearching: false
 		};
 	}
 	componentWillMount(){
 		if(this.props.value) this.setState({value: this.props.value});
 	}
+	componentDidMount(){
+		if(this.props.focus) this.refs.input.focus();
+	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.value) this.setState({value: nextProps.value});
 	}
-	componentDidUpdate(prevProps, prevState){
-		//if(prevState.value != this.state.value && prevState.signOfClick === this.state.signOfClick) this.search(this.state.value);
-		//if(prevState.result.length && this.state.result.length && prevState.signOfClick === this.state.signOfClick) this.setState({result: []});
+	componentDidUpdate(prevProps, nextProps){
+		if(this.props.focus) this.refs.input.focus();
 	}
 	search(keyword){
 		this.setState({isSearching: true});
@@ -38,23 +39,14 @@ class SearchInput extends Component {
 	handleKeyUp(event){
 		this.search(event.target.value);
 	}
-	handleKeyDown(event){
-		/*
-		if(event.key == 'Enter'){
-			this.search(event.target.value);
-		}
-		*/
-	}
 	handleClick(which, value, item){
 		if(which == 'item'){
-			this.setState({value: value, result: [], signOfClick: !this.state.signOfClick});
+			this.setState({value: value, result: []});
 			if(this.props.onChange) this.props.onChange(item);
 		}
-		/*
 		else if(which == 'search'){
 			this.search(this.state.value);
 		}
-		*/
 	}
 	render(){
 		const result = this.state.result.map((item, index) => {
@@ -83,9 +75,8 @@ class SearchInput extends Component {
 			</button>
 		return(
 			<div className="searchinput">
-				<input type="text" value={this.state.value}
+				<input type="text" ref="input" value={this.state.value}
 					onChange={this.handleChange.bind(this)}
-					onKeyDown={this.handleKeyDown.bind(this)}
 					onKeyUp={this.handleKeyUp.bind(this)}
 				/>
 				{spinner}
@@ -97,6 +88,7 @@ class SearchInput extends Component {
 }
 SearchInput.propTypes = {
 	value: PropTypes.string,
+	focus: PropTypes.bool,
 	onChange: PropTypes.func,
 	search: PropTypes.func.isRequired,
 	resultFNames: PropTypes.array.isRequired
