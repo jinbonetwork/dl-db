@@ -1,14 +1,12 @@
 import React, {Component, PropTypes} from 'react';
-import update from 'react-addons-update';  // for update()
-import {withRouter} from 'react-router';
-import 'babel-polyfill'; // for update(), find() ...
-import Textarea from './Textarea';
-import DateForm from './DateForm';
 import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../accessories/Table';
 import Message from '../accessories/Message';
 import {_fieldAttrs, _sFname, _convertDocToSave, _isHiddenField} from '../schema/docSchema';
 import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../accessories/functions';
+import update from 'react-addons-update';  // for update()
+import {withRouter} from 'react-router';
+import 'babel-polyfill'; // for update(), find() ...
 
 class DocumentForm extends Component {
 	isHiddenField(fname){
@@ -20,17 +18,17 @@ class DocumentForm extends Component {
 			let fAttr = _fieldAttrs[fn];
 			if(fAttr.type == 'meta' || fAttr.type == 'group' || this.isHiddenField(fn) || this.isHiddenField(fAttr.parent)) continue;
 			if(fAttr.required && _isEmpty(value)){
-				return {fname: fn, message: fAttr.displayName+'을(를) 입력하세요.'};
+				return {fname: fn, index: (fAttr.multiple ? 0 : undefined), message: fAttr.displayName+'을(를) 입력하세요.'};
 			}
 			if(fAttr.multiple === false) value = [value];
 			for(let j in value){
-				let v = value[j];
-				if(
+				const v = value[j];
+				if(v && (
 					(fAttr.type == 'email' && !_isEmailValid(v)) ||
 					(fAttr.type == 'phone' && !_isPhoneValid(v)) ||
 					(fAttr.type == 'date' && !_isDateValid(v, fAttr.form))
-				){
-					return {fname: fn, message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
+				)){
+					return {fname: fn, index: (fAttr.multiple ? j : undefined), message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
 				}
 			}
 		}
@@ -38,7 +36,9 @@ class DocumentForm extends Component {
 	submit(){
 		let error = this.validationCheck();
 		if(error){
-			this.props.callBacks.setMessage(error.message, 'unset');
+			this.props.callBacks.setMessage(error.message, () => {
+				this.props.callBacks.setFieldWithFocus(error.fname, error.index);
+			});
 			return false;
 		}
 
@@ -79,12 +79,10 @@ class DocumentForm extends Component {
 			let fAttr = _fieldAttrs[fn];
 			let value = this.props.document[fn];
 			if(fAttr.type != 'meta' && !fAttr.parent && !_isHiddenField(fn, this.props.document, 'form')){
-				let documentField = (
+				const documentField = (
 					<DocumentField
-						key={fn} fname={fn} value={value} docData={this.props.docData} callBacks={this.props.callBacks}
-						formCallBacks={{
-							isHiddenField: this.isHiddenField.bind(this)
-						}}
+						key={fn} fname={fn} value={value} docData={this.props.docData} fieldWithFocus={this.props.fieldWithFocus}
+						callBacks={this.props.callBacks} formCallBacks={{isHiddenField: this.isHiddenField.bind(this)}}
 					/>
 				);
 				if(fAttr.required){
@@ -111,7 +109,7 @@ class DocumentForm extends Component {
 					<Row>
 						<Column></Column>
 						<Column>
-							<button type="button" className="document-form--submit"
+							<button type="button" className="document-form__submit"
 								onClick={this.handleClick.bind(this, 'submit')}>{this.props.formAttr.submit}
 							</button>
 						</Column>
@@ -125,6 +123,7 @@ DocumentForm.propTypes = {
 	formAttr: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired,
 	docData: PropTypes.object.isRequired,
+	fieldWithFocus: PropTypes.object.isRequired,
 	callBacks: PropTypes.object.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,

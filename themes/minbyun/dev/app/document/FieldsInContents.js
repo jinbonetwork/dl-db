@@ -10,7 +10,7 @@ class FieldsInContents extends Component {
 			case 'taxonomy':
 				if(!fAttr.multiple) value = [value];
 				return value.map((v) => this.props.docData.terms[v]).join(', ');
-			case 'char': case 'date':
+			case 'char': case 'email': case 'phone': case 'date':
 				if(!fAttr.multiple) value = [value];
 				if(fAttr.form !== 'textarea'){
 					return value.join(', ');

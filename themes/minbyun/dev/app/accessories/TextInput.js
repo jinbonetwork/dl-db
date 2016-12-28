@@ -1,59 +1,29 @@
 import React, {Component, PropTypes} from 'react';
 
 class TextInput extends Component {
-	constructor(){
-		super();
-		this.state = {
-			value: '',
-			firstFocused: false
-		};
-	}
-	componentWillMount(){
-		if(this.props.value) this.setState({value: this.props.value});
-	}
-	componentWillReceiveProps(nextProps){
-		if(nextProps.value) this.setState({value: nextProps.value});
+	componentDidMount(){
+		if(this.props.focus) this.refs.text.focus();
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.state.firstFocused && prevState.value != this.state.value && this.props.onChange){
-			this.props.onChange({target: {value: this.state.value}});
-		}
+		if(this.props.focus) this.refs.text.focus();
 	}
 	handleChange(event){
-		this.setState({value: event.target.value});
-	}
-	handleKeyDown(event){
-		if(this.props.onKeyDown) this.props.onKeyDown(event);
-	}
-	handleKeyUp(event){
-		if(this.props.onKeyUp) this.props.onKeyUp(event);
-	}
-	handleFocus(event){
-		if(!this.state.firstFocused) this.setState({firstFocused: true});
-		if(this.props.onFocus) this.props.onFocus(event);
-	}
-	handleBlur(event){
-		if(this.props.onBlur) this.props.onBlur(event);
+		this.props.onChange(event.target.value);
 	}
 	render(){
+		const value = (this.props.value ? this.props.value : '');
+		const type = (this.props.type ? this.props.type : 'text');
 		return (
-			<input type="text" value={this.state.value}
-				onChange={this.handleChange.bind(this)}
-				onKeyDown={this.handleKeyDown.bind(this)}
-				onKeyUp={this.handleKeyUp.bind(this)}
-				onFocus={this.handleFocus.bind(this)}
-				onBlur={this.handleBlur.bind(this)}
-			/>
+			<input type={type} ref="text" value={value} onChange={this.handleChange.bind(this)} placeholder={this.props.placeholder} />
 		);
 	}
 }
 TextInput.propTypes = {
+	type: PropTypes.string,
 	value: PropTypes.string,
-	onChange: PropTypes.func,
-	onKeyDown: PropTypes.func,
-	onKeyUp: PropTypes.func,
-	onFocus: PropTypes.func,
-	onBlur: PropTypes.func
+	placeholder: PropTypes.string,
+	focus: PropTypes.bool,
+	onChange: PropTypes.func.isRequired
 };
 
 export default TextInput;

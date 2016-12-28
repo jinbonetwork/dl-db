@@ -1,72 +1,28 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 import jQ from 'jquery';
 
-class DdItem extends Component {
-	handleClick(){
-		if(this.props.onClick) this.props.onClick();
-	}
-	render(){
-		let className = (this.props.className ? 'dditem '+this.props.className : 'dditem');
-		return <li className={className} onClick={this.handleClick.bind(this)}>{this.props.children}</li>
-	}
-}
-DdItem.propTypes = {
-	className: PropTypes.string,
-	onClick: PropTypes.func
-};
-
-class DdHead extends Component {
-	handleClick(){
-		if(this.props.onClick) this.props.onClick();
-	}
-	render(){
-		let arrow, children = [];
-		Children.forEach(this.props.children, (child) => { if(child){
-			if(child.type == DdArrow) arrow = child;
-			else children.push(child);
-		}});
-		let className = (this.props.className ? 'ddhead '+this.props.className : 'ddhead');
-		return (
-			<div className={className} onClick={this.handleClick.bind(this)}>{children}{arrow}</div>
-		);
-	}
-}
-DdHead.propTypes = {
-	className: PropTypes.string,
-	onClick: PropTypes.func
-};
-
-class DdArrow extends Component {
-	render(){
-		return <div className="ddarrow">{this.props.children}</div>
-	}
-}
-
 class Dropdown extends Component {
 	constructor(){
 		super();
 		this.state = {
+			groupName: 'dropdown'+Date.now(),
 			isUnfolded: false,
-			width: null
+			width: null,
+			focused: -1
 		};
+	}
+	componentWillMount(){
+		if(this.props.autoUnfold) this.setState({isUnfolded: true});
 	}
 	componentDidMount(){
 		this.setSize();
 	}
-	componentWillMount(nextProps){
-		if(this.props.hasOwnProperty('isUnfolded')){
-			this.setState({isUnfolded: this.props.isUnfolded});
-		}
-	}
 	componentWillReceiveProps(nextProps){
-		if(nextProps.hasOwnProperty('isUnfolded')){
-			this.setState({isUnfolded: nextProps.isUnfolded});
-		}
+		this.setSize();
 	}
 	componentDidUpdate(prevProps, prevState){
-		this.setSize();
-		if(!this.props.hasOwnProperty('isUnfolded')){
-			if(prevState.isUnfolded && this.state.isUnfolded) this.setState({isUnfolded: false});
+		if(this.state.focused === 0){
+			this.refs.head.focus();
 		}
 	}
 	setSize(){
@@ -81,37 +37,88 @@ class Dropdown extends Component {
 			}
 		}
 	}
-	handleClick(which){
-		this.setState({isUnfolded: !this.state.isUnfolded});
+	handleClick(which, arg1st){
+		if(which == 'head'){
+			this.setState({isUnfolded: !this.state.isUnfolded});
+		}
+		else if(which == 'item'){
+			const value = arg1st;
+			if(!this.props.multiple) this.setState({isUnfolded: false, focused: 0});
+		}
+		if(this.props.onClick) this.props.onClick(which, arg1st);
+	}
+	handleFocus(which, arg1st){
+		if(this.props.onFocus) this.props.onFocus(which, arg1st);
+	}
+	handleBlur(which, arg1st){
+		if(which == 'head'){
+			const event = arg1st;
+			if(!event.relatedTarget || this.state.groupName != event.relatedTarget.getAttribute('groupname')){
+				this.setState({isUnfolded: false, focused: -1});
+			}
+		}
+		else if(which == 'item'){
+			const isUnfolded = arg1st;
+			if(!isUnfolded) this.setState({isUnfolded: false, focused: -1});
+		}
+	}
+	handleKeyDown(which, arg1st, arg2nd){
+		if(which == 'head'){
+			const event = arg1st;
+			if(event.key == 'Enter') this.setState({isUnfolded: !this.state.isUnfolded});
+			else if(event.key == 'ArrowDown') this.setState({isUnfolded: true, focused: 1});
+		}
+		else if(which == 'item'){
+			const index = arg1st;
+			const key = arg2nd;
+			if(key == 'ArrowDown') this.setState({focused: index+1});
+			else if(key == 'ArrowUp') this.setState({focused: index-1})
+		}
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
 		className += (this.state.isUnfolded ? ' dropdown--unfolded' : '');
 
-		let head, items = [];
-		Children.forEach(this.props.children, (child, index) => { if(child){
-			if(child.type == DdHead){
-				head = cloneElement(child, {width: this.state.width});
-			}
-			else if(child.type == DdItem){
-				items.push(child);
-			}
+		const head = (
+			<div className='ddhead'>
+				{this.props.head}
+				<div className="ddarrow">{this.props.arrow}</div>
+			</div>
+		);
+
+		let indexOfItem = 0;
+		const items = Children.map(this.props.children, (child) => { if(child){
+			const focus = (this.state.focused == ++indexOfItem);
+			return cloneElement(child, {
+				tabIndex: -1,
+				focus: focus,
+				groupName: this.state.groupName,
+				onBlur: this.handleBlur.bind(this, 'item'),
+				onFocus: this.handleFocus.bind(this, 'item', child.props.value),
+				onClick: this.handleClick.bind(this, 'item', child.props.value),
+				onKeyDown: this.handleKeyDown.bind(this, 'item', indexOfItem)
+			});
 		}});
 
-		let headWidth = (this.props.hasOwnProperty('headWidth') ? this.props.headWidth : this.state.width);
-		let itemWidth = (this.props.hasOwnProperty('itemWidth') ? this.props.itemWidth : this.state.width);
+		const headWidth = (this.props.hasOwnProperty('headWidth') ? this.props.headWidth : this.state.width);
+		const itemWidth = (this.props.hasOwnProperty('itemWidth') ? this.props.itemWidth : this.state.width);
 
 		return (
 			<div className={className}>
-				<div className="dropdown__headwrap" ref="headwrap" onClick={this.handleClick.bind(this, 'head')}>
-					<div className="dropdown__head" style={{width: headWidth}}>
+				<div className="dropdown__headwrap" ref="headwrap">
+					<div className="dropdown__head" ref="head" tabIndex="0" style={{width: headWidth}}
+						onBlur={this.handleBlur.bind(this, 'head')} onClick={this.handleClick.bind(this, 'head')} onFocus={this.handleFocus.bind(this, 'head')}
+						onKeyDown={this.handleKeyDown.bind(this, 'head')}
+					>
 						{head}
 					</div>
 				</div>
 				<div className="dropdown__innerwrap">
 					<div className="dropdown__items">
 						<div className="dropdown__items-top-border" style={{width: itemWidth}}></div>
-						<ul style={{width: itemWidth}}>{items}</ul>
+						<ul style={{width: itemWidth}}>
+							{items}
+						</ul>
 					</div>
 				</div>
 				<div className="dropdown__invisible" ref="invisible">
@@ -124,11 +131,16 @@ class Dropdown extends Component {
 }
 Dropdown.propTypes = {
 	className: PropTypes.string,
+	head: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	arrow: PropTypes.element,
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	isUnfolded: PropTypes.bool,
-	handleClick: PropTypes.func,
+	window: PropTypes.shape({width: PropTypes.number, height: PropTypes.number}),
+	autoUnfold: PropTypes.bool,
+	multiple: PropTypes.bool,
 	onResize: PropTypes.func,
+	onClick: PropTypes.func,
+	onFocus: PropTypes.func
 };
 
-export {Dropdown, DdHead, DdItem, DdArrow};
+export default Dropdown;

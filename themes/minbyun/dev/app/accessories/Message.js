@@ -2,13 +2,21 @@ import React, {Component, PropTypes} from 'react';
 import Overlay from './Overlay';
 
 class Message extends Component {
+	componentDidMount(){
+		this.refs.message.focus();
+	}
+	handleClick(){
+		if(this.props.onClick) this.props.onClick();
+	}
+	handleKeyDown(){
+		this.handleClick();
+	}
 	render(){
-		let className = (this.props.handleClick ? 'message message--clickable': 'message');
-		if(this.props.className) className += ' '+this.props.className;
+		let className = (this.props.className ? 'message '+this.props.className: 'message');
 		return (
 			<div>
-				<Overlay handleClick={this.props.handleClick.bind(this)} />
-				<div className={className} onClick={this.props.handleClick.bind(this)}>
+				<Overlay onClick={this.handleClick.bind(this)} />
+				<div tabIndex="0" ref="message" className={className} onClick={this.handleClick.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}>
 					{this.props.children}
 				</div>
 			</div>
@@ -17,7 +25,7 @@ class Message extends Component {
 }
 Message.propTypes = {
 	className: PropTypes.string,
-	handleClick: PropTypes.func.isRequired
+	onClick: PropTypes.func
 }
 
 export default Message;

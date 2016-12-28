@@ -5,7 +5,7 @@
 .document {
 	margin-top: 5%;
 	padding: 1em;
-	.document--back{
+	.document__back{
 		color: @main-color;
 		i {
 			font-size: 1.3em
@@ -77,6 +77,9 @@
 			margin: 1em 0;
 		}
 
+		& > div + a, & > a + div {
+			margin-left: 1em;
+		}
 		a, a:visited, a:link, a:hover, a:active {
 			color: @main-color;
 			text-decoration: none;
@@ -86,9 +89,6 @@
 			line-height: 2em;
 			padding: 0 1em;
 			border: solid 1px @main-color;
-		}
-		a:last-child {
-			margin-left: 1em;
 		}
 		button {
 			line-height: 2em;
@@ -112,6 +112,17 @@
 		.document__remove-bookmark button {
 			color: @main-color;
 			background-color: @minor-color-2;
+		}
+		.document__delete {
+			display: inline-block;;
+		}
+		.document__delete button {
+			background-color: @minor-color-2;
+			color: @main-color;
+		}
+		.document__delete--yes-or-no button:first-child {
+			background-color: @main-color;
+			color: @minor-color-2;
 		}
 	}
 	.document__header .table {
@@ -158,34 +169,6 @@
 				padding-left: 0;
 			}
 		}
-		/*
-		.table__row:last-child {
-			margin-left: 18em;
-			@media screen and (max-width: @medium-screen){
-				margin-left: 34vw;
-			}
-			@media screen and (max-width: @s-medium-screen){
-				margin-left: 11em;
-			}
-			@media screen and (max-width: @small-m-screen){
-				margin-left: 0;
-			}
-		}
-		.table__row:last-child .table__col:first-child {
-			@media screen and (max-width: @m-m-large-screen){
-				float: none;
-				padding-right: 2em;
-			}
-		}
-		.table__row:last-child .table__col + .table__col {
-			@media screen and (max-width: @m-m-large-screen){
-				margin-left: 2em;
-			}
-			@media screen and (max-width: @medium-screen){
-				margin-left: 0;
-			}
-		}
-		*/
 		ol {
 			padding-left: 1em;
 			margin: 0;

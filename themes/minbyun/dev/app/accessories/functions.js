@@ -11,17 +11,15 @@ const _isEmpty = (value) => {
 		}
 		return true;
 	}
-}
+};
 const _isEmailValid = (email) => {
-	email = email.trim();
 	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	return re.test(email);
-}
+	return re.test(email.trim());
+};
 const _isPhoneValid = (phone) => {
-	phone = phone.trim();
 	let re = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1}|)-?[0-9]{3,4}-?[0-9]{4}$/;
-	return re.test(phone);
-}
+	return re.test(phone.trim());
+};
 const _isDateValid = (value, form) => {
 	let today = new Date();
 	if(form == 'Ym'){
@@ -39,21 +37,21 @@ const _isDateValid = (value, form) => {
 		if(1 <= dateArray[2] && dateArray[2] <= 31 && dateArray[2].length == 2); else return false;
 		return true;
 	}
-}
+};
 const _displayDate = (date) => {
 	let items = [];
 	if(date.year) items.push(date.year);
 	if(date.month) items.push(date.month);
 	if(date.date) items.push(date.date);
 	return items.join('/');
-}
+};
 const _displayDateOfMilliseconds = (milliseconds) => {
 	let regDate = new Date(milliseconds);
 	let year = regDate.getFullYear();
 	let month = regDate.getMonth()+1; if(month < 10) month = '0'+month;
 	let date = regDate.getDate(); if(date < 10) date = '0'+date;
 	return  year+'/'+month+'/'+date;
-}
+};
 const _isCommon = (array1, array2, equal) => {
 	if(!equal){
 		for(let i in array1){
@@ -73,7 +71,7 @@ const _isCommon = (array1, array2, equal) => {
 		}
 		return true;
 	}
-}
+};
 const _mapO = (obj, callBack) => { // object -> array
 	let array = [];
 	for(let prop in obj){
@@ -87,14 +85,14 @@ const _mapAO = (array, callBacks) => { // array -> object
 		object[array[i]] = callBacks(array[i]);
 	}
 	return object;
-}
+};
 const _forIn = (obj, callBack) => { // object -> object
 	let newObj = {};
 	for(let prop in obj){
 		newObj[prop] = callBack(prop, obj[prop]);
 	}
 	return newObj;
-}
+};
 const _pushpull = (array, value) => {
 	let newArray = [];
 	array.forEach((v) => { if(v != value) newArray.push(v); });

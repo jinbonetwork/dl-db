@@ -41,22 +41,13 @@ const _childProps = {
 }
 
 class DigitalLibrary extends Component {
-	constructor(){
-		super();
-		this.state = {
-			clicked: false
-		};
-	}
-	handleClick(){
-		this.setState({clicked: true});
-	}
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
 		let childProp = _childProps[child.props.route.path];
 		if(!userData.role && childProp.role) return null;
 		if(childProp.role && !_isCommon(childProp.role, userData.role)){
 			return (
-				<Message handleClick={this.props.router.goBack.bind(this)}>이 페이지에 접근할 권한이 없습니다.</Message>
+				<Message onClick={this.props.router.goBack.bind(this)}>이 페이지에 접근할 권한이 없습니다.</Message>
 			);
 		}
 		let props = {};
@@ -101,7 +92,7 @@ class DigitalLibrary extends Component {
 		}
 		const logo = (_screen.sMedium < wWidth && wWidth <= _screen.medium ? 'logo.svg' : 'logo-text.svg');
 		return(
-			<div className="digital-library" onClick={this.handleClick.bind(this)}>
+			<div className="digital-library">
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
 						<img src={site_base_uri+'/themes/minbyun/images/'+logo} />

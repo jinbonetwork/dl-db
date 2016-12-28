@@ -11,7 +11,7 @@ body, html {
 	background-color: @minor-color-1;
 	margin: 0;
 }
-input[type=text], input[type=password], textarea, button {
+input[type=text], input[type=email], input[type=password], textarea, button {
 	font-family:'Nanum Barun Gothic';
 	font-size: @font-size;
 	color: @font-color;
@@ -19,21 +19,29 @@ input[type=text], input[type=password], textarea, button {
 	padding: 0 0.5em;
 	outline: none;
 }
-input[type=text], input[type=password] {
+input[type=text], input[type=email], input[type=password] {
 	line-height: 1.2em;
 	padding-top: 0.9em;
 	padding-bottom: 0.9em;
 }
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
+	background-color: @focus-color-1;
+}
 input::placeholder {
 	color: @font-color*1.7;
 }
-input[type=text], input[type=password], button, textarea {
+input[type=text], input[type=email], input[type=password], button, textarea {
 	appearance: none;
 	border-radius: 0;
 	box-shadow: none;
 }
 button {
+	padding: 0;
 	cursor: pointer;
+}
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
 }
 ul {
 	margin: 0;
@@ -51,16 +59,31 @@ p + p {
 	margin-top: 1em;
 }
 a, a:visited, a:link, a:hover, a:active {
+	outline: none;
 	color: inherit;
 	text-decoration: none;
+}
+div {
+	outline: none;
+}
+.dropdown {
+	.dropdown__head:focus {
+		background-color: @focus-color-1;
+	}
+	.item {
+		outline: none;
+	}
+	.item:focus {
+		background-color: @focus-color-1;
+	}
 }
 .select.dropdown {
 	.dropdown__headwrap {
 		border: solid 1px @main-color;
 		border-bottom: 0;
+		background-color: @minor-color-2;
 	}
 	.ddhead {
-		background-color: @minor-color-2;
 		text-align: left;
 		padding-left: 1em;
 		line-height: 3em;
@@ -79,7 +102,7 @@ a, a:visited, a:link, a:hover, a:active {
 	&:not(.dropwdown--unfolded) .dropdown__items {
 		border-bottom: solid 1px @main-color !important;
 	}
-	.dditem {
+	.item {
 		padding-right: 3em;
 		line-height: 2.5em;
 		cursor: pointer;
@@ -91,5 +114,22 @@ a, a:visited, a:link, a:hover, a:active {
 		top: 50%; left: 50%;
 		transform: translate(-50%, -50%);
 		color: @main-color;
+	}
+}
+.check {
+	.item {
+		outline: none;
+		border-bottom: dotted 1px transparent;
+	}
+	.item:focus {
+		border-bottom: dotted 1px @main-color;
+	}
+}
+.fileinput {
+	.fileinput__upload {
+		outline: none;
+	}
+	.fileinput__upload:focus {
+		background-color: @focus-color-2;
 	}
 }

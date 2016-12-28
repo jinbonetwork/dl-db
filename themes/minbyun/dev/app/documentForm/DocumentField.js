@@ -19,7 +19,7 @@ class DocumentField extends Component {
 	}
 	documentInputForm(value, index){
 		return (
-			<DocumentInputForm fname={this.props.fname} value={value} index={index}
+			<DocumentInputForm fname={this.props.fname} value={value} index={index} fieldWithFocus={this.props.fieldWithFocus}
 				docData={this.props.docData} callBacks={this.props.callBacks}
 				formCallBacks={this.props.formCallBacks}
 			/>
@@ -28,21 +28,23 @@ class DocumentField extends Component {
 	inputForms(){
 		let innerElement;
 		if(_fieldAttrs[this.props.fname].multiple){
-			innerElement = this.props.value.map((v, i) => (
-				<div key={i} className="document-form__input-with-buttons">
-					<div className="document-form__middle">
-						{this.documentInputForm(v, i)}
+			innerElement = this.props.value.map((v, i) => {
+				return (
+					<div key={i} className="document-form__input-with-buttons">
+						<div className="document-form__middle">
+							{this.documentInputForm(v, i)}
+						</div>
+						<div className="document-from__buttons">
+							<button type="button" onClick={this.handleClickToAddInputForm.bind(this)}>
+								<i className="pe-7s-plus"></i>
+							</button>
+							<button type="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>
+								<i className="pe-7s-close-circle"></i>
+							</button>
+						</div>
 					</div>
-					<div className="document-from__buttons">
-						<button type="button" onClick={this.handleClickToAddInputForm.bind(this)}>
-							<i className="pe-7s-plus"></i>
-						</button>
-						<button type="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>
-							<i className="pe-7s-close-circle"></i>
-						</button>
-					</div>
-				</div>
-			));
+				)
+			});
 		} else if(_fieldAttrs[this.props.fname].form == 'file'){
 			innerElement = (
 				<div className="document-form__input-with-buttons">
@@ -83,6 +85,7 @@ DocumentField.propTypes = {
 	fname: PropTypes.string.isRequired,
 	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.object]),
 	docData: PropTypes.object.isRequired,
+	fieldWithFocus: PropTypes.object,
 	callBacks: PropTypes.objectOf(PropTypes.func).isRequired,
 	formCallBacks: PropTypes.object.isRequired,
 };

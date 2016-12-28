@@ -20,6 +20,9 @@
 		border: solid 3px @main-color;
 		border-left: 0;
 	}
+	.searchbar__keyword--focused {
+		background-color: @focus-color-1;
+	}
 	.searchbar__keyword div:first-child {
 		float: left;
 		width: 3em;
@@ -44,11 +47,15 @@
 		border-right: 0;
 		margin-right: 8em;
 	}
+	.searchbar__period--focused {
+		background-color: @focus-color-1;
+	}
 	.searchbar__period input[type=text] {
 		width: 5em;
 		border: 0;
 		padding-left: 0; padding-right: 0;
 		text-align: center;
+		background-color: transparent;
 	}
 	.searchbar__period div {
 		display: inline-block;
@@ -69,6 +76,9 @@
 		border: solid 3px @main-color;
 		background-color: @main-color;
 		color: @minor-color-2;
+	}
+	.searchbar__button:focus {
+		background-color: @focus-color-2;
 	}
 }
 .searchbar:not(.searchbar--content){
@@ -197,6 +207,9 @@
 	.searchbar__bar + .searchbar__helper {
 		margin-top: 1em;
 	}
+	.searchbar__helper:not(.searchbar__helper--visible) {
+		display: none;
+	}
 	.searchbar__helper {
 		max-width: 26em;
 		margin-left: auto; margin-right: auto;
@@ -239,6 +252,7 @@
 	line-height: 3.3em;
 	.dropdown__headwrap {
 		border: solid 3px @main-color;
+		line-height: 3.3em;
 	}
 	&.dropdown--unfolded .dropdown__headwrap {
 		border-bottom: 0;
@@ -261,22 +275,26 @@
 	.dropdown__items ul {
 		background-color: @minor-color-2;
 	}
-	.dditem {
+	.item {
 		line-height: 2.5em;
 		cursor: pointer;
 	}
-	.dditem:hover {
+	.item:hover {
 		background-color: @main-color * 1.5;
 	}
-	.dditem i {
-		color: @main-color;
+	.item i {
 		font-weight: bold;
 		width: 1em;
+		opacity: 0.3;
 	}
-	.dditem span {
+	.item.item--checked i {
+		opacity: 1;
+		color: @main-color;
+	}
+	.item span {
 		margin-left: 1em;
 	}
-	.dditem--checked {
+	.item.item--checked span {
 		color: @main-color;
 	}
 }

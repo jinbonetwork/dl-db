@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
-import {DdSelect, DdItem, DdHead, DdArrow} from './accessories/DdSelect';
+import DdSelect from './accessories/DdSelect';
+import Item from './accessories/Item';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
@@ -14,7 +15,10 @@ class SearchBar extends Component {
 		super();
 		this.state = {
 			keywordMarginLeft: null,
-			isPeriodVisible: false
+			isPeriodVisible: false,
+			isPeriodFocused: false,
+			isHelperVisible: false,
+			isKeywordFocused: false
 		};
 	}
 	handleChange(which, arg){
@@ -40,7 +44,7 @@ class SearchBar extends Component {
 	}
 	handleClick(which, arg){
 		if(which == 'search'){
-			if(!this.props.query.keyword){ this.props.setMessage('검색어를 입력하세요.', 'unset'); return; }
+			if(!this.props.query.keyword){ this.props.setMessage('검색어를 입력하세요.', () => {this.refs.keyword.focus();}); return; }
 			let period = _period(this.props.query.from, this.props.query.to);
 			let from = (period[0] ? period[0] : '');
 			let to = (period[1] ? period[1] : '');
@@ -54,20 +58,35 @@ class SearchBar extends Component {
 			this.setState({isPeriodVisible: !this.state.isPeriodVisible});
 		}
 	}
+	handleFocus(which){
+		let newState = {isHelperVisible: true};
+		if(which == 'keyword') newState.isKeywordFocused = true;
+		else if(which == 'from' || which == 'to') newState.isPeriodFocused = true;
+		this.setState(update(this.state, {$merge: newState}));
+	}
+	handleBlur(which){
+		let newState = {};
+		if(which == 'keyword') newState.isKeywordFocused = false;
+		else if(which == 'from' || which == 'to') newState.isPeriodFocused = false;
+		this.setState(update(this.state, {$merge: newState}));
+	}
 	handleResize(which, size){
 		if(which == 'doctypes'){
 			this.setState({keywordMarginLeft: size.width});
 		}
 	}
 	period(prsRsp){
+		let className = (this.state.isPeriodFocused ? 'searchbar__period searchbar__period--focused' : 'searchbar__period');
 		const period = (
-			<div className="searchbar__period" style={prsRsp.style.period}>
+			<div className={className} style={prsRsp.style.period}>
 				<input type="text" value={this.props.query.from} placeholder="1988.5" style={prsRsp.style.from}
 					onChange={this.handleChange.bind(this, 'from')} onKeyDown={this.handleKeyDown.bind(this)}
+					onFocus={this.handleFocus.bind(this, 'from')} onBlur={this.handleBlur.bind(this, 'from')}
 				/>
 				<div><i className="pe-7s-right-arrow pe-va"></i></div>
 				<input type="text" value={this.props.query.to} placeholder="2015.11" style={prsRsp.style.to}
 					onChange={this.handleChange.bind(this, 'to')} onKeyDown={this.handleKeyDown.bind(this)}
+					onFocus={this.handleFocus.bind(this, 'to')} onBlur={this.handleBlur.bind(this, 'to')}
 				/>
 			</div>
 		);
@@ -91,18 +110,15 @@ class SearchBar extends Component {
 	}
 	doctypeHead(){
 		if(this.props.mode != 'content' && this.props.window.width <= _screen.medium){
-			return (
-				<DdHead>
-					<span><i className="pe-7s-edit pe-va"></i></span>
-				</DdHead>
-			);
+			return {
+				head: <span><i className="pe-7s-edit pe-va"></i></span>,
+				arrow: null
+			}
 		} else {
-			return (
-				<DdHead>
-					<span>{_fieldAttrs['doctype'].displayName}</span>
-					<DdArrow><i className="pe-7s-angle-down pe-va"></i></DdArrow>
-				</DdHead>
-			);
+			return {
+				head: <span>{_fieldAttrs['doctype'].displayName}</span>,
+				arrow: <i className="pe-7s-angle-down pe-va"></i>
+			}
 		}
 	}
 	propsForResponsivity(){
@@ -153,21 +169,25 @@ class SearchBar extends Component {
 	render(){
 		const prsRsp = this.propsForResponsivity();
 		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
+		const doctypeHead = this.doctypeHead();
 		const doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
-			<DdItem key={tid} value={tid}><span>{tname}</span></DdItem>
+			<Item key={tid} value={tid}><span>{tname}</span></Item>
 		));
 		let searchBar = (
 			<div className="searchbar__bar">
 				<div style={prsRsp.style.firstPart}>
-					<DdSelect selected={this.props.query.doctypes} onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}>
-						{this.doctypeHead()}
+					<DdSelect selected={this.props.query.doctypes} head={doctypeHead.head} arrow={doctypeHead.arrow} window={this.props.window}
+						onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}
+						onFocus={this.handleFocus.bind(this, 'doctypes')}
+					>
 						{doctypeItems}
 					</DdSelect>
-					<div className="searchbar__keyword" style={{marginLeft: this.state.keywordMarginLeft}}>
+					<div className={'searchbar__keyword'+(this.state.isKeywordFocused ? ' searchbar__keyword--focused' : '')} style={{marginLeft: this.state.keywordMarginLeft}}>
 						<div><i className="pe-7f-search pe-va"></i></div>
 						<div>
-							<input type="text" value={this.props.query.keyword} placeholder="검색어를 입력하세요"
+							<input type="text" ref="keyword" value={this.props.query.keyword} placeholder="검색어를 입력하세요"
 								onChange={this.handleChange.bind(this, 'keyword')} onKeyDown={this.handleKeyDown.bind(this)}
+								onFocus={this.handleFocus.bind(this, 'keyword')} onBlur={this.handleBlur.bind(this, 'keyword')}
 							/>
 						</div>
 					</div>
@@ -179,11 +199,12 @@ class SearchBar extends Component {
 			</div>
 		);
 		if(this.props.mode == 'content'){
+			let helperClassName = (this.state.isHelperVisible ? 'searchbar__helper searchbar__helper--visible' : 'searchbar__helper');
 			return(
 				<div className={className} style={prsRsp.style.wrap}>
 					<div className="searchbar__header"><span style={prsRsp.style.header}>민변 디지털 도서관</span></div>
 					{searchBar}
-					<div className="searchbar__helper">
+					<div className={helperClassName}>
 						<div>
 							<div className="searchbar__helper-title"><span>※ 검색 연산자 안내</span></div>
 							<Table>
@@ -199,7 +220,7 @@ class SearchBar extends Component {
 									<Column><span>NOT 검색</span></Column>
 									<Column>
 										<div><span>이사회 ! 감사</span></div>
-										<div><span>(* 검색어는 '이사회', 제외어는 '감시'일 경우)</span></div>
+										<div><span>(* 검색어는 '이사회', 제외어는 '감사'일 경우)</span></div>
 									</Column>
 								</Row>
 								<Row>
