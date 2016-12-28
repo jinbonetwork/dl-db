@@ -43,6 +43,7 @@ CREATE TABLE `dldb_fields` (
 	`tables`	char(80) NOT NULL DEFAULT '',
 	`parent`	int(10) NOT NULL DEFAULT 0,
 	`idx`		smallint(5) NOT NULL DEFAULT 1,
+	`slug`		char(128),
 	`subject`	char(255),
 	`iscolumn`	char(1) DEFAULT 0,
 	`type`		char(20),
@@ -179,6 +180,7 @@ CREATE TABLE `dldb_members` (
 	`email`		char(255),
 	`phone`		char(30),
 	`custom`	text,
+	`license`	char(1) DEFAULT '0',
 
 	KEY `UID` (`uid`),
 	KEY `NAME` (`name`),

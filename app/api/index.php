@@ -9,6 +9,8 @@ class index extends \DLDB\Controller {
 		$context = \DLDB\Model\Context::instance();
 
 		$this->user_info = \DLDB\Member::getUser($_SESSION['user']['uid']);
+		$member = \DLDB\Members::getByUid($_SESSION['user']['uid']);
+		$this->agreement = $member['license'];
 		$acl = \DLDB\Acl::instance();
 		$this->role = $acl->getAcl();
 		$this->sessiontype = $context->getProperty('session.type');

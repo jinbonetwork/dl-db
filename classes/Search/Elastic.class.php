@@ -406,10 +406,6 @@ class Elastic extends \DLDB\Objects {
 				)
 			);
 		}
-		$fp = fopen("/tmp/dldb.log","a+");
-		fputs($fp,serialize($params));
-		fputs($fp,"\n");
-		fclose($fp);
 		if($mode == 'index')
 			$response = $this->client->index($params);
 		else

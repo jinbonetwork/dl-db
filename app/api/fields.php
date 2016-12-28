@@ -24,6 +24,7 @@ class fields extends \DLDB\Controller {
 				'multiple' => $field['multiple'],
 				'required' => $field['required'],
 				'cid' => $field['cid'],
+				'system' => $field['system'],
 				'form' => $field['form']
 			);
 		}
