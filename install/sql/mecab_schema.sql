@@ -179,6 +179,7 @@ CREATE TABLE `dldb_members` (
 	`email`		char(255),
 	`phone`		char(30),
 	`custom`	text,
+	`license`	char(1) DEFAULT '0',
 
 	KEY `UID` (`uid`),
 	KEY `NAME` (`name`),
