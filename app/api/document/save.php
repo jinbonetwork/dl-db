@@ -33,11 +33,13 @@ class save extends \DLDB\Controller {
 					'fid' => $v['fid'],
 					'parent' => $v['parent'],
 					'idx' => $v['idx'],
+					'slug' => $v['slug'],
 					'subject' => $v['subject'],
 					'type' => $v['type'],
 					'multiple' => $v['multiple'],
 					'required' => $v['required'],
 					'cid' => $v['cid'],
+					'system' => $v['system'],
 					'form' => $v['form']
 				);
 				if( $v['type'] == 'group') continue;
