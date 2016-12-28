@@ -150,6 +150,7 @@ CREATE TABLE `dldb_taxonomy_terms` (
 	`idx`		smallint(5) NOT NULL DEFAULT 1,
 	`nsubs`		smallint(5) DEFAULT 0,
 	`name`		char(128) NOT NULL DEFAULT '',
+	`slug`		char(128),
 	`current`	char(1) DEFAULT 1,
 	`active`	char(1) DEFAULT 1,
 	`created`	int(10) NOT NULL DEFAULT 0,

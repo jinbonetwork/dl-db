@@ -43,7 +43,8 @@ class fields extends \DLDB\Controller {
 					'parent' => $term['parent'],
 					'idx' => $term['idx'],
 					'nsubs' => $term['nsubs'],
-					'name' => $term['name']
+					'name' => $term['name'],
+					'slug' => $term['slug']
 				);
 			}
 		}
