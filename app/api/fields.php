@@ -19,6 +19,7 @@ class fields extends \DLDB\Controller {
 				'fid' => $field['fid'],
 				'parent' => $field['parent'],
 				'idx' => $field['idx'],
+				'slug' => $field['slug'],
 				'subject' => $field['subject'],
 				'type' => $field['type'],
 				'multiple' => $field['multiple'],

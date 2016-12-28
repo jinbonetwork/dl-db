@@ -24,12 +24,14 @@ class search extends \DLDB\Controller {
 				'fid' => $field['fid'],
 				'parent' => $field['parent'],
 				'idx' => $field['idx'],
+				'slug' => $field['slug'],
 				'subject' => $field['subject'],
 				'type' => $field['type'],
 				'multiple' => $field['multiple'],
 				'required' => $field['required'],
 				'cid' => $field['cid'],
 				'form' => $field['form'],
+				'system' => $field['system'],
 				'sefield' => $field['sefield'],
 			);
 		}
