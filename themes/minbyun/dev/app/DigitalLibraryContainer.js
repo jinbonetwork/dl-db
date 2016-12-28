@@ -57,7 +57,7 @@ class DigitalLibraryContainer extends Component {
 		jQ(window).off('resize');
 	}
 	handleResize(){
-		this.setState({window: {width: jQ(window).width(), height: jQ(window).height()}});
+		this.setState({window: {width: window.innerWidth, height: window.innerHeight}});
 	}
 	fetchData(method, url, arg2, arg3){
 		let data = (method == 'get' ? null : arg2);
