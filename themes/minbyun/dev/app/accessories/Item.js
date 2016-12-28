@@ -56,7 +56,7 @@ class Item extends Component {
 Item.propTypes = {
 	groupName: PropTypes.string,
 	className: PropTypes.string,
-	tabIndex: PropTypes.number,
+	tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	focus: PropTypes.bool,
 	onBlur: PropTypes.func,
 	onFocus: PropTypes.func,

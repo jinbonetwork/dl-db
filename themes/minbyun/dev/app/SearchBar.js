@@ -220,7 +220,7 @@ class SearchBar extends Component {
 									<Column><span>NOT 검색</span></Column>
 									<Column>
 										<div><span>이사회 ! 감사</span></div>
-										<div><span>(* 검색어는 '이사회', 제외어는 '감시'일 경우)</span></div>
+										<div><span>(* 검색어는 '이사회', 제외어는 '감사'일 경우)</span></div>
 									</Column>
 								</Row>
 								<Row>

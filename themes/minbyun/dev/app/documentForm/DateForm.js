@@ -1,29 +1,29 @@
 import React, {Component, PropTypes} from 'react';
 
 class DateForm extends Component {
+	componentDidMount(){
+		if(this.props.focus) this.refs.year.focus();
+	}
+	componentDidUpdate(prevProps, prevState){
+		if(this.props.focus) this.refs.year.focus();
+	}
 	handleChangeYear(event){
-		let year = parseInt(event.target.value);
-		if(year >= 0){
-			year %= 10000;
-		} else {
-			year = '';
+		const today = new Date();
+		const year = event.target.value;
+		if(0 <= year && year <= today.getFullYear()){
+			this.props.onChange({year: year, month: this.props.value.month});
 		}
-		this.props.onChange({year: year, month: this.props.value.month});
 	}
 	handleChangeMonth(event){
-		let month = parseInt(event.target.value);
-		if(month >= 0){
-			month %= 100;
-			if(month > 12) month = 12;
-		} else {
-			month = '';
+		const month = event.target.value;
+		if(0 <= month && month <= 12){
+			this.props.onChange({year: this.props.value.year, month: month});
 		}
-		this.props.onChange({year: this.props.value.year, month: month});
 	}
 	render(){
 		return (
 			<div className="dateform">
-				<input className="dateform__year" type="text" value={this.props.value.year}
+				<input className="dateform__year" type="text" ref="year" value={this.props.value.year}
 					onChange={this.handleChangeYear.bind(this)}
 				/>
 				<span>년</span>
@@ -36,8 +36,8 @@ class DateForm extends Component {
 	}
 }
 DateForm.propTypes = {
-	fname: PropTypes.string.isRequired,
 	value: PropTypes.object.isRequired,
+	focus: PropTypes.bool,
 	onChange: PropTypes.func.isRequired
 };
 

@@ -103,7 +103,7 @@ class DocumentInputForm extends Component {
 					</Check>
 				);
 			case 'Ym':
-				return <DateForm fname={this.props.fname} value={this.props.value} onChange={this.handleChange.bind(this)}/>;
+				return <DateForm value={this.props.value} focus={isWithFocus} onChange={this.handleChange.bind(this)}/>;
 			case 'textarea':
 				const message = (this.props.fname == 'content' ? '* 200자 내외로 작성해주세요.' : null);
 				return (

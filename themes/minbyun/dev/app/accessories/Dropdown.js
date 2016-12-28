@@ -11,6 +11,9 @@ class Dropdown extends Component {
 			focused: -1
 		};
 	}
+	componentWillMount(){
+		if(this.props.autoUnfold) this.setState({isUnfolded: true});
+	}
 	componentDidMount(){
 		this.setSize();
 	}
@@ -71,7 +74,6 @@ class Dropdown extends Component {
 			if(key == 'ArrowDown') this.setState({focused: index+1});
 			else if(key == 'ArrowUp') this.setState({focused: index-1})
 		}
-
 	}
 	render(){
 		let className = (this.props.className ? 'dropdown '+this.props.className : 'dropdown');
@@ -134,6 +136,7 @@ Dropdown.propTypes = {
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	window: PropTypes.shape({width: PropTypes.number, height: PropTypes.number}),
+	autoUnfold: PropTypes.bool,
 	multiple: PropTypes.bool,
 	onResize: PropTypes.func,
 	onClick: PropTypes.func,
