@@ -14,7 +14,7 @@ import {_mapAO} from '../accessories/functions';
 
 class DocumentInputForm extends Component {
 	isValid(value, fAttr){
-		if(fAttr.type == 'date' && fAttr.form == 'text'){
+		if(this.props.fname == 'sentence'){
 			let dateArray = value.split('-');
 			if(dateArray.length > 3) return false;
 			let today = new Date();
@@ -63,16 +63,19 @@ class DocumentInputForm extends Component {
 		const isWithFocus = (this.props.fieldWithFocus.fname === this.props.fname && this.props.fieldWithFocus.index === this.props.index);
 		switch(fAttr.form){
 			case 'text':
-				const placeholder = (fAttr.type == 'date' ? '2015-12-07' : null);
-				const type = (fAttr.type == 'email' ? 'email' : null);
-				return <TextInput type={type} value={this.props.value} focus={isWithFocus} placeholder={placeholder} onChange={this.handleChange.bind(this)} />;
-			case 'search':
-				const fnames = fAttrs[fAttrs[this.props.fname].parent].children;
-				return (
-					<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames} focus={isWithFocus}
-						onChange={this.handleChangeOfSearch.bind(this, fnames)}
-					/>
-				);
+				if(this.props.fname != 'name'){
+					const placeholder = (this.props.fname == 'sentence' ? '2015-12-07' : null);
+					const type = (fAttr.type == 'email' ? 'email' : null);
+					return <TextInput type={type} value={this.props.value} focus={isWithFocus} placeholder={placeholder} onChange={this.handleChange.bind(this)} />;
+				}
+				else {
+					const fnames = fAttrs[fAttrs[this.props.fname].parent].children;
+					return (
+						<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames} focus={isWithFocus}
+							onChange={this.handleChangeOfSearch.bind(this, fnames)}
+						/>
+					);
+				}
 			case 'file':
 				let accept;
 				if(fAttr.type == 'file') accept = '.pdf, .hwp, .doc, .docx';
@@ -110,11 +113,12 @@ class DocumentInputForm extends Component {
 				switch(this.props.fname){
 					case 'content':
 						message = '* 200자 내외로 작성해주세요.';
+						displayCount = true;
 						break;
 					case 'tag':
 						message = '* 쉼표로 구분해주세요.';
-						displayCount = false;
 						break;
+					default:
 				}
 				return (
 					<Textarea value={this.props.value} focus={isWithFocus} message={message} displayCount={displayCount} onChange={this.handleChange.bind(this)} />

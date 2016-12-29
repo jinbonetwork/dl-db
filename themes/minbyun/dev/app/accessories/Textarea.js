@@ -14,14 +14,17 @@ class Textarea extends Component {
 	render(){
 		const value = (this.props.value ? this.props.value : '');
 		const message = (this.props.message ? <span>{this.props.message}</span> : null);
-		const count = (this.props.displayCount !== false ? <span className="textarea__num-of-words">{this.props.value.length}자</span> : null);
+		const count = (this.props.displayCount ? <span className="textarea__num-of-words">{this.props.value.length}자</span> : null);
+		const footer = (message || count) && (
+			<div className="textarea__footer">
+				{message}
+				{count}
+			</div>
+		) ;
 		return(
 			<div className="textarea">
 				<textarea ref="textarea" value={value} onChange={this.handleChange.bind(this)} />
-				<div className="textarea__footer">
-					{message}
-					{count}
-				</div>
+				{footer}
 			</div>
 		);
 	}

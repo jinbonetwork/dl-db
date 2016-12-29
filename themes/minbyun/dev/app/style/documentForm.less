@@ -134,7 +134,7 @@
 	.inner-table .table__row:last-child {
 		border-width: 1px;
 	}
-	.inner-table input[type=text], .inner-table input[type=email] {
+	.inner-table input[type=text], .inner-table input[type=email], .inner-table textarea {
 		border: 0;
 	}
 	.inner-table .table__col:first-child {
@@ -158,6 +158,9 @@
 	}
 	button.document-form__submit:focus {
 		background-color: @focus-color-2;
+	}
+	textarea {
+		min-height: 11em;
 	}
 	textarea:focus {
 		background-color: @focus-color-1;

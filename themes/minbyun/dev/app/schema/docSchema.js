@@ -22,20 +22,20 @@ const _defaultFAttrs = {
 	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
 	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
 	trial: {type: 'group', displayName: '사건정보', children: ['court', 'sentence', 'number', 'trialname', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
-	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: true},
-	sentence: {type: 'date', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: false},
-	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: true},
-	trialname: {type: 'char', displayName: '사건명', form: 'text', parent: 'trial', multiple: false, required: true},
-	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: true},
+	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: false},
+	sentence: {type: 'char', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: false},
+	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: false},
+	trialname: {type: 'char', displayName: '사건명', form: 'text', parent: 'trial', multiple: false, required: false},
+	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: false},
 	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
-	lawyer: {type: 'char', displayName: '변호사', form: 'text', parent: 'trial', multiple: false, required: true},
+	lawyer: {type: 'char', displayName: '변호사', form: 'textarea', parent: 'trial', multiple: false, required: false},
 	commitee: {type: 'taxonomy', displayName: '담당', form: 'select', parent: '', multiple: true, required: true},
 	tag: {type: 'tag', displayName: '주제어', form: 'textarea', paretn: '', multiple: false, required: false},
 	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
 	date: {type: 'date', displayName: '자료 작성 시점', form: 'Ym', parent: '', multiple: false, required: true},
 	access: {type: 'taxonomy', displayName: '자료 제공 방식', form: 'radio', parent: '', multiple: false, required: true},
 	author: {type: 'group', displayName: '담당자/작성자', children: ['name', 'class', 'email', 'phone'], form: 'fieldset', required: true},
-	name: {type: 'char', displayName: '이름', form: 'search', parent: 'author', multiple: false, required: true},
+	name: {type: 'char', displayName: '이름', form: 'text', parent: 'author', multiple: false, required: true},
 	class: {type: 'char', displayName: '기수', form: 'text', parent: 'author', multiple: false, required: true},
 	email: {type: 'email', displayName: '이메일', form: 'text', parent: 'author', multiple: false, required: false},
 	phone: {type: 'phone', displayName: '전화번호', form: 'text', parent: 'author', multiple: false, required: false},
@@ -61,7 +61,7 @@ const _defaultSFname = {
 	access: 'f14', author: 'f15', name: 'f16', class: 'f17', email: 'f18', phone: 'f19', image: 'f20', file: 'f21'
 };
 const _docData = (data) => {
-	
+
 };
 const _convertToDoc = (sDoc, docData) => {
 	let document = {};
