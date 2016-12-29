@@ -50,10 +50,10 @@ class UserDocuments extends Component {
 		}});
 	}
 	render(){
-		const documents =  this.state.sDocuments.map((doc) => this.userDoc(_convertToDoc(doc)));
+		const documents =  this.state.sDocuments.map((doc) => this.userDoc(_convertToDoc(doc, this.props.docData)));
 		const page = parseInt(this.props.params.page);
 		const numOfPages = this.state.numOfPages;
-		
+
 		const documentList = documents.map((doc) => (
 			<DocListItem key={doc.id} document={doc} docData={this.props.docData} userRole={this.props.userData.role} />
 		));

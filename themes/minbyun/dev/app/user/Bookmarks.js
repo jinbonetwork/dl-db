@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import Pagination from '../accessories/Pagination';
 import {Table, Row, Column} from '../accessories/Table';
-import {_sFname, _fieldAttrs} from '../schema/docSchema';
+import {_sFname} from '../schema/docSchema';
 import {_displayDateOfMilliseconds} from '../accessories/functions';
 
 class Bookmarks extends Component {
@@ -38,11 +38,12 @@ class Bookmarks extends Component {
 		});
 	}
 	bookmark(sBookmark){
+		const sFname = this.props.docData.sFname;
 		return {
-			id: sBookmark[_sFname['id']],
+			id: sBookmark[sFname['id']],
 			bid: sBookmark.bid,
 			regDate: _displayDateOfMilliseconds(sBookmark.regdate*1000),
-			title: sBookmark[_sFname['title']]
+			title: sBookmark[sFname['title']]
 		};
 	}
 	handleClick(which, arg){
@@ -74,7 +75,7 @@ class Bookmarks extends Component {
 					<Table>
 						<Row>
 							<Column>저장일</Column>
-							<Column>{_fieldAttrs['title'].displayName}</Column>
+							<Column>{this.props.docData.fAttrs['title'].displayName}</Column>
 						</Row>
 						{rows}
 					</Table>
@@ -85,6 +86,7 @@ class Bookmarks extends Component {
 	}
 }
 Bookmarks.propTypes = {
+	docData: PropTypes.object,
 	fetchData: PropTypes.func,
 	setMessage: PropTypes.func,
 	router: PropTypes.shape({

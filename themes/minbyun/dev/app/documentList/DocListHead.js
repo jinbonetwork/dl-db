@@ -16,6 +16,7 @@ class DoctypeList extends Component {
 		}
 	}
 	render(){
+		const sFname = this.props.docData.sFname;
 		const doctypes = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => {
 			let className = (this.props.doctypes.indexOf(tid) >= 0 ? 'doctype-li doctype-li--checked' : 'doctype-li');
 			let count = (this.props.distribution[tid] ? this.props.distribution[tid] : 0);
@@ -32,7 +33,7 @@ class DoctypeList extends Component {
 					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
 				>
 					<Item value="score"><span className="doclisthead__orderby">관련도순</span></Item>
-					<Item value={_sFname['date']}><span className="doclisthead__orderby">최신순</span></Item>
+					<Item value={sFname['date']}><span className="doclisthead__orderby">최신순</span></Item>
 				</Check>
 			</div>
 		);

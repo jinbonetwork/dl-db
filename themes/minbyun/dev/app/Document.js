@@ -7,7 +7,7 @@ import FieldsInContents from './document/FieldsInContents';
 import LinkIf from './accessories/LinkIf';
 import Message from  './accessories/Message';
 import {Table, Row, Column} from './accessories/Table';
-import {_fieldAttrs, _convertToDoc, _isHiddenField} from './schema/docSchema';
+import {_convertToDoc, _isHiddenField} from './schema/docSchema';
 import {_screen} from './schema/screenSchema';
 import {_isEmpty, _isCommon, _interpolate} from './accessories/functions';
 
@@ -22,7 +22,7 @@ class Document extends Component {
 	}
 	componentDidMount(){
 		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){
-			let document = _convertToDoc(data.document);
+			let document = _convertToDoc(data.document, this.props.docData);
 			this.setState({
 				document: document
 			});
@@ -142,11 +142,11 @@ class Document extends Component {
 		const prsRsp = this.propsForResponsivity();
 
 		for(let fn in this.state.document){
-			let fAttr = _fieldAttrs[fn];
+			let fAttr = this.props.docData.fAttrs[fn];
 			if(!fAttr.parent && fn != 'title'){
 				if(fn == 'image' || fn == 'file' || fn == 'date'){
 					fieldsInHeader[fn] = !_isEmpty(this.state.document[fn]) && (
-						<FieldsInHeader fname={fn} document={this.state.document} userRole={userRole} />
+						<FieldsInHeader fname={fn} document={this.state.document} userRole={userRole} docData={this.props.docData} />
 					);
 				}
 				else if(!_isHiddenField(fn, this.state.document, 'view')){

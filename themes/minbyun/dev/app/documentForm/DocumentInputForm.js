@@ -9,7 +9,7 @@ import {Table} from '../accessories/Table';
 import Select from '../accessories/Select';
 import Item from '../accessories/Item';
 import Check from '../accessories/Check';
-import {_fieldAttrs, _taxonomy, _terms} from '../schema/docSchema';
+import {_taxonomy, _terms} from '../schema/docSchema';
 import {_mapAO} from '../accessories/functions';
 
 class DocumentInputForm extends Component {
@@ -41,7 +41,7 @@ class DocumentInputForm extends Component {
 		}
 	}
 	handleChange(value){
-		if(this.isValid(value, _fieldAttrs[this.props.fname])){
+		if(this.isValid(value, this.props.docData.fAttrs[this.props.fname])){
 			this.props.callBacks.updateSingleField(this.props.fname, this.props.index, value);
 		}
 	}
@@ -58,7 +58,8 @@ class DocumentInputForm extends Component {
 		});
 	}
 	render(){
-		const fAttr = _fieldAttrs[this.props.fname];
+		const fAttrs = this.props.docData.fAttrs;
+		const fAttr = fAttrs[this.props.fname];
 		const isWithFocus = (this.props.fieldWithFocus.fname === this.props.fname && this.props.fieldWithFocus.index === this.props.index);
 		switch(fAttr.form){
 			case 'text':
@@ -66,7 +67,7 @@ class DocumentInputForm extends Component {
 				const type = (fAttr.type == 'email' ? 'email' : null);
 				return <TextInput type={type} value={this.props.value} focus={isWithFocus} placeholder={placeholder} onChange={this.handleChange.bind(this)} />;
 			case 'search':
-				const fnames = _fieldAttrs[_fieldAttrs[this.props.fname].parent].children;
+				const fnames = fAttrs[fAttrs[this.props.fname].parent].children;
 				return (
 					<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames} focus={isWithFocus}
 						onChange={this.handleChangeOfSearch.bind(this, fnames)}
@@ -105,9 +106,18 @@ class DocumentInputForm extends Component {
 			case 'Ym':
 				return <DateForm value={this.props.value} focus={isWithFocus} onChange={this.handleChange.bind(this)}/>;
 			case 'textarea':
-				const message = (this.props.fname == 'content' ? '* 200자 내외로 작성해주세요.' : null);
+				let message, displayCount;
+				switch(this.props.fname){
+					case 'content':
+						message = '* 200자 내외로 작성해주세요.';
+						break;
+					case 'tag':
+						message = '* 쉼표로 구분해주세요.';
+						displayCount = false;
+						break;
+				}
 				return (
-					<Textarea value={this.props.value} focus={isWithFocus} message={message} onChange={this.handleChange.bind(this)} />
+					<Textarea value={this.props.value} focus={isWithFocus} message={message} displayCount={displayCount} onChange={this.handleChange.bind(this)} />
 				);
 			case 'fieldset':
 				let subFormFields = [];

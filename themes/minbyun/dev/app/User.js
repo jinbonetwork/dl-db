@@ -14,6 +14,7 @@ class User extends Component {
 					props = {userProfile: this.props.userProfile}; break;
 				case 'bookmarks': case 'history':
 					props = {
+						docData: this.props.docData,
 						fetchData: this.props.fetchData,
 						setMessage: this.props.setMessage
 					}; break;

@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import DocumentField from './DocumentField';
 import {Table, Row, Column} from '../accessories/Table';
 import Message from '../accessories/Message';
-import {_fieldAttrs, _sFname, _convertDocToSave, _isHiddenField} from '../schema/docSchema';
+import {_convertDocToSave, _isHiddenField} from '../schema/docSchema';
 import {_isEmpty, _isCommon, _isEmailValid, _isPhoneValid, _isDateValid} from '../accessories/functions';
 import update from 'react-addons-update';  // for update()
 import {withRouter} from 'react-router';
@@ -15,7 +15,7 @@ class DocumentForm extends Component {
 	validationCheck(){
 		for(let fn in this.props.document){
 			let value = this.props.document[fn];
-			let fAttr = _fieldAttrs[fn];
+			let fAttr = this.props.docData.fAttrs[fn];
 			if(fAttr.type == 'meta' || fAttr.type == 'group' || this.isHiddenField(fn) || this.isHiddenField(fAttr.parent)) continue;
 			if(fAttr.required && _isEmpty(value)){
 				return {fname: fn, index: (fAttr.multiple ? 0 : undefined), message: fAttr.displayName+'을(를) 입력하세요.'};
@@ -42,20 +42,21 @@ class DocumentForm extends Component {
 			return false;
 		}
 
+		const sFname = this.props.docData.sFname;
 		let formData = new FormData();
 		formData.append('document', JSON.stringify(
-			_convertDocToSave(this.props.document)
+			_convertDocToSave(this.props.document, this.props.docData)
 		));
 		for(let fn in this.props.document){
 			let value = this.props.document[fn];
-			let fAttr = _fieldAttrs[fn];
+			let fAttr = this.props.docData.fAttrs[fn];
 			if(fAttr.form == 'file'){
 				if(fAttr.multiple){
 					value.forEach((file) => {
-						if(file.name) formData.append(_sFname[fn]+'[]', file);
+						if(file.name) formData.append(sFname[fn]+'[]', file);
 					});
 				} else {
-					if(value.name) formData.append(_sFname[fn], value);
+					if(value.name) formData.append(sFname[fn], value);
 				}
 			}
 		};
@@ -76,7 +77,7 @@ class DocumentForm extends Component {
 	render(){
 		let requiredFields = [], electiveFields = [];
 		for(let fn in this.props.document){
-			let fAttr = _fieldAttrs[fn];
+			let fAttr = this.props.docData.fAttrs[fn];
 			let value = this.props.document[fn];
 			if(fAttr.type != 'meta' && !fAttr.parent && !_isHiddenField(fn, this.props.document, 'form')){
 				const documentField = (

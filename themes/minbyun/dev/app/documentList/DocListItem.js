@@ -1,22 +1,24 @@
 import React, {Component, PropTypes} from 'react';
 import LinkIf from '../accessories/LinkIf';
-import {_fieldAttrs} from '../schema/docSchema';
 import {_displayDate, _isCommon} from '../accessories/functions';
 
-const _sideDispNames = {
-	date: '작성일',
-	number: _fieldAttrs.number.displayName,
-	commitee: _fieldAttrs.commitee.displayName,
-	name: _fieldAttrs.name.displayName
-}
-
 class DocListItem extends Component {
+	sideDispNames(){
+		const fAttrs = this.props.docData.fAttrs;
+		return {
+			date: '작성일',
+			number: fAttrs.number.displayName,
+			commitee: fAttrs.commitee.displayName,
+			name: fAttrs.name.displayName
+		}
+	}
 	side(){
+		const sideDispNames = this.sideDispNames();
 		let side = [];
-		for(let fn in _sideDispNames){ if(this.props.document[fn]){
+		for(let fn in sideDispNames){ if(this.props.document[fn]){
 			side.push(
 				<li key={fn}>
-					<span>{_sideDispNames[fn]}: </span>
+					<span>{sideDispNames[fn]}: </span>
 					<span>{this.tagged(this.props.document[fn])}</span>
 				</li>
 			);

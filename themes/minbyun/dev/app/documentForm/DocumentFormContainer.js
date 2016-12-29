@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 import DocumentForm from './DocumentForm';
-import {_emptyDocument, _fieldAttrs, _convertToDoc} from '../schema/docSchema';
+import {_convertToDoc} from '../schema/docSchema';
 
 class DocumentFormContainer extends Component {
 	componentWillMount(){
@@ -14,13 +14,13 @@ class DocumentFormContainer extends Component {
 	componentDidMount(){
 		if(this.props.formAttr.mode == 'modify'){
 			this.props.fetchData('get', '/api/document?id='+this.state.document.id, (data) => { if(data){
-				this.setState({document: _convertToDoc(data.document)});
+				this.setState({document: _convertToDoc(data.document, this.props.docData)});
 			}});
 		}
 	}
 	firstField(){
 		for(let fn in this.props.document){
-			let fa = _fieldAttrs[fn];
+			let fa = this.props.docData.fAttrs[fn];
 			if(fa.type != 'meta'){
 				return {fname: fn, index: (fa.multiple ? 0 : undefined)};
 			}
@@ -50,7 +50,7 @@ class DocumentFormContainer extends Component {
 	}
 	addValueToField(fname){
 		this.setState({document: update(this.state.document, {
-			[fname]: {$push: [_emptyDocument[fname][0]]}
+			[fname]: {$push: [this.props.docData.emptyDoc[fname][0]]}
 		})});
 	}
 	removeValueInField(fname, index){
@@ -61,11 +61,11 @@ class DocumentFormContainer extends Component {
 				})});
 			} else {
 				this.setState({document: update(this.state.document, {
-					[fname]: {0: {$set: _emptyDocument[fname][0]}}
+					[fname]: {0: {$set: this.props.docData.emptyDoc[fname][0]}}
 				})});
 			}
 		} else {
-			this.setState({document: update(this.state.document, {[fname]: {$set: _emptyDocument[fname]}})});
+			this.setState({document: update(this.state.document, {[fname]: {$set: this.props.docData.emptyDoc[fname]}})});
 		}
 	}
 	fieldValue(fname){

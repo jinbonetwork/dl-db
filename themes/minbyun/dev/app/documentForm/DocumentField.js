@@ -1,13 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentInputForm from './DocumentInputForm';
 import {Table, Row, Column} from '../accessories/Table';
-import {_fieldAttrs} from '../schema/docSchema';
 
 class DocumentField extends Component {
 	fieldFooter(){
-		switch(_fieldAttrs[this.props.fname].form){
+		switch(this.props.docData.fAttrs[this.props.fname].form){
 			case 'file':
-				let accept = (_fieldAttrs[this.props.fname].type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
+				let accept = (this.props.docData.fAttrs[this.props.fname].type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
 				return <div className="document-form__fileformat">{`* 파일형식: ${accept}`}</div>;
 		}
 	}
@@ -27,7 +26,7 @@ class DocumentField extends Component {
 	}
 	inputForms(){
 		let innerElement;
-		if(_fieldAttrs[this.props.fname].multiple){
+		if(this.props.docData.fAttrs[this.props.fname].multiple){
 			innerElement = this.props.value.map((v, i) => {
 				return (
 					<div key={i} className="document-form__input-with-buttons">
@@ -45,7 +44,7 @@ class DocumentField extends Component {
 					</div>
 				)
 			});
-		} else if(_fieldAttrs[this.props.fname].form == 'file'){
+		} else if(this.props.docData.fAttrs[this.props.fname].form == 'file'){
 			innerElement = (
 				<div className="document-form__input-with-buttons">
 					<div className="document-form__middle">
@@ -72,7 +71,7 @@ class DocumentField extends Component {
 		return (
 			<Row>
 				<Column>
-					<span>{_fieldAttrs[this.props.fname].displayName}</span>
+					<span>{this.props.docData.fAttrs[this.props.fname].displayName}</span>
 				</Column>
 				<Column>
 					{this.inputForms()}

@@ -5,7 +5,7 @@ import Item from './accessories/Item';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import {Table, Row, Column} from './accessories/Table';
-import {_fieldAttrs, _sFname, _termsOf} from './schema/docSchema';
+import {_termsOf} from './schema/docSchema';
 import {_query, _period, _params} from './schema/searchSchema';
 import {_screen} from './schema/screenSchema';
 import {_isEmpty, _mapO, _interpolate, _notNull} from './accessories/functions';
@@ -50,8 +50,9 @@ class SearchBar extends Component {
 			let to = (period[1] ? period[1] : '');
 			this.props.update({from: from, to: to});
 
-			let query = _query({keyword: this.props.query.keyword, doctypes: this.props.query.doctypes, from: from, to: to });
-			let params = _params(query);
+			const sFname = this.props.docData.sFname;
+			let query = _query({keyword: this.props.query.keyword, doctypes: this.props.query.doctypes, from: from, to: to }, sFname);
+			let params = _params(query, sFname);
 			if(params) this.props.router.push('/search'+params);
 		}
 		else if(which == 'togglePeriod'){
@@ -116,7 +117,7 @@ class SearchBar extends Component {
 			}
 		} else {
 			return {
-				head: <span>{_fieldAttrs['doctype'].displayName}</span>,
+				head: <span>{this.props.docData.fAttrs['doctype'].displayName}</span>,
 				arrow: <i className="pe-7s-angle-down pe-va"></i>
 			}
 		}

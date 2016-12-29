@@ -3,7 +3,6 @@ import {withRouter} from 'react-router';
 import DocListItem from './documentList/DocListItem';
 import DocListHead from './documentList/DocListHead';
 import Pagination from './accessories/Pagination';
-import {_convertToDoc, _sFname, _fname} from './schema/docSchema';
 import {_searchQuery, _query, _queryOf, _params} from './schema/searchSchema';
 import {_isEmpty, _displayDate} from './accessories/functions';
 import update from 'react-addons-update';  // for update()
@@ -20,20 +19,22 @@ class SearchResult extends Component {
 	}
 	componentDidMount(){
 		if(!_isEmpty(this.props.location.query)){
+			const sFname = this.props.docData.sFname;
 			const query = this.props.location.query;
-			const sQuery = _searchQuery(query, true);
+			const sQuery = _searchQuery(query, this.props.docData.fname, true);
 			this.props.updateSearchQuery(sQuery);
 
-			let params = _params(update(_query(sQuery), {$merge: {
+			let params = _params(update(_query(sQuery, sFname), {$merge: {
 				orderby: query.orderby, page: query.page
-			}}));
+			}}), sFname);
 			this.fetchData(params);
-			if(params != _params(query)) this.props.router.push('/search'+params);
+			if(params != _params(query, sFname)) this.props.router.push('/search'+params);
 		};
 	}
 	componentWillReceiveProps(nextProps){
-		let thisUrlParams = _params(this.props.location.query);
-		let nextUrlParams = _params(nextProps.location.query);
+		const sFname = this.props.docData.sFname;
+		let thisUrlParams = _params(this.props.location.query, sFname);
+		let nextUrlParams = _params(nextProps.location.query, sFname);
 		if(thisUrlParams != nextUrlParams){
 			this.fetchData(nextUrlParams);
 		}
@@ -59,15 +60,16 @@ class SearchResult extends Component {
 	}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'dochead'){
+			const sFname = this.props.docData.sFname;
 			which = arg1st; let value = arg2nd, query;
 			if(which == 'doctypes'){
 				this.props.updateSearchQuery('doctypes', value);
-				query = update(this.props.location.query, {$merge: _query({doctypes: value})});
+				query = update(this.props.location.query, {$merge: _query({doctypes: value}, sFname)});
 			}
 			else if(which == 'orderby'){
 				query = update(this.props.location.query, {$merge: {order: value}});
 			}
-			this.props.router.push('/search'+_params(query));
+			this.props.router.push('/search'+_params(query, sFname));
 		}
 	}
 	searched(sSearched){
@@ -75,15 +77,17 @@ class SearchResult extends Component {
 		searched.id = sSearched._id;
 		for(let fn in sSearched._source){
 			let value = sSearched._source[fn];
-			let fname = _fname[fn];
+			let fname = this.props.docData.fname[fn];
 			if(fname == 'date') value = value.replace('-', '/');
 			searched[fname] = value;
 		}
 		return searched;
 	}
 	keywords(query){
+		const sFname = this.props.docData.sFname;
+		const fname = this.props.docData.fname;
 		let keywords = [];
-		let kwd = _searchQuery(_queryOf('keyword', query)).keyword; if(!kwd) return '';
+		let kwd = _searchQuery(_queryOf('keyword', query, sFname), fname).keyword; if(!kwd) return '';
 		kwd = kwd.replace(/[\&\!\+\"]/g, '');
 		kwd.split(' ').forEach((k) => {
 			if(k && kwd.match(new RegExp(k, 'g')).length === 1) keywords.push(k);
@@ -91,10 +95,12 @@ class SearchResult extends Component {
 		return keywords.join('|');
 	}
 	render(){
+		const sFname = this.props.docData.sFname;
+		const fname = this.props.docData.fname;
 		const query = this.props.location.query;
 		const page = (query.page ? parseInt(query.page) : 1);
-		const paginationUrl = '/search'+_params(query, ['page'])+'&page=';
-		const doctypes = _searchQuery(_queryOf('doctypes', query)).doctypes || [];
+		const paginationUrl = '/search'+_params(query, sFname, ['page'])+'&page=';
+		const doctypes = _searchQuery(_queryOf('doctypes', query, sFname), fname).doctypes || [];
 		const orderby = (query.order ? query.order : 'score');
 		const keywords = this.keywords(query);
 

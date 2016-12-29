@@ -31,7 +31,8 @@ class Accordian extends Component {
 	}
 	handleClick(which, index){
 		if(which == 'head'){
-			this.setState({unfoldedItem: index});
+			if(index != this.state.unfoldedItem) this.setState({unfoldedItem: index});
+			else this.setState({unfoldedItem: -1});
 		}
 		this.props.onClick(which);
 	}

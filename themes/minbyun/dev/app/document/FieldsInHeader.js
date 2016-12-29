@@ -3,14 +3,14 @@ import {Link} from 'react-router';
 import ImageWrap from './ImageWrap';
 import LinkIf from '../accessories/LinkIf';
 import {Table, Row, Column} from '../accessories/Table';
-import {_fieldAttrs, _isAccessDownload} from '../schema/docSchema';
+import {_isAccessDownload} from '../schema/docSchema';
 import {_displayDate, _isCommon} from '../accessories/functions';
 
 class FieldsInHeader extends Component {
 	date(){
 		return (
 			<Row>
-				<Column>{_fieldAttrs[this.props.fname].displayName}</Column>
+				<Column>{this.props.docData.fAttrs[this.props.fname].displayName}</Column>
 				<Column>{_displayDate(this.props.document[this.props.fname])}</Column>
 			</Row>
 		);
@@ -34,7 +34,7 @@ class FieldsInHeader extends Component {
 		return (
 			<Row>
 				<Column>
-					<i className="pe-7s-download pe-va"></i> {_fieldAttrs[this.props.fname].displayName}
+					<i className="pe-7s-download pe-va"></i> {this.props.docData.fAttrs[this.props.fname].displayName}
 				</Column>
 				<Column><ol>{fileList}</ol></Column>
 			</Row>

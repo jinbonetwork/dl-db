@@ -38,12 +38,13 @@ class History extends Component {
 		});
 	}
 	history(item){
-		const period = item.options[_sFname['date']];
+		const sFname = this.props.docData.sFname;
+		const period = item.options[sFname['date']];
 		return {
 			hid: item.hid,
 			searchDate: _displayDateOfMilliseconds(item.search_date*1000),
 			keyword: item.query,
-			doctypes: item.options[_sFname['doctype']],
+			doctypes: item.options[sFname['doctype']],
 			from: (period && period.from ? period.from : ''),
 			to: (period && period.to ? period.to : ''),
 			params: item.query_string
@@ -102,6 +103,7 @@ class History extends Component {
 	}
 }
 History.propTypes = {
+	docData: PropTypes.object.isRequired,
 	fetchData: PropTypes.func,
 	setMessage: PropTypes.func,
 	router: PropTypes.shape({

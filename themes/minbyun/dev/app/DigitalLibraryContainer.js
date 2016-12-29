@@ -5,7 +5,7 @@ import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import Message from './accessories/Message';
 import Overlay from './accessories/Overlay';
-import  {_defaultTaxonomy, _defaultTerms, _taxonomy, _terms, _customFields, _customFieldAttrs} from './schema/docSchema';
+import  {_defaultEmptyDoc, _defaultFAttrs, _defaultFname, _defaultSFname, _defaultTaxonomy, _defaultTerms, _taxonomy, _terms} from './schema/docSchema';
 import {_role, _convertToUser, _emptyUser, _usCustomFieldAttrs, _usCustomFields} from './schema/userSchema';
 import {_menuData} from './schema/menuSchema';
 import {_isEmpty} from './accessories/functions';
@@ -18,10 +18,12 @@ class DigitalLibraryContainer extends Component {
 			userData: {user: null, role: null, type: null},
 			menuData: [],
 			docData: {
+				emptyDoc: _defaultEmptyDoc,
+				fAttrs: _defaultFAttrs,
+				fname: _defaultFname,
+				sFname: _defaultSFname,
 				taxonomy: _defaultTaxonomy,
 				terms: _defaultTerms,
-				customFields: null,
-				customFieldAttrs: null
 			},
 			searchQuery: {
 				doctypes: [],
@@ -30,9 +32,7 @@ class DigitalLibraryContainer extends Component {
 				to: ''
 			},
 			userProfile: {
-				profile: _emptyUser,
-				customFields: null,
-				customFieldAttrs: null
+				profile: _emptyUser
 			},
 			message: null,
 			openedDocuments: [],
@@ -98,17 +98,17 @@ class DigitalLibraryContainer extends Component {
 			if(data.role){
 				this.fetchData('get', '/api/fields', (data) => {
 					this.setState({docData: {
-						taxonomy: _taxonomy(data.taxonomy, data.fields),
-						terms: _terms(data.taxonomy),
-						customFields: _customFields(data.fields),
-						customFieldAttrs: _customFieldAttrs(data.fields)
+						emptyDoc: _defaultEmptyDoc,
+						fAttrs: _defaultFAttrs,
+						fname: _defaultFname,
+						sFname: _defaultSFname,
+						taxonomy: _taxonomy(data.taxonomy, data.fields, this.state.docData.fname),
+						terms: _terms(data.taxonomy)
 					}});
 				});
 				this.fetchData('get', '/api/user/profile', (data) => {
 					this.setState({userProfile: {
-						profile: _convertToUser(data.profile),
-						customFields: _usCustomFields(data.fields),
-						customFieldAttrs: _usCustomFieldAttrs(data.fields)
+						profile: _convertToUser(data.profile)
 					}});
 				});
 			}
