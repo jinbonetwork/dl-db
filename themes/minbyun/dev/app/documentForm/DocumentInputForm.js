@@ -5,11 +5,10 @@ import SearchInput from '../accessories/SearchInput';
 import Textarea from '../accessories/Textarea';
 import DateForm from './DateForm';
 import FileInput from '../accessories/FileInput';
-import {Table} from '../accessories/Table';
 import Select from '../accessories/Select';
 import Item from '../accessories/Item';
 import Check from '../accessories/Check';
-import {_taxonomy, _terms} from '../schema/docSchema';
+import {Table} from '../accessories/Table';
 import {_mapAO} from '../accessories/functions';
 
 class DocumentInputForm extends Component {
@@ -52,6 +51,9 @@ class DocumentInputForm extends Component {
 			this.props.callBacks.updateFields(_mapAO(fnames, (fn) => result[fn]));
 		}
 	}
+	handleBlur(){
+		this.props.callBacks.unsetFieldWithFocus();
+	}
 	searchMember(name, callBack){
 		this.props.callBacks.fetchData('get', '/api/members?q='+encodeURIComponent(name), (data) => {
 			if(data && callBack) callBack(data.members);
@@ -66,13 +68,17 @@ class DocumentInputForm extends Component {
 				if(this.props.fname != 'name'){
 					const placeholder = (this.props.fname == 'sentence' ? '2015-12-07' : null);
 					const type = (fAttr.type == 'email' ? 'email' : null);
-					return <TextInput type={type} value={this.props.value} focus={isWithFocus} placeholder={placeholder} onChange={this.handleChange.bind(this)} />;
+					return (
+						<TextInput type={type} value={this.props.value} focus={isWithFocus} placeholder={placeholder}
+							onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+						/>
+					);
 				}
 				else {
 					const fnames = fAttrs[fAttrs[this.props.fname].parent].children;
 					return (
 						<SearchInput value={this.props.value} search={this.searchMember.bind(this)} resultFNames={fnames} focus={isWithFocus}
-							onChange={this.handleChangeOfSearch.bind(this, fnames)}
+							onChange={this.handleChangeOfSearch.bind(this, fnames)} onBlur={this.handleBlur.bind(this)}
 						/>
 					);
 				}
@@ -81,8 +87,8 @@ class DocumentInputForm extends Component {
 				if(fAttr.type == 'file') accept = '.pdf, .hwp, .doc, .docx';
 				else if(fAttr.type == 'image') accept = '.jpg, .png';
 				return (
-					<FileInput value={this.props.value.name || this.props.value.filename} focus={isWithFocus}
-						accept={accept} onChange={this.handleChange.bind(this)}
+					<FileInput value={this.props.value.name || this.props.value.filename} focus={isWithFocus} accept={accept}
+						onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
 					/>
 				);
 			case 'select':
@@ -107,7 +113,7 @@ class DocumentInputForm extends Component {
 					</Check>
 				);
 			case 'Ym':
-				return <DateForm value={this.props.value} focus={isWithFocus} onChange={this.handleChange.bind(this)}/>;
+				return <DateForm value={this.props.value} focus={isWithFocus} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}/>;
 			case 'textarea':
 				let message, displayCount;
 				switch(this.props.fname){
@@ -121,7 +127,9 @@ class DocumentInputForm extends Component {
 					default:
 				}
 				return (
-					<Textarea value={this.props.value} focus={isWithFocus} message={message} displayCount={displayCount} onChange={this.handleChange.bind(this)} />
+					<Textarea value={this.props.value} focus={isWithFocus} message={message} displayCount={displayCount}
+						onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+					/>
 				);
 			case 'fieldset':
 				let subFormFields = [];
@@ -137,6 +145,9 @@ class DocumentInputForm extends Component {
 					}
 				});
 				return <Table className="inner-table">{subFormFields}</Table>
+			default:
+				console.error(fAttr.form+': 적합한 form이 아닙니다.');
+				return null;
 		}
 	}
 }

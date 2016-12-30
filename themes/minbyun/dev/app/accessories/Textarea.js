@@ -11,6 +11,9 @@ class Textarea extends Component {
 		if(this.props.limit > 0 && event.target.value.length > this.props.limit) ;
 		else this.props.onChange(event.target.value);
 	}
+	handleBlur(event){
+		if(this.props.onBlur) this.props.onBlur();
+	}
 	render(){
 		const value = (this.props.value ? this.props.value : '');
 		const message = (this.props.message ? <span>{this.props.message}</span> : null);
@@ -23,7 +26,7 @@ class Textarea extends Component {
 		) ;
 		return(
 			<div className="textarea">
-				<textarea ref="textarea" value={value} onChange={this.handleChange.bind(this)} />
+				<textarea ref="textarea" value={value} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)} />
 				{footer}
 			</div>
 		);
@@ -35,7 +38,8 @@ Textarea.propTypes = {
 	message: PropTypes.string,
 	limit: PropTypes.number,
 	displayCount: PropTypes.bool,
-	onChange: PropTypes.func.isRequired
+	onChange: PropTypes.func.isRequired,
+	onBlur: PropTypes.func
 };
 
 export default Textarea;

@@ -26,25 +26,19 @@ class DocumentFormContainer extends Component {
 			}
 		}
 	}
-	emptyFieldWithFocus(){
-		return {fname: '', index: undefined};
-	}
 	updateFields(fields){ if(!fields) return;
 		this.setState({
-			document: update(this.state.document, {$merge: fields}),
-			fieldWithFocus: this.emptyFieldWithFocus()
+			document: update(this.state.document, {$merge: fields})
 		});
 	}
 	updateSingleField(fname, index, value){
 		if(index === undefined){
 			this.setState({
-				document: update(this.state.document, {[fname]: {$set: value}}),
-				fieldWithFocus: this.emptyFieldWithFocus()
+				document: update(this.state.document, {[fname]: {$set: value}})
 			});
 		} else {
 			this.setState({
-				document: update(this.state.document, {[fname]: {[index]: {$set: value}}}),
-				fieldWithFocus: this.emptyFieldWithFocus()
+				document: update(this.state.document, {[fname]: {[index]: {$set: value}}})
 			});
 		}
 	}
@@ -74,6 +68,9 @@ class DocumentFormContainer extends Component {
 	setFieldWithFocus(fname, index){
 		this.setState({fieldWithFocus: {fname: fname, index: index}});
 	}
+	unsetFieldWithFocus(){
+		this.setState({fieldWithFocus: {fname: '', index: undefined}});
+	}
 	render(){
 		return(
 			<DocumentForm
@@ -83,13 +80,14 @@ class DocumentFormContainer extends Component {
 				fieldWithFocus={this.state.fieldWithFocus}
 				callBacks={{
 					setFieldWithFocus: this.setFieldWithFocus.bind(this),
+					unsetFieldWithFocus: this.unsetFieldWithFocus.bind(this),
 					fieldValue: this.fieldValue.bind(this),
 					updateSingleField: this.updateSingleField.bind(this),
 					updateFields: this.updateFields.bind(this),
 					addValueToField: this.addValueToField.bind(this),
 					removeValueInField: this.removeValueInField.bind(this),
 					fetchData: this.props.fetchData,
-					setMessage: this.props.setMessage
+					setMessage: this.props.setMessage,
 				}}
 			/>
 		);

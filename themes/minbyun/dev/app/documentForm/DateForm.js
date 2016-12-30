@@ -20,15 +20,18 @@ class DateForm extends Component {
 			this.props.onChange({year: this.props.value.year, month: month});
 		}
 	}
+	handleBlur(){
+		if(this.props.onBlur) this.props.onBlur();
+	}
 	render(){
 		return (
 			<div className="dateform">
 				<input className="dateform__year" type="text" ref="year" value={this.props.value.year}
-					onChange={this.handleChangeYear.bind(this)}
+					onChange={this.handleChangeYear.bind(this)} onBlur={this.handleBlur.bind(this)}
 				/>
 				<span>년</span>
 				<input className="dateform_month" type="text" value={this.props.value.month}
-					onChange={this.handleChangeMonth.bind(this)}
+					onChange={this.handleChangeMonth.bind(this)} onBlur={this.handleBlur.bind(this)}
 				/>
 				<span>월</span>
 			</div>
@@ -38,7 +41,8 @@ class DateForm extends Component {
 DateForm.propTypes = {
 	value: PropTypes.object.isRequired,
 	focus: PropTypes.bool,
-	onChange: PropTypes.func.isRequired
+	onChange: PropTypes.func.isRequired,
+	onBlur: PropTypes.func
 };
 
 export default DateForm;

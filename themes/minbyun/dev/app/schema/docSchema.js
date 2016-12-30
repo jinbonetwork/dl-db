@@ -1,14 +1,26 @@
-import {_isEmpty} from '../accessories/functions';
+import {_isEmpty, _copyOf} from '../accessories/functions';
 
-const _emptyMeta = {
-	id: 0, uid: 0, created: 0, owner: false, bookmark: false
+const _emptyDoc = {
+	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
+	title: '', content: ''
 };
+const _fAttrs = {
+	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
+	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
+	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true}
+};
+const _fname = {
+	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content'
+};
+const _sFname = {
+	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', title: 'subject', content: 'content'
+}
 const _defaultEmptyDoc = {
 	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
 	title: '',
 	doctype: 1,
 	trial: undefined, court: '', sentence: '', number: '', trialname: '', judge: '', prosecutor: '', lawyer: '',
-	commitee: [7],
+	committee: [7],
 	tag: '',
 	content: '',
 	date: {year: '', month: ''},
@@ -20,6 +32,7 @@ const _defaultEmptyDoc = {
 const _defaultFAttrs = {
 	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
 	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
+	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
 	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
 	trial: {type: 'group', displayName: '사건정보', children: ['court', 'sentence', 'number', 'trialname', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
 	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: false},
@@ -29,9 +42,8 @@ const _defaultFAttrs = {
 	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: false},
 	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
 	lawyer: {type: 'char', displayName: '변호사', form: 'textarea', parent: 'trial', multiple: false, required: false},
-	commitee: {type: 'taxonomy', displayName: '담당', form: 'select', parent: '', multiple: true, required: true},
-	tag: {type: 'tag', displayName: '주제어', form: 'textarea', paretn: '', multiple: false, required: false},
-	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
+	committee: {type: 'taxonomy', displayName: '담당', form: 'select', parent: '', multiple: true, required: true},
+	tag: {type: 'tag', displayName: '주제어', form: 'textarea', parent: '', multiple: false, required: false},
 	date: {type: 'date', displayName: '자료 작성 시점', form: 'Ym', parent: '', multiple: false, required: true},
 	access: {type: 'taxonomy', displayName: '자료 제공 방식', form: 'radio', parent: '', multiple: false, required: true},
 	author: {type: 'group', displayName: '담당자/작성자', children: ['name', 'class', 'email', 'phone'], form: 'fieldset', required: true},
@@ -44,7 +56,7 @@ const _defaultFAttrs = {
 };
 const _defaultTaxonomy = {
 	doctype: [1],
-	commitee: [7],
+	committee: [7],
 	access: [33, 34]
 };
 const _defaultTerms = {
@@ -52,16 +64,75 @@ const _defaultTerms = {
 };
 const _defaultFname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content', memo: 'memo',
-	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'sentence', f5: 'number', f6: 'trialname', f7: 'judge', f8: 'prosecutor', f9: 'lawyer', f10: 'commitee', f12: 'tag', f13: 'date',
+	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'sentence', f5: 'number', f6: 'trialname', f7: 'judge', f8: 'prosecutor', f9: 'lawyer', f10: 'committee', f12: 'tag', f13: 'date',
 	f14: 'access', f15: 'author', f16: 'name', f17: 'class', f18: 'email', f19: 'phone', f20: 'image', f21: 'file'
 };
 const _defaultSFname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', title: 'subject', content: 'content', memo: 'memo',
-	doctype: 'f1', trial: 'f2', court: 'f3', sentence: 'f4', number: 'f5', trialname: 'f6', judge: 'f7', prosecutor: 'f8', lawyer: 'f9', commitee: 'f10', tag: 'f12', date: 'f13',
+	doctype: 'f1', trial: 'f2', court: 'f3', sentence: 'f4', number: 'f5', trialname: 'f6', judge: 'f7', prosecutor: 'f8', lawyer: 'f9', committee: 'f10', tag: 'f12', date: 'f13',
 	access: 'f14', author: 'f15', name: 'f16', class: 'f17', email: 'f18', phone: 'f19', image: 'f20', file: 'f21'
 };
 const _docData = (data) => {
-
+	let fname = _copyOf(_fname), sFname = _copyOf(_sFname), fAttrs = _copyOf(_fAttrs), emptyDoc = _copyOf(_emptyDoc);
+	let taxonomy = {}, terms = {};
+	data.fields.forEach((attr) => { // fname, sFname, taxonomy, terms
+		fname['f'+attr.fid] = attr.slug;
+		sFname[attr.slug] = 'f'+attr.fid;
+		if(attr.type == 'taxonomy' && attr.cid > 0){
+			let fn = fname['f'+attr.fid];
+			taxonomy[attr.slug] = [];
+			data.taxonomy[attr.cid].forEach((term) => {
+				taxonomy[attr.slug][term.idx-1] = parseInt(term.tid);
+				terms[term.tid] = term.name;
+			});
+		}
+	});
+	data.fields.forEach((attr) => { // fAttrs
+		const parent = (attr.parent > 0 ? fname['f'+attr.parent] : '');
+		const children = []; data.fields.forEach((a) => {if(a.parent == attr.fid) children.push(a.slug)});
+		fAttrs[attr.slug] = {
+			type: attr.type, displayName: attr.subject, form: attr.form,
+			parent: parent, children: children,
+			multiple: (attr.multiple == 1 ? true : false),
+			required: (attr.required == 1 ? true : false)
+		};
+	});
+	data.fields.forEach((attr) => { // emptyDoc
+		const fname = attr.slug;
+		if(!fAttrs[fname].parent){
+			emptyDoc[fname] = emptyDocValue(fname, fAttrs[fname], taxonomy);
+			if(fAttrs[fname].children.length > 0){
+				fAttrs[fname].children.forEach((fn) => {
+					emptyDoc[fn] = emptyDocValue(fn, fAttrs[fn], taxonomy)
+				});
+			}
+		}
+	});
+	return {
+		fname: fname, sFname, fAttrs: fAttrs, emptyDoc: emptyDoc, taxonomy: taxonomy, terms: terms
+	};
+};
+const emptyDocValue = (fname, fAttr, taxonomy) => {
+	let value;
+	switch(fAttr.type){
+		case 'char': case 'tag': case 'email': case 'phone':
+			value = ''; break;
+		case 'date':
+			value = {year: '', month: ''}; break;
+		case 'image': case 'file':
+			value = {filename: ''}; break;
+		case 'taxonomy':
+			value = taxonomy[fname][0]; break;
+		case 'group':
+			value = undefined; break;
+		default:
+			console.error(type+': 적합하지 않은 type입니다.'); return;
+	}
+	if(fAttr.multiple){
+		return [value];
+	} else {
+		return value;
+	}
 };
 const _convertToDoc = (sDoc, docData) => {
 	let document = {};
@@ -165,4 +236,4 @@ const _isAccessDownload = (access) => {
 	return (access == _defaultTaxonomy.access[1]);
 };
 
-export {_defaultEmptyDoc, _defaultFAttrs, _defaultFname, _defaultSFname, _defaultTaxonomy, _defaultTerms, _convertToDoc, _convertDocToSave, _taxonomy, _terms, _termsOf, _isHiddenField, _isAccessDownload};
+export {_docData, _defaultEmptyDoc, _defaultFAttrs, _defaultFname, _defaultSFname, _defaultTaxonomy, _defaultTerms, _convertToDoc, _convertDocToSave, _taxonomy, _terms, _termsOf, _isHiddenField, _isAccessDownload};

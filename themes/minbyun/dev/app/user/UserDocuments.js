@@ -46,7 +46,7 @@ class UserDocuments extends Component {
 		return update(doc, {$merge: {
 			doctype: this.props.docData.terms[doc.doctype],
 			date: _displayDate(doc.date),
-			commitee: this.props.docData.terms[doc.commitee],
+			committee: this.props.docData.terms[doc.committee],
 		}});
 	}
 	render(){

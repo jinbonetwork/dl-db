@@ -4,17 +4,21 @@ import {Table, Row, Column} from '../accessories/Table';
 
 class DocumentField extends Component {
 	fieldFooter(){
-		switch(this.props.docData.fAttrs[this.props.fname].form){
+		const fAttr = this.props.docData.fAttrs[this.props.fname];
+		switch(fAttr.form){
 			case 'file':
-				let accept = (this.props.docData.fAttrs[this.props.fname].type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
+				let accept = (fAttr.type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
 				return <div className="document-form__fileformat">{`* 파일형식: ${accept}`}</div>;
 		}
 	}
-	handleClickToAddInputForm(){
-		this.props.callBacks.addValueToField(this.props.fname);
-	}
-	handleClickToRemoveInputForm(index){
-		this.props.callBacks.removeValueInField(this.props.fname, index);
+	handleClick(which, arg1st){
+		if(which == 'add'){
+			this.props.callBacks.addValueToField(this.props.fname);
+		}
+		else if(which =='remove'){
+			const index = arg1st;
+			this.props.callBacks.removeValueInField(this.props.fname, index);
+		}
 	}
 	documentInputForm(value, index){
 		return (
@@ -25,8 +29,9 @@ class DocumentField extends Component {
 		);
 	}
 	inputForms(){
+		const fAttr = this.props.docData.fAttrs[this.props.fname];
 		let innerElement;
-		if(this.props.docData.fAttrs[this.props.fname].multiple){
+		if(fAttr.multiple){
 			innerElement = this.props.value.map((v, i) => {
 				return (
 					<div key={i} className="document-form__input-with-buttons">
@@ -34,24 +39,24 @@ class DocumentField extends Component {
 							{this.documentInputForm(v, i)}
 						</div>
 						<div className="document-from__buttons">
-							<button type="button" onClick={this.handleClickToAddInputForm.bind(this)}>
+							<button type="button" onClick={this.handleClick.bind(this, 'add')}>
 								<i className="pe-7s-plus"></i>
 							</button>
-							<button type="button" onClick={this.handleClickToRemoveInputForm.bind(this, i)}>
+							<button type="button" onClick={this.handleClick.bind(this, 'remove', i)}>
 								<i className="pe-7s-close-circle"></i>
 							</button>
 						</div>
 					</div>
 				)
 			});
-		} else if(this.props.docData.fAttrs[this.props.fname].form == 'file'){
+		} else if(fAttr.form == 'file'){
 			innerElement = (
 				<div className="document-form__input-with-buttons">
 					<div className="document-form__middle">
 						{this.documentInputForm(this.props.value)}
 					</div>
 					<div className="document-from__buttons">
-						<button type="button" onClick={this.handleClickToRemoveInputForm.bind(this, undefined)}>
+						<button type="button" onClick={this.handleClick.bind(this, 'remove', undefined)}>
 							<i className="pe-7s-close-circle"></i>
 						</button>
 					</div>
@@ -68,10 +73,11 @@ class DocumentField extends Component {
 		);
 	}
 	render(){
+		const fAttr = this.props.docData.fAttrs[this.props.fname];
 		return (
 			<Row>
 				<Column>
-					<span>{this.props.docData.fAttrs[this.props.fname].displayName}</span>
+					<span>{fAttr.displayName}</span>
 				</Column>
 				<Column>
 					{this.inputForms()}

@@ -8,7 +8,7 @@ class DocListItem extends Component {
 		return {
 			date: '작성일',
 			number: fAttrs.number.displayName,
-			commitee: fAttrs.commitee.displayName,
+			committee: fAttrs.committee.displayName,
 			name: fAttrs.name.displayName
 		}
 	}

@@ -93,6 +93,9 @@ const _forIn = (obj, callBack) => { // object -> object
 	}
 	return newObj;
 };
+const _copyOf = (obj) => {
+	return _forIn(obj, (pn, pv) => pv);
+};
 const _pushpull = (array, value) => {
 	let newArray = [];
 	array.forEach((v) => { if(v != value) newArray.push(v); });
@@ -114,4 +117,4 @@ const _notNull = (values) => {
 	return null;
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _pushpull, _interpolate, _notNull};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _copyOf, _pushpull, _interpolate, _notNull};

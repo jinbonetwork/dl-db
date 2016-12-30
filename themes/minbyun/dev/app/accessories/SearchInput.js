@@ -15,6 +15,7 @@ class SearchInput extends Component {
 		if(this.props.focus) this.setState({focused: 0});
 	}
 	componentDidMount(){
+		this.refs.input.setAttribute('groupname', this.state.groupName);
 		if(this.state.focused === 0) this.refs.input.focus();
 	}
 	componentWillReceiveProps(nextProps){
@@ -68,11 +69,13 @@ class SearchInput extends Component {
 			const event = arg1st;
 			if(!event.relatedTarget || this.state.groupName != event.relatedTarget.getAttribute('groupname')){
 				this.setState({result: [], focused: -1});
+				if(this.props.onBlur) this.props.onBlur();
 			}
 		}
 		else if(which == 'item'){
 			const isFocusInHere = arg1st;
 			if(!isFocusInHere) this.setState({result: [], focused: -1});
+			if(this.props.onBlur) this.props.onBlur();
 		}
 	}
 	render(){
@@ -127,9 +130,10 @@ class SearchInput extends Component {
 SearchInput.propTypes = {
 	value: PropTypes.string,
 	focus: PropTypes.bool,
+	resultFNames: PropTypes.array.isRequired,
 	onChange: PropTypes.func.isRequired,
+	onBlur: PropTypes.func,
 	search: PropTypes.func.isRequired,
-	resultFNames: PropTypes.array.isRequired
 };
 
 export default SearchInput;
