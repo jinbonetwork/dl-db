@@ -21,6 +21,12 @@ class SearchBar extends Component {
 			isKeywordFocused: false
 		};
 	}
+	query(sQuery){
+		return _query(sQuery, this.props.docData.sFname);
+	}
+	params(params, excepts){
+		return _params(params, this.props.docData.sFname, excepts)
+	}
 	handleChange(which, arg){
 		switch(which){
 			case 'doctypes': this.props.update(which, arg); break;
@@ -50,9 +56,8 @@ class SearchBar extends Component {
 			let to = (period[1] ? period[1] : '');
 			this.props.update({from: from, to: to});
 
-			const sFname = this.props.docData.sFname;
-			let query = _query({keyword: this.props.query.keyword, doctypes: this.props.query.doctypes, from: from, to: to }, sFname);
-			let params = _params(query, sFname);
+			let query = this.query({keyword: this.props.query.keyword, doctypes: this.props.query.doctypes, from: from, to: to });
+			let params = this.params(query);
 			if(params) this.props.router.push('/search'+params);
 		}
 		else if(which == 'togglePeriod'){

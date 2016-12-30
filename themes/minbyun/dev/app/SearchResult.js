@@ -19,25 +19,35 @@ class SearchResult extends Component {
 	}
 	componentDidMount(){
 		if(!_isEmpty(this.props.location.query)){
-			const sFname = this.props.docData.sFname;
 			const query = this.props.location.query;
-			const sQuery = _searchQuery(query, this.props.docData.fname, true);
+			const sQuery = this.searchQuery(query, true);
 			this.props.updateSearchQuery(sQuery);
 
-			let params = _params(update(_query(sQuery, sFname), {$merge: {
+			let params = this.params(update(this.query(sQuery), {$merge: {
 				orderby: query.orderby, page: query.page
-			}}), sFname);
+			}}));
 			this.fetchData(params);
-			if(params != _params(query, sFname)) this.props.router.push('/search'+params);
+			if(params != this.params(query)) this.props.router.push('/search'+params);
 		};
 	}
 	componentWillReceiveProps(nextProps){
-		const sFname = this.props.docData.sFname;
-		let thisUrlParams = _params(this.props.location.query, sFname);
-		let nextUrlParams = _params(nextProps.location.query, sFname);
+		let thisUrlParams = this.params(this.props.location.query);
+		let nextUrlParams = this.params(nextProps.location.query);
 		if(thisUrlParams != nextUrlParams){
 			this.fetchData(nextUrlParams);
 		}
+	}
+	query(sQuery){
+		return _query(sQuery, this.props.docData.sFname);
+	}
+	queryOf(propOfSQuery, query){
+		return _queryOf(propOfSQuery, query, this.props.docData.sFname);
+	}
+	params(params, excepts){
+		return _params(params, this.props.docData.sFname, excepts)
+	}
+	searchQuery(query, correct){
+		return _searchQuery(query, this.props.docData.fname, correct);
 	}
 	fetchData(params){
 		let unsetProcessing = this.props.setMessage(null);
@@ -60,16 +70,15 @@ class SearchResult extends Component {
 	}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'dochead'){
-			const sFname = this.props.docData.sFname;
 			which = arg1st; let value = arg2nd, query;
 			if(which == 'doctypes'){
 				this.props.updateSearchQuery('doctypes', value);
-				query = update(this.props.location.query, {$merge: _query({doctypes: value}, sFname)});
+				query = update(this.props.location.query, {$merge: this.query({doctypes: value})});
 			}
 			else if(which == 'orderby'){
 				query = update(this.props.location.query, {$merge: {order: value}});
 			}
-			this.props.router.push('/search'+_params(query, sFname));
+			this.props.router.push('/search'+this.params(query));
 		}
 	}
 	searched(sSearched){
@@ -84,10 +93,8 @@ class SearchResult extends Component {
 		return searched;
 	}
 	keywords(query){
-		const sFname = this.props.docData.sFname;
-		const fname = this.props.docData.fname;
 		let keywords = [];
-		let kwd = _searchQuery(_queryOf('keyword', query, sFname), fname).keyword; if(!kwd) return '';
+		let kwd = this.searchQuery(this.queryOf('keyword', query)).keyword; if(!kwd) return '';
 		kwd = kwd.replace(/[\&\!\+\"]/g, '');
 		kwd.split(' ').forEach((k) => {
 			if(k && kwd.match(new RegExp(k, 'g')).length === 1) keywords.push(k);
@@ -95,12 +102,10 @@ class SearchResult extends Component {
 		return keywords.join('|');
 	}
 	render(){
-		const sFname = this.props.docData.sFname;
-		const fname = this.props.docData.fname;
 		const query = this.props.location.query;
 		const page = (query.page ? parseInt(query.page) : 1);
-		const paginationUrl = '/search'+_params(query, sFname, ['page'])+'&page=';
-		const doctypes = _searchQuery(_queryOf('doctypes', query, sFname), fname).doctypes || [];
+		const paginationUrl = '/search'+this.params(query, ['page'])+'&page=';
+		const doctypes = this.searchQuery(this.queryOf('doctypes', query)).doctypes || [];
 		const orderby = (query.order ? query.order : 'score');
 		const keywords = this.keywords(query);
 
