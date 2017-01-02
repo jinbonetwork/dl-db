@@ -1,5 +1,7 @@
 RewriteEngine On
 
+RewriteRule ^(files)/(.+).(pdf|hwp|doc|docx)$ index.php [L,QSA]
+
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^(.*)$ - [QSA,L]
 

@@ -26,7 +26,7 @@ final class URIHandler extends \DLDB\Objects {
 				'root'      => rtrim(str_replace('index.php', '', $_SERVER["SCRIPT_NAME"]), 'index.php')
 			);
 		}
-		$uri['fullpath'] = $uri['root'].substr($uri['fullpath'], strlen($uri['root']) - 1);
+		$uri['fullpath'] = preg_replace("/^\/\//i","/",$uri['root'].substr($uri['fullpath'], strlen($uri['root']) - 1));
 		if($uri['fullpath'] == "/") {
 			$uri['fullpath'] .= "react";
 		}
@@ -42,12 +42,19 @@ final class URIHandler extends \DLDB\Objects {
 			else {
 				$part = ltrim(rtrim($uri['input']), '/');
 				$part = (($qpos = strpos($part, '?')) !== false) ? substr($part, 0, $qpos) : $part;
-				if(file_exists($part)) {
-					require_once DLDB_LIB_PATH.'/file.php';
-					\DLDB\Lib\dumpWithEtag($part);
-					exit;
+				if($path == 'files' && preg_match("/\.(pdf|hwp|doc|docx)$/i",$part)) {
+					$_GET['attachement'] = preg_replace("/^files\//i","",$uri['input']);
+					$uri['path'] = "/download";
+					$uri['fullpath'] = "/download";
+					$uri['input'] = "download";
 				} else {
-					header("HTTP/1.0 404 Not Found");exit;
+					if(file_exists($part)) {
+						require_once DLDB_LIB_PATH.'/file.php';
+						\DLDB\Lib\dumpWithEtag($part);
+						exit;
+					} else {
+						header("HTTP/1.0 404 Not Found");exit;
+					}
 				}
 			}
 		}
