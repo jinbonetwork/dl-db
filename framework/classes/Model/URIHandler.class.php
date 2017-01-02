@@ -108,9 +108,6 @@ final class URIHandler extends \DLDB\Objects {
 			\DLDB\Respond::NotFoundPage();
 		}
 		$this->params = array_merge($_GET, $_POST);
-		$fp = fopen("/tmp/cadb2.txt","w");
-		fputs($fp,serialize($this->params));
-		fclose($fp);
 		foreach($this->params as $k => $v) {
 			if(!is_array($v) && $this->isJson($v)) {
 				$this->params[$k] = json_decode($v,true);
