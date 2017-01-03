@@ -15,6 +15,7 @@ class Dropdown extends Component {
 		if(this.props.autoUnfold) this.setState({isUnfolded: true});
 	}
 	componentDidMount(){
+		this.refs.head.setAttribute('groupname', this.state.groupName);
 		this.setSize();
 	}
 	componentWillReceiveProps(nextProps){

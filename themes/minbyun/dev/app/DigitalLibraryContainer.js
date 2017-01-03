@@ -5,7 +5,7 @@ import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import Message from './accessories/Message';
 import Overlay from './accessories/Overlay';
-import  {_docData, _defaultEmptyDoc, _defaultFAttrs, _defaultFname, _defaultSFname, _defaultTaxonomy, _defaultTerms, _taxonomy, _terms} from './schema/docSchema';
+import  {_emptyDoc, _fAttrs, _fname, _sFname, _docData} from './schema/docSchema';
 import {_role, _convertToUser, _emptyUser, _usCustomFieldAttrs, _usCustomFields} from './schema/userSchema';
 import {_menuData} from './schema/menuSchema';
 import {_isEmpty} from './accessories/functions';
@@ -18,12 +18,12 @@ class DigitalLibraryContainer extends Component {
 			userData: {user: null, role: null, type: null},
 			menuData: [],
 			docData: {
-				emptyDoc: _defaultEmptyDoc,
-				fAttrs: _defaultFAttrs,
-				fname: _defaultFname,
-				sFname: _defaultSFname,
-				taxonomy: _defaultTaxonomy,
-				terms: _defaultTerms,
+				emptyDoc: _emptyDoc,
+				fAttrs: _fAttrs,
+				fname: _fname,
+				sFname: _sFname,
+				taxonomy: {},
+				terms: {},
 			},
 			searchQuery: {
 				doctypes: [],
@@ -98,18 +98,6 @@ class DigitalLibraryContainer extends Component {
 			if(data.role){
 				this.fetchData('get', '/api/fields', (data) => {
 					this.setState({docData: _docData(data)});
-					/*
-					const docData = _docData(data);
-					console.log(docData);
-					this.setState({docData: {
-						emptyDoc: _defaultEmptyDoc,
-						fAttrs: _defaultFAttrs,
-						fname: _defaultFname,
-						sFname: _defaultSFname,
-						taxonomy: _taxonomy(data.taxonomy, data.fields, this.state.docData.fname),
-						terms: _terms(data.taxonomy)
-					}});
-					*/
 				});
 				this.fetchData('get', '/api/user/profile', (data) => {
 					this.setState({userProfile: {

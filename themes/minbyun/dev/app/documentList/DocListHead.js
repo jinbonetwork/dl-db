@@ -16,27 +16,40 @@ class DoctypeList extends Component {
 		}
 	}
 	render(){
+		const fAttrs = this.props.docData.fAttrs;
 		const sFname = this.props.docData.sFname;
-		const doctypes = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => {
-			let className = (this.props.doctypes.indexOf(tid) >= 0 ? 'doctype-li doctype-li--checked' : 'doctype-li');
-			let count = (this.props.distribution[tid] ? this.props.distribution[tid] : 0);
+		const doctypes = (fAttrs.doctype) && _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => {
+			const isTermChecked = (this.props.doctypes.indexOf(tid) >= 0);
+			let className = (isTermChecked ? 'doctype-li doctype-li--checked' : 'doctype-li');
+			let count;
+			if(isTermChecked || this.props.doctypes.length == 0){
+				count = (this.props.distribution[tid] ? this.props.distribution[tid] : 0);
+				count = '('+count+')';
+			}
 			return (
 				<li key={tid} className={className} onClick={this.handleClick.bind(this, 'doctypes', tid)}>
-					<span>{tname} ({count})</span>
+					<span>{tname} {count}</span>
 				</li>
 			);
 		});
-		return (
-			<div className="doclisthead">
-				<ul>{doctypes}</ul>
-				<Check multiple={false} selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}
-					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
-				>
-					<Item value="score"><span className="doclisthead__orderby">관련도순</span></Item>
-					<Item value={sFname['date']}><span className="doclisthead__orderby">최신순</span></Item>
-				</Check>
-			</div>
+		const option = (fAttrs.date) && (
+			<Check multiple={false} selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}
+				checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
+			>
+				<Item value="score"><span className="doclisthead__orderby">관련도순</span></Item>
+				<Item value={sFname['date']}><span className="doclisthead__orderby">최신순</span></Item>
+			</Check>
 		);
+		if(doctypes || option){
+			return (
+				<div className="doclisthead">
+					<ul>{doctypes}</ul>
+					{option}
+				</div>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 DoctypeList.propTypes = {

@@ -2,29 +2,16 @@ import React, {Component, PropTypes} from 'react';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 import DocumentForm from './DocumentForm';
-import {_convertToDoc} from '../schema/docSchema';
 
 class DocumentFormContainer extends Component {
 	componentWillMount(){
 		this.setState({
 			document: this.props.document,
-			fieldWithFocus: this.firstField()
+			fieldWithFocus: {fname: 'title', index: undefined}
 		});
 	}
-	componentDidMount(){
-		if(this.props.formAttr.mode == 'modify'){
-			this.props.fetchData('get', '/api/document?id='+this.state.document.id, (data) => { if(data){
-				this.setState({document: _convertToDoc(data.document, this.props.docData)});
-			}});
-		}
-	}
-	firstField(){
-		for(let fn in this.props.document){
-			let fa = this.props.docData.fAttrs[fn];
-			if(fa.type != 'meta'){
-				return {fname: fn, index: (fa.multiple ? 0 : undefined)};
-			}
-		}
+	componentWillReceiveProps(nextProps){
+		this.setState({document: nextProps.document});
 	}
 	updateFields(fields){ if(!fields) return;
 		this.setState({

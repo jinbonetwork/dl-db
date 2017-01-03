@@ -1,57 +1,39 @@
-import React, {Component, PropTypes, Children, cloneElement} from 'react';
+import React, {Component, PropTypes, Children} from 'react';
 import Dropdown from './Dropdown';
 import {_isCommon, _pushpull} from './functions';
 
 class Select extends Component {
-	constructor(){
-		super();
-		this.state = {
-			selected: ''
-		};
-	}
-	componentWillMount(){
-		if(this.props.selected){
-			this.setState({selected: this.props.selected});
-		}
-	}
-	componentWillReceiveProps(nextProps){
-		if(nextProps.selected){
-			this.setState({selected: nextProps.selected});
-		}
-	}
 	handleClick(which, value){
 		if(which == 'item'){
-			if(this.state.seleced != value){
-				if(this.props.onChange){
-					this.props.onChange(value);
-				} else {
-					this.setState({selected: value});
-				}
+			if(this.props.selected != value){
+				this.props.onChange(value);
 			}
 		}
 	}
 	render(){
-		let head;
-		const children = Children.map(this.props.children, (child) => { if(child){
-			if(child.props.value == this.state.selected){
+		let head, items = [];
+		Children.map(this.props.children, (child) => { if(child){
+			if(child.props.value == this.props.selected){
 				head = child.props.children;
 			} else {
-				return child;
+				items.push(child);
 			}
 		}});
+		if(!head){
+			head = <span>선택하세요</span>
+		}
 		return (
 			<Dropdown className="select" head={head} arrow={<i className="pe-7s-angle-down pe-va"></i>}
-				onClick={this.handleClick.bind(this)}
-				onResize={this.props.onResize}
+				onClick={this.handleClick.bind(this)} onResize={this.props.onResize}
 			>
-				{children}
+				{items}
 			</Dropdown>
 		);
 	}
 }
 Select.propTypes = {
 	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	onChange: PropTypes.func,
+	onChange: PropTypes.func.isRequired,
 	onResize: PropTypes.func
 };
 

@@ -10,7 +10,7 @@ import 'babel-polyfill'; // for update(), find() ...
 
 class DocumentForm extends Component {
 	isHiddenField(fname){
-		return _isHiddenField(fname, this.props.document, 'form');
+		return _isHiddenField(fname, 'form', this.props.document, this.props.docData);
 	}
 	validationCheck(){
 		for(let fn in this.props.document){
@@ -77,9 +77,9 @@ class DocumentForm extends Component {
 	render(){
 		let requiredFields = [], electiveFields = [];
 		for(let fn in this.props.document){
-			let fAttr = this.props.docData.fAttrs[fn];
-			let value = this.props.document[fn];
-			if(fAttr.type != 'meta' && !fAttr.parent && !_isHiddenField(fn, this.props.document, 'form')){
+			const fAttr = this.props.docData.fAttrs[fn];
+			const value = this.props.document[fn];
+			if(fAttr.type != 'meta' && !fAttr.parent && !this.isHiddenField(fn)){
 				const documentField = (
 					<DocumentField
 						key={fn} fname={fn} value={value} docData={this.props.docData} fieldWithFocus={this.props.fieldWithFocus}
@@ -102,10 +102,12 @@ class DocumentForm extends Component {
 						<Column><h2>필수입력사항</h2></Column>
 					</Row>
 					{requiredFields}
-					<Row className="document-form__section-title">
-						<Column></Column>
-						<Column><h2>선택입력사항</h2></Column>
-					</Row>
+					{electiveFields.length > 0 &&
+						<Row className="document-form__section-title">
+							<Column></Column>
+							<Column><h2>선택입력사항</h2></Column>
+						</Row>
+					}
 					{electiveFields}
 					<Row>
 						<Column></Column>

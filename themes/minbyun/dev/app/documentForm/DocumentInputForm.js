@@ -94,7 +94,7 @@ class DocumentInputForm extends Component {
 			case 'select':
 				let options = [];
 				this.props.docData.taxonomy[this.props.fname].forEach((tid) => { if(tid){
-					options.push(<Item key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Item>);
+					options.push(<Item key={tid} value={tid}><span>{this.props.docData.terms[tid].name}</span></Item>);
 				}});
 				return (
 					<Select selected={this.props.value} onChange={this.handleChange.bind(this)}>
@@ -103,7 +103,7 @@ class DocumentInputForm extends Component {
 				);
 			case 'radio':
 				const radioItems =  this.props.docData.taxonomy[this.props.fname].map((tid) => (
-					<Item key={tid} value={tid}><span>{this.props.docData.terms[tid]}</span></Item>
+					<Item key={tid} value={tid}><span>{this.props.docData.terms[tid].name}</span></Item>
 				));
 				return (
 					<Check multiple={false} selected={this.props.value} onChange={this.handleChange.bind(this)}
@@ -134,7 +134,7 @@ class DocumentInputForm extends Component {
 			case 'fieldset':
 				let subFormFields = [];
 				fAttr.children.forEach((fn) => {
-					if(this.props.formCallBacks.isHiddenField(fn) === false){
+					if(!this.props.formCallBacks.isHiddenField(fn)){
 						subFormFields.push(
 							<DocumentField
 								key={fn} fname={fn} value={this.props.callBacks.fieldValue(fn)} fieldWithFocus={this.props.fieldWithFocus}

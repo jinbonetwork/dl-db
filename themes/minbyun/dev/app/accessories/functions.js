@@ -86,15 +86,37 @@ const _mapAO = (array, callBacks) => { // array -> object
 	}
 	return object;
 };
-const _forIn = (obj, callBack) => { // object -> object
+const _mapOO = (obj, callBack) => { // object -> object
 	let newObj = {};
 	for(let prop in obj){
 		newObj[prop] = callBack(prop, obj[prop]);
 	}
 	return newObj;
 };
-const _copyOf = (obj) => {
-	return _forIn(obj, (pn, pv) => pv);
+const _forIn = (obj, callBack) => {
+	for(let pn in obj){
+		let rtn = callBack(pn, obj[pn]);
+		if(rtn === false) break;
+	}
+};
+const _copyOf = (obj, excludeNull) => {
+	if(obj.hasOwnProperty('length')){ // in the case of array
+		let array = [];
+		for(let i in obj){
+			if(excludeNull){
+				if(obj[i]) array.push(obj[i]);
+			} else {
+				array[i] = obj[i];
+			}
+		}
+		return array;
+	} else {
+		let newObj = {};
+		for(let pn in obj){
+			if(!excludeNull || obj[pn]) newObj[pn] = obj[pn];
+		}
+		return newObj;
+	}
 };
 const _pushpull = (array, value) => {
 	let newArray = [];
@@ -117,4 +139,4 @@ const _notNull = (values) => {
 	return null;
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _forIn, _copyOf, _pushpull, _interpolate, _notNull};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _copyOf, _pushpull, _interpolate, _notNull};

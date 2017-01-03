@@ -43,11 +43,32 @@ class UserDocuments extends Component {
 		});
 	}
 	userDoc(doc){
-		return update(doc, {$merge: {
-			doctype: this.props.docData.terms[doc.doctype],
-			date: _displayDate(doc.date),
-			committee: this.props.docData.terms[doc.committee],
+		const docData = this.props.docData;
+		const fAttrs = docData.fAttrs;
+		const fieldsArray = ['doctype', 'date', 'committee'];
+		const fieldsToMerge = {};
+		fieldsArray.forEach((fn) => {if(fAttrs[fn] && doc[fn]){
+			if(fAttrs[fn].type == 'taxonomy'){
+				if(fAttrs[fn].multiple){
+					 let fv = doc[fn].map((t) => {
+						let term = docData.terms[t]; if(term) return term.name;
+					}).join(', ');
+					if(fv) fieldsToMerge[fn] = fv;
+				} else {
+					let term = docData.terms[doc[fn]];
+					if(term) fieldsToMerge[fn] = term.name;
+				}
+			}
+			else if(fAttrs[fn].type == 'date' && fAttrs[fn].form == 'Ym'){
+				if(!fAttrs[fn].multiple){
+					fieldsToMerge[fn] = _displayDate(doc[fn]);
+				} else {
+					fieldsToMerge[fn] = doc[fn].map((d) => _displayDate(d));
+				}
+
+			}
 		}});
+		return update(doc, {$merge: fieldsToMerge});
 	}
 	render(){
 		const documents =  this.state.sDocuments.map((doc) => this.userDoc(_convertToDoc(doc, this.props.docData)));

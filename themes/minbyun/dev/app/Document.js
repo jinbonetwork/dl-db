@@ -15,53 +15,72 @@ class Document extends Component {
 	constructor(){
 		super();
 		this.state = {
+			sDocument: {},
 			document: {},
 			fileText: {},
 			dispBtnOfYesOrNo: false
 		};
 	}
 	componentDidMount(){
-		this.props.fetchData('get', '/api/document?id='+this.props.params.did, (data) => { if(data){
-			let document = _convertToDoc(data.document, this.props.docData);
+		const fAttrs = this.props.docData.fAttrs;
+		const docApi = '/api/document?id='+this.props.params.did;
+		const unsetProc = this.props.setMessage(null);
+		this.props.fetchData('get', docApi, (data) => { unsetProc(); if(data){
+			const document = _convertToDoc(data.document, this.props.docData);
 			this.setState({
+				sDocument: data.document,
 				document: document
 			});
-			document.file.forEach((f) => {if(f.fid){
-				this.props.fetchData('get', '/api/document/text?id='+this.props.params.did+'&fid='+f.fid, (data) => { if(data){
-					this.setState({
-						fileText: update(this.state.fileText, {$merge: {[f.fid]: {
-							text: data.text, header: data.header
-						}}})
-					});
-				}});
+			if(fAttrs.file) this.setFileText(document.file);
+		}});
+	}
+	componentDidUpdate(prevProps, prevState){
+		if(JSON.stringify(prevProps.docData) != JSON.stringify(this.props.docData)){
+			const document = _convertToDoc(this.state.sDocument, this.props.docData);
+			this.setState({document: document});
+			if(this.props.docData.fAttrs.file) this.setFileText(document.file);
+		}
+	}
+	setFileText(docFile){
+		const fAttr = this.props.docData.fAttrs.file;
+		const file = (fAttr.multiple ? docFile : [docFile]);
+		const textApi = '/api/document/text?id='+this.props.params.did+'&fid=';
+		file.forEach((f) => {if(f.fid){
+			this.props.fetchData('get', textApi+f.fid, (data) => { if(data){
+				this.setState({
+					fileText: update(this.state.fileText, {$merge: {[f.fid]: {
+						text: data.text, header: data.header
+					}}})
+				});
 			}});
 		}});
 	}
 	handleClick(which){
+		const document = this.state.document;
 		switch(which){
 			case 'bookmark':
-				this.setState({document: update(this.state.document, {bookmark: {$set: -1}})});
-				this.props.fetchData('post', '/api/user/bookmark?mode=add&did='+this.state.document.id, null, (data) => {
+				this.setState({document: update(document, {bookmark: {$set: -1}})});
+				this.props.fetchData('post', '/api/user/bookmark?mode=add&did='+document.id, null, (data) => {
 					if(data){
-						this.setState({document: update(this.state.document, {bookmark: {$set: data.bid}})});
+						this.setState({document: update(document, {bookmark: {$set: data.bid}})});
 					} else {
 						this.setState({bookmark: 0});
-						this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
+						this.setState({document: update(document, {bookmark: {$set: 0}})});
 					}
 				});
 				break;
 			case 'removeBookmark':
-				const prevBookmark = this.state.document.bookmark;
-				this.setState({document: update(this.state.document, {bookmark: {$set: 0}})});
-				this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+this.state.document.bookmark, null, (data) => {
-					if(!data) this.setState({document: update(this.state.document, {bookmark: {$set: prevBookmark}})});
+				const prevBookmark = document.bookmark;
+				this.setState({document: update(document, {bookmark: {$set: 0}})});
+				this.props.fetchData('post', '/api/user/bookmark?mode=delete&bid='+document.bookmark, null, (data) => {
+					if(!data) this.setState({document: update(document, {bookmark: {$set: prevBookmark}})});
 				});
 				break;
 			case 'delete':
 				this.setState({dispBtnOfYesOrNo: true});
 				break;
 			case 'delete-yes':
-				this.props.fetchData('post', '/api/document/save?mode=delete&id='+this.state.document.id, null, (data) => { if(data){
+				this.props.fetchData('post', '/api/document/save?mode=delete&id='+document.id, null, (data) => { if(data){
 					this.props.router.goBack();
 				}});
 				break;
@@ -106,14 +125,14 @@ class Document extends Component {
 	deleteDocument(){
 		if(_isCommon(['admin'], this.props.userData.role) || this.state.document.owner){
 			if(!this.state.dispBtnOfYesOrNo){
-				const className="document__delete";
+				const className = "document__delete";
 				return (
 					<div className={className}>
 						<button type="button" onClick={this.handleClick.bind(this, 'delete')}>삭제하기</button>
 					</div>
 				);
 			} else {
-				const className="document__delete document__delete--yes-or-no";
+				const className = "document__delete document__delete--yes-or-no";
 				return (
 					<div className={className}>
 						<button type="button" onClick={this.handleClick.bind(this, 'delete-yes')}>예</button>
@@ -134,6 +153,8 @@ class Document extends Component {
 		}
 	}
 	render(){
+		const document = this.state.document;
+		const fileText = this.state.fileText;
 		const userRole = this.props.userData.role;
 
 		const fieldsInHeader = {image: null, file: null, date: null};
@@ -141,22 +162,22 @@ class Document extends Component {
 
 		const prsRsp = this.propsForResponsivity();
 
-		for(let fn in this.state.document){
+		for(let fn in document){
 			let fAttr = this.props.docData.fAttrs[fn];
 			if(!fAttr.parent && fn != 'title'){
 				if(fn == 'image' || fn == 'file' || fn == 'date'){
-					fieldsInHeader[fn] = !_isEmpty(this.state.document[fn]) && (
-						<FieldsInHeader fname={fn} document={this.state.document} userRole={userRole} docData={this.props.docData} />
+					fieldsInHeader[fn] = !_isEmpty(document[fn]) && (
+						<FieldsInHeader fname={fn} document={document} fileText={fileText} userRole={userRole} docData={this.props.docData} />
 					);
 				}
-				else if(!_isHiddenField(fn, this.state.document, 'view')){
-					fieldsInContents.push(<FieldsInContents key={fn} fname={fn} docData={this.props.docData} document={this.state.document} />);
+				else if(!_isHiddenField(fn, 'view', document, this.props.docData)){
+					fieldsInContents.push(<FieldsInContents key={fn} fname={fn} docData={this.props.docData} document={document} />);
 				}
 			}
 		};
 
 		const children = this.props.children && cloneElement(this.props.children, {
-			document: this.state.document,  fileText: this.state.fileText, submit: this.submitFileText.bind(this)
+			document: document,  fileText: fileText, submit: this.submitFileText.bind(this)
 		});
 
 		return (
@@ -168,11 +189,11 @@ class Document extends Component {
 					<div className="document__header">
 						{fieldsInHeader.image}
 						<div className={(fieldsInHeader.image ? 'document__column' : '')}>
-							<h1 style={prsRsp.style.h1}>{this.state.document.title}</h1>
+							<h1 style={prsRsp.style.h1}>{document.title}</h1>
 						</div>
 						<div className="document__buttons">
 							{this.bookmark()}
-							<LinkIf to={'/document/'+this.state.document.id+'/edit'} if={_isCommon(['admin'], userRole) || this.state.document.owner}>
+							<LinkIf to={'/document/'+document.id+'/edit'} if={_isCommon(['admin'], userRole) || document.owner}>
 								<span>수정하기</span>
 							</LinkIf>
 							{this.deleteDocument()}

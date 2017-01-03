@@ -1,4 +1,4 @@
-import {_isEmpty, _copyOf} from '../accessories/functions';
+import {_isEmpty, _copyOf, _forIn} from '../accessories/functions';
 
 const _emptyDoc = {
 	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
@@ -6,8 +6,8 @@ const _emptyDoc = {
 };
 const _fAttrs = {
 	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
-	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
-	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true}
+	title: {type: 'char', displayName: '제목', form: 'text', parent: '', children: [], multiple: false, required: true},
+	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', children: [], multiple: false, required: true}
 };
 const _fname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content'
@@ -15,97 +15,51 @@ const _fname = {
 const _sFname = {
 	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', title: 'subject', content: 'content'
 }
-const _defaultEmptyDoc = {
-	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
-	title: '',
-	doctype: 1,
-	trial: undefined, court: '', sentence: '', number: '', trialname: '', judge: '', prosecutor: '', lawyer: '',
-	committee: [7],
-	tag: '',
-	content: '',
-	date: {year: '', month: ''},
-	access: 33,
-	author: undefined, name: '', class: '', email: '', phone: '',
-	image: {filename: ''},
-	file: [{filename: ''}]
-};
-const _defaultFAttrs = {
-	id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
-	title: {type: 'char', displayName: '제목', form: 'text', parent: '', multiple: false, required: true},
-	content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', multiple: false, required: true},
-	doctype: {type: 'taxonomy', displayName: '자료종류', form: 'select', parent: '', multiple: false, required: true},
-	trial: {type: 'group', displayName: '사건정보', children: ['court', 'sentence', 'number', 'trialname', 'judge', 'prosecutor', 'lawyer'], form: 'fieldset', required: true},
-	court: {type: 'char', displayName: '법원', form: 'text', parent: 'trial', multiple: false, required: false},
-	sentence: {type: 'char', displayName: '선고일자', form: 'text', parent: 'trial', multiple: false, required: false},
-	number: {type: 'char', displayName: '사건번호', form: 'text', parent: 'trial', multiple: false, required: false},
-	trialname: {type: 'char', displayName: '사건명', form: 'text', parent: 'trial', multiple: false, required: false},
-	judge: {type: 'char', displayName: '판사', form: 'text', parent: 'trial', multiple: false, required: false},
-	prosecutor: {type: 'char', displayName: '검사', form: 'text', parent: 'trial', multiple: false, required: false},
-	lawyer: {type: 'char', displayName: '변호사', form: 'textarea', parent: 'trial', multiple: false, required: false},
-	committee: {type: 'taxonomy', displayName: '담당', form: 'select', parent: '', multiple: true, required: true},
-	tag: {type: 'tag', displayName: '주제어', form: 'textarea', parent: '', multiple: false, required: false},
-	date: {type: 'date', displayName: '자료 작성 시점', form: 'Ym', parent: '', multiple: false, required: true},
-	access: {type: 'taxonomy', displayName: '자료 제공 방식', form: 'radio', parent: '', multiple: false, required: true},
-	author: {type: 'group', displayName: '담당자/작성자', children: ['name', 'class', 'email', 'phone'], form: 'fieldset', required: true},
-	name: {type: 'char', displayName: '이름', form: 'text', parent: 'author', multiple: false, required: true},
-	class: {type: 'char', displayName: '기수', form: 'text', parent: 'author', multiple: false, required: true},
-	email: {type: 'email', displayName: '이메일', form: 'text', parent: 'author', multiple: false, required: false},
-	phone: {type: 'phone', displayName: '전화번호', form: 'text', parent: 'author', multiple: false, required: false},
-	image: {type: 'image', displayName: '표지이미지', form: 'file', multiple: false, required: false},
-	file: {type: 'file', displayName: '첨부파일', form: 'file', multiple: true, required: false}
-};
-const _defaultTaxonomy = {
-	doctype: [1],
-	committee: [7],
-	access: [33, 34]
-};
-const _defaultTerms = {
-	1: '판결문', 7: '기타', 33: '열람', 34: '다운로드'
-};
-const _defaultFname = {
-	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content', memo: 'memo',
-	f1: 'doctype', f2: 'trial', f3: 'court', f4: 'sentence', f5: 'number', f6: 'trialname', f7: 'judge', f8: 'prosecutor', f9: 'lawyer', f10: 'committee', f12: 'tag', f13: 'date',
-	f14: 'access', f15: 'author', f16: 'name', f17: 'class', f18: 'email', f19: 'phone', f20: 'image', f21: 'file'
-};
-const _defaultSFname = {
-	id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', title: 'subject', content: 'content', memo: 'memo',
-	doctype: 'f1', trial: 'f2', court: 'f3', sentence: 'f4', number: 'f5', trialname: 'f6', judge: 'f7', prosecutor: 'f8', lawyer: 'f9', committee: 'f10', tag: 'f12', date: 'f13',
-	access: 'f14', author: 'f15', name: 'f16', class: 'f17', email: 'f18', phone: 'f19', image: 'f20', file: 'f21'
-};
 const _docData = (data) => {
-	let fname = _copyOf(_fname), sFname = _copyOf(_sFname), fAttrs = _copyOf(_fAttrs), emptyDoc = _copyOf(_emptyDoc);
-	let taxonomy = {}, terms = {};
+	let fname = _copyOf(_fname), sFname = _copyOf(_sFname), fAttrs = _copyOf(_fAttrs);
+	let emptyDoc = {}, taxonomy = {}, terms = {};
 	data.fields.forEach((attr) => { // fname, sFname, taxonomy, terms
 		fname['f'+attr.fid] = attr.slug;
 		sFname[attr.slug] = 'f'+attr.fid;
 		if(attr.type == 'taxonomy' && attr.cid > 0){
 			let fn = fname['f'+attr.fid];
-			taxonomy[attr.slug] = [];
+			let tempTaxo = [];
 			data.taxonomy[attr.cid].forEach((term) => {
-				taxonomy[attr.slug][term.idx-1] = parseInt(term.tid);
-				terms[term.tid] = term.name;
+				tempTaxo[term.idx] = parseInt(term.tid);
+				terms[term.tid] = {name: term.name, slug: term.slug};
 			});
+			taxonomy[attr.slug] = _copyOf(tempTaxo, true);
 		}
 	});
+	let topFields = [];
 	data.fields.forEach((attr) => { // fAttrs
 		const parent = (attr.parent > 0 ? fname['f'+attr.parent] : '');
-		const children = []; data.fields.forEach((a) => {if(a.parent == attr.fid) children.push(a.slug)});
+		const children = []; data.fields.forEach((cattr) => {if(cattr.parent == attr.fid) children[cattr.idx] = cattr.slug});
+		if(attr.parent == 0){ if(attr.type != 'group' || children.length > 0){
+			topFields[attr.idx] = attr.slug;
+		}}
 		fAttrs[attr.slug] = {
 			type: attr.type, displayName: attr.subject, form: attr.form,
-			parent: parent, children: children,
+			parent: parent, children: _copyOf(children, true),
 			multiple: (attr.multiple == 1 ? true : false),
 			required: (attr.required == 1 ? true : false)
 		};
 	});
-	data.fields.forEach((attr) => { // emptyDoc
-		const fname = attr.slug;
-		if(!fAttrs[fname].parent){
-			emptyDoc[fname] = emptyDocValue(fname, fAttrs[fname], taxonomy);
-			if(fAttrs[fname].children.length > 0){
-				fAttrs[fname].children.forEach((fn) => {
-					emptyDoc[fn] = emptyDocValue(fn, fAttrs[fn], taxonomy)
-				});
-			}
+	topFields = _copyOf(topFields, true);
+	if(topFields[0] == 'doctype' && topFields[1] == 'trial' && topFields[2] == 'committee'){
+		topFields.splice(3, 0, 'content');
+	} else {
+		topFields.splice(0, 0, 'content');
+	}
+	_forIn(_emptyDoc, (pn, pv) => {
+		if(pn != 'content') emptyDoc[pn] = pv;
+	});
+	topFields.forEach((fn) => {
+		emptyDoc[fn] = emptyDocValue(fn, fAttrs[fn], taxonomy);
+		if(fAttrs[fn].children.length > 0){
+			fAttrs[fn].children.forEach((cfn) => {
+				emptyDoc[cfn] = emptyDocValue(cfn, fAttrs[cfn], taxonomy);
+			});
 		}
 	});
 	return {
@@ -191,38 +145,17 @@ const _convertDocToSave = (doc, docData) => {
 	}
 	return sDocument;
 };
-const _taxonomy = (sTaxonomy, sFields, fname) => {
-	let taxonomy = {};
-	sFields.forEach((sFAttr) => {
-		if(sFAttr.type == 'taxonomy' && sFAttr.cid > 0){
-			let fn = fname['f'+sFAttr.fid];
-			taxonomy[fn] = [];
-			sTaxonomy[sFAttr.cid].forEach((sTerm) => {
-				taxonomy[fn][sTerm.idx-1] = parseInt(sTerm.tid);
-			});
-		}
-	});
-	return taxonomy;
-};
-const _terms = (taxonomyData) => {
-	let terms = {};
-	for(let cid in taxonomyData){
-		taxonomyData[cid].forEach((t) => {
-			terms[t.tid] = t.name;
-		});
-	}
-	return terms;
-};
 const _termsOf = (fname, docData) => {
 	let terms = {};
 	docData.taxonomy[fname].forEach((tid) => {
-		terms[tid] = docData.terms[tid];
+		terms[tid] = docData.terms[tid].name;
 	});
 	return terms;
 };
-const _isHiddenField = (fname, doc, where) => {
-	if(fname == 'trial' && (where == 'form' || where == 'view')){
-		if(doc.doctype == 1 || doc.doctype == 2){ // 판결문, 서면
+const _isHiddenField = (fname, where, doc, docData) => {
+	if(fname == 'trial' && docData.fAttrs.doctype && !docData.fAttrs.doctype.multiple && doc.doctype){
+		const term = docData.terms[doc.doctype];
+		if(term && (term.slug == 'sentencing' || term.slug == 'writing')){
 			return false;
 		}
 		else return true;
@@ -230,10 +163,7 @@ const _isHiddenField = (fname, doc, where) => {
 	else if(fname == 'access' && where == 'view'){
 		return true;
 	}
-	return false;
-};
-const _isAccessDownload = (access) => {
-	return (access == _defaultTaxonomy.access[1]);
+	else return false;
 };
 
-export {_docData, _defaultEmptyDoc, _defaultFAttrs, _defaultFname, _defaultSFname, _defaultTaxonomy, _defaultTerms, _convertToDoc, _convertDocToSave, _taxonomy, _terms, _termsOf, _isHiddenField, _isAccessDownload};
+export {_emptyDoc, _fAttrs, _fname, _sFname, _docData, _convertToDoc, _convertDocToSave, _termsOf, _isHiddenField};

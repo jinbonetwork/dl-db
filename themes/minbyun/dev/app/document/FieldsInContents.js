@@ -4,11 +4,17 @@ import {Table, Row, Column} from '../accessories/Table';
 class FieldsInContents extends Component {
 	content(){
 		let value = this.props.document[this.props.fname];
-		let fAttr = this.props.docData.fAttrs[this.props.fname];
+		const fAttr = this.props.docData.fAttrs[this.props.fname];
 		switch(fAttr.type){
 			case 'taxonomy':
 				if(!fAttr.multiple) value = [value];
-				return value.map((v) => this.props.docData.terms[v]).join(', ');
+				const taxo = [];
+				value.forEach((v) => {
+					let term = this.props.docData.terms[v];
+					if(term) taxo.push(term.name);
+				});
+				if(taxo.length) return taxo.join(', ');
+				else return null;
 			case 'char': case 'email': case 'phone': case 'date':
 				if(!fAttr.multiple) value = [value];
 				if(fAttr.form !== 'textarea'){

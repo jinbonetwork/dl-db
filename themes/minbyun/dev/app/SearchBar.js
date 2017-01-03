@@ -114,23 +114,11 @@ class SearchBar extends Component {
 			}
 		}
 	}
-	doctypeHead(){
-		if(this.props.mode != 'content' && this.props.window.width <= _screen.medium){
-			return {
-				head: <span><i className="pe-7s-edit pe-va"></i></span>,
-				arrow: null
-			}
-		} else {
-			return {
-				head: <span>{this.props.docData.fAttrs['doctype'].displayName}</span>,
-				arrow: <i className="pe-7s-angle-down pe-va"></i>
-			}
-		}
-	}
 	propsForResponsivity(){
+		const fAttrs = this.props.docData.fAttrs;
 		const wWidth = this.props.window.width;
 		const buttonWidth = _interpolate(wWidth, 4, 8, _screen.mmLarge, _screen.large, 'em');
-		const sndPartWidth = _notNull([
+		const secondPartWidth = _notNull([
 			(wWidth <= _screen.medium ? '8em' : null),
 			_interpolate(wWidth, 16, 20, _screen.mmLarge, _screen.large, 'em')
 		]);
@@ -150,10 +138,10 @@ class SearchBar extends Component {
 					marginRight: _notNull([(wWidth <= _screen.medium ? 0 : null) ,buttonWidth])
 				},
 				firstPart: {
-					marginRight: sndPartWidth
+					marginRight: (fAttrs.date ? secondPartWidth : buttonWidth)
 				},
 				secondPart: {
-					width: sndPartWidth
+					width: (fAttrs.date ? secondPartWidth : buttonWidth)
 				}
 			}
 		};
@@ -172,22 +160,43 @@ class SearchBar extends Component {
 		};
 		return (this.props.mode == 'content' ? inContent : inMenu);
 	}
-	render(){
-		const prsRsp = this.propsForResponsivity();
-		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
-		const doctypeHead = this.doctypeHead();
+	docTypeSelect(){
+		let doctypeHead;
+		if(this.props.mode != 'content' && this.props.window.width <= _screen.medium){
+			doctypeHead = {
+				head: <span><i className="pe-7s-edit pe-va"></i></span>,
+				arrow: null
+			};
+		} else {
+			doctypeHead = {
+				head: <span>{this.props.docData.fAttrs['doctype'].displayName}</span>,
+				arrow: <i className="pe-7s-angle-down pe-va"></i>
+			};
+		}
+
 		const doctypeItems = _mapO(_termsOf('doctype', this.props.docData), (tid, tname) => (
 			<Item key={tid} value={tid}><span>{tname}</span></Item>
 		));
+
+		return (
+			<DdSelect selected={this.props.query.doctypes} head={doctypeHead.head} arrow={doctypeHead.arrow} window={this.props.window}
+				onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}
+				onFocus={this.handleFocus.bind(this, 'doctypes')}
+			>
+				{doctypeItems}
+			</DdSelect>
+		);
+	}
+	render(){
+		const fAttrs = this.props.docData.fAttrs;
+		const prsRsp = this.propsForResponsivity();
+		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
+		const docTypeSelect = (fAttrs.doctype ? this.docTypeSelect() : null);
+		const period = (fAttrs.date ? this.period(prsRsp) : null);
 		let searchBar = (
 			<div className="searchbar__bar">
-				<div style={prsRsp.style.firstPart}>
-					<DdSelect selected={this.props.query.doctypes} head={doctypeHead.head} arrow={doctypeHead.arrow} window={this.props.window}
-						onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}
-						onFocus={this.handleFocus.bind(this, 'doctypes')}
-					>
-						{doctypeItems}
-					</DdSelect>
+				<div className={(!fAttrs.date ? 'searchbar__1st-part--no-period' : null)} style={prsRsp.style.firstPart}>
+					{docTypeSelect}
 					<div className={'searchbar__keyword'+(this.state.isKeywordFocused ? ' searchbar__keyword--focused' : '')} style={{marginLeft: this.state.keywordMarginLeft}}>
 						<div><i className="pe-7f-search pe-va"></i></div>
 						<div>
@@ -198,8 +207,8 @@ class SearchBar extends Component {
 						</div>
 					</div>
 				</div>
-				<div style={prsRsp.style.secondPart}>
-					{this.period(prsRsp)}
+				<div className={(!fAttrs.date ? 'searchbar__2nd-part--no-period' : null)} style={prsRsp.style.secondPart}>
+					{period}
 					<button className="searchbar__button" style={prsRsp.style.button} onClick={this.handleClick.bind(this, 'search')}>검색</button>
 				</div>
 			</div>

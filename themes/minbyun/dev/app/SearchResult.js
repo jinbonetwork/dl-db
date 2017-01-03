@@ -12,30 +12,32 @@ class SearchResult extends Component {
 	constructor(){
 		super();
 		this.state = {
-			documents: [],
+			sDocuments: [],
 			distribution: {},
 			numOfPages: 1
 		};
 	}
 	componentDidMount(){
 		if(!_isEmpty(this.props.location.query)){
-			const query = this.props.location.query;
-			const sQuery = this.searchQuery(query, true);
-			this.props.updateSearchQuery(sQuery);
-
-			let params = this.params(update(this.query(sQuery), {$merge: {
-				orderby: query.orderby, page: query.page
-			}}));
-			this.fetchData(params);
-			if(params != this.params(query)) this.props.router.push('/search'+params);
+			this.updateSearchQueryAndFetchData();
 		};
 	}
-	componentWillReceiveProps(nextProps){
-		let thisUrlParams = this.params(this.props.location.query);
-		let nextUrlParams = this.params(nextProps.location.query);
-		if(thisUrlParams != nextUrlParams){
-			this.fetchData(nextUrlParams);
+	componentDidUpdate(prevProps, prevState){
+		if(
+			JSON.stringify(prevProps.location.query) != JSON.stringify(this.props.location.query) ||
+			JSON.stringify(prevProps.docData) != JSON.stringify(this.props.docData)
+		){
+			this.updateSearchQueryAndFetchData();
 		}
+	}
+	updateSearchQueryAndFetchData(){
+		const query = this.props.location.query;
+		const sQuery = this.searchQuery(query, true);
+		const params = this.params(update(this.query(sQuery), {$merge: {
+			orderby: query.orderby, page: query.page
+		}}));
+		this.props.updateSearchQuery(sQuery);
+		this.fetchData(params);
 	}
 	query(sQuery){
 		return _query(sQuery, this.props.docData.sFname);
@@ -50,21 +52,21 @@ class SearchResult extends Component {
 		return _searchQuery(query, this.props.docData.fname, correct);
 	}
 	fetchData(params){
-		let unsetProcessing = this.props.setMessage(null);
-		this.props.fetchData('get', '/api/search'+params, (data) => { unsetProcessing(); if(data){
+		const unsetProc = this.props.setMessage(null);
+		this.props.fetchData('get', '/api/search'+params, (data) => { unsetProc(); if(data){
 			if(typeof data === 'string'){
-				this.setState({documents: null, numOfPages: 1});
+				this.setState({sDocuments: null, numOfPages: 1});
 				this.props.setMessage(data, 'unset');
 				return;
 			}
 			if(data.result.cnt > 0){
 				this.setState({
-					documents: data.documents.map((doc) => this.searched(doc)),
+					sDocuments: data.documents,
 					distribution: data.result.taxonomy_cnt,
 					numOfPages: data.result.total_page
 				});
 			} else {
-				this.setState({documents: [], distribution: {}, numOfPages: 1});
+				this.setState({sDocuments: [], distribution: {}, numOfPages: 1});
 			}
 		}});
 	}
@@ -109,12 +111,12 @@ class SearchResult extends Component {
 		const orderby = (query.order ? query.order : 'score');
 		const keywords = this.keywords(query);
 
-		let documents = this.state.documents.map((doc, index) => (
+		const documents = this.state.sDocuments.map((sDoc, index) => (
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
 				<div>
-					<DocListItem key={doc.id} docData={this.props.docData} userRole={this.props.userData.role}
-						document={doc} keywords={keywords}
+					<DocListItem key={index} docData={this.props.docData} userRole={this.props.userData.role}
+						document={this.searched(sDoc)} keywords={keywords}
 					/>
 				</div>
 			</div>

@@ -59,6 +59,7 @@ class History extends Component {
 		}
 	}
 	render(){
+		const fAttrs = this.props.docData.fAttrs;
 		const page = (this.props.params.page ?  parseInt(this.props.params.page) : 1);
 		const rows = this.state.history.map((item) => (
 			<Row key={item.hid}>
@@ -68,11 +69,11 @@ class History extends Component {
 						<Link to={'/search?'+item.params}>{item.keyword}</Link>
 					</div>
 					<div>
-						{item.doctypes && <span className="history__doctypes">
+						{(fAttrs.doctype && item.doctypes) && <span className="history__doctypes">
 							<i className="pe-7s-edit pe-va"></i>
 							<span>{item.doctypes}</span>
 						</span>}
-						{(item.from || item.to) && <span className="history__period">
+						{(fAttrs.date && (item.from || item.to)) && <span className="history__period">
 							<span>{item.from || '_'}</span>
 							<span><i className="pe-7s-right-arrow pe-va"></i></span>
 							<span>{item.to || '_'}</span>

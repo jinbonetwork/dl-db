@@ -1,6 +1,7 @@
 @import "variables";
 
 @second-part-width: 20em;
+@button-width: 8em;
 
 .searchbar {
 	.searchbar__bar {
@@ -10,15 +11,21 @@
 		margin-right: @second-part-width;
 		background-color: @minor-color-2;
 	}
+	.searchbar__bar > div:first-child.searchbar__1st-part--no-period {
+		margin-right: @button-width;
+	}
 	.searchbar__bar > div:last-child {
 		position: absolute;
 		top: 0; right: 0;
 		width: @second-part-width;
 		background-color: @minor-color-2;
 	}
+	.searchbar__bar > div:last-child.searchbar__2nd-part--no-period {
+		width: @button-width;
+		height: 100%;
+	}
 	.searchbar__keyword {
 		border: solid 3px @main-color;
-		border-left: 0;
 	}
 	.searchbar__keyword--focused {
 		background-color: @focus-color-1;
@@ -71,7 +78,7 @@
 	.searchbar__button {
 		position: absolute;
 		top: 0; right: 0;
-		width: 8em;
+		width: @button-width;
 		height: 100%;
 		border: solid 3px @main-color;
 		background-color: @main-color;
@@ -95,14 +102,8 @@
 		visibility: hidden;
 	}
 
-	.searchbar__bar .ddselect .dropdown__headwrap {
-		border-width: 0 2px;
-	}
-	.searchbar__bar .ddselect .dropdown__items {
-		border-width: 2px;
-	}
 	.searchbar__keyword {
-		border-width: 0 2px 0 0;
+		border-width: 0 2px;
 		@media screen and (max-width: @medium-screen){
 			margin-left: 4em !important;
 			border-style: dotted;
@@ -156,13 +157,31 @@
 			margin-right: auto
 		}
 	}
-	.searchbar__bar > div:first-child {
+	.searchbar__bar > div:first-child:not(.searchbar__1st-part--no-period) {
 		@media screen and (max-width: @medium-screen){
 			margin: 0 1em;
 		}
 	}
-	.searchbar__bar > div:last-child {
+	.searchbar__bar > div:first-child.searchbar__1st-part--no-period {
 		@media screen and (max-width: @medium-screen){
+			margin-left: 1em;
+		}
+		@media screen and (max-width: @small-m-screen){
+			margin: 0 1em;
+		}
+	}
+	.searchbar__bar > div:last-child:not(.searchbar__2nd-part--no-period) {
+		@media screen and (max-width: @medium-screen){
+			position: relative;
+			width: auto;
+			margin: 0 1em;
+		}
+	}
+	.searchbar__bar > div:last-child.searchbar__2nd-part--no-period {
+		@media screen and (max-width: @medium-screen){
+			margin-right: 1em;
+		}
+		@media screen and (max-width: @small-m-screen){
 			position: relative;
 			width: auto;
 			margin: 0 1em;
@@ -198,6 +217,14 @@
 	}
 	.searchbar__button {
 		@media screen and (max-width: @small-screen){
+			position: static;
+			line-height: 3.3em;
+			width: 100%;
+			border-top: 0;
+		}
+	}
+	.searchbar__bar > .searchbar__2nd-part--no-period .searchbar__button {
+		@media screen and (max-width: @small-m-screen){
 			position: static;
 			line-height: 3.3em;
 			width: 100%;
@@ -252,6 +279,7 @@
 	line-height: 3.3em;
 	.dropdown__headwrap {
 		border: solid 3px @main-color;
+		border-right: 0;
 		line-height: 3.3em;
 	}
 	&.dropdown--unfolded .dropdown__headwrap {
@@ -298,11 +326,18 @@
 		color: @main-color;
 	}
 }
+.searchbar.searchbar--content .searchbar__bar .ddselect {
+	.dropdown__headwrap {
+		@media screen and (max-width: @small-screen){
+			border-right: solid 3px @main-color;
+		}
+	}
+}
 .searchbar:not(.searchbar--content) .searchbar__bar .ddselect {
 	.dropdown__headwrap {
+		border-width: 0 0 0 2px;
 		@media screen and (max-width: @medium-screen){
 			width: 4em;
-			border-right-style: dotted;
 		}
 	}
 	.dropdown__head {
@@ -325,6 +360,9 @@
 		@media screen and (max-width: @medium-screen){
 			display: none;
 		}
+	}
+	.dropdown__items {
+		border-width: 2px;
 	}
 	&.dropdown--unfolded .dropdown__items-top-border {
 		@media screen and (max-width: @medium-screen){

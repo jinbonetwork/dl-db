@@ -1,4 +1,4 @@
-import {_isEmpty, _forIn} from '../accessories/functions';
+import {_isEmpty} from '../accessories/functions';
 
 const _period = (from, to) => {
 	let period=[];
