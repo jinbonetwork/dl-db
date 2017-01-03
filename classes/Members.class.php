@@ -99,6 +99,13 @@ class Members extends \DLDB\Objects {
 		return 0;
 	}
 
+	public static function agreement($uid) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {members} SET license = ? WHERE uid = ?";
+		$dbm->execute($que, array("dd",1,$uid));
+	}
+
 	private static function fetchMember($row) {
 		if(!$row) return null;
 		$member = array();
