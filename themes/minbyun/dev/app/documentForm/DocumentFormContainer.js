@@ -1,21 +1,52 @@
 import React, {Component, PropTypes} from 'react';
+import DocumentForm from './DocumentForm';
+import {_convertToDoc} from '../schema/docSchema';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
-import DocumentForm from './DocumentForm';
 
 class DocumentFormContainer extends Component {
-	componentWillMount(){
-		this.setState({
-			document: this.props.document,
+	constructor(){
+		super();
+		this.state = {
+			sDocument: {},
+			document: {},
 			fieldWithFocus: {fname: 'title', index: undefined}
-		});
+		};
+	}
+	componentWillMount(){
+		this.setState({document: this.props.docData.emptyDoc});
+	}
+	componentDidMount(){
+		if(this.props.formAttr.mode == 'modify'){
+			const unsetProc = this.props.setMessage(null);
+			const api = '/api/document?id='+this.props.formAttr.id;
+			this.props.fetchData('get', api, (data) => { unsetProc(); if(data){
+				const document = _convertToDoc(data.document, this.props.docData);
+				this.setState({
+					sDocument: data.document,
+					document: document
+				});
+			}});
+		}
 	}
 	componentWillReceiveProps(nextProps){
-		this.setState({document: nextProps.document});
+		if(JSON.stringify(this.props.docData) != JSON.stringify(nextProps.docData)){
+			if(nextProps.formAttr.mode == 'modify'){
+				this.setState({
+					document: _convertToDoc(this.state.sDocument, nextProps.docData)
+				});
+			}
+			else if(nextProps.formAttr.mode == 'add'){
+				this.setState({
+					document: nextProps.docData.emptyDoc
+				});
+			}
+		}
 	}
 	updateFields(fields){ if(!fields) return;
 		this.setState({
-			document: update(this.state.document, {$merge: fields})
+			document: update(this.state.document, {$merge: fields}),
+			fieldWithFocus: {fname: '', index: undefined}
 		});
 	}
 	updateSingleField(fname, index, value){
@@ -82,7 +113,7 @@ class DocumentFormContainer extends Component {
 }
 DocumentFormContainer.propTypes = {
 	formAttr: PropTypes.object.isRequired,
-	document: PropTypes.object.isRequired,
+	//document: PropTypes.object.isRequired,
 	docData: PropTypes.object,
 	fetchData: PropTypes.func,
 	setMessage: PropTypes.func

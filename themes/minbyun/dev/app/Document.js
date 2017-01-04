@@ -2,8 +2,8 @@ import React, {Component, PropTypes, cloneElement} from 'react';
 import {Link, withRouter} from 'react-router';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
-import FieldsInHeader from './document/FieldsInHeader';
-import FieldsInContents from './document/FieldsInContents';
+import FieldInHeader from './document/FieldInHeader';
+import FieldInContents from './document/FieldInContents';
 import LinkIf from './accessories/LinkIf';
 import Message from  './accessories/Message';
 import {Table, Row, Column} from './accessories/Table';
@@ -167,11 +167,11 @@ class Document extends Component {
 			if(!fAttr.parent && fn != 'title'){
 				if(fn == 'image' || fn == 'file' || fn == 'date'){
 					fieldsInHeader[fn] = !_isEmpty(document[fn]) && (
-						<FieldsInHeader fname={fn} document={document} fileText={fileText} userRole={userRole} docData={this.props.docData} />
+						<FieldInHeader fname={fn} document={document} fileText={fileText} userRole={userRole} docData={this.props.docData} />
 					);
 				}
 				else if(!_isHiddenField(fn, 'view', document, this.props.docData)){
-					fieldsInContents.push(<FieldsInContents key={fn} fname={fn} docData={this.props.docData} document={document} />);
+					fieldsInContents.push(<FieldInContents key={fn} fname={fn} docData={this.props.docData} document={document} />);
 				}
 			}
 		};

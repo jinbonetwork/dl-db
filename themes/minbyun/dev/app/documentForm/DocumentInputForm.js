@@ -16,10 +16,9 @@ class DocumentInputForm extends Component {
 		if(this.props.fname == 'sentence'){
 			let dateArray = value.split('-');
 			if(dateArray.length > 3) return false;
-			let today = new Date();
 			for(let index in dateArray){
 				if(index == 0){
-					if(0 <= dateArray[0] && dateArray[0] <= today.getFullYear()); else return false;
+					if(dateArray[0] >= 0); else return false;
 				} else {
 					if(0 <= dateArray[index] && dateArray[index] <= 31); else return false;
 				}

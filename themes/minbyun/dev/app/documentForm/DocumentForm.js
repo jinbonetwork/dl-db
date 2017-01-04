@@ -26,7 +26,7 @@ class DocumentForm extends Component {
 				if(v && (
 					(fAttr.type == 'email' && !_isEmailValid(v)) ||
 					(fAttr.type == 'phone' && !_isPhoneValid(v)) ||
-					(fAttr.type == 'date' && !_isDateValid(v, fAttr.form))
+					((fAttr.type == 'date' || fn == 'sentence') && !_isDateValid(v, fAttr.form))
 				)){
 					return {fname: fn, index: (fAttr.multiple ? j : undefined), message:fAttr.displayName+'의 형식이 적합하지 않습니다.'};
 				}
@@ -48,8 +48,8 @@ class DocumentForm extends Component {
 			_convertDocToSave(this.props.document, this.props.docData)
 		));
 		for(let fn in this.props.document){
-			let value = this.props.document[fn];
-			let fAttr = this.props.docData.fAttrs[fn];
+			const value = this.props.document[fn];
+			const fAttr = this.props.docData.fAttrs[fn];
 			if(fAttr.form == 'file'){
 				if(fAttr.multiple){
 					value.forEach((file) => {

@@ -1,4 +1,4 @@
-import {_isEmpty, _copyOf, _forIn} from '../accessories/functions';
+import {_isEmpty, _copyOf, _forIn, _mapO} from '../accessories/functions';
 
 const _emptyDoc = {
 	id: 0, uid: 0, created: 0, owner: false, bookmark: false,
@@ -72,7 +72,10 @@ const emptyDocValue = (fname, fAttr, taxonomy) => {
 		case 'char': case 'tag': case 'email': case 'phone':
 			value = ''; break;
 		case 'date':
-			value = {year: '', month: ''}; break;
+			if(fAttr.form == 'Ym') value = {year: '', month: ''};
+			else if(fAttr.form == 'text') value = '';
+			else value = '';
+			break;
 		case 'image': case 'file':
 			value = {filename: ''}; break;
 		case 'taxonomy':
@@ -127,7 +130,7 @@ const _convertDocToSave = (doc, docData) => {
 		let sFn = docData.sFname[fn];
 		if(!_isEmpty(value)){
 			switch(fAttr.type){
-				case 'meta': case 'char': case 'tag': case 'email': case 'phone': case 'date': case 'taxonomy':
+				case 'meta': case 'char': case 'tag': case 'email': case 'phone': case 'taxonomy': case 'date':
 					sDocument[sFn] = value; break;
 				case 'image': case 'file':
 					if(fAttr.multiple){ value.forEach((file) => {

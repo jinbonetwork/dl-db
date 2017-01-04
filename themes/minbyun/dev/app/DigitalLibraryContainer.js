@@ -15,7 +15,7 @@ class DigitalLibraryContainer extends Component {
 	constructor(){
 		super();
 		this.state = {
-			userData: {user: null, role: null, type: null},
+			userData: {user: null, role: null, type: null, agreement: null},
 			menuData: [],
 			docData: {
 				emptyDoc: _emptyDoc,
@@ -91,7 +91,8 @@ class DigitalLibraryContainer extends Component {
 				userData: {
 					user: data.user,
 					role: _role(data.role),
-					type: data.sessiontype
+					type: data.sessiontype,
+					agreement: (data.agreement == 1)
 				},
 				menuData: _menuData(data.menu)
 			});
@@ -125,7 +126,7 @@ class DigitalLibraryContainer extends Component {
 	}
 	unsetUserData(){
 		this.setState({userData: update(this.state.userData, {
-			user: {$set: {uid: 0}}, role: {$set: null}
+			user: {$set: {uid: 0}}, role: {$set: null}, agreement: {$set: null}
 		})});
 	}
 	handleOfMessage(actOnClick, arg){

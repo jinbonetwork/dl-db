@@ -5,7 +5,7 @@ import LinkIf from '../accessories/LinkIf';
 import {Table, Row, Column} from '../accessories/Table';
 import {_displayDate, _isCommon} from '../accessories/functions';
 
-class FieldsInHeader extends Component {
+class FieldInHeader extends Component {
 	date(){
 		return (
 			<Row>
@@ -60,7 +60,7 @@ class FieldsInHeader extends Component {
 		}
 	}
 }
-FieldsInHeader.propTypes = {
+FieldInHeader.propTypes = {
 	fname: PropTypes.string.isRequired,
 	document: PropTypes.object.isRequired,
 	fileText: PropTypes.object.isRequired,
@@ -68,4 +68,4 @@ FieldsInHeader.propTypes = {
 	docData: PropTypes.object.isRequired
 };
 
-export default FieldsInHeader;
+export default FieldInHeader;

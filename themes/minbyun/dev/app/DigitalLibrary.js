@@ -43,11 +43,16 @@ const _childProps = {
 class DigitalLibrary extends Component {
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
+		if(userData.role && child.props.route.path == '/login'){
+			return (
+				<Message onClick={this.props.router.goBack}>이미 로그인하셨습니다.</Message>
+			);
+		}
 		let childProp = _childProps[child.props.route.path];
 		if(!userData.role && childProp.role) return null;
 		if(childProp.role && !_isCommon(childProp.role, userData.role)){
 			return (
-				<Message onClick={this.props.router.goBack.bind(this)}>이 페이지에 접근할 권한이 없습니다.</Message>
+				<Message onClick={this.props.router.goBack}>이 페이지에 접근할 권한이 없습니다.</Message>
 			);
 		}
 		let props = {};

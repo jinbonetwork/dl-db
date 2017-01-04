@@ -1,7 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {Table, Row, Column} from '../accessories/Table';
+import {_isEmpty} from '../accessories/functions';
 
-class FieldsInContents extends Component {
+class FieldInContents extends Component {
 	content(){
 		let value = this.props.document[this.props.fname];
 		const fAttr = this.props.docData.fAttrs[this.props.fname];
@@ -20,10 +21,13 @@ class FieldsInContents extends Component {
 				if(fAttr.form !== 'textarea'){
 					return value.join(', ');
 				} else{
-					return value.map((text, i) => {
+					let texts = [];
+					value.map((text, i) => { if(text){
 						text = text.split(/\n/).map((t, j) => <div key={j}>{t}</div>);
-						return <div key={i}>{text}</div>
-					});
+						texts.push(<div key={i}>{text}</div>);
+					}});
+					if(texts.length) return texts;
+					else return null;
 				}
 			case 'tag':
 				if(value){
@@ -35,7 +39,9 @@ class FieldsInContents extends Component {
 			case 'group':
 				let inSubontent = [];
 				fAttr.children.forEach((fn) => {
-					inSubontent.push(<FieldsInContents key={fn} fname={fn} docData={this.props.docData} document={this.props.document} />);
+					if(!_isEmpty(this.props.document[fn])){
+						inSubontent.push(<FieldInContents key={fn} fname={fn} docData={this.props.docData} document={this.props.document} />);
+					}
 				});
 				if(inSubontent.length > 0){
 					return <Table className="inner-table">{inSubontent}</Table>;
@@ -59,10 +65,10 @@ class FieldsInContents extends Component {
 		}
 	}
 }
-FieldsInContents.propTypes = {
+FieldInContents.propTypes = {
 	fname: PropTypes.string.isRequired,
 	docData: PropTypes.object.isRequired,
 	document: PropTypes.object.isRequired
 };
 
-export default FieldsInContents;
+export default FieldInContents;

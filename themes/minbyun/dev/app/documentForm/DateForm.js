@@ -8,9 +8,8 @@ class DateForm extends Component {
 		if(this.props.focus) this.refs.year.focus();
 	}
 	handleChangeYear(event){
-		const today = new Date();
 		const year = event.target.value;
-		if(0 <= year && year <= today.getFullYear()){
+		if(year >= 0){
 			this.props.onChange({year: year, month: this.props.value.month});
 		}
 	}

@@ -5,17 +5,16 @@ import DocumentFormContainer from './documentForm/DocumentFormContainer';
 
 class NewDocument extends Component {
 	render(){
-		let document = update(this.props.docData.emptyDoc, {uid: {$set: this.props.userData.user.uid}});
 		return(
 			<DocumentFormContainer
 				formAttr={{header: '자료입력하기', submit: '등록', mode: 'add'}}
-				document={document}
 				docData={this.props.docData}
 				fetchData={this.props.fetchData}
 				setMessage={this.props.setMessage}
 			/>
 		);
 	}
+
 }
 NewDocument.propTypes = {
 	userData: PropTypes.object,
