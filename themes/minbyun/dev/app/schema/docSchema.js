@@ -83,7 +83,7 @@ const emptyDocValue = (fname, fAttr, taxonomy) => {
 		case 'group':
 			value = undefined; break;
 		default:
-			console.error(type+': 적합하지 않은 type입니다.'); return;
+			console.error(fAttr.type+': 적합하지 않은 type입니다.'); return;
 	}
 	if(fAttr.multiple){
 		return [value];
