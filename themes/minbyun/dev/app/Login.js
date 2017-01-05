@@ -16,6 +16,9 @@ class Login extends Component {
 			agreement: ''
 		};
 	}
+	componentDidMount(){
+		this.refs.id.focus();
+	}
 	componentDidUpdate(prevProps, prevState){
 		if(!prevState.showAgreement && this.state.showAgreement){
 			this.props.fetchData('get', '/api/agreement', (data) => { if(data){
@@ -125,7 +128,7 @@ class Login extends Component {
 				<Row>
 					<Column>아이디</Column>
 					<Column>
-						<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
+						<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id}
 							onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
 						/>
 					</Column>
@@ -150,9 +153,6 @@ class Login extends Component {
 		);
 		const agreement = (
 			<div className="login__agreement">
-				{/*<div className="login__agreement-body">
-					{renderHTML(this.state.agreement)}
-				</div>*/}
 				<Scrollbars className="login__agreement-wrap">
 					<div className="login__agreement-content">
 						{renderHTML(this.state.agreement)}
@@ -171,6 +171,8 @@ class Login extends Component {
 					</div>
 				</div>
 				{(!this.state.agreement ? loginBody : agreement)}
+				<div className="login__links">
+				</div>
 			</div>
 		);
 	}

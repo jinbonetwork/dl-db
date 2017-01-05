@@ -41,7 +41,7 @@ class DigitalLibraryContainer extends Component {
 	}
 	componentDidMount(){
 		this.fetchContData((data) => {
-			if(!data.agreement != 1){
+			if(data.agreement != 1){
 				if(this.props.location.pathname != '/login'){
 					this.props.router.push('/login');
 				} else {
