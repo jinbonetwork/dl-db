@@ -54,6 +54,7 @@ class Item extends Component {
 	}
 }
 Item.propTypes = {
+	value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	groupName: PropTypes.string,
 	className: PropTypes.string,
 	tabIndex: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

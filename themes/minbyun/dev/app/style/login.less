@@ -68,19 +68,43 @@
 		height: auto;
 		padding: 0.5em 0;
 	}
-	input[type=text], input[type=email], input[type=password], button {
+	.login__body input[type=text],
+	.login__body input[type=email],
+	.login__body input[type=password],
+	.login__body button {
 		height: 100%;
 		line-height: 1em;
 		width: 100%;
 		border: 0;
 	}
-	button {
+	.login__body button {
 		background-color: @main-color;
 		color: @minor-color-2;
 		font-weight: @font-bold;
 		border-bottom: solid 1px @main-color;
 	}
-	button:focus {
+	.login__body button:focus {
 		background-color: @focus-color-2;
+	}
+	.login__header + .login__agreement {
+		margin-top: 7%;
+	}
+	.login__agreement-wrap {
+		border: solid 1px @main-color;
+		height: 50vh !important;
+	}
+	.login__agreement-content {
+		text-align: left;
+		padding: 1em;
+		background-color: @minor-color-2;
+		line-height: 1.5em;
+	}
+	.login__agreement-wrap + button {
+		margin-top: 1em;
+	}
+	.login__agreement button {
+		background-color: @main-color;
+		color: @minor-color-2;
+		padding: 1em 2em;
 	}
 }

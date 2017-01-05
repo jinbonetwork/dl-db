@@ -137,5 +137,8 @@ const _notNull = (values) => {
 	}
 	return null;
 };
+const _wrap = (callBack) => {
+	return callBack();
+};
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _copyOf, _pushpull, _interpolate, _notNull};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _copyOf, _pushpull, _interpolate, _notNull, _wrap};

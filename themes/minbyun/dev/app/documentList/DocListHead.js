@@ -33,7 +33,7 @@ class DoctypeList extends Component {
 			);
 		});
 		const option = (fAttrs.date) && (
-			<Check multiple={false} selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}
+			<Check type="radio" selected={this.props.orderby} onChange={this.handleChange.bind(this, 'orderby')}
 				checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
 			>
 				<Item value="score"><span className="doclisthead__orderby">관련도순</span></Item>

@@ -10,7 +10,7 @@ import {_screen} from './schema/screenSchema';
 const _childProps = {
 	'/login': {
 		role: null,
-		required: ['fetchData', 'fetchContData', 'setMessage', 'window', 'unsetUserData'],
+		required: ['fetchData', 'fetchContData', 'setMessage', 'window', 'unsetUserData', 'setAgreement'],
 		elective: ['userData']
 	},
 	'/user': {
@@ -43,8 +43,8 @@ const _childProps = {
 class DigitalLibrary extends Component {
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
+		if(!userData.agreement && child.props.route.path != '/login') return null;
 		let childProp = _childProps[child.props.route.path];
-		if(!userData.role && childProp.role) return null;
 		if(childProp.role && !_isCommon(childProp.role, userData.role)){
 			return (
 				<Message onClick={this.props.router.goBack}>이 페이지에 접근할 권한이 없습니다.</Message>
@@ -82,7 +82,7 @@ class DigitalLibrary extends Component {
 		const wWidth = this.props.window.width;
 		const userRole = this.props.userData.role;
 		const child = this.cloneChild(this.props.children, this.props.userData);
-		if(!userRole || this.props.location.pathname == '/login'){
+		if(!this.props.userData.agreement || this.props.location.pathname == '/login'){
 			return (
 				<div className="digital-library">
 					{child}
@@ -121,6 +121,7 @@ DigitalLibrary.propTypes = {
 	fetchContData: PropTypes.func.isRequired,
 	setMessage: PropTypes.func.isRequired,
 	unsetUserData: PropTypes.func.isRequired,
+	setAgreement: PropTypes.func.isRequired,
 	fetchData: PropTypes.func.isRequired,
 	updateSearchQuery: PropTypes.func.isRequired,
 	router: PropTypes.shape({

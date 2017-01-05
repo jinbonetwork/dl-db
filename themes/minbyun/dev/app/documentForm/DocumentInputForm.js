@@ -105,7 +105,7 @@ class DocumentInputForm extends Component {
 					<Item key={tid} value={tid}><span>{this.props.docData.terms[tid].name}</span></Item>
 				));
 				return (
-					<Check multiple={false} selected={this.props.value} onChange={this.handleChange.bind(this)}
+					<Check type="radio" selected={this.props.value} onChange={this.handleChange.bind(this)}
 						checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
 					>
 						{radioItems}

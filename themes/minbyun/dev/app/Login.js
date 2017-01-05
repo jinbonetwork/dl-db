@@ -1,9 +1,11 @@
 import React, {Component, PropTypes} from 'react';
+import Item from './accessories/Item';
 import {withRouter} from 'react-router';
 import {Table, Row, Column} from './accessories/Table';
-import Message from './accessories/Message';
 import {_screen} from './schema/screenSchema';
 import {_interpolate} from './accessories/functions';
+import renderHTML from 'react-render-html';
+import {Scrollbars} from 'react-custom-scrollbars';
 
 class Login extends Component {
 	constructor(){
@@ -11,7 +13,7 @@ class Login extends Component {
 		this.state = {
 			id: '',
 			password: '',
-			agreement: null
+			agreement: ''
 		};
 	}
 	componentDidUpdate(prevProps, prevState){
@@ -59,12 +61,9 @@ class Login extends Component {
 				this.props.fetchContData((data) => {
 					if(data.role){
 						if(data.agreement != 1){
-							/*
 							this.props.fetchData('get', '/api/agreement', (data) => { if(data){
 								this.setState({agreement: data.agreement});
 							}});
-							*/
-							callBack();
 						} else {
 							callBack();
 						}
@@ -77,8 +76,9 @@ class Login extends Component {
 			}
 		});
 	}
-	handleChange(which, event){
-		this.setState({[which]: event.target.value});
+	handleChange(which, arg1st){
+		let value = arg1st.target.value;
+		this.setState({[which]: value});
 	}
 	handleClick(which, event){
 		if(which == 'submit'){
@@ -86,6 +86,12 @@ class Login extends Component {
 		}
 		else if(which == 'error'){
 			this.setState({child: null});
+		}
+		else if(which == 'agree'){
+			this.props.fetchData('post', '/api/agreement?agreement=1', null, (data) => { if(data){
+				this.props.setAgreement();
+				this.props.router.goBack();
+			}});
 		}
 	}
 	handleKeyDown(which, event){
@@ -114,51 +120,59 @@ class Login extends Component {
 	}
 	render(){
 		const prsRsp = this.propsForResponsivity();
-		if(!this.state.agreement){
-			return(
-				<div className="login">
-					<div className="login__header">
-						<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
-						<div className="login__title">
-							<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
-							<span style={prsRsp.style.title1}>디지털 도서관</span>
-						</div>
+		const loginBody = (
+			<Table className="login__body">
+				<Row>
+					<Column>아이디</Column>
+					<Column>
+						<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
+							onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<Column>비밀번호</Column>
+					<Column>
+						<input type="password" value={this.state.password} placeholder={prsRsp.placeholder.password}
+							onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')}
+						/>
+					</Column>
+				</Row>
+				<Row>
+					<Column></Column>
+					<Column><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></Column>
+				</Row>
+				<Row>
+					<Column></Column>
+					<Column><span>※ 아이디 개설 문의: 민변 사무처</span></Column>
+				</Row>
+			</Table>
+		);
+		const agreement = (
+			<div className="login__agreement">
+				{/*<div className="login__agreement-body">
+					{renderHTML(this.state.agreement)}
+				</div>*/}
+				<Scrollbars className="login__agreement-wrap">
+					<div className="login__agreement-content">
+						{renderHTML(this.state.agreement)}
 					</div>
-					<Table className="login__body">
-						<Row>
-							<Column>아이디</Column>
-							<Column>
-								<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
-									onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
-								/>
-							</Column>
-						</Row>
-						<Row>
-							<Column>비밀번호</Column>
-							<Column>
-								<input type="password" value={this.state.password} placeholder={prsRsp.placeholder.password}
-									onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')}
-								/>
-							</Column>
-						</Row>
-						<Row>
-							<Column></Column>
-							<Column><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></Column>
-						</Row>
-						<Row>
-							<Column></Column>
-							<Column><span>※ 아이디 개설 문의: 민변 사무처</span></Column>
-						</Row>
-					</Table>
-					<div className="login__agreement">
+				</Scrollbars>
+				<button onClick={this.handleClick.bind(this, 'agree')}>이용약관에 동의합니다</button>
+			</div>
+		);
+		return(
+			<div className="login">
+				<div className="login__header">
+					<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
+					<div className="login__title">
+						<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
+						<span style={prsRsp.style.title1}>디지털 도서관</span>
 					</div>
 				</div>
-			);
-		} else {
-			return (
-				<div>{this.state.agreement}</div>
-			);
-		}
+				{(!this.state.agreement ? loginBody : agreement)}
+			</div>
+		);
 	}
 }
 Login.propTypes = {
@@ -168,6 +182,7 @@ Login.propTypes = {
 	fetchContData: PropTypes.func.isRequired,
 	setMessage:  PropTypes.func.isRequired,
 	unsetUserData: PropTypes.func.isRequired,
+	setAgreement: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

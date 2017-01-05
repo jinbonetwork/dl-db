@@ -1,42 +1,34 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 import Item from '../accessories/Item';
+import {_wrap, _pushpull} from '../accessories/functions';
 
 class Check extends Component {
-	constructor(){
-		super();
-		this.state = {
-			selected: null
-		};
-	}
-	componentWillMount(){
-		if(this.props.selected) this.setState({selected: this.props.selected});
-	}
-	componentWillReceiveProps(nextProps){
-		if(nextProps.selected) this.setState({selected: nextProps.selected});
-	}
 	handleClick(value){
-		if(this.props.multiple){
-			let selected = _pushpull(this.state.selected, value);
-			if(this.props.onChange){
-				this.props.onChange(selected);
-			} else {
-				this.setState({selected: selected});
-			}
+		if(this.props.type != 'radio'){
+			let selected = _pushpull(this.props.selected, value);
+			this.props.onChange(selected);
 		} else {
-			if(value != this.state.selected){
-				if(this.props.onChange){
-					this.props.onChange(value);
-				} else {
-					this.setState({selected: value});
-				}
+			if(value != this.props.selected){
+				this.props.onChange(value);
 			}
 		}
 	}
 	render(){
-		let className = (this.props.className ? 'check '+this.props.className : 'check');
-		const selected = (this.props.multiple ? this.state.selected : [this.state.selected]);
+		const selected = _wrap(() => {
+			if(!this.props.selected){
+				if(this.props.type == 'radio') return '';
+				else return [];
+			} else {
+				return this.props.selected;
+			}
+		});
+		const className = (this.props.className ? 'check '+this.props.className : 'check');
 		const children = Children.map(this.props.children, (child) => { if(child){
-			const className = (selected.indexOf(child.props.value) >= 0 ? 'item--checked' : '');
+			const className = _wrap(() => {
+				if(	(this.props.type == 'radio' && selected == child.props.value) ||
+					(this.props.type != 'radio' && selected.indexOf(child.props.value) >= 0)
+				) return 'item--checked'; else return '';
+			});
 			const children = [
 				<span key="checkicon" className="item__checkicon">{this.props.checkIcon}</span>,
 				<span key="uncheckicon" className="item__uncheckicon">{this.props.uncheckIcon}</span>
@@ -55,11 +47,11 @@ class Check extends Component {
 }
 Check.propTypes = {
 	className: PropTypes.string,
-	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]),
+	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array]).isRequired,
 	checkIcon: PropTypes.element,
 	uncheckIcon: PropTypes.element,
-	multiple: PropTypes.bool,
-	onChange: PropTypes.func
+	type: PropTypes.oneOf(['radio', 'check']),
+	onChange: PropTypes.func.isRequired
 }
 
 export default Check;

@@ -41,7 +41,7 @@ class DigitalLibraryContainer extends Component {
 	}
 	componentDidMount(){
 		this.fetchContData((data) => {
-			if(!data.role){
+			if(!data.agreement != 1){
 				if(this.props.location.pathname != '/login'){
 					this.props.router.push('/login');
 				} else {
@@ -52,13 +52,6 @@ class DigitalLibraryContainer extends Component {
 		});
 		this.handleResize();
 		jQ(window).on('resize', this.handleResize.bind(this));
-	}
-	componentDidUpdate(prevProps, prevState){
-		/*
-		if(!this.state.userData.role && this.props.location.pathname != '/login'){
-			this.props.router.push('/login');
-		}
-		*/
 	}
 	componentWillUnmount(){
 		jQ(window).off('resize');
@@ -136,6 +129,9 @@ class DigitalLibraryContainer extends Component {
 			user: {$set: {uid: 0}}, role: {$set: null}, agreement: {$set: null}
 		})});
 	}
+	setAgreement(){
+		this.setState({userData: update(this.state.userData, {agreement: {$set: true}})});
+	}
 	handleOfMessage(actOnClick, arg){
 		this.setState({message: null});
 		switch(actOnClick){
@@ -174,6 +170,7 @@ class DigitalLibraryContainer extends Component {
 			fetchContData: this.fetchContData.bind(this),
 			setMessage: this.setMessage.bind(this),
 			unsetUserData: this.unsetUserData.bind(this),
+			setAgreement: this.setAgreement.bind(this),
 			fetchData: this.fetchData.bind(this),
 			updateSearchQuery: this.updateSearchQuery.bind(this)
 		});

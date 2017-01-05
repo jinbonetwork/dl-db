@@ -38,7 +38,9 @@
     "react": "^15.3.2",
     "react-addons-css-transition-group": "^15.3.1",
     "react-addons-update": "^15.3.1",
+    "react-custom-scrollbars": "^4.0.0",
     "react-dom": "^15.3.2",
+    "react-render-html": "^0.1.6",
     "react-router": "^2.8.1"
   }
 }
