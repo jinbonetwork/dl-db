@@ -17,6 +17,9 @@ module.exports = {
 		return [require('autoprefixer')];
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': {'NODE_ENV': '"production"'}
+		}),
 		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.optimize.UglifyJsPlugin(),
 		new ExtractTextPlugin(config.styleFilename)
