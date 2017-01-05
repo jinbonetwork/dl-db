@@ -10,7 +10,7 @@ import {_screen} from './schema/screenSchema';
 const _childProps = {
 	'/login': {
 		role: null,
-		required: ['fetchData', 'fetchContData', 'setMessage', 'window'],
+		required: ['fetchData', 'fetchContData', 'setMessage', 'window', 'unsetUserData'],
 		elective: ['userData']
 	},
 	'/user': {
@@ -43,11 +43,6 @@ const _childProps = {
 class DigitalLibrary extends Component {
 	cloneChild(child, userData){
 		if(!child || !userData.user) return null;
-		if(userData.role && child.props.route.path == '/login'){
-			return (
-				<Message onClick={this.props.router.goBack}>이미 로그인하셨습니다.</Message>
-			);
-		}
 		let childProp = _childProps[child.props.route.path];
 		if(!userData.role && childProp.role) return null;
 		if(childProp.role && !_isCommon(childProp.role, userData.role)){
@@ -87,7 +82,7 @@ class DigitalLibrary extends Component {
 		const wWidth = this.props.window.width;
 		const userRole = this.props.userData.role;
 		const child = this.cloneChild(this.props.children, this.props.userData);
-		if(!userRole){
+		if(!userRole || this.props.location.pathname == '/login'){
 			return (
 				<div className="digital-library">
 					{child}

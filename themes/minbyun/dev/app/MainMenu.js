@@ -14,6 +14,7 @@ class MainMenu extends Component {
 		if(which == 'logout'){
 			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
 				this.props.unsetUserData();
+				this.props.router.push('/');
 				this.props.router.push('/login');
 			}});
 		}

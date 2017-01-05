@@ -10,18 +10,26 @@ class Login extends Component {
 		super();
 		this.state = {
 			id: '',
-			password: ''
+			password: '',
+			agreement: null
+		};
+	}
+	componentDidUpdate(prevProps, prevState){
+		if(!prevState.showAgreement && this.state.showAgreement){
+			this.props.fetchData('get', '/api/agreement', (data) => { if(data){
+				this.setState({agreement: data.agreement});
+			}});
 		}
 	}
 	submit(){ if(this.props.userData.type){
-		let data, loginUri;
+		let data, loginUrl;
 		if(this.props.userData.type == 'xe'){
 			data = {
 				user_id: this.state.id,
 				password: this.state.password,
 				success_return_url: '/'
 			}
-			loginUri = '/xe/?act=procMemberLogin';
+			loginUrl = '/xe/?act=procMemberLogin';
 		}
 		else{
 			data = {
@@ -29,19 +37,37 @@ class Login extends Component {
 				mb_password: this.state.password,
 				url: '/'
 			}
-			loginUri = '/gnu5/bbs/login_check.php';
+			loginUrl = '/gnu5/bbs/login_check.php';
 		}
 
 		let formData = new FormData;
 		for(let prop in data){
 			formData.append(prop, data[prop]);
 		}
-
-		this.props.fetchData('post', loginUri, formData, (response) => {
+		if(this.props.userData.role){
+			this.props.unsetUserData();
+			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
+				this.login(loginUrl, formData, this.props.router.push.bind(this, '/'));
+			}});
+		} else {
+			this.login(loginUrl, formData, this.props.router.goBack);
+		}
+	}}
+	login(loginUrl, formData, callBack){
+		this.props.fetchData('post', loginUrl, formData, (response) => {
 			if(response){
 				this.props.fetchContData((data) => {
 					if(data.role){
-						this.props.router.goBack();
+						if(data.agreement != 1){
+							/*
+							this.props.fetchData('get', '/api/agreement', (data) => { if(data){
+								this.setState({agreement: data.agreement});
+							}});
+							*/
+							callBack();
+						} else {
+							callBack();
+						}
 					} else {
 						this.props.setMessage('로그인 정보가 잘못되었습니다.', () => {
 							this.refs.id.focus();
@@ -50,7 +76,7 @@ class Login extends Component {
 				});
 			}
 		});
-	}}
+	}
 	handleChange(which, event){
 		this.setState({[which]: event.target.value});
 	}
@@ -88,46 +114,51 @@ class Login extends Component {
 	}
 	render(){
 		const prsRsp = this.propsForResponsivity();
-		return(
-			<div className="login">
-				<div className="login__header">
-					<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
-					<div className="login__title">
-						<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
-						<span style={prsRsp.style.title1}>디지털 도서관</span>
+		if(!this.state.agreement){
+			return(
+				<div className="login">
+					<div className="login__header">
+						<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
+						<div className="login__title">
+							<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
+							<span style={prsRsp.style.title1}>디지털 도서관</span>
+						</div>
+					</div>
+					<Table className="login__body">
+						<Row>
+							<Column>아이디</Column>
+							<Column>
+								<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
+									onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
+								/>
+							</Column>
+						</Row>
+						<Row>
+							<Column>비밀번호</Column>
+							<Column>
+								<input type="password" value={this.state.password} placeholder={prsRsp.placeholder.password}
+									onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')}
+								/>
+							</Column>
+						</Row>
+						<Row>
+							<Column></Column>
+							<Column><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></Column>
+						</Row>
+						<Row>
+							<Column></Column>
+							<Column><span>※ 아이디 개설 문의: 민변 사무처</span></Column>
+						</Row>
+					</Table>
+					<div className="login__agreement">
 					</div>
 				</div>
-				<Table className="login__body">
-					<Row>
-						<Column>아이디</Column>
-						<Column>
-							<input type="email" ref="id" value={this.state.id} placeholder={prsRsp.placeholder.id} autoFocus={true}
-								onChange={this.handleChange.bind(this, 'id')} onKeyDown={this.handleKeyDown.bind(this, 'id')}
-							/>
-						</Column>
-					</Row>
-					<Row>
-						<Column>비밀번호</Column>
-						<Column>
-							<input type="password" value={this.state.password} placeholder={prsRsp.placeholder.password}
-								onChange={this.handleChange.bind(this, 'password')} onKeyDown={this.handleKeyDown.bind(this, 'password')}
-							/>
-						</Column>
-					</Row>
-					<Row>
-						<Column></Column>
-						<Column><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></Column>
-					</Row>
-					<Row>
-						<Column></Column>
-						<Column><span>※ 아이디 개설 문의: 민변 사무처</span></Column>
-					</Row>
-				</Table>
-				<div className="login__agreement">
-				</div>
-				{this.state.child}
-			</div>
-		);
+			);
+		} else {
+			return (
+				<div>{this.state.agreement}</div>
+			);
+		}
 	}
 }
 Login.propTypes = {
@@ -136,6 +167,7 @@ Login.propTypes = {
 	fetchData:  PropTypes.func.isRequired,
 	fetchContData: PropTypes.func.isRequired,
 	setMessage:  PropTypes.func.isRequired,
+	unsetUserData: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

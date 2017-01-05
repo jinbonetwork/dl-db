@@ -53,6 +53,13 @@ class DigitalLibraryContainer extends Component {
 		this.handleResize();
 		jQ(window).on('resize', this.handleResize.bind(this));
 	}
+	componentDidUpdate(prevProps, prevState){
+		/*
+		if(!this.state.userData.role && this.props.location.pathname != '/login'){
+			this.props.router.push('/login');
+		}
+		*/
+	}
 	componentWillUnmount(){
 		jQ(window).off('resize');
 	}
