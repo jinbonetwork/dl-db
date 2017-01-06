@@ -9,8 +9,9 @@ themes/*/node_modules
 themes/*/node_modules/*
 themes/minbyun/script/script.js
 themes/minbyun/css/style.css
-themes/minbyun/dev/app.old/
-app/api/__test_upload.php
+app/admin/dev/node_modules/
+app/admin/script/script.js
+app/admin/css/style.css
 contribute/elasticsearch/vendor
 contribute/elasticsearch/vendor/*
 contribute/*/vendor
