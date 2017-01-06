@@ -7,6 +7,10 @@ class DBM extends \DLDB\Objects {
 		return self::_instance(__CLASS__);
 	}
 
+	public static function getFields() {
+		
+	}
+
 	public static function totalCnt($s_mode='',$s_arg='') {
 		$dbm = \DLDB\DBM::instance();
 
@@ -29,18 +33,21 @@ class DBM extends \DLDB\Objects {
 		$que .= " ORDER BY id ".$order;
 		$que .= " LIMIT ".( ($page-1) * $limit ).",".$limit;
 
-		$members[] = array();
+		$members = array();
 		while($row = $dbm->getFetchArray($que)) {
 			$members[] = self::fetchMember($row);
 		}
 		return $members;
 	}
 
-	public static function add($args) {
+	public static function insert($args) {
 		$dbm = \DLDB\DBM::instance();
 
 		$que = "INSERT INTO {members} (`name`,`class`, `email`, `phone`, `custom`, `license`) VALUES (?,?,?,?,?,?)";
 		$dbm->execute($que,array("sssssd",$args['name'],$args['class'],$args['email'],$args['phone'],serialize($args['custom']),0));
+
+		$insert_id = $dbm->getLastInsertId();
+		return $insert_id;
 	}
 
 	private static function fetchMember($row) {
