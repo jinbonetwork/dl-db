@@ -231,13 +231,14 @@ abstract class Controller {
 	public function dirCssJsHtml($dir,$priority=0,$position='header') {
 		if(!@is_dir(DLDB_PATH."/".$dir)) return;
 		$dp = opendir(DLDB_PATH."/".$dir);
+		$__dir = "/".ltrim(rtrim(DLDB_URI,"/").$dir,"/");
 		while($f = readdir()) {
 			if(substr($f,0,1) == ".") continue;
 			if(@is_dir(DLDB_PATH."/".$dir."/".$f)) continue;
 			if(preg_match("/(.+)\.css$/i",$f)) {
-				\DLDB\View\Resource::addCssURI(rtrim(DLDB_URI,"/").$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
+				\DLDB\View\Resource::addCssURI($__dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
 			} else if(preg_match("/(.+)\.js$/i",$f)) {     
-				\DLDB\View\Resource::addJsURI(rtrim(DLDB_URI,"/").$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
+				\DLDB\View\Resource::addJsURI($__dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
 			}
 		}
 		closedir($dp);
