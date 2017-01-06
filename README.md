@@ -79,7 +79,14 @@ $service['elastic_tokenizer'] = 'seunjeon_tokenizer';
 
 5) React 코드 설정
 -----------------
-* react 소스는 각 테마안에 있습니다.
+* 관리페잊는 react로 제작되었습니다. admin app 폴더에서 react를 build해주세요.
+```bash
+$ cd app/admin/dev
+$ npm install
+$ npm run build
+```
+
+* 각 테마는 react 로 구성되어야 합니다. 사용할 테마로 가셔서 react를 build해주세요.
 ```bash
 $ cd themes/minbyun/dev
 $ npm install
