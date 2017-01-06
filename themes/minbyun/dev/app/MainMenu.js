@@ -19,9 +19,9 @@ class MainMenu extends Component {
 			}});
 		}
 	}
-	menuItems(data, tag){
+	menuItems(name, data, tag){
 		return data.items.map((item, index) => {
-			const child = <a href={item.url} target="_blank"><span>{item.displayName}</span></a>
+			const child = <a href={item.url} target={(name == 'boards' ? null : '_blank')}><span>{item.displayName}</span></a>
 			if(tag == 'li'){
 				return <li key={index}>{child}</li>
 			} else {
@@ -67,9 +67,9 @@ class MainMenu extends Component {
 				}
 				return items;
 			case 'boards':
-				return this.menuItems(this.props.menuData[0], tag);
+				return this.menuItems(name, this.props.menuData[0], tag);
 			case 'links':
-				return this.menuItems(this.props.menuData[1], tag);
+				return this.menuItems(name, this.props.menuData[1], tag);
 		}
 	}
 	dropdownMenu(){
