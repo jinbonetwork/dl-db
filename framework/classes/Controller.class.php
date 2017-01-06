@@ -56,16 +56,8 @@ abstract class Controller {
 		} else $user = $this->user;
 
 		if($this->total_cnt) $this->PageNavigation();
-		if($this->contentType == "redirect") 
+		if($this->contentType == "redirect") {
 			header("Location: $this->redirectURI");
-		else if(($this->params['output'] == "xml" || $this->contentType == "xml")) {
-			extract((array)$this);
-			if(file_exists($this->params['controller']['path']."/".$this->params['controller']['file'].".xml.php"))
-				include $this->params['controller']['path']."/".$this->params['controller']['file'].".xml.php";
-			else if(file_exists($this->params['controller']['path']."/".$this->params['controller']['process'].".xml.php"))
-				include $this->params['controller']['path']."/".$this->params['controller']['process'].".xml.php";
-			else
-				\DLDB\Respond::NotFoundPage(true);
 		} else if(($this->params['browserType'] == 'api' || $this->params['output'] == 'json' || $this->contentType == "json")) {
 			extract((array)$this);
 			header("Content-Type: application/json; charset=utf-8");
@@ -140,9 +132,10 @@ abstract class Controller {
 				/**
 				 * @brief themes에 있는 기본 css와 script 들을 가장 먼저 포함한다.
 				 **/
-				$this->initTheme();
 				if($this->layout == "admin") {
 					\DLDB\Lib\importResource('app-admin');
+				} else {
+					$this->initTheme();
 				}
 				if(($html_file = $this->appPath())) {
 					$this->themeCssJs($html_file);
