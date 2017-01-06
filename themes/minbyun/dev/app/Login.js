@@ -184,6 +184,7 @@ class Login extends Component {
 								<a href="http://github.com/jinbonetwork" target="_blank">
 									<img src={_imgPath+'/github.png'}/>
 								</a>
+
 							</div>
 						</div>
 						<div><img src={_imgPath+'/archive.png'} /></div>

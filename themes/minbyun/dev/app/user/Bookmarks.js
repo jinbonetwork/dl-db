@@ -10,7 +10,7 @@ class Bookmarks extends Component {
 		super();
 		this.state = {
 			bookmarks: null,
-			numOfPages: 1
+			lastPage: 1
 		};
 	}
 	componentDidMount(){
@@ -29,10 +29,10 @@ class Bookmarks extends Component {
 				if(data.result.cnt > 0){
 					this.setState({
 						bookmarks: data.bookmarks.map((sBmk) => this.bookmark(sBmk)),
-						numOfPages: data.result.total_page
+						lastPage: data.result.total_page
 					});
 				} else {
-					this.setState({bookmarks: null, numOfPages: 1});
+					this.setState({bookmarks: null, lastPage: 1});
 				}
 			}
 		});
@@ -80,7 +80,7 @@ class Bookmarks extends Component {
 						{rows}
 					</Table>
 				</div>
-				<Pagination url="/user/bookmarks/page/" page={page} numOfPages={this.state.numOfPages} />
+				<Pagination url="/user/bookmarks/page/" page={page} lastPage={this.state.lastPage} />
 			</div>
 		);
 	}

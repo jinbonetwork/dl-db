@@ -13,7 +13,7 @@ class UserDocuments extends Component {
 		super();
 		this.state = {
 			sDocuments: [],
-			numOfPages: 1
+			lastPage: 1
 		};
 	}
 	componentDidMount(){
@@ -34,10 +34,10 @@ class UserDocuments extends Component {
 				if(data.result.cnt > 0){
 					this.setState({
 						sDocuments: data.documents,
-						numOfPages: data.result.total_page
+						lastPage: data.result.total_page
 					});
 				} else {
-					this.setState({documents: null, numOfPages: 1});
+					this.setState({documents: null, lastPage: 1});
 				}
 			}
 		});
@@ -73,7 +73,7 @@ class UserDocuments extends Component {
 	render(){
 		const documents =  this.state.sDocuments.map((doc) => this.userDoc(_convertToDoc(doc, this.props.docData)));
 		const page = parseInt(this.props.params.page);
-		const numOfPages = this.state.numOfPages;
+		const lastPage = this.state.lastPage;
 
 		const documentList = documents.map((doc) => (
 			<DocListItem key={doc.id} document={doc} docData={this.props.docData} userRole={this.props.userData.role} />
@@ -83,7 +83,7 @@ class UserDocuments extends Component {
 				<div className="userdocs__doclist">
 					{documentList}
 				</div>
-				<Pagination url="/user/documents/page/" page={page} numOfPages={numOfPages} />
+				<Pagination url="/user/documents/page/" page={page} lastPage={lastPage} />
 			</div>
 		);
 	}

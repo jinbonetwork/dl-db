@@ -113,7 +113,6 @@ class DocumentFormContainer extends Component {
 }
 DocumentFormContainer.propTypes = {
 	formAttr: PropTypes.object.isRequired,
-	//document: PropTypes.object.isRequired,
 	docData: PropTypes.object,
 	fetchData: PropTypes.func,
 	setMessage: PropTypes.func
