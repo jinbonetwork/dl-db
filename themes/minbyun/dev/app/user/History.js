@@ -10,7 +10,7 @@ class History extends Component {
 		super();
 		this.state = {
 			history: [],
-			numOfPages: 1
+			lastPage: 1
 		};
 	}
 	componentDidMount(){
@@ -29,10 +29,10 @@ class History extends Component {
 				if(data.result.cnt > 0){
 					this.setState({
 						history: data.histories.map((item) => this.history(item)),
-						numOfPages: data.result.total_page
+						lastPage: data.result.total_page
 					});
 				} else {
-					this.setState({history: [], numOfPages: 1});
+					this.setState({history: [], lastPage: 1});
 				}
 			}
 		});
@@ -98,7 +98,7 @@ class History extends Component {
 						{rows}
 					</Table>
 				</div>
-				<Pagination url="/user/history/page/" page={page} numOfPages={this.state.numOfPages} />
+				<Pagination url="/user/history/page/" page={page} lastPage={this.state.lastPage} />
 			</div>
 		);
 	}

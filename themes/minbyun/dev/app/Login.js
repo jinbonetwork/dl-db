@@ -7,6 +7,8 @@ import {_interpolate} from './accessories/functions';
 import renderHTML from 'react-render-html';
 import {Scrollbars} from 'react-custom-scrollbars';
 
+const _imgPath = site_base_uri+'/themes/minbyun/images';
+
 class Login extends Component {
 	constructor(){
 		super();
@@ -163,15 +165,30 @@ class Login extends Component {
 		);
 		return(
 			<div className="login">
-				<div className="login__header">
-					<img src={site_base_uri+'/themes/minbyun/images/logo.svg'} />
-					<div className="login__title">
-						<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
-						<span style={prsRsp.style.title1}>디지털 도서관</span>
+				<div className="login__innerwrap">
+					<div className="login__header">
+						<img src={_imgPath+'/logo.svg'} />
+						<div className="login__title">
+							<span style={prsRsp.style.title0}>민주사회를 위한 변호사모임</span>
+							<span style={prsRsp.style.title1}>디지털 도서관</span>
+						</div>
 					</div>
+					{(!this.state.agreement ? loginBody : agreement)}
 				</div>
-				{(!this.state.agreement ? loginBody : agreement)}
 				<div className="login__links">
+					<div className="login__links-content">
+						<div>
+							<div><span>Powered by </span><a href="http://jinbo.net" target="_blank">진보넷</a></div>
+							<div>
+								<span>디지털 아카이브 프로젝트 </span>
+								<a href="http://github.com/jinbonetwork" target="_blank">
+									<img src={_imgPath+'/github.png'}/>
+								</a>
+
+							</div>
+						</div>
+						<div><img src={_imgPath+'/archive.png'} /></div>
+					</div>
 				</div>
 			</div>
 		);

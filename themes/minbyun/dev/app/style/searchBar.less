@@ -148,6 +148,12 @@
 		font-size: 3.4em;
 		font-weight: @font-bold;
 		color: @main-color;
+
+		.text-shadow-gradient(@n) when (@n > 0){
+			.text-shadow-gradient((@n - 1));
+			text-shadow+: -1px*@n 1px*@n mix(@minor-color-1, @main-color, 50% + 2.5%*@n);
+		}
+		.text-shadow-gradient(20);
 	}
 	.searchbar__header + .searchbar__bar {
 		margin: 10% 1em 0 1em;

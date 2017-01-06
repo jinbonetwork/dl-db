@@ -14,7 +14,7 @@ class SearchResult extends Component {
 		this.state = {
 			sDocuments: [],
 			distribution: {},
-			numOfPages: 1
+			lastPage: 1
 		};
 	}
 	componentDidMount(){
@@ -55,7 +55,7 @@ class SearchResult extends Component {
 		const unsetProc = this.props.setMessage(null);
 		this.props.fetchData('get', '/api/search'+params, (data) => { unsetProc(); if(data){
 			if(typeof data === 'string'){
-				this.setState({sDocuments: null, numOfPages: 1});
+				this.setState({sDocuments: null, lastPage: 1});
 				this.props.setMessage(data, 'unset');
 				return;
 			}
@@ -63,10 +63,10 @@ class SearchResult extends Component {
 				this.setState({
 					sDocuments: data.documents,
 					distribution: data.result.taxonomy_cnt,
-					numOfPages: data.result.total_page
+					lastPage: data.result.total_page
 				});
 			} else {
-				this.setState({sDocuments: [], distribution: {}, numOfPages: 1});
+				this.setState({sDocuments: [], distribution: {}, lastPage: 1});
 			}
 		}});
 	}
@@ -131,7 +131,7 @@ class SearchResult extends Component {
 				<div className="search-result__doclist">
 					{documents}
 				</div>
-				<Pagination url={paginationUrl} page={page} numOfPages={this.state.numOfPages} />
+				<Pagination url={paginationUrl} page={page} lastPage={this.state.lastPage} />
 			</div>
 		);
 	}

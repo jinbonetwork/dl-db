@@ -1,11 +1,12 @@
 @import "variables";
 
 @lable-width: 5em;
+@archive-width: 3.75em;
 
-.login {
+.login__innerwrap {
 	width: 100%;
 	max-width: 600px;
-	margin: 10% auto;
+	margin: 10% auto 5% auto;
 	padding: 1em;
 	text-align: center;
 
@@ -106,5 +107,39 @@
 		background-color: @main-color;
 		color: @minor-color-2;
 		padding: 1em 2em;
+	}
+}
+.login__links {
+	position: fixed;
+	bottom: 0; right: 0;
+	width: 18em;
+	padding: 0 2em 2em 0;
+	@media screen and (max-width: 1037px){
+		position: static;
+		float: right;
+	}
+	span, a {
+		font-weight: @font-bold;
+	}
+	a {
+		color: @main-color;
+	}
+	.login__links-content {
+		position: relative;
+	}
+	.login__links-content > div:first-child {
+		padding-top: 1em;
+		margin-right: @archive-width;
+	}
+	.login__links-content > div:first-child > div + div{
+		margin-top: 0.5em;
+	}
+	.login__links-content > div:last-child {
+		position: absolute;
+		top: 0; right: 0;
+		width: @archive-width;
+	}
+	.login__links-content > div:last-child img {
+		width: 100%;
 	}
 }

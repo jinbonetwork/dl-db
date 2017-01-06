@@ -25,11 +25,11 @@ class DateForm extends Component {
 	render(){
 		return (
 			<div className="dateform">
-				<input className="dateform__year" type="text" ref="year" value={this.props.value.year}
+				<input type="number" className="dateform__year" type="text" ref="year" value={this.props.value.year}
 					onChange={this.handleChangeYear.bind(this)} onBlur={this.handleBlur.bind(this)}
 				/>
 				<span>년</span>
-				<input className="dateform_month" type="text" value={this.props.value.month}
+				<input type="number" className="dateform__month" type="text" value={this.props.value.month}
 					onChange={this.handleChangeMonth.bind(this)} onBlur={this.handleBlur.bind(this)}
 				/>
 				<span>월</span>
