@@ -97,6 +97,8 @@ abstract class Controller {
 					\DLDB\View\Resource::addCssURI($this->params['controller']['uri']."/".$this->params['controller']['file'].".css",0,array('compress'=>true));
 				}
 
+				$this->initAppCssScript($this->params['controller']['path']);
+
 				/**
 				 * @brief resource/script에서 불러오도록 지정된 script들의 경로를 잡아준다.
 				 **/
@@ -136,9 +138,9 @@ abstract class Controller {
 					\DLDB\Lib\importResource('app-admin');
 				} else {
 					$this->initTheme();
-				}
-				if(($html_file = $this->appPath())) {
-					$this->themeCssJs($html_file);
+					if(($html_file = $this->appPath())) {
+						$this->themeCssJs($html_file);
+					}
 				}
 
 				/* FaceBook plugin */
@@ -186,6 +188,15 @@ abstract class Controller {
 		}
 	}
 
+	public function initAppCssScript($path) {
+		if(file_exists($path."/css")) {
+			$this->dirCssJsHtml(substr($path,strlen(DLDB_PATH))."/css",1000);
+		}
+		if(file_exists($path."/script")) {
+			$this->dirCssJsHtml(substr($path,strlen(DLDB_PATH))."/script",1000,'footer');
+		}
+	}
+
 	public function initTheme() {
 		if( !$this->themeCssLoad ) {
 			if(file_exists(DLDB_PATH."/themes/".$this->themes."/config.php")) {
@@ -217,16 +228,16 @@ abstract class Controller {
 		return $urlscript;
 	}
 
-	public function dirCssJsHtml($dir,$priority,$position='header') {
+	public function dirCssJsHtml($dir,$priority=0,$position='header') {
 		if(!@is_dir(DLDB_PATH."/".$dir)) return;
 		$dp = opendir(DLDB_PATH."/".$dir);
 		while($f = readdir()) {
 			if(substr($f,0,1) == ".") continue;
 			if(@is_dir(DLDB_PATH."/".$dir."/".$f)) continue;
 			if(preg_match("/(.+)\.css$/i",$f)) {
-				\DLDB\View\Resource::addCssURI(rtrim(DLDB_URI,"/")."/".$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
+				\DLDB\View\Resource::addCssURI(rtrim(DLDB_URI,"/").$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
 			} else if(preg_match("/(.+)\.js$/i",$f)) {     
-				\DLDB\View\Resource::addJsURI(rtrim(DLDB_URI,"/")."/".$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
+				\DLDB\View\Resource::addJsURI(rtrim(DLDB_URI,"/").$dir."/".$f,$priority,array('compress'=>true,'position'=>$position));
 			}
 		}
 		closedir($dp);
