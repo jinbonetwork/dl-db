@@ -73,6 +73,9 @@ final class URIHandler extends \DLDB\Objects {
 		} else if( in_array($uri['fragment'][0], array( 'user', 'document', 'error', 'login', 'logout' ) ) ) {
 			$uri['appType'] = 'react';
 			$pathPart = DLDB_APP_PATH."react";
+		} else if( in_array($uri['fragment'][0], array( 'admin' ) ) ) {
+			$uri['appType'] = 'admin';
+			$pathPart = DLDB_APP_PATH."admin";
 		} else {
 			if (isset($uri['fragment'][0]) && file_exists(DLDB_APP_PATH.$uri['fragment'][0])) {
 				$uri['appType'] = $uri['fragment'][0];
