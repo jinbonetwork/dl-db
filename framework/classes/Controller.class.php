@@ -36,6 +36,7 @@ abstract class Controller {
 	public function render() {
 		global $uri, $browser;
 		$context = \DLDB\Model\Context::instance();
+		$this->site_title = $context->getProperty('service.title');
 
 		/**
 		 * @brief settting gloabl variables to be used in themes
@@ -295,7 +296,11 @@ abstract class Controller {
 	}
 
 	private function LayoutFile() {
-		$layout_file = DLDB_PATH."/themes/".$this->themes."/layout.html.php";
+		if($this->layout == 'admin') {
+			$layout_file = DLDB_PATH."/resources/html/admin.layout.html.php";
+		} else {
+			$layout_file = DLDB_PATH."/themes/".$this->themes."/layout.html.php";
+		}
 		if(file_exists($layout_file)) return $layout_file;
 		return null;
 	}

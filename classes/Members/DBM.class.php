@@ -2,13 +2,36 @@
 namespace DLDB\Members;
 
 class DBM extends \DLDB\Objects {
+	private static $fields;
+	private static $cids;
+	private static $taxonomy;
+	private static $taxonomy_terms;
+	private static $errmsg;
 
 	public static function instance() {
 		return self::_instance(__CLASS__);
 	}
 
 	public static function getFields() {
-		
+		if(!self::$fields) {
+			self::$fields = \DLDB\Fields::getFields('members');
+		}
+		if(!self::$cids) {
+			foreach(self::$fields as $f => $field) {
+				if($field['type'] == 'taxonomy') {
+					self::$cids[] = $field['cid'];
+				} 
+			}
+		}
+		if(self::$cids) {
+			if(!self::$taxonomy) {
+				self::$taxonomy = \DLDB\Taxonomy::getTaxonomy(self::$cids);
+			}
+			if(!self::$taxonomy_terms) {
+				self::$taxonomy_terms = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
+			}
+		}
+		return self::$fields;
 	}
 
 	public static function totalCnt($s_mode='',$s_arg='') {
@@ -26,11 +49,11 @@ class DBM extends \DLDB\Objects {
 		$dbm = \DLDB\DBM::instance();
 
 		if(!$page) $page = 1;
-		$que = "SELECT * FROM {members}";
+		$que = "SELECT * FROM {members} AS m LEFT JOIN {user_roles} AS r ON m.uid = r.uid";
 		if($s_mode && $s_arg) {
 			$que .= " WHERE `".$s_mode."` LIKE '%".$s_arg."%'";
 		}
-		$que .= " ORDER BY id ".$order;
+		$que .= " ORDER BY m.id ".$order;
 		$que .= " LIMIT ".( ($page-1) * $limit ).",".$limit;
 
 		$members = array();
@@ -50,11 +73,44 @@ class DBM extends \DLDB\Objects {
 		return $insert_id;
 	}
 
+	public static function makeID($rows) {
+	}
+
+	public static function getRole($uid) {
+		if($uid) {
+			$dbm = \DLDB\DBM::instance();
+			
+			$que = "SELECT * FROM {user_roles) WHERE uid = ".$uid;
+			$row = $dbm->getFetchArray($que);
+			$role = unserialize($row['role']);
+		}
+		return $role;
+	}
+
+	public static function updateRole($uid,$roles) {
+		if(!$uid) return 0;
+		if($roles && !is_array($roles)) {
+			$roles = array($roles);
+		}
+
+		$dbm = \DLDB\DBM::instance();
+
+		$role = self::getRole($uid);
+		if($role) {
+			$que = "UPDATE {user_roles) SET `role` = ? WHERE `uid` = ?";
+			$dbm->execute($que,array("sd",serialize($roles),$uid));
+		} else {
+			$que = "INSERT INTO {user_roles) (`uid`,`role`) VALUES (?,?)";
+			$dbm->execute($que,array("ds",$uid,serialize($roles)));
+		}
+		return 0;
+	}
+
 	private static function fetchMember($row) {
 		if(!$row) return null;
 		$member = array();
 		foreach($row as $k => $v) {
-			if($k == 'custom') {
+			if($k == 'custom' || $k == 'role') {
 				$member[$k] = unserialize($v);
 			} else if(is_numeric($v)) {
 				$member[$k] = $v;
