@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import {createHistory} from 'history';
 import {Provider, connect} from 'react-redux';
+
 import adminStore from './store/adminStore';
 import adminActionCreators from './actions/adminActionCreators';
 import Admin from './components/Admin';
@@ -19,25 +20,15 @@ const mapOfUsers = {
 }
 const UsersContainer = connect(mapOfUsers.stateToProps, mapOfUsers.dispatchToProps)(Users);
 
-const mapOfAgreement = {
-	stateToProps: (state) => ({
-		agreement: state.agreement
-	}),
-	dispatchToProps: (dispatch) => ({
-		fetchAgreement: () => dispatch(adminActionCreators.fetchAgreement())
-	})
-}
-const AgreementContainer = connect(mapOfAgreement.stateToProps, mapOfAgreement.dispatchToProps)(Agreement);
-
 render(
-	<Provider store={adminStore}>
+	{/*<Provider store={adminStore}>*/}
 		<Router history={browserHistory}>
 			<Route path="/admin" component={Admin}>
-				<IndexRoute component={UsersContainer} />
-				<Route path="users" component={UsersContainer} />
-				<Route path="agreement" component={AgreementContainer} />
+				{/*<IndexRoute component={UsersContainer} />
+				<Route path="users" component={UsersContainer} />*/}
+				<Route path="agreement" component={Agreement} />
 			</Route>
 		</Router>
-	</Provider>,
+	{/*</Provider>*/},
 	document.getElementById('root')
 );

@@ -1,5 +1,4 @@
-export const REQUEST_AIRPORTS = 'request airports';
-export const RECEIVE_AIRPORTS = 'receive airports';
-export const CHOOSE_AIRPORT = 'choose airport';
-export const REQUEST_TICKETS = 'request tickets';
-export const RECEIVE_TICKETS = 'receive tickets';
+export const REQUEST_USERLIST = 'request userlist';
+export const RECEIVE_USERLIST = 'receive userlist';
+export const REQUEST_AGREEMENT = 'request agreement';
+export const RECEIVE_AGREEMENT = 'receive agreement';

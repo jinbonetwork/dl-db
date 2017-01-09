@@ -1,10 +1,10 @@
-import { combineReducers } from 'redux';
-import airports from './airports';
-import route from './route';
+import {combineReducers} from 'redux'
+import users from './users';
+import agreement from './agreement'
 
 const rootReducer = combineReducers({
-	airports: airports,
-	route: route
+	users: users,
+	agreement: agreement
 });
 
 export default rootReducer;
