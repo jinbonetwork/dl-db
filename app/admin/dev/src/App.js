@@ -11,10 +11,12 @@ import Agreement from './components/Agreement';
 
 const mapOfUsers = {
 	stateToProps: (state) => ({
-		list: state.users.list
+		list: state.users.list,
+		fieldData: state.users.fieldData
 	}),
 	dispatchToProps: (dispatch) => ({
-		fetchUserList: () => dispatch(adminActionCreators.fetchUserList())
+		fetchUserList: () => dispatch(adminActionCreators.fetchUserList()),
+		fetchUserFieldData: () => dispatch(adminActionCreators.fetchUserFieldData())
 	})
 }
 const UsersContainer = connect(mapOfUsers.stateToProps, mapOfUsers.dispatchToProps)(Users);
