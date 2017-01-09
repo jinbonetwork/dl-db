@@ -1,7 +1,8 @@
 <?php
 $result = array(
 	'fields' => $fields,
-	'taxonomy' => $taxonomy
+	'taxonomy' => $taxonomy,
+	'roles' => $roles
 );
 print json_encode($result);
 ?>
