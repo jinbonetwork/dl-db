@@ -18,9 +18,11 @@ const _sFname = {
 const _docData = (data) => {
 	let fname = _copyOf(_fname), sFname = _copyOf(_sFname), fAttrs = _copyOf(_fAttrs);
 	let emptyDoc = {}, taxonomy = {}, terms = {};
-	data.fields.forEach((attr) => { // fname, sFname, taxonomy, terms
+	data.fields.forEach((attr) => { // fname, sFname
 		fname['f'+attr.fid] = attr.slug;
 		sFname[attr.slug] = 'f'+attr.fid;
+	});
+	data.fields.forEach((attr) => { // taxonomy, terms
 		if(attr.type == 'taxonomy' && attr.cid > 0){
 			let fn = fname['f'+attr.fid];
 			let tempTaxo = [];
@@ -63,7 +65,7 @@ const _docData = (data) => {
 		}
 	});
 	return {
-		fname: fname, sFname, fAttrs: fAttrs, emptyDoc: emptyDoc, taxonomy: taxonomy, terms: terms
+		fname: fname, sFname: sFname, fAttrs: fAttrs, emptyDoc: emptyDoc, taxonomy: taxonomy, terms: terms
 	};
 };
 const emptyDocValue = (fname, fAttr, taxonomy) => {

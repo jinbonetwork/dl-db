@@ -1,4 +1,6 @@
-import {REQUEST_USERLIST, RECEIVE_USERLIST, REQUEST_AGREEMENT, RECEIVE_AGREEMENT} from '../constants';
+import {REQUEST_USERLIST, RECEIVE_USERLIST,
+		REQUEST_USER_FIELD_DATA, RECEIVE_USER_FIELD_DATA,
+		REQUEST_AGREEMENT, RECEIVE_AGREEMENT} from '../constants';
 import adminApi from '../api/adminApi';
 
 const adminActionCreators = {
@@ -8,6 +10,15 @@ const adminActionCreators = {
 			adminApi.fetchUserList(
 				(userList) => dispatch({type: RECEIVE_USERLIST, success: true, userList: userList}),
 				(error) => dispatch({type: RECEIVE_USERLIST, success: false})
+			);
+		}
+	},
+	fetchUserFieldData(){
+		return (dispatch) => {
+			dispatch({type: REQUEST_USER_FIELD_DATA});
+			adminApi.fetchUserFieldData(
+				(userFieldData) => dispatch({type: RECEIVE_USER_FIELD_DATA, success: true, userFieldData: userFieldData}),
+				(error) => dispatch({type: RECEIVE_USER_FIELD_DATA, success: false})
 			);
 		}
 	},

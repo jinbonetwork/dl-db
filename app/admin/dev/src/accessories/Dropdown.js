@@ -1,6 +1,5 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
 import jQ from 'jquery';
-import browser from 'detect-browser';
 
 class Dropdown extends Component {
 	constructor(){
@@ -18,9 +17,6 @@ class Dropdown extends Component {
 	componentDidMount(){
 		this.refs.head.setAttribute('groupname', this.state.groupName);
 		this.setSize();
-		if(browser.name == 'ie'){
-			jQ(this.refs.head).focusout((event) => {this.handleBlur('head', event);});
-		}
 	}
 	componentWillReceiveProps(nextProps){
 		this.setSize();
@@ -108,13 +104,11 @@ class Dropdown extends Component {
 		const headWidth = (this.props.hasOwnProperty('headWidth') ? this.props.headWidth : this.state.width);
 		const itemWidth = (this.props.hasOwnProperty('itemWidth') ? this.props.itemWidth : this.state.width);
 
-		const handleHeadBlur = (browser.name != 'ie' ? this.handleBlur.bind(this, 'head') : null);
-
 		return (
 			<div className={className}>
 				<div className="dropdown__headwrap" ref="headwrap">
 					<div className="dropdown__head" ref="head" tabIndex="0" style={{width: headWidth}}
-						onBlur={handleHeadBlur} onClick={this.handleClick.bind(this, 'head')} onFocus={this.handleFocus.bind(this, 'head')}
+						onBlur={this.handleBlur.bind(this, 'head')} onClick={this.handleClick.bind(this, 'head')} onFocus={this.handleFocus.bind(this, 'head')}
 						onKeyDown={this.handleKeyDown.bind(this, 'head')}
 					>
 						{head}

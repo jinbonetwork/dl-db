@@ -28,6 +28,9 @@ const adminApi = {
 		});
 		*/
 	},
+	fetchUserFieldData(success, fail){
+		this.fetchData('get', '/api/admin/member/fields', (userFieldData) => success(userFieldData), fail);
+	},
 	fetchUserList(success, fail){
 		this.fetchData('get', '/api/admin/member?page=1', ({members}) => success(members), fail);
 	},
