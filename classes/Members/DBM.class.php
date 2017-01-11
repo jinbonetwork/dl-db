@@ -70,10 +70,33 @@ class DBM extends \DLDB\Objects {
 		$dbm->execute($que,array("sssssd",$args['name'],$args['class'],$args['email'],$args['phone'],serialize($args['custom']),0));
 
 		$insert_id = $dbm->getLastInsertId();
+
+		if($args['password']) {
+			$uid = self::makeID($rows);
+			$que = "UPDATE {members} SET uid = ? WHERE id = ?";
+			$dbm->execute($que,array("dd",$uid,$insert_id));
+		}
+
 		return $insert_id;
 	}
 
+	public static function modify($member,$args) {
+	}
+
 	public static function makeID($rows) {
+		$context = \DLDB\Model\Context::instance();
+		$session_type = $context->getProperty('session.type');
+		switch($session_type) {
+			case 'gnu5':
+				$uid = \DLDB\Members\Gnu5\User::add($rows);
+				break;
+			case 'xe':
+			default:
+				$uid = \DLDB\Members\XE\User::add($rows);
+				break;
+		}
+
+		return $uid;
 	}
 
 	public static function getRole($uid) {

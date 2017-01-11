@@ -74,9 +74,10 @@ class Bookmark extends \DLDB\Objects {
 				$bookmark["f".$k] = $v;
 			}
 		}
+		$acl = \DLDB\Acl::instance();
 		if($bookmark['uid'] == $_SESSION['user']['uid']) {
 			$bookmark['owner'] = 1;
-		} else if( \DLDB\Acl::isMaster() ) {
+		} else if( $acl->isMaster() ) {
 			$bookmark['owner'] = 1;
 		} else {
 			$bookmark['owner'] = 0;

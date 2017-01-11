@@ -2,11 +2,15 @@
 namespace DLDB\Model;
 
 class GNU5 extends \DLDB\Objects {
+	private $prefix;
+
 	public static function instance() {
 		return self::_instance(__CLASS__);
 	}
 
-	protected function __contruct() {
+	function __construct() {
+		$context = \DLDB\Model\Context::instance();
+		$this->prefix = $context->getProperty('service.gnu5_prefix');
 	}
 
 	public function getAcl($domain) {
@@ -14,7 +18,7 @@ class GNU5 extends \DLDB\Objects {
 			$dbm = \DLDB\DBM::instance();
 
 			if($_SESSION['ss_mb_id']) {
-				$que = "SELECT * FROM `g5_member` WHERE `mb_id` = '".$_SESSION['ss_mb_id']."'";
+				$que = "SELECT * FROM `".$this->prefix."member` WHERE `mb_id` = '".$_SESSION['ss_mb_id']."'";
 				$row = $dbm->getFetchArray($que);
 				if($row['mb_no']) {
 					$_SESSION['user'] = array(
@@ -28,7 +32,7 @@ class GNU5 extends \DLDB\Objects {
 	public function getMember($mb_no) {
 		$dbm = \DLDB\DBM::instance();
 			        
-		$que = "SELECT * FROM `g5_member` WHERE `mb_no` = ".$mb_no;
+		$que = "SELECT * FROM `".$this->prefix."member` WHERE `mb_no` = ".$mb_no;
 		$row = $dbm->getFetchArray($que);
 		if($row['mb_no']) {
 			$member = array(
