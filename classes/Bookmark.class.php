@@ -14,7 +14,7 @@ class Bookmark extends \DLDB\Objects {
 		return ($row['cnt'] ? $row['cnt'] : 0);
 	}
 
-	public static function getList($uid, $page=1,$limit=10) {
+	public static function getList($uid, $page=1,$limit=20) {
 		$dbm = \DLDB\DBM::instance();
 
 		$que = "SELECT * FROM {bookmark} AS b LEFT JOIN {documents} AS d ON b.did = d.id WHERE b.uid = ".$uid." ORDER BY b.bid DESC LIMIT ".( ($page - 1)* $limit ).",".$limit;
