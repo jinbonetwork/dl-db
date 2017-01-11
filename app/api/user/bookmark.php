@@ -39,7 +39,7 @@ class bookmark extends \DLDB\Controller {
 				break;
 			default:
 				if(!$this->params['page']) $this->params['page'] = 1;
-				if(!$this->params['limit']) $this->params['limit'] = 20;
+				if(!$this->params['limit']) $this->params['limit'] = 10;
 				if($this->params['bid']) {
 					$this->bookmark = \DLDB\Bookmark::get($this->user['uid'],$this->params['bid']);
 					if(!$this->bookmark) {
