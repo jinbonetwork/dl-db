@@ -1,7 +1,7 @@
 <?php
 namespace DLDB\App\admin;
 
-$Acl = 'administrator';
+$Acl = 'anonymous';
 
 class index extends \DLDB\Controller {
 	public function process() {

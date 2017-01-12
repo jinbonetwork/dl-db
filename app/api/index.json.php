@@ -4,6 +4,7 @@ $result = array(
 	'user' => $user_info,
 	'agreement' => $agreement,
 	'role' => $role,
+	'roles' => $roles,
 	'sessiontype' => $sessiontype,
 	'menu' => $menu
 );
