@@ -2,11 +2,15 @@
 namespace DLDB\Model;
 
 class XE extends \DLDB\Objects {
+	private $prefix;
+
 	public static function instance() {
 		return self::_instance(__CLASS__);
 	}
 
-	protected function __contruct() {
+	function __construct() {
+		$context = \DLDB\Model\Context::instance();
+		$this->prefix = $context->getProperty('service.xe_prefix');
 	}
 
 	public function getAcl($domain) {
@@ -14,7 +18,8 @@ class XE extends \DLDB\Objects {
 			$dbm = \DLDB\DBM::instance();
 
 			if($_SESSION['member_srl']) {
-				$que = "SELECT * FROM `xe_member` WHERE `member_srl` = ".$_SESSION['member_srl'];
+				$que = "SELECT * FROM `".$this->prefix."member` WHERE `member_srl` = ".$_SESSION['member_srl'];
+				echo $que;
 				$row = $dbm->getFetchArray($que);
 				if($row['member_srl']) {
 					$_SESSION['user'] = array(
@@ -28,7 +33,7 @@ class XE extends \DLDB\Objects {
 	public function getMember($member_srl) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "SELECT * FROM `xe_member` WHERE `member_srl` = ".$member_srl;
+		$que = "SELECT * FROM `".$this->prefix."member` WHERE `member_srl` = ".$member_srl;
 		$row = $dbm->getFetchArray($que);
 		if($row['member_srl']) {
 			$member = array(
@@ -49,7 +54,7 @@ class XE extends \DLDB\Objects {
 		$menu_srl = $context->getProperty('service.xe_menu_srl');
 
 		$menu = array();
-		$que = "SELECT * FROM `".$context->getProperty('service.xe_prefix')."menu_item` WHERE menu_srl = ".$menu_srl." ORDER BY parent_srl ASC, listorder DESC";
+		$que = "SELECT * FROM `".$this->prefix."menu_item` WHERE menu_srl = ".$menu_srl." ORDER BY parent_srl ASC, listorder DESC";
 		while($row = $dbm->getFetchArray($que)) {
 			if($row['url'] == 'index') continue;
 			if(!preg_match("/^http:\/\//i",$row['url'])) {

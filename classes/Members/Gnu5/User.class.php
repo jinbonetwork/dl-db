@@ -2,16 +2,27 @@
 namespace CADB\Members\Gnu5;
         
 class User extends \CADB\Objects  {
+	private static $prefix;
 	public static $errmsg;
 				        
 	public static function instance() {
 		return self::_instance(__CLASS__);
 	}
 
+	private static function getPrefix() {
+		if(!self::$prefix) {
+			$context = \DLDB\Model\Context::instance();
+			self::$prefix = $context->getProperty('service.gnu5_prefix');
+		}
+		return self::$prefix;
+	}
+
 	public static function getMember($mb_no) {
 		$dbm = \CADB\DBM::instance();
 
-		$que = "SELECT * FROM `g5_member` WHERE mb_no = ".$mb_no;
+		$prefix = self::getPrefix();
+
+		$que = "SELECT * FROM `".$prefix."member` WHERE mb_no = ".$mb_no;
 		$member = self::fetchMember($dbm->getFetchArray($que));
 		if(!$member) return null;
 		return $member;
@@ -43,15 +54,17 @@ class User extends \CADB\Objects  {
 	public static function add($args) {
 		$dbm = \CADB\DBM::instance();
 
-		if(!$args['mb_id'] && $args['uid']) $args['mb_id'] = $args['uid'];
-		$que = "SELECT * FROM `g5_member` WHERE mb_id = '".$args['mb_id']."'";
+		$prefix = self::getPrefix();
+
+		$user_id = $args['mb_id'] = 
+		$que = "SELECT * FROM `".$prefix."member` WHERE mb_id = '".$args['mb_id']."'";
 		$row = $dbm->getFetchArray($que);
 		if($row['mb_no']) {
 			self::setErrorMsg( $args['mb_id']."는 이미 존재하는 아이디입니다." );
 			return -1;
 		}
 
-		$que = "INSERT INTO `g5_member` (
+		$que = "INSERT INTO `".$prefix."member` (
 			mb_id,
 			mb_password,
 			mb_name,
@@ -163,8 +176,10 @@ class User extends \CADB\Objects  {
 	public static function modify($member,$args) {
 		$dbm = \CADB\DBM::instance();
 
+		$prefix = self::getPrefix();
+
 		if(!$args['mb_id'] && $args['uid']) $args['mb_id'] = $args['uid'];
-		$que = "SELECT * FROM `g5_member` WHERE mb_id = '".$args['mb_id']."' AND mb_no != ".$args['mb_no'];
+		$que = "SELECT * FROM `".$prefix."member` WHERE mb_id = '".$args['mb_id']."' AND mb_no != ".$args['mb_no'];
 		$row = $dbm->getFetchArray($que);
 		if($row['mb_no']) {
 			self::setErrorMsg( $args['mb_id']."는 이미 존재하는 아이디입니다." );
@@ -173,9 +188,9 @@ class User extends \CADB\Objects  {
 
 		$c = 0;
 		if($args['password']) {
-			$que = "UPDATE `g5_member` SET mb_id = ?, mb_password = password('".$args['password']."'), mb_name = ?, mb_nick = ?, mb_email = ?, mb_level = ? WHERE mb_no = ?";
+			$que = "UPDATE `".$prefix."member` SET mb_id = ?, mb_password = password('".$args['password']."'), mb_name = ?, mb_nick = ?, mb_email = ?, mb_level = ? WHERE mb_no = ?";
 		} else {
-			$que = "UPDATE `g5_member` SET mb_id = ?, mb_name = ?, mb_nick = ?, mb_email = ?, mb_level = ? WHERE mb_no = ?";
+			$que = "UPDATE `".$prefix."member` SET mb_id = ?, mb_name = ?, mb_nick = ?, mb_email = ?, mb_level = ? WHERE mb_no = ?";
 		}
 		$dbm->execute($que,array("ssssdd",$args['mb_id'], $args['mb_name'],$args['mb_nick'],$args['mb_email'],$args['mb_level'],$args['mb_no']));
 
@@ -185,10 +200,21 @@ class User extends \CADB\Objects  {
 	public static function delete($mb_no) {
 		$dbm = \CADB\DBM::instance();
 
-		$que = "DELETE FROM `g5_member` WHERE mb_no = ?";
+		$prefix = self::getPrefix();
+
+		$que = "DELETE FROM `".$prefix."member` WHERE mb_no = ?";
 		$dbm->execute($que,array("d",$mb_no));
 
 		return 0;
+	}
+
+	public static function changePassword($mb_no,$password) {
+		$dbm = \CADB\DBM::instance();
+
+		$prefix = self::getPrefix();
+
+		$que = "UPDATE `".$prefix."member` SET mb_password = password('".$password."') WHERE mb_no = ?";
+		$dbm->execute($que,array("d",$mb_no));
 	}
 
 	public static function setErrorMsg($errmsg) {

@@ -34,7 +34,7 @@ class documents extends \DLDB\Controller {
 			}
 		} else {
 			if(!$this->params['page']) $this->params['page'] = 1;
-			if(!$this->params['limit']) $this->params['limit'] = 20;
+			if(!$this->params['limit']) $this->params['limit'] = 10;
 			$this->total_cnt = \DLDB\Document::totalCnt($this->user['uid']);
 			if($this->total_cnt) {
 				$this->total_page = (int)( ( $this->total_cnt - 1 ) / $this->params['limit'] ) + 1;

@@ -72,7 +72,7 @@ class Parser extends \DLDB\Objects {
 					if ( is_array( $value ) ) {
 						$value = implode(', ', $value);
 					}
-					$header[$property] = $value;
+					$header[$property] = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
 				}
 			}
 
