@@ -81,6 +81,33 @@ class DBM extends \DLDB\Objects {
 	}
 
 	public static function modify($member,$args) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ? WHERE id = ?";
+		$dbm->execute($que,array("ssssd",$args['name'],$args['class'],$args['email'],$args['phone'],$member['id']));
+
+		if($member['uid']) {
+			self::modifyID($member,$args);
+		} else if(!$member['uid'] && $args['password']) {
+			$uid = self::makeID($rows);
+			$que = "UPDATE {members} SET uid = ? WHERE id = ?";
+			$dbm->execute($que,array("dd",$uid,$insert_id));
+		}
+
+		return 0;
+	}
+
+	public static function delete($member) {
+		$dbm = \DLDB\DBM::instance();
+
+		if($member['uid']) {
+			self::deleteID($member['uid']);
+		}
+
+		$que = "DELETE FROM {members} WHERE id = ?";
+		$dbm->execute($que,array("d",$member['id']));
+
+		return 0;
 	}
 
 	public static function makeID($rows) {
@@ -97,6 +124,34 @@ class DBM extends \DLDB\Objects {
 		}
 
 		return $uid;
+	}
+
+	public static function modifyID($member,$rows) {
+		$context = \DLDB\Model\Context::instance();
+		$session_type = $context->getProperty('session.type');
+		switch($session_type) {
+			case 'gnu5':
+				$uid = \DLDB\Members\Gnu5\User::modify($member,$rows);
+				break;
+			case 'xe':
+			default:
+				$uid = \DLDB\Members\XE\User::modify($member,$rows);
+				break;
+		}
+	}
+
+	public static function deleteID($uid) {
+		$context = \DLDB\Model\Context::instance();
+		$session_type = $context->getProperty('session.type');
+		switch($session_type) {
+			case 'gnu5':
+				\DLDB\Members\Gnu5\User::delete($uid);
+				break;
+			case 'xe':
+			default:
+				\DLDB\Members\XE\User::delete($uid);
+				break;
+		}
 	}
 
 	public static function getRole($uid) {
