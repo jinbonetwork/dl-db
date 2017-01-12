@@ -2,6 +2,9 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
 class Admin extends Component {
+	componentDidMount(){
+		this.props.fetchAdminInfo();
+	}
 	render(){
 		return (
 			<div>
@@ -16,5 +19,12 @@ class Admin extends Component {
 		);
 	}
 }
+Admin.propTypes = {
+	isAdmin: PropTypes.bool,
+	loginType: PropTypes.string.isRequired,
+	id: PropTypes.string.isRequired,
+	password: PropTypes.string.isRequired,
+	fetchAdminInfo: PropTypes.func.isRequired
+};
 
 export default Admin;

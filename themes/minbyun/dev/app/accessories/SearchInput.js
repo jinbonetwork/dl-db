@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import Item from './Item';
+import browser from 'detect-browser';
 
 class SearchInput extends Component {
 	constructor(){
@@ -17,6 +18,9 @@ class SearchInput extends Component {
 	componentDidMount(){
 		this.refs.input.setAttribute('groupname', this.state.groupName);
 		if(this.state.focused === 0) this.refs.input.focus();
+		if(browser.name == 'ie'){
+			jQ(this.refs.input).focusout((event) => {this.handleBlur('input', event);});
+		}
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.focus) this.setState({focused: 0});
@@ -112,13 +116,14 @@ class SearchInput extends Component {
 				<i className="pe-7s-search pe-va"></i>
 			</button>
 		);
+		const handleInputBlur = (browser.name != 'ie' ? this.handleBlur.bind(this, 'input') : null);
 		return(
 			<div className="searchinput">
 				<input type="text" ref="input" value={(this.props.value ? this.props.value : '')}
 					onChange={this.handleChange.bind(this)}
 					onKeyUp={this.handleKeyUp.bind(this, 'input')}
 					onKeyDown={this.handleKeyDown.bind(this, 'input')}
-					onBlur={this.handleBlur.bind(this, 'input')}
+					onBlur={handleInputBlur}
 				/>
 				{spinner}
 				{searchButton}

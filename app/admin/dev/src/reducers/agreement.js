@@ -1,6 +1,5 @@
 import {RECEIVE_AGREEMENT} from '../constants';
 
-
 const agreement = (state = '', action) => {
 	switch(action.type){
 		case RECEIVE_AGREEMENT:

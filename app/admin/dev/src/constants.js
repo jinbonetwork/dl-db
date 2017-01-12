@@ -4,3 +4,5 @@ export const REQUEST_USER_FIELD_DATA = 'request user field data';
 export const RECEIVE_USER_FIELD_DATA = 'receive user field data';
 export const REQUEST_AGREEMENT = 'request agreement';
 export const RECEIVE_AGREEMENT = 'receive agreement';
+export const REQUEST_ADMIN_INFO = 'request administrator information';
+export const RECEIVE_ADMIN_INFO = 'receive administrator information';
