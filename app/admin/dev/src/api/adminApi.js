@@ -1,23 +1,23 @@
 import axios from 'axios';
+import {_findProp} from '../accessories/functions';
 
 const fetchData = (method, url, arg2, arg3, arg4) => {
 	let data = (method == 'get' ? null : arg2);
-	let success = (method == 'get' ? arg2 : arg3);
-	let fail = (method == 'get' ? arg3: arg4)
+	let succeed = (method == 'get' ? arg2 : arg3);
+	let fail = (method == 'get' ? arg3 : arg4)
 	axios({method: method, url: url, data: data, timeout: 60000}).then((response) => {
 		if(response.statusText == 'OK'){
 			if(!response.data.error || response.data.error == 0){
-				success(response.data);
+				succeed(response.data);
 			} else {
-				//let actOnClick = (response.data.error == -9999 ? 'goToLogin' : 'unset');
 				let message = (response.data.message ? response.data.message : response.data);
-				console.error(response.data);
-				fail(message);
+				console.error(message);
+				fail({code: response.data.error, message: message});
 			}
 		} else {
 			let message = 'Server response was not OK';
 			console.error(message);
-			fail(message);
+			fail({code: null, message: message});
 		}
 	});
 	/*
@@ -29,18 +29,34 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 };
 
 const adminApi = {
-	fetchAdminInfo(success, fail){
-		fetchData('get', '/api', (adminInfo) => success(adminInfo), fail);
+	fetchAdminInfo(succeed, fail){
+		fetchData('get', '/api', (adminInfo) => succeed(adminInfo), fail);
 	},
-	fetchUserFieldData(success, fail){
-		fetchData('get', '/api/admin/member/fields', (userFieldData) => success(userFieldData), fail);
+	login(loginUrl, formData, succeed, fail){
+		fetchData('post', loginUrl, formData, () => {
+			fetchData('get', '/api', (adminInfo) => {
+				if(adminInfo.role && adminInfo.role.indexOf(parseInt(_findProp(adminInfo.roles, 'administrator'))) >= 0){
+					succeed(true);
+				} else {
+					if(adminInfo.role){
+						fetchData('post', '/api/logout', null, () => succeed(false), fail);
+					} else {
+						succeed(false);
+					}
+				}
+			}, fail)
+		}, fail);
 	},
-	fetchUserList(page, success, fail){
-		console.log(page);
-		fetchData('get', '/api/admin/member?page='+(page ? page : 1), ({members}) => success(members), fail);
+	fetchUserFieldData(succeed, fail){
+		fetchData('get', '/api/admin/member/fields', (userFieldData) => succeed(userFieldData), fail);
 	},
-	fetchAgreement(success, fail){
-		fetchData('get', '/api/agreement', ({agreement}) => success(agreement), fail);
+	fetchUserList(page, succeed, fail){
+		fetchData('get', '/api/admin/member?page='+(page ? page : 1),
+			(data) => succeed(data.members, parseInt(data.result.total_page)), fail
+		);
+	},
+	fetchAgreement(succeed, fail){
+		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
 	}
 };
 

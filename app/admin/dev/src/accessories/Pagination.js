@@ -37,7 +37,7 @@ class Pagination extends Component {
 }
 Pagination.propTypes = {
 	url: PropTypes.string.isRequired,
-	page: PropTypes.number.isRequired,
+	page: PropTypes.number,
 	lastPage: PropTypes.number.isRequired,
 	prevIcon: PropTypes.element,
 	nextIcon: PropTypes.element

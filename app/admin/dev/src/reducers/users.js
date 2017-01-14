@@ -1,6 +1,6 @@
-import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA} from '../constants';
+import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, REFINE_ROLES} from '../constants';
 import update from 'react-addons-update';
-import {_copyOf, _forIn, _mapOO} from '../accessories/functions';
+import {_copyOf, _forIn} from '../accessories/functions';
 
 const initialState = {
 	fieldData: {
@@ -69,20 +69,9 @@ const refineFieldData = (fData) => {
 			});
 		}
 	});
-	// roles ////
-	const roleNames = {
-		administrator: '관리자',
-		write: '쓰기',
-		download: '다운로드',
-		view: '읽기'
-	};
-	roles = _mapOO(fData.roles, (pn, pv) => ({
-		name: roleNames[pv],
-		slug: pv
-	}));
 
 	// return ////
-	return {fSlug, fID, fProps, empty, taxonomy, terms, roles};
+	return {fSlug, fID, fProps, empty, taxonomy, terms};
 };
 const emptyValue = (fSlug, fProp, taxonomy) => {
 	let value;
@@ -109,6 +98,19 @@ const emptyValue = (fSlug, fProp, taxonomy) => {
 		return value;
 	}
 };
+const refineRoles = (roles) => {
+	let newRoles = {};
+	const roleNames = {
+		administrator: '관리자',
+		write: '쓰기',
+		download: '다운로드',
+		view: '읽기'
+	};
+	_forIn(roles, (pn, pv) => {
+		if(roleNames[pv]) newRoles[pn] = roleNames[pv];
+	});
+	return newRoles;
+};
 const refineList = (original, fieldData) => {
 	const fID = fieldData.fID;
 	const fProps = fieldData.fProps;
@@ -126,14 +128,19 @@ const users = (state = initialState, action) => {
 		case RECEIVE_USER_FIELD_DATA:
 			const fieldData = refineFieldData(action.userFieldData);
 			return update(state, {
-				fieldData: {$set: fieldData},
+				fieldData: {$merge: fieldData},
 				list: {$set: refineList(state.originalList, fieldData)}
 			});
 		case RECEIVE_USERLIST:
 			return update(state, {
 				orginalList: {$set: action.userList},
-				list: {$set: refineList(action.userList, state.fieldData)}
+				list: {$set: refineList(action.userList, state.fieldData)},
+				lastPage: {$set: action.lastPage}
 			});
+		case REFINE_ROLES:
+			return update(state, {
+				fieldData: {roles: {$set: refineRoles(action.roles)}}
+			})
 		default:
 			return state;
 	}
