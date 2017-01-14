@@ -26,7 +26,7 @@ class Admin extends Component {
 		);
 		if(this.props.isAdmin){
 			return (
-				<div>
+				<div className="admin">
 					<MainMenu />
 					<div>
 						{this.props.children}
@@ -36,7 +36,7 @@ class Admin extends Component {
 			);
 		} else if(this.props.isAdmin === false){
 			return (
-				<div>
+				<div className="admin">
 					<Login loginType={this.props.loginType} id={this.props.id} password={this.props.password}
 						onChange={this.props.onChange} onLogin={this.props.onLogin} fetchAdminInfo={this.props.fetchAdminInfo} showMessage={this.props.showMessage}
 					/>

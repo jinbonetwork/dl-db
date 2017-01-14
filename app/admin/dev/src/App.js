@@ -12,6 +12,7 @@ import './style/admin.less';
 import './style/login.less';
 import './style/mainMenu.less';
 import './style/users.less';
+import './style/accessories.less';
 
 const mapOfAdmin = {
 	stateToProps: (state) => ({

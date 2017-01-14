@@ -24,11 +24,13 @@ class Users extends Component {
 		return(
 			<div className="users">
 				<h1>회원목록</h1>
-				<div className="users__list">
-					<table><tbody>
-						{listHead}
-						{list}
-					</tbody></table>
+				<div className="users__list-wrap">	
+					<div className="users__list">
+						<table><tbody>
+							{listHead}
+							{list}
+						</tbody></table>
+					</div>
 				</div>
 				<Pagination url="/admin/users/page/" page={parseInt(this.props.params.page)} lastPage={this.props.lastPage} />
 			</div>

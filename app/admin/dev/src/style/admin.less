@@ -1,7 +1,5 @@
 @import 'variables';
 
-@import "variables";
-
 *, *:before, *:after {
 	box-sizing: border-box;
 }
@@ -67,6 +65,29 @@ a {
 }
 div {
 	outline: none;
+}
+table {
+	border-collapse: collapse;
+	th {
+		padding: 0;
+	}
+	td {
+		padding: 0;
+	}
+}
+.admin .pagination {
+	a {
+		color: @font-color;
+		background-color: @minor-color-2;
+	}
+	span.pagination__page {
+		color: @minor-color-2;
+		background-color: @main-color;
+	}
+	.pagination__arrow i {
+		font-weight: @font-bold;
+		color: @main-color;
+	}
 }
 .message {
 	& > div:first-child {
