@@ -1,20 +1,21 @@
 @import 'variables';
 
 .users {
-	width: 100%;
-	max-width: 40em;
-	margin: 5% auto;
+	margin: 5% 0;
+
 	h1 {
 		color: @main-color;
 		font-weight: @font-normal;
 		text-align: center;
+		margin: 0;
 	}
-	.users__list-wrap {
-		padding: 1.5em;
-		background-color: @minor-color-2;
+	h1 + table {
+		margin-top: 5%;
 	}
 	table {
-		width: 100%;
+		border: solid 1.5em @minor-color-2;
+		background-color: @minor-color-2;
+		margin-left: auto; margin-right: auto;
 	}
 	table tr {
 		border-bottom: dotted 1px @main-color;
@@ -24,12 +25,15 @@
 	}
 	table th {
 		font-weight: @font-normal;
-		padding-bottom: 0.7em;
+		padding: 0 0.5em 0.7em 0.5em;
 	}
 	table td {
 		padding: 0.7em 0.5em;
 	}
-	.users__list-wrap + .pagination {
-		margin-top: 1em;
+	table tr:last-child td {
+		padding-bottom: 0;
+	}
+	table + .pagination {
+		margin-top: 5%;
 	}
 }

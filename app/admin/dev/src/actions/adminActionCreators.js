@@ -1,6 +1,6 @@
 import {
 	REQUEST_USERLIST, RECEIVE_USERLIST,
-	REQUEST_USER_FIELD_DATA, RECEIVE_USER_FIELD_DATA, REFINE_ROLES,
+	REQUEST_USER_FIELD_DATA, RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERS, REFINE_ROLES,
 	REQUEST_AGREEMENT, RECEIVE_AGREEMENT,
 	REQUEST_ADMIN_INFO, RECEIVE_ADMIN_INFO,
 	CHANGE_PROPS_IN_ADMIN,
@@ -64,6 +64,9 @@ const adminActionCreators = {
 				(error) => dispatchError(dispatch, error)
 			);
 		}
+	},
+	changePropsInUsers(which, value){
+		return {type: CHANGE_PROPS_IN_USERS, which, value};
 	},
 	fetchAgreement(){
 		return (dispatch) => {

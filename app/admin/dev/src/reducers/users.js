@@ -1,4 +1,4 @@
-import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, REFINE_ROLES} from '../constants';
+import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERS, REFINE_ROLES} from '../constants';
 import update from 'react-addons-update';
 import {_copyOf, _forIn} from '../accessories/functions';
 
@@ -20,7 +20,8 @@ const initialState = {
 	},
 	list: [],
 	originalList: [],
-	lastPage: 1
+	lastPage: 1,
+	selected: []
 };
 const refineFieldData = (fData) => {
 	const init = initialState.fieldData;
@@ -115,6 +116,7 @@ const refineList = (original, fieldData) => {
 	const fID = fieldData.fID;
 	const fProps = fieldData.fProps;
 	return original.map((item) => ({
+		id: parseInt(item[fID.id]),
 		name: item[fID.name],
 		class: item[fID.class],
 		email: item[fID.email],
@@ -140,7 +142,9 @@ const users = (state = initialState, action) => {
 		case REFINE_ROLES:
 			return update(state, {
 				fieldData: {roles: {$set: refineRoles(action.roles)}}
-			})
+			});
+		case CHANGE_PROPS_IN_USERS:
+			return update(state, {[action.which]: {$set: action.value}});
 		default:
 			return state;
 	}

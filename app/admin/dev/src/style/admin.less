@@ -112,3 +112,15 @@ table {
 		cursor: pointer;
 	}
 }
+.admin .checkbox {
+	font-size: 1.5em;
+	&:focus {
+		border-bottom: dotted 1px @main-color;
+	}
+	.checkbox__check-icon {
+		color: @main-color;
+	}
+	.checkbox__uncheck-icon {
+		color: lighten(@font-color, 30%);
+	}
+}

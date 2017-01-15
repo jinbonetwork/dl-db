@@ -37,11 +37,13 @@ const mapOfUsers = {
 		fieldData: state.users.fieldData,
 		list: state.users.list,
 		originalList: state.users.originalList,
-		lastPage: state.users.lastPage
+		lastPage: state.users.lastPage,
+		selected: state.users.selected
 	}),
 	dispatchToProps: (dispatch) => ({
 		fetchUserFieldData: () => dispatch(adminActionCreators.fetchUserFieldData()),
 		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value)),
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback))
 	})
 }

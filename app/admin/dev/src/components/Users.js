@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
+import CheckBox from '../accessories/CheckBox';
 import Pagination from '../accessories/Pagination';
-import {_mapO} from '../accessories/functions';
+import {_mapO, _pushpull} from '../accessories/functions';
 
 class Users extends Component {
 	componentDidMount(){
@@ -12,27 +13,40 @@ class Users extends Component {
 			this.props.fetchUserList(this.props.params.page);
 		}
 	}
+	handleChange(which, arg1st, arg2nd){
+		if(which == 'check'){
+			let id = arg1st, isChecked = arg2nd;
+			this.props.onChange('selected', _pushpull(this.props.selected, id));
+		}
+	}
 	render(){
 		const fProps = this.props.fieldData.fProps;
 		const listHead = (
 			<tr>{_mapO(this.props.list[0], (pn, pv) => <th key={pn}>{fProps[pn].dispName}</th>)}</tr>
 		)
-		const list = this.props.list.map((item, index) => (
-			<tr key={index}>{_mapO(item, (pn, pv) => <td key={pn}>{pv}</td>)}</tr>
-		));
+		const list = this.props.list.map((item, index) => {
+			let userInfo = _mapO(item, (pn, pv) => {
+				if(pn != 'id'){
+					return <td key={pn}>{pv}</td>
+				} else {
+					return (
+						<td key={pn}>
+							<CheckBox check={this.props.selected.indexOf(pv) >= 0} onChange={this.handleChange.bind(this, 'check', pv)}/>
+						</td>
+					);
+				}
+			});
+			return <tr key={index}>{userInfo}</tr>
+		});
 		const page = (this.props.params.page ? parseInt(this.props.params.page) : 1);
 		return(
 			<div className="users">
 				<h1>회원목록</h1>
-				<div className="users__list-wrap">	
-					<div className="users__list">
-						<table><tbody>
-							{listHead}
-							{list}
-						</tbody></table>
-					</div>
-				</div>
-				<Pagination url="/admin/users/page/" page={parseInt(this.props.params.page)} lastPage={this.props.lastPage} />
+				<table><tbody>
+					{listHead}
+					{list}
+				</tbody></table>
+				<Pagination url="/admin/users/page/" page={page} lastPage={this.props.lastPage} />
 			</div>
 		);
 	}
@@ -44,8 +58,10 @@ Users.propTypes = {
 	originalList: PropTypes.array.isRequired,
 	list: PropTypes.array.isRequired,
 	lastPage: PropTypes.number.isRequired,
+	selected: PropTypes.array.isRequired,
 	fetchUserFieldData: PropTypes.func.isRequired,
 	fetchUserList: PropTypes.func.isRequired,
+	onChange: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired
 }
 

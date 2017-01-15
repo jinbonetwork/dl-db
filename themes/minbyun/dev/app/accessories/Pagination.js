@@ -1,8 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
-const _numOfPages = 10;
-
 class Pagination extends Component {
 	page(page){
 		if(page != this.props.page){
@@ -14,12 +12,12 @@ class Pagination extends Component {
 	render(){
 		let pagination = [];
 		let from, to;
-		if(this.props.lastPage <= _numOfPages){
+		if(this.props.lastPage <= this.props.numOfPages){
 			from = 1; to = this.props.lastPage;
 		} else {
 			let tempFrom = (this.props.page - 4 >= 1 ? this.props.page - 4 : 1);
-			to = (tempFrom + _numOfPages - 1 <= this.props.lastPage ? tempFrom + _numOfPages - 1 : this.props.lastPage);
-			from = to - _numOfPages + 1;
+			to = (tempFrom + this.props.numOfPages - 1 <= this.props.lastPage ? tempFrom + this.props.numOfPages - 1 : this.props.lastPage);
+			from = to - this.props.numOfPages + 1;
 		}
 		for(let i = from; i <= to; i++){
 			pagination.push(this.page(i));
@@ -39,10 +37,12 @@ Pagination.propTypes = {
 	url: PropTypes.string.isRequired,
 	page: PropTypes.number,
 	lastPage: PropTypes.number.isRequired,
+	numOfPages: PropTypes.number,
 	prevIcon: PropTypes.element,
 	nextIcon: PropTypes.element
 }
 Pagination.defaultProps = {
+	numOfPages: 10,
 	prevIcon: <i className="pe-7s-angle-left pe-va"></i>,
 	nextIcon: <i className="pe-7s-angle-right pe-va"></i>
 };
