@@ -2,7 +2,7 @@ import {
 	RECEIVE_ADMIN_INFO,
 	CHANGE_PROPS_IN_ADMIN,
 	REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
-	SHOW_MESSAGE, HIDE_MESSAGE } from '../constants';
+	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS } from '../constants';
 import update from 'react-addons-update';
 import {_findProp} from '../accessories/functions';
 
@@ -14,7 +14,8 @@ const initialState = {
 	password: '',
 	message: {
 		content: '', callback: null
-	}
+	},
+	showProc: false
 };
 
 const admin = (state = initialState, action) => {
@@ -36,6 +37,10 @@ const admin = (state = initialState, action) => {
 			return update(state, {message: {$set: {content: action.message, callback: action.callback}}});
 		case HIDE_MESSAGE:
 			return update(state, {message: {$set: {content: '', callback: null}}});
+		case SHOW_PROCESS:
+			return update(state, {showProc: {$set: true}});
+		case HIDE_PROCESS:
+			return update(state, {showProc: {$set: false}});
 		default:
 			return state;
 	}

@@ -90,12 +90,12 @@ class DigitalLibrary extends Component {
 				</div>
 			);
 		}
-		const logo = (_screen.sMedium < wWidth && wWidth <= _screen.medium ? 'logo.svg' : 'logo-text.svg');
 		return(
 			<div className="digital-library">
 				<div className="digital-library__header">
 					<Link className="digital-library__logo" to="/">
-						<img src={site_base_uri+'/themes/minbyun/images/'+logo} />
+						<img src={site_base_uri+'/themes/minbyun/images/logo.png'} />
+						{(!child || wWidth <= _screen.sMedium) && <span>민주사회를 위한 변호사모임</span>}
 					</Link>
 					{child && this.searchBar()}{!child && <span>&nbsp;</span>}
 					<MainMenu userRole={userRole} menuData={this.props.menuData} window={this.props.window}

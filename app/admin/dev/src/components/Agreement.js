@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 class Agreement extends Component {
 	componentDidMount(){
-		//this.props.fetchAgreement();
+		this.props.fetchAgreement();
 	}
 	render(){
 		return (

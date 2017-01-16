@@ -98,8 +98,7 @@ Users.propTypes = {
 	selected: PropTypes.array.isRequired,
 	fetchUserFieldData: PropTypes.func.isRequired,
 	fetchUserList: PropTypes.func.isRequired,
-	onChange: PropTypes.func.isRequired,
-	showMessage: PropTypes.func.isRequired
+	onChange: PropTypes.func.isRequired
 }
 
 export default Users;

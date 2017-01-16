@@ -89,7 +89,7 @@
 	}
 }
 .searchbar:not(.searchbar--content){
-	margin-left: 7.4em;
+	margin-left: 53px;
 	margin-right: @main-menu-width;
 	@media screen and (max-width: @medium-screen){
 		margin-left: 4em;
@@ -101,7 +101,6 @@
 		margin-left: 7.4em;
 		visibility: hidden;
 	}
-
 	.searchbar__keyword {
 		border-width: 0 2px;
 		@media screen and (max-width: @medium-screen){
@@ -237,11 +236,13 @@
 			border-top: 0;
 		}
 	}
-	.searchbar__bar + .searchbar__helper {
-		margin-top: 1em;
+	.counter + .searchbar__helper {
+		margin-top: 5%;
 	}
 	.searchbar__helper:not(.searchbar__helper--visible) {
-		display: none;
+		@media screen and (max-width: @small-m-screen) {
+			display: none;
+		}
 	}
 	.searchbar__helper {
 		max-width: 26em;
@@ -379,5 +380,81 @@
 			border-width: 0 2px;
 			margin-left: -2px;
 		}
+	}
+}
+
+.counter {
+	width: 100%;
+	margin: 0 auto;
+	max-width: 26em;
+	&:not(.counter--visible) {
+		@media screen and (max-width: @small-m-screen){
+			display: none;
+		}
+	}
+	.searchbar__bar + & {
+		margin-top: 5%;
+	}
+	.counter__head {
+		text-align: center;
+		color: @main-color;
+		font-weight: @font-bold;
+	}
+	.counter__head + .counter__body {
+		margin-top: 1em;
+	}
+	.counter__body {
+		width: 100%;
+		border: solid 8px @minor-color-2;
+		border-radius: 15px;
+		background-color: @main-color;
+		padding: 8px;
+		.box-shadow-gradient(@n) when (@n > 0){
+			.box-shadow-gradient((@n - 1));
+			box-shadow+: -1px*@n 1px*@n mix(@minor-color-1, @main-color, 50% + 2.5%*@n);
+		}
+		.box-shadow-gradient(20);
+		@media screen and (max-width: @small-m-screen) {
+			border: 0;
+			background-color: transparent;
+			box-shadow: none;
+			text-align: center;
+		}
+	}
+	.counter__body > div:first-child {
+		float: left;
+		width: 150px;
+		@media screen and (max-width: @small-m-screen) {
+			display: none;
+		}
+	}
+	.counter__body > div:first-child img {
+		display: block;
+		margin: 0 auto;
+	}
+	.counter__body > div:last-child {
+		@media screen and (max-width: @small-m-screen) {
+			display: inline-block;
+		}
+	}
+	.counter__digit {
+		display: inline-block;
+		position: relative;
+		width: 40px;
+		height: 52px;
+		text-align: center;
+	}
+	.counter__digit + .counter__digit {
+		margin-left: 0.5em;
+	}
+	.counter__digit img {
+		position: absolute;
+		top: 0; left: 0;
+	}
+	.counter__digit span {
+		position: relative;
+		line-height: 52px;
+		font-size: 1.5em;
+		color: @main-color;
 	}
 }

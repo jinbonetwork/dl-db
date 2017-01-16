@@ -18,11 +18,13 @@ const _sFname = {
 const _docData = (data) => {
 	let fname = _copyOf(_fname), sFname = _copyOf(_sFname), fAttrs = _copyOf(_fAttrs);
 	let emptyDoc = {}, taxonomy = {}, terms = {};
-	data.fields.forEach((attr) => { // fname, sFname
+	// fname, sFname ////
+	data.fields.forEach((attr) => {
 		fname['f'+attr.fid] = attr.slug;
 		sFname[attr.slug] = 'f'+attr.fid;
 	});
-	data.fields.forEach((attr) => { // taxonomy, terms
+	// taxonomy, terms ////
+	data.fields.forEach((attr) => {
 		if(attr.type == 'taxonomy' && attr.cid > 0){
 			let fn = fname['f'+attr.fid];
 			let tempTaxo = [];
@@ -33,8 +35,9 @@ const _docData = (data) => {
 			taxonomy[attr.slug] = _copyOf(tempTaxo, true);
 		}
 	});
+	// fAttrs ////
 	let topFields = [];
-	data.fields.forEach((attr) => { // fAttrs
+	data.fields.forEach((attr) => {
 		const parent = (attr.parent > 0 ? fname['f'+attr.parent] : '');
 		const children = []; data.fields.forEach((cattr) => {if(cattr.parent == attr.fid) children[cattr.idx] = cattr.slug});
 		if(attr.parent == 0){ if(attr.type != 'group' || children.length > 0){
@@ -47,6 +50,7 @@ const _docData = (data) => {
 			required: (attr.required == 1 ? true : false)
 		};
 	});
+	// emptyDoc ////
 	topFields = _copyOf(topFields, true);
 	if(topFields[0] == 'doctype' && topFields[1] == 'trial' && topFields[2] == 'committee'){
 		topFields.splice(3, 0, 'content');
@@ -64,8 +68,15 @@ const _docData = (data) => {
 			});
 		}
 	});
+	// numOfDocs ////
+	let numOfDocs = data.total_cnt;
+	for(let i = 5, len = numOfDocs.length; i > len; i--){
+		numOfDocs = '0'+numOfDocs;
+	}
+	if(numOfDocs.length > 5) numOfDocs = '99999';
+	// return ////
 	return {
-		fname: fname, sFname: sFname, fAttrs: fAttrs, emptyDoc: emptyDoc, taxonomy: taxonomy, terms: terms
+		fname: fname, sFname: sFname, fAttrs: fAttrs, emptyDoc: emptyDoc, taxonomy: taxonomy, terms: terms, numOfDocs: numOfDocs
 	};
 };
 const emptyDocValue = (fname, fAttr, taxonomy) => {

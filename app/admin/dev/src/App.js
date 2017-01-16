@@ -20,13 +20,13 @@ const mapOfAdmin = {
 		loginType: state.admin.loginType,
 		id: state.admin.id,
 		password: state.admin.password,
-		message: state.admin.message
+		message: state.admin.message,
+		showProc: state.admin.showProc
 	}),
 	dispatchToProps: (dispatch) => ({
 		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(adminActionCreators.login(loginUrl, formData, failLogin)),
-		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
 		hideMessage: () => dispatch(adminActionCreators.hideMessage())
 	})
 }
@@ -43,8 +43,7 @@ const mapOfUsers = {
 	dispatchToProps: (dispatch) => ({
 		fetchUserFieldData: () => dispatch(adminActionCreators.fetchUserFieldData()),
 		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
-		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value)),
-		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback))
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value))
 	})
 }
 const UsersContainer = connect(mapOfUsers.stateToProps, mapOfUsers.dispatchToProps)(Users);

@@ -14,3 +14,5 @@ export const SUCCEED_LOGIN = 'succeed login';
 export const SHOW_LOGIN = 'show login';
 export const SHOW_MESSAGE = 'show message';
 export const HIDE_MESSAGE = 'hide message';
+export const SHOW_PROCESS = 'show process';
+export const HIDE_PROCESS = 'hide process';

@@ -5,7 +5,7 @@ import {
 	REQUEST_ADMIN_INFO, RECEIVE_ADMIN_INFO,
 	CHANGE_PROPS_IN_ADMIN,
 	REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
-	SHOW_MESSAGE, HIDE_MESSAGE } from '../constants';
+	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS } from '../constants';
 import adminApi from '../api/adminApi';
 
 const dispatchError = (dispatch, error) => {
@@ -22,7 +22,6 @@ const dispatchError = (dispatch, error) => {
 const adminActionCreators = {
 	fetchAdminInfo(){
 		return (dispatch) => {
-			dispatch({type: REQUEST_ADMIN_INFO});
 			adminApi.fetchAdminInfo((adminInfo) => {
 				dispatch({type: RECEIVE_ADMIN_INFO, adminInfo});
 				dispatch({type: REFINE_ROLES, roles: adminInfo.roles});
@@ -34,10 +33,16 @@ const adminActionCreators = {
 	},
 	login(loginUrl, formData, failLogin){
 		return (dispatch) => {
-			dispatch({type: REQUEST_LOGIN});
 			adminApi.login(loginUrl, formData, (isLogedIn) => {
-				if(isLogedIn) dispatch({type: SUCCEED_LOGIN});
-				else failLogin;
+				if(isLogedIn){
+					dispatch({type: SUCCEED_LOGIN});
+				} else {
+					dispatch({
+						type: SHOW_MESSAGE,
+						message: '로그인 정보가 올바르지 않습니다.',
+						callback: failLogin
+					});
+				}
 			}, (error) => dispatchError(dispatch, error));
 		};
 	},
@@ -49,16 +54,21 @@ const adminActionCreators = {
 	},
 	fetchUserList(page){
 		return (dispatch) => {
-			dispatch({type: REQUEST_USERLIST});
+			dispatch({type: SHOW_PROCESS});
 			adminApi.fetchUserList(page,
-				(userList, lastPage) => dispatch({type: RECEIVE_USERLIST, userList, lastPage}),
-				(error) => dispatchError(dispatch, error)
+				(userList, lastPage) => {
+					dispatch({type: HIDE_PROCESS});
+					dispatch({type: RECEIVE_USERLIST, userList, lastPage})
+				},
+				(error) => {
+					dispatch({type: HIDE_PROCESS});
+					dispatchError(dispatch, error);
+				}
 			);
 		}
 	},
 	fetchUserFieldData(){
 		return (dispatch) => {
-			dispatch({type: REQUEST_USER_FIELD_DATA});
 			adminApi.fetchUserFieldData(
 				(userFieldData) => dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
 				(error) => dispatchError(dispatch, error)
@@ -70,7 +80,6 @@ const adminActionCreators = {
 	},
 	fetchAgreement(){
 		return (dispatch) => {
-			dispatch({type: REQUEST_AGREEMENT});
 			adminApi.fetchAgreement(
 				(agreement) => dispatch({type: RECEIVE_AGREEMENT, agreement}),
 				(error) => dispatchError(dispatch, error)

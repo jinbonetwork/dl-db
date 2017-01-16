@@ -135,6 +135,7 @@ const users = (state = initialState, action) => {
 			});
 		case RECEIVE_USERLIST:
 			return update(state, {
+				showProc: {$set: false},
 				orginalList: {$set: action.userList},
 				list: {$set: refineList(action.userList, state.fieldData)},
 				lastPage: {$set: action.lastPage}
