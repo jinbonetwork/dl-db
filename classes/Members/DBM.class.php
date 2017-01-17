@@ -66,10 +66,38 @@ class DBM extends \DLDB\Objects {
 	public static function insert($args) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "INSERT INTO {members} (`name`,`class`, `email`, `phone`, `custom`, `license`) VALUES (?,?,?,?,?,?)";
-		$dbm->execute($que,array("sssssd",$args['name'],$args['class'],$args['email'],$args['phone'],serialize($args['custom']),0));
+		$fields = self::getFields();
+
+		$que = "INSERT INTO {members} (`name`,`class`, `email`, `phone`, `custom`, `license`";
+		$que2 .= ") VALUES (?,?,?,?,?,?)";
+		$array1 = 'array("sssssd';
+		$array2 = '$'."args['name'], ".'$'."args['class'], ".'$'."args['email'], ".'$'."args['phone'], serialize(".'$'."custom), 0";
+
+		$fieldquery = \DLDB\FieldsQuery::instance();
+		$fieldquery->setFields($fields);
+		$fieldquery->setTaxonomy(self::$taxonomy);
+		$fieldquery->setTaxonomyTerms(self::$taxonomy_terms);
+		$result = $fieldquery->insertQue($que,$que2,$array1,$array2,$args);
+		@extract($result);
+
+		$que = $que.$que2;
+		$eval_str = '$'."q_args = ".$array1.$array2.";";
+		eval($eval_str);
+
+		if($dbm->execute($que,$q_args) < 1) {
+			self::setErrorMsg($que." 가 DB에 반영되지 않았습니다.");
+			return -1;
+		}
+//		$dbm->execute($que,array("sssssd",$args['name'],$args['class'],$args['email'],$args['phone'],serialize($args['custom']),0));
 
 		$insert_id = $dbm->getLastInsertId();
+
+		if( is_array($taxonomy_map) ) {
+			if( $fieldquery->reBuildTaxonomy('members', $insert_id, $taxonomy_map) < 0 ) {
+				self::setErrorMsg( $fieldquery->getErrorMsg() );
+				return -1;
+			}
+		}
 
 		if($args['password']) {
 			$uid = self::makeID($rows);
@@ -89,9 +117,9 @@ class DBM extends \DLDB\Objects {
 		if($member['uid']) {
 			self::modifyID($member,$args);
 		} else if(!$member['uid'] && $args['password']) {
-			$uid = self::makeID($rows);
+			$uid = self::makeID($args);
 			$que = "UPDATE {members} SET uid = ? WHERE id = ?";
-			$dbm->execute($que,array("dd",$uid,$insert_id));
+			$dbm->execute($que,array("dd",$uid,$member['id']));
 		}
 
 		return 0;
@@ -182,6 +210,14 @@ class DBM extends \DLDB\Objects {
 			$dbm->execute($que,array("ds",$uid,serialize($roles)));
 		}
 		return 0;
+	}
+
+	public static function getErrorMsg() {
+		return self::$errmsg;
+	}
+
+	private static function setErrorMsg($msg) {
+		self::$errmsg = $msg;
 	}
 
 	private static function fetchMember($row) {
