@@ -1,5 +1,6 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, PropTypes, cloneElement} from 'react';
 import jQ from 'jquery';
+import browser from 'detect-browser';
 
 class Item extends Component {
 	componentDidMount(){
@@ -10,6 +11,10 @@ class Item extends Component {
 			});
 		}
 		if(this.props.focus) this.refs.li.focus();
+
+		if(browser.name == 'ie'){
+			jQ(this.refs.li).focusout((event) => {this.handleBlur(event)});
+		}
 	}
 	componentDidUpdate(prevProps, prevState){
 		if(this.props.focus) this.refs.li.focus();
@@ -43,9 +48,10 @@ class Item extends Component {
 	render(){
 		let className = (this.props.className ? 'item '+this.props.className : 'item');
 		const tabIndex = (this.props.hasOwnProperty('tabIndex') ? this.props.tabIndex : 0);
+		const handleBlur = (browser.name != 'ie' ? this.handleBlur.bind(this) : null);
 		return (
 			<li tabIndex={tabIndex} ref="li" className={className}
-				onBlur={this.handleBlur.bind(this)} onClick={this.handleClick.bind(this)} onFocus={this.handleFocus.bind(this)}
+				onBlur={handleBlur} onClick={this.handleClick.bind(this)} onFocus={this.handleFocus.bind(this)}
 				onKeyDown={this.handleKeyDown.bind(this)}
 			>
 				{this.props.children}

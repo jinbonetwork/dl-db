@@ -1,0 +1,114 @@
+@import 'variables';
+
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+body, html {
+	font-family:'Nanum Barun Gothic';
+	font-size: @font-size;
+	font-weight: @font-normal;
+	color: @font-color;
+	background-color: @minor-color-1;
+	margin: 0;
+}
+input[type=text], input[type=email], input[type=password], textarea, button {
+	font-family:'Nanum Barun Gothic';
+	font-size: @font-size;
+	color: @font-color;
+	border: solid 1px @main-color;
+	padding: 0 0.5em;
+	outline: none;
+	appearance: none;
+	border-radius: 0;
+	box-shadow: none;
+}
+input[type=text], input[type=email], input[type=password] {
+	&:focus {
+		background-color: @focus-color-1;
+	}
+}
+input::placeholder {
+	color: @font-color*1.7;
+}
+button {
+	padding: 0;
+	cursor: pointer;
+}
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
+}
+textarea {
+	margin: 0;
+	resize: vertical;
+}
+ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+li {
+	padding: 0;
+	list-style-type: none;
+}
+p {
+	margin: 0
+}
+p + p {
+	margin-top: 1em;
+}
+a {
+	color: inherit;
+	outline: none;
+	text-decoration: none;
+}
+div {
+	outline: none;
+}
+table {
+	border-collapse: collapse;
+	th {
+		padding: 0;
+	}
+	td {
+		padding: 0;
+	}
+}
+.admin .pagination {
+	a {
+		color: @font-color;
+		background-color: @minor-color-2;
+	}
+	span.pagination__page {
+		color: @minor-color-2;
+		background-color: @main-color;
+	}
+	.pagination__arrow i {
+		font-weight: @font-bold;
+		color: @main-color;
+	}
+}
+.message {
+	& > div:first-child {
+		position: fixed;
+		z-index: 2;
+		top: 0; left: 0; bottom: 0; right: 0;
+		width: 100%; height: 100%;
+		background-color: #000000;
+		opacity: 0.2;
+		cursor: pointer;
+	}
+	.message__content {
+		position: fixed;
+		z-index: 2;
+		top: 50%; left: 50%;
+		transform: translate(-50%, -50%);
+		max-width: 31em;
+		padding: 1em;
+		color: @main-color;
+		border: solid 1px @main-color;
+		background-color: @minor-color-2;
+		cursor: pointer;
+	}
+}

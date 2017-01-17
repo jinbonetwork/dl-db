@@ -14,16 +14,16 @@ class FieldInContents extends Component {
 					let term = this.props.docData.terms[v];
 					if(term) taxo.push(term.name);
 				});
-				if(taxo.length) return taxo.join(', ');
+				if(taxo.length) return <span>{taxo.join(', ')}</span>;
 				else return null;
 			case 'char': case 'email': case 'phone': case 'date':
 				if(!fAttr.multiple) value = [value];
 				if(fAttr.form !== 'textarea'){
-					return value.join(', ');
+					return <span>{value.join(', ')}</span>;
 				} else{
 					let texts = [];
 					value.map((text, i) => { if(text){
-						text = text.split(/\n/).map((t, j) => <div key={j}>{t}</div>);
+						text = text.split(/\n/).map((t, j) => <div key={j}><span>{t}</span></div>);
 						texts.push(<div key={i}>{text}</div>);
 					}});
 					if(texts.length) return texts;
