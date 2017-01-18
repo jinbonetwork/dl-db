@@ -1,11 +1,12 @@
 import {
-	RECEIVE_USERLIST, REFINE_USERLIST,
+	RECEIVE_USERLIST, REFINE_USERDATA,
 	RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERLIST, REFINE_ROLES,
 	RECEIVE_AGREEMENT,
 	RECEIVE_ADMIN_INFO,
 	CHANGE_PROPS_IN_ADMIN,
 	SUCCEED_LOGIN, SHOW_LOGIN,
-	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS } from '../constants';
+	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS,
+ 	RECEIVE_USER} from '../constants';
 import adminApi from '../api/adminApi';
 
 const dispatchError = (dispatch, error) => {
@@ -24,6 +25,7 @@ const adminActionCreators = {
 		return (dispatch) => {
 			adminApi.fetchAdminInfo((adminInfo) => {
 				dispatch({type: RECEIVE_ADMIN_INFO, adminInfo});
+				if(adminInfo.isAdmin) this.fetchUserFieldData();
 			}, (error) => dispatchError(dispatch, error));
 		}
 	},
@@ -32,7 +34,7 @@ const adminActionCreators = {
 			adminApi.fetchUserFieldData(
 				(userFieldData) => {
 					dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
-					dispatch({type: REFINE_USERLIST, userFieldData})
+					dispatch({type: REFINE_USERDATA, userFieldData})
 				},
 				(error) => dispatchError(dispatch, error)
 			);
@@ -46,6 +48,7 @@ const adminActionCreators = {
 			adminApi.login(loginUrl, formData, (isLogedIn) => {
 				if(isLogedIn){
 					dispatch({type: SUCCEED_LOGIN});
+					this.fetchUserFieldData();
 				} else {
 					dispatch({
 						type: SHOW_MESSAGE,
@@ -79,6 +82,26 @@ const adminActionCreators = {
 	},
 	changePropsInUserList(which, value){
 		return {type: CHANGE_PROPS_IN_USERLIST, which, value};
+	},
+	fetchUser(id, list){
+		let user = list.find((usr) => (usr.id == id));
+		if(user){
+			return {type: RECEIVE_USER, user}
+		} else {
+			return (dispatch) => {
+				dispatch({type: SHOW_PROCESS});
+				adminApi.fetchUser(id,
+					(user) => {
+						dispatch({type: HIDE_PROCESS});
+						dispatch({type: RECEIVE_USER, user})
+					},
+					(error) => {
+						dispatch({type: HIDE_PROCESS});
+						dispatchError(dispatch, error);
+					}
+				);
+			};
+		}
 	},
 	fetchAgreement(){
 		return (dispatch) => {

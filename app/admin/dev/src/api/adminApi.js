@@ -65,6 +65,9 @@ const adminApi = {
 			(data) => succeed(data.members, parseInt(data.result.total_page)), fail
 		);
 	},
+	fetchUser(id, succeed, fail){
+		fetchData('get', '/api/admin/member?id='+id, ({memeber}) => succeed(memeber), fail)
+	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
 	}

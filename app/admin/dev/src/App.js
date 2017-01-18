@@ -28,7 +28,6 @@ const mapOfAdmin = {
 	}),
 	dispatchToProps: (dispatch) => ({
 		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
-		fetchUserFieldData: () => dispatch(adminActionCreators.fetchUserFieldData()),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(adminActionCreators.login(loginUrl, formData, failLogin)),
 		hideMessage: () => dispatch(adminActionCreators.hideMessage())
@@ -51,16 +50,16 @@ const mapOfUserList = {
 };
 const UserListContainer = connect(mapOfUserList.stateToProps, mapOfUserList.dispatchToProps)(UserList);
 
-/*
-const mapOfUserContainer = {
-	stateToProps: (state) => ({
-		originalData: state.user.originalData,
-		data: sate.user.data
+const UserContainer = connect(
+	(state) => ({
+		userFieldData: state.user.userFieldData,
+		originalUserList: state.user.originalUserList,
+		user: state.user.user
 	}),
-	dispatchToProps: (dispatch) => ({
+	(dispatch) => ({
+		fetchUser: (id, list) => dispatch(adminActionCreators.fetchUser(id, list))
 	})
-};
-*/
+)(User);
 
 const mapOfAgreement = {
 	stateToProps: (state) => ({
@@ -78,7 +77,7 @@ render(
 			<Route path="/admin" component={AdminContainer}>
 				<IndexRoute component={UserListContainer} />
 				<Route path="userlist(/page/:page)" component={UserListContainer} />
-				<Route path="user/:id" component={User}>
+				<Route path="user/:id" component={UserContainer}>
 					<Route path="edit" component={EditUser} />
 				</Route>
 				<Route path="user/new" component={NewUser} />

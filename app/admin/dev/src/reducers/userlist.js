@@ -1,4 +1,4 @@
-import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, REFINE_USERLIST, CHANGE_PROPS_IN_USERLIST} from '../constants';
+import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, REFINE_USERDATA, CHANGE_PROPS_IN_USERLIST} from '../constants';
 import userFieldData from '../fieldData/userFieldData';
 import update from 'react-addons-update';
 import {_copyOf, _forIn} from '../accessories/functions';
@@ -31,7 +31,7 @@ const userlist = (state = initialState, action) => {
 				list: {$set: refineList(action.userList, state.userFieldData)},
 				lastPage: {$set: action.lastPage}
 			});
-		case REFINE_USERLIST:
+		case REFINE_USERDATA:
 			return update(state, {list: {$set: refineList(state.originalList, action.userFieldData)}});
 		case CHANGE_PROPS_IN_USERLIST:
 			return update(state, {[action.which]: {$set: action.value}});

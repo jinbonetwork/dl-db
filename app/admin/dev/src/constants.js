@@ -1,8 +1,7 @@
 export const RECEIVE_USERLIST = 'receive userlist';
-export const REFINE_USERLIST = 'refine userlist';
+export const REFINE_USERDATA = 'refine userdata';
 export const RECEIVE_USER_FIELD_DATA = 'receive user field data';
 export const CHANGE_PROPS_IN_USERS = 'change props in users';
-export const REFINE_ROLES = 'refine roles';
 export const RECEIVE_AGREEMENT = 'receive agreement';
 export const RECEIVE_ADMIN_INFO = 'receive administrator information';
 export const CHANGE_PROPS_IN_ADMIN = 'change props in admin';
@@ -12,3 +11,4 @@ export const SHOW_MESSAGE = 'show message';
 export const HIDE_MESSAGE = 'hide message';
 export const SHOW_PROCESS = 'show process';
 export const HIDE_PROCESS = 'hide process';
+export const RECEIVE_USER = 'receive user';
