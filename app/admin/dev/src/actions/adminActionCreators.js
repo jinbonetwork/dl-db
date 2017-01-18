@@ -1,10 +1,10 @@
 import {
-	REQUEST_USERLIST, RECEIVE_USERLIST,
-	REQUEST_USER_FIELD_DATA, RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERS, REFINE_ROLES,
-	REQUEST_AGREEMENT, RECEIVE_AGREEMENT,
-	REQUEST_ADMIN_INFO, RECEIVE_ADMIN_INFO,
+	RECEIVE_USERLIST, REFINE_USERLIST,
+	RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERLIST, REFINE_ROLES,
+	RECEIVE_AGREEMENT,
+	RECEIVE_ADMIN_INFO,
 	CHANGE_PROPS_IN_ADMIN,
-	REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
+	SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -24,8 +24,18 @@ const adminActionCreators = {
 		return (dispatch) => {
 			adminApi.fetchAdminInfo((adminInfo) => {
 				dispatch({type: RECEIVE_ADMIN_INFO, adminInfo});
-				dispatch({type: REFINE_ROLES, roles: adminInfo.roles});
 			}, (error) => dispatchError(dispatch, error));
+		}
+	},
+	fetchUserFieldData(){
+		return (dispatch) => {
+			adminApi.fetchUserFieldData(
+				(userFieldData) => {
+					dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
+					dispatch({type: REFINE_USERLIST, userFieldData})
+				},
+				(error) => dispatchError(dispatch, error)
+			);
 		}
 	},
 	changePropsInAdmin(which, value){
@@ -67,16 +77,8 @@ const adminActionCreators = {
 			);
 		}
 	},
-	fetchUserFieldData(){
-		return (dispatch) => {
-			adminApi.fetchUserFieldData(
-				(userFieldData) => dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
-				(error) => dispatchError(dispatch, error)
-			);
-		}
-	},
-	changePropsInUsers(which, value){
-		return {type: CHANGE_PROPS_IN_USERS, which, value};
+	changePropsInUserList(which, value){
+		return {type: CHANGE_PROPS_IN_USERLIST, which, value};
 	},
 	fetchAgreement(){
 		return (dispatch) => {

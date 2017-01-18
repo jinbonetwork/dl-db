@@ -18,8 +18,30 @@ class SearchBar extends Component {
 			isPeriodVisible: false,
 			isPeriodFocused: false,
 			isHelperVisible: false,
-			isKeywordFocused: false
+			isKeywordFocused: false,
+			count: '00000'
 		};
+		this.countIntv = undefined;
+	}
+	componentDidMount(){
+		if(this.props.mode == 'content'){
+			this.countIntv = setInterval(() => {
+				if(this.props.docData.numOfDocs != this.state.count){
+					let newCount = '' + (parseInt(this.state.count) + 1);
+					for(let i = 5, len = newCount.length; i > len; i--){
+						newCount = '0'+newCount;
+					}
+					this.setState({count: newCount})
+				} else {
+					clearInterval(this.countIntv);
+				}
+			}, 50);
+		}
+	}
+	componentWillUnmount(){
+		if(this.props.mode == 'content'){
+			clearInterval(this.countIntv);
+		}
 	}
 	query(sQuery){
 		return _query(sQuery, this.props.docData.sFname);
@@ -188,8 +210,8 @@ class SearchBar extends Component {
 		);
 	}
 	displayCount(){
-		let count = this.props.docData.numOfDocs.split('');
-		return count.map((digit, index) => (
+		//let count = this.props.docData.numOfDocs.split('');
+		return this.state.count.split('').map((digit, index) => (
 			<div key={index} className="counter__digit">
 				<img src={site_base_uri+'/themes/minbyun/images/count.png'} />
 				<span>{digit}</span>

@@ -170,8 +170,15 @@ const _termsOf = (fname, docData) => {
 };
 const _isHiddenField = (fname, where, doc, docData) => {
 	if(fname == 'trial' && docData.fAttrs.doctype && !docData.fAttrs.doctype.multiple && doc.doctype){
-		const term = docData.terms[doc.doctype];
-		if(term && (term.slug == 'sentencing' || term.slug == 'writing')){
+		const doctype = docData.terms[doc.doctype].slug;
+		if(doctype && (doctype == 'sentencing' || doctype == 'writing')){
+			return false;
+		}
+		else return true;
+	}
+	else if(fname == 'sentence' && docData.fAttrs.doctype && !docData.fAttrs.doctype.multiple && doc.doctype){
+		const doctype = docData.terms[doc.doctype].slug;
+		if(doctype && doctype == 'sentencing'){
 			return false;
 		}
 		else return true;

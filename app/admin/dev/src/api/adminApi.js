@@ -1,4 +1,5 @@
 import axios from 'axios';
+import userFieldData from '../fieldData/userFieldData';
 import {_findProp} from '../accessories/functions';
 
 const fetchData = (method, url, arg2, arg3, arg4) => {
@@ -28,17 +29,26 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 	*/
 };
 
+const isAdmin = ({role, roles}) => {
+	return (role ? role.indexOf(parseInt(_findProp(roles, 'administrator'))) >= 0 : false);
+};
+
 const adminApi = {
 	fetchAdminInfo(succeed, fail){
-		fetchData('get', '/api', (adminInfo) => succeed(adminInfo), fail);
+		fetchData('get', '/api', ({role, roles, sessiontype}) => {
+			succeed({
+				isAdmin: isAdmin({role, roles}),
+				loginType: sessiontype
+			});
+		}, fail);
 	},
 	login(loginUrl, formData, succeed, fail){
 		fetchData('post', loginUrl, formData, () => {
-			fetchData('get', '/api', (adminInfo) => {
-				if(adminInfo.role && adminInfo.role.indexOf(parseInt(_findProp(adminInfo.roles, 'administrator'))) >= 0){
+			fetchData('get', '/api', ({role, roles}) => {
+				if(isAdmin({role, roles})){
 					succeed(true);
 				} else {
-					if(adminInfo.role){
+					if(role){
 						fetchData('post', '/api/logout', null, () => succeed(false), fail);
 					} else {
 						succeed(false);
@@ -48,7 +58,7 @@ const adminApi = {
 		}, fail);
 	},
 	fetchUserFieldData(succeed, fail){
-		fetchData('get', '/api/admin/member/fields', (userFieldData) => succeed(userFieldData), fail);
+		fetchData('get', '/api/admin/member/fields', (fData) => succeed(userFieldData.refineData(fData)), fail);
 	},
 	fetchUserList(page, succeed, fail){
 		fetchData('get', '/api/admin/member?page='+(page ? page : 1),

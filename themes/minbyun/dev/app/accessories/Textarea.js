@@ -15,7 +15,6 @@ class Textarea extends Component {
 		if(this.props.onBlur) this.props.onBlur();
 	}
 	render(){
-		const value = (this.props.value ? this.props.value : '');
 		const message = (this.props.message ? <span>{this.props.message}</span> : null);
 		const count = (this.props.displayCount ? <span className="textarea__num-of-words">{this.props.value.length}자</span> : null);
 		const footer = (message || count) && (
@@ -26,7 +25,7 @@ class Textarea extends Component {
 		) ;
 		return(
 			<div className="textarea">
-				<textarea ref="textarea" value={value} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)} />
+				<textarea ref="textarea" value={this.props.value} rows={this.props.rows} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)} />
 				{footer}
 			</div>
 		);
@@ -34,6 +33,7 @@ class Textarea extends Component {
 }
 Textarea.propTypes = {
 	value: PropTypes.string,
+	rows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	focus: PropTypes.bool,
 	message: PropTypes.string,
 	limit: PropTypes.number,
@@ -41,5 +41,9 @@ Textarea.propTypes = {
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func
 };
+Textarea.defaultProps = {
+	value: '',
+	rows: 5
+}
 
 export default Textarea;

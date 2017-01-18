@@ -9,6 +9,7 @@ class Admin extends Component {
 	}
 	componentDidUpdate(prevProps, prevState){
 		if(this.refs.message) this.refs.message.focus();
+		if(!prevProps.isAdmin && this.props.isAdmin) this.props.fetchUserFieldData();
 	}
 	handleClick(which){
 		if(which == 'message'){
@@ -68,6 +69,7 @@ Admin.propTypes = {
 	}).isRequired,
 	showProc: PropTypes.bool,
 	fetchAdminInfo: PropTypes.func.isRequired,
+	fetchUserFieldData: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
 	hideMessage: PropTypes.func.isRequired
