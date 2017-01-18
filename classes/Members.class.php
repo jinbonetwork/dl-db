@@ -96,6 +96,21 @@ class Members extends \DLDB\Objects {
 
 		$dbm->execute($que,$q_args);
 
+		if( is_array($taxonomy_map) ) {
+			if( $fieldquery->reBuildTaxonomy('members', $args['id'], $taxonomy_map) < 0 ) {             
+				self::setErrorMsg( $fieldquery->getErrorMsg() );
+				return -1;
+			}
+		}
+
+		if($member['uid']) {
+			\DLDB\Members\DBM::modifyID($member,$args);
+		} else if(!$member['uid'] && $args['password']) {
+			$uid = \DLDB\Members\DBM::makeID($args);
+			$que = "UPDATE {members} SET uid = ? WHERE id = ?";
+			$dbm->execute($que,array("dd",$uid,$args['id']));
+		}
+
 		return 0;
 	}
 
