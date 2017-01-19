@@ -18,13 +18,18 @@ class index extends \DLDB\Controller {
 					'message' => '존재하지 않는 회원입니다.'
 				);
 			} else {
+				if($member['uid']) {
+					$member['role'] = \DLDB\Members\DBM::getRole($member['uid']);
+				} else {
+					$member['role'] = array();
+				}
 				$this->result = array(
 					'error' => 0,
 					'result' => array(
 						'id' => $this->params['id'],
 						'page' => $this->params['page']
 					),
-					'memeber' => $member
+					'mmeber' => $member
 				);
 			}
 		} else {
