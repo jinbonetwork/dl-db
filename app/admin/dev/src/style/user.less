@@ -1,0 +1,44 @@
+@import 'variables';
+
+/*--- index --------------------------------------------
+.user
+.user__table:not(.user__inner-table)
+--------------------------------------------------------*/
+
+.user {
+	margin: 10% 0;
+	.user__wrap {
+		margin: 0 auto;
+	}
+	tr.user__table-padding {
+		height: 1.5em;
+		td:nth-child(n+2){
+			background-color: @minor-color-2;
+		}
+		td:last-child {
+			background-color: transparent;
+		}
+	}
+	td.user__table-margin {
+		width: 1em;
+	}
+	td.user__table-padding {
+		width: 1.5em;
+		background-color: @minor-color-2;
+	}
+}
+.user__table:not(.user__inner-table) {
+	min-width: 500px;
+	background-color: @minor-color-2;
+	tr:not(:last-child) {
+		border-bottom: solid 1px @main-color;
+	}
+	td {
+		padding: 1em 0.7em;
+	}
+	td:first-child {
+		max-width: 4em;
+		text-align: center;
+		border-right: solid 1px @main-color;
+	}
+}

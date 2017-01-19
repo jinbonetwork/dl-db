@@ -104,6 +104,38 @@ const userFieldData = {
 		} else {
 			return value;
 		}
+	},
+	refineUser(origin, fData){
+		let user = {};
+		for(let fn in fData.empty){
+			const fProp = fData.fProps[fn];
+			const originValue = origin[fData.fID[fn]];
+			if(originValue){
+				switch(fProp.type){
+					case 'meta':
+						if(fn == 'owner') user[fn] = (originValue == 1 ? true : false);
+						else user[fn] = parseInt(originValue); break;
+					case 'char': case 'tag': case 'email': case 'phone': case 'date': case 'role':
+						user[fn] = originValue; break;
+					case 'taxonomy':
+						user[fn] = [];
+						for(let tid in originValue) user[fn].push(parseInt(tid));
+						if(!fProp.multiple) user[fn] = user[fn][0]; break;
+					case 'image': case 'file':
+						user[fn] = [];
+						for(let fid in originValue){
+							originValue[fid].fid = fid;
+							user[fn].push(originValue[fid]);
+						}
+						if(!fProp.multiple) user[fn] = user[fn][0]; break;
+					default:
+						console.error(fProp.type+': 적합하지 않은 type입니다.'); return;
+				}
+			} else {
+				user[fn] = fData.empty[fn];
+			}
+		}
+		return user;
 	}
 };
 

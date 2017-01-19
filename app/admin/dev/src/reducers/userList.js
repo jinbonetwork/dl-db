@@ -20,7 +20,7 @@ const refineList = (original, {fID, fProps}) => {
 		uid: (item[fID.uid] > 0 ? '등록' : '')
 	}));
 };
-const userlist = (state = initialState, action) => {
+const userList = (state = initialState, action) => {
 	switch (action.type) {
 		case RECEIVE_USER_FIELD_DATA:
 			return update(state, {userFieldData: {$set: action.userFieldData}});
@@ -40,4 +40,4 @@ const userlist = (state = initialState, action) => {
 	}
 };
 
-export default userlist;
+export default userList;

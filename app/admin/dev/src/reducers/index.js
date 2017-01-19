@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
 import admin from './admin';
-import userlist from './userlist';
+import userList from './userList';
 import user from './user';
 import agreement from './agreement';
 
 const rootReducer = combineReducers({
 	admin,
-	userlist,
+	userList,
 	user,
 	agreement
 });

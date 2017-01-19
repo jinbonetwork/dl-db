@@ -16,9 +16,10 @@ import './style/login.less';
 import './style/mainMenu.less';
 import './style/userlist.less';
 import './style/accessories.less';
+import './style/user.less';
 
-const mapOfAdmin = {
-	stateToProps: (state) => ({
+const AdminContainer = connect(
+	(state) => ({
 		isAdmin: state.admin.isAdmin,
 		loginType: state.admin.loginType,
 		id: state.admin.id,
@@ -26,34 +27,33 @@ const mapOfAdmin = {
 		message: state.admin.message,
 		showProc: state.admin.showProc
 	}),
-	dispatchToProps: (dispatch) => ({
+	(dispatch) => ({
 		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(adminActionCreators.login(loginUrl, formData, failLogin)),
 		hideMessage: () => dispatch(adminActionCreators.hideMessage())
 	})
-};
-const AdminContainer = connect(mapOfAdmin.stateToProps, mapOfAdmin.dispatchToProps)(Admin);
+)(Admin);
 
-const mapOfUserList = {
-	stateToProps: (state) => ({
-		userFieldData: state.userlist.userFieldData,
-		list: state.userlist.list,
-		originalList: state.userlist.originalList,
-		lastPage: state.userlist.lastPage,
-		selected: state.userlist.selected
+const UserListContainer = connect(
+	(state) => ({
+		userFieldData: state.userList.userFieldData,
+		list: state.userList.list,
+		originalList: state.userList.originalList,
+		lastPage: state.userList.lastPage,
+		selected: state.userList.selected
 	}),
-	dispatchToProps: (dispatch) => ({
+	(dispatch) => ({
 		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value))
 	})
-};
-const UserListContainer = connect(mapOfUserList.stateToProps, mapOfUserList.dispatchToProps)(UserList);
+)(UserList);
 
 const UserContainer = connect(
 	(state) => ({
 		userFieldData: state.user.userFieldData,
 		originalUserList: state.user.originalUserList,
+		originalUser: state.user.originalUser,
 		user: state.user.user
 	}),
 	(dispatch) => ({
@@ -61,15 +61,15 @@ const UserContainer = connect(
 	})
 )(User);
 
-const mapOfAgreement = {
-	stateToProps: (state) => ({
+const AgreementContainer = connect(
+	(state) => ({
 		agreement: state.agreement
 	}),
-	dispatchToProps: (dispatch) => ({
+	(dispatch) => ({
 		fetchAgreement: () => dispatch(adminActionCreators.fetchAgreement())
 	})
-};
-const AgreementContainer = connect(mapOfAgreement.stateToProps, mapOfAgreement.dispatchToProps)(Agreement);
+)(Agreement);
+
 
 render(
 	<Provider store={adminStore}>
@@ -78,9 +78,9 @@ render(
 				<IndexRoute component={UserListContainer} />
 				<Route path="userlist(/page/:page)" component={UserListContainer} />
 				<Route path="user/:id" component={UserContainer}>
-					<Route path="edit" component={EditUser} />
+					{/*<Route path="edit" component={EditUser} />*/}
 				</Route>
-				<Route path="user/new" component={NewUser} />
+				{/*<Route path="user/new" component={NewUser} />*/}
 				<Route path="agreement" component={AgreementContainer} />
 			</Route>
 		</Router>

@@ -20,26 +20,26 @@ const dispatchError = (dispatch, error) => {
 		});
 	}
 };
+const dispatchUserFieldData = (dispatch) => {
+	adminApi.fetchUserFieldData(
+		(userFieldData) => {
+			dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
+			dispatch({type: REFINE_USERDATA, userFieldData})
+		},
+		(error) => dispatchError(dispatch, error)
+	);
+};
+
 const adminActionCreators = {
 	fetchAdminInfo(){
 		return (dispatch) => {
 			adminApi.fetchAdminInfo((adminInfo) => {
 				dispatch({type: RECEIVE_ADMIN_INFO, adminInfo});
-				if(adminInfo.isAdmin) this.fetchUserFieldData();
+				if(adminInfo.isAdmin) dispatchUserFieldData(dispatch);
 			}, (error) => dispatchError(dispatch, error));
 		}
 	},
-	fetchUserFieldData(){
-		return (dispatch) => {
-			adminApi.fetchUserFieldData(
-				(userFieldData) => {
-					dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
-					dispatch({type: REFINE_USERDATA, userFieldData})
-				},
-				(error) => dispatchError(dispatch, error)
-			);
-		}
-	},
+
 	changePropsInAdmin(which, value){
 		return {type: CHANGE_PROPS_IN_ADMIN, which, value};
 	},
@@ -48,7 +48,7 @@ const adminActionCreators = {
 			adminApi.login(loginUrl, formData, (isLogedIn) => {
 				if(isLogedIn){
 					dispatch({type: SUCCEED_LOGIN});
-					this.fetchUserFieldData();
+					dispatchUserFieldData(dispatch);
 				} else {
 					dispatch({
 						type: SHOW_MESSAGE,
