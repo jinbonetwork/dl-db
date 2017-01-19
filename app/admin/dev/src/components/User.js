@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {Link} from 'react-router';
 import {_mapO, _mapAO} from '../accessories/functions';
 
 class User extends Component {
@@ -69,23 +70,26 @@ class User extends Component {
 	render(){
 		return (
 			<div className="user">
+				<h1>회원정보</h1>
 				<table className="user__wrap"><tbody>
 					<tr>
 						<td className="user__table-margin"></td>
-						<td className="user__table-padding"></td>
-						<td className="user__menu">
-							<Link className="user__edit-usr" to={'/admin/user/'+this.props.params.id+'/edit'}>
+						<td className="user__menu" colSpan="3">
+							{(!this.props.user.uid) &&
+							<button className="user__register-user">
+								<i className="pe-7s-id pe-va"></i><span>등록</span>
+							</button>}
+							<Link className="user__edit-user" to={'/admin/user/'+this.props.params.id+'/edit'}>
 								<i className="pe-7s-note pe-va"></i><span>수정</span>
 							</Link>
 							<button className="user__delete-user">
 								<i className="pe-7s-delete-user pe-va"></i><span>삭제</span>
 							</button>
 						</td>
-						<td className="user__table-padding"></td>
 						<td className="user__table-margin"></td>
 					</tr>
 					<tr className="user__table-padding"><td></td><td colSpan="3"></td><td></td></tr>
-					<tr>
+					<tr className="user__body">
 						<td className="user__table-margin"></td>
 						<td className="user__table-padding"></td>
 						<td>{this.renderTable(this.props.user)}</td>
