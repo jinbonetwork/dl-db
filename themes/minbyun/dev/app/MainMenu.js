@@ -58,7 +58,7 @@ class MainMenu extends Component {
 						}
 						else if(item.path == '/admin'){
 							if(this.props.userRole.indexOf('admin') >= 0){
-								return <a href={item.path} target="_blank"><i className={item.icon+' pe-va'}></i><span>{item.name}</span></a>
+								return <a href={item.path}><i className={item.icon+' pe-va'}></i><span>{item.name}</span></a>
 							} else {
 								return null;
 							}
