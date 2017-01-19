@@ -7,6 +7,7 @@
 		this.Root = jQuery(element);
 
 		self.initMenu();
+		self.closeHeaderBind();
 		jQuery(window).resize(function(e) {
 			self.resize();
 		});
@@ -64,8 +65,18 @@
 
 		toggleheadClick: function(element) {
 			element.click(function(e) {
-				jQuery(this).parent().toggleClass('acditem--unfolded');
-				jQuery(this).parent().siblings().removeClass('acditem--unfolded');
+				jQuery(this).parent().toggleClass('dropdown--unfolded');
+				jQuery(this).parent().siblings().removeClass('dropdown--unfolded');
+			});
+		},
+
+		closeHeaderBind: function() {
+			var self = this;
+			jQuery('body,html').bind('click.dldb_xe_layout',function(e) {
+				var m = jQuery(e.target).closest('.main-menu');
+				if(m.length < 1) {
+					self.Root.find('.dropdown').removeClass('dropdown--unfolded');
+				}
 			});
 		},
 
