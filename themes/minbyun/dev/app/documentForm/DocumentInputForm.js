@@ -83,7 +83,7 @@ class DocumentInputForm extends Component {
 				}
 			case 'file':
 				let accept;
-				if(fAttr.type == 'file') accept = '.pdf, .hwp, .doc, .docx';
+				if(fAttr.type == 'file') accept = '.pdf, .doc, .docx, .hwp';
 				else if(fAttr.type == 'image') accept = '.jpg, .png';
 				return (
 					<FileInput value={this.props.value.name || this.props.value.filename} focus={isWithFocus} accept={accept}
@@ -114,7 +114,7 @@ class DocumentInputForm extends Component {
 			case 'Ym':
 				return <DateForm value={this.props.value} focus={isWithFocus} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}/>;
 			case 'textarea':
-				let message, displayCount;
+				let message, displayCount, rows;
 				switch(this.props.fname){
 					case 'content':
 						message = '* 200자 내외로 작성해주세요.';
@@ -122,11 +122,12 @@ class DocumentInputForm extends Component {
 						break;
 					case 'tag':
 						message = '* 쉼표로 구분해주세요.';
+						rows = 2;
 						break;
 					default:
 				}
 				return (
-					<Textarea value={this.props.value} focus={isWithFocus} message={message} displayCount={displayCount}
+					<Textarea value={this.props.value} focus={isWithFocus} message={message} displayCount={displayCount} rows={rows}
 						onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
 					/>
 				);

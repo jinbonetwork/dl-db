@@ -54,8 +54,12 @@
 		position: relative;
 	}
 	.document-form__input-with-buttons + .document-form__input-with-buttons,
-	.document-form__input-with-buttons + .document-form__fileformat {
+	.document-form__input-with-buttons + .document-form__bottom-message,
+	.document-form__input-with-buttons + .document-form__bottom-message div + div {
 		margin-top: 0.5em;
+	}
+	.document-form__input-with-buttons + .document-form__bottom-message div {
+		line-height: 1.5em;
 	}
 	.document-form__middle {
 		margin-right: @document-from-button-width * 2 + 0.5em;
@@ -160,7 +164,7 @@
 		background-color: @focus-color-2;
 	}
 	textarea {
-		min-height: 11em;
+		//min-height: 11em;
 	}
 	textarea:focus {
 		background-color: @focus-color-1;

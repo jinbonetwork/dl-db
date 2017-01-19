@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import MainMenu from './MainMenu';
 import Login from './Login';
+import {_wrap} from '../accessories/functions';
 
 class Admin extends Component {
 	componentDidMount(){
@@ -8,6 +9,7 @@ class Admin extends Component {
 	}
 	componentDidUpdate(prevProps, prevState){
 		if(this.refs.message) this.refs.message.focus();
+		if(!prevProps.isAdmin && this.props.isAdmin) this.props.fetchUserFieldData();
 	}
 	handleClick(which){
 		if(which == 'message'){
@@ -24,28 +26,36 @@ class Admin extends Component {
 				</div>
 			</div>
 		);
-		if(this.props.isAdmin){
-			return (
-				<div className="admin">
-					<MainMenu />
-					<div>
-						{this.props.children}
-					</div>
-					{message}
-				</div>
-			);
-		} else if(this.props.isAdmin === false){
-			return (
-				<div className="admin">
+		const process = this.props.showProc && (
+			<div className="process">
+				<div></div>
+				<div><i className="pe-7f-config pe-va pe-spin"></i></div>
+			</div>
+		)
+		const content = _wrap(() => {
+			if(this.props.isAdmin){
+				return [
+					<MainMenu key="main-menu" />,
+					<div key="children">{this.props.children}</div>
+				];
+			}
+			else if(this.props.isAdmin === false){
+				return (
 					<Login loginType={this.props.loginType} id={this.props.id} password={this.props.password}
-						onChange={this.props.onChange} onLogin={this.props.onLogin} fetchAdminInfo={this.props.fetchAdminInfo} showMessage={this.props.showMessage}
+						onChange={this.props.onChange} onLogin={this.props.onLogin} fetchAdminInfo={this.props.fetchAdminInfo}
 					/>
-					{message}
-				</div>
-			);
-		} else {
-			return null;
-		}
+				);
+			}
+			else return null;
+		});
+
+		return (
+			<div className="admin">
+				{content}
+				{message}
+				{process}
+			</div>
+		);
 	}
 }
 Admin.propTypes = {
@@ -57,10 +67,11 @@ Admin.propTypes = {
 		content: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 		callback: PropTypes.func
 	}).isRequired,
+	showProc: PropTypes.bool,
 	fetchAdminInfo: PropTypes.func.isRequired,
+	fetchUserFieldData: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
-	showMessage: PropTypes.func.isRequired,
 	hideMessage: PropTypes.func.isRequired
 };
 

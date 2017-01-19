@@ -98,6 +98,11 @@ const _forIn = (obj, callBack) => {
 		if(rtn === false) break;
 	}
 };
+const _findProp = (obj, propValue) => {
+	for(let pn in obj){
+		if(obj[pn] == propValue) return pn;
+	}
+};
 const _copyOf = (obj, excludeNull) => {
 	if(obj.hasOwnProperty('length')){ // in the case of array
 		let array = [];
@@ -141,4 +146,4 @@ const _wrap = (callBack) => {
 	return callBack();
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _copyOf, _pushpull, _interpolate, _notNull, _wrap};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _findProp, _copyOf, _pushpull, _interpolate, _notNull, _wrap};

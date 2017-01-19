@@ -8,16 +8,18 @@
 }
 .digital-library__logo {
 	display: block;
+	position: relative;
 	float: left;
 	height: 3.3em;
-	padding: 0.3em;
-	img {
-		height: 100%;
-		@media screen and (max-width: @medium-screen){
-			height: 2.7em; width: 3.03em;
-		}
-		@media screen and (max-width: @s-medium-screen){
-			height: 100%; width: auto;
+	padding: 0.4em;
+	& > span {
+		position: absolute;
+		width: 12em;
+		top: 0;
+		left: 55px;
+		color: @main-color;
+		@media screen and (max-width: @small-screen) {
+			font-size: 0.8em;
 		}
 	}
 }

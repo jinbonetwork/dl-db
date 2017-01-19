@@ -79,7 +79,8 @@ class DocumentForm extends Component {
 		for(let fn in this.props.document){
 			const fAttr = this.props.docData.fAttrs[fn];
 			const value = this.props.document[fn];
-			if(fAttr.type != 'meta' && !fAttr.parent && !this.isHiddenField(fn)){
+			//if(fAttr.type != 'meta' && !fAttr.parent && !this.isHiddenField(fn)){
+			if(fAttr.type != 'meta' && !fAttr.parent){
 				const documentField = (
 					<DocumentField
 						key={fn} fname={fn} value={value} docData={this.props.docData} fieldWithFocus={this.props.fieldWithFocus}

@@ -5,10 +5,19 @@ import {Table, Row, Column} from '../accessories/Table';
 class DocumentField extends Component {
 	fieldFooter(){
 		const fAttr = this.props.docData.fAttrs[this.props.fname];
-		switch(fAttr.form){
+		switch(fAttr.type){
 			case 'file':
-				let accept = (fAttr.type == 'file' ? 'pdf, hwp, doc, docx' : 'jpg, png');
-				return <div className="document-form__fileformat">{`* 파일형식: ${accept}`}</div>;
+				return (
+					<div className="document-form__bottom-message">
+						<div>* 파일형식: pdf, doc, docx, hwp</div>
+						<div>* 민변 디지털도서관은 첨부파일의 내용을 자동으로 추출하여 검색할 수 있습니다. 다만, 한글(hwp) 파일의 경우 자체 암호화로 내용 검색이 불가능하므로 가능한 'PDF' 파일로 변환하여 주시기를 권장합니다(방법: 파일 &rarr; PDF로 저장하기).</div>
+					</div>
+				);
+			case 'image':
+				return (
+					<div className="document-form__bottom-message">* 파일형식: jpg, png</div>
+				);
+			default:
 		}
 	}
 	handleClick(which, arg1st){
@@ -73,17 +82,21 @@ class DocumentField extends Component {
 		);
 	}
 	render(){
-		const fAttr = this.props.docData.fAttrs[this.props.fname];
-		return (
-			<Row>
-				<Column>
-					<span>{fAttr.displayName}</span>
-				</Column>
-				<Column>
-					{this.inputForms()}
-				</Column>
-			</Row>
-		);
+		if(!this.props.formCallBacks.isHiddenField(this.props.fname)){
+			const fAttr = this.props.docData.fAttrs[this.props.fname];
+			return (
+				<Row>
+					<Column>
+						<span>{fAttr.displayName}</span>
+					</Column>
+					<Column>
+						{this.inputForms()}
+					</Column>
+				</Row>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 DocumentField.propTypes = {

@@ -18,8 +18,30 @@ class SearchBar extends Component {
 			isPeriodVisible: false,
 			isPeriodFocused: false,
 			isHelperVisible: false,
-			isKeywordFocused: false
+			isKeywordFocused: false,
+			count: '00000'
 		};
+		this.countIntv = undefined;
+	}
+	componentDidMount(){
+		if(this.props.mode == 'content'){
+			this.countIntv = setInterval(() => {
+				if(this.props.docData.numOfDocs != this.state.count){
+					let newCount = '' + (parseInt(this.state.count) + 1);
+					for(let i = 5, len = newCount.length; i > len; i--){
+						newCount = '0'+newCount;
+					}
+					this.setState({count: newCount})
+				} else {
+					clearInterval(this.countIntv);
+				}
+			}, 50);
+		}
+	}
+	componentWillUnmount(){
+		if(this.props.mode == 'content'){
+			clearInterval(this.countIntv);
+		}
 	}
 	query(sQuery){
 		return _query(sQuery, this.props.docData.sFname);
@@ -187,6 +209,15 @@ class SearchBar extends Component {
 			</DdSelect>
 		);
 	}
+	displayCount(){
+		//let count = this.props.docData.numOfDocs.split('');
+		return this.state.count.split('').map((digit, index) => (
+			<div key={index} className="counter__digit">
+				<img src={site_base_uri+'/themes/minbyun/images/count.png'} />
+				<span>{digit}</span>
+			</div>
+		));
+	}
 	render(){
 		const fAttrs = this.props.docData.fAttrs;
 		const prsRsp = this.propsForResponsivity();
@@ -215,10 +246,18 @@ class SearchBar extends Component {
 		);
 		if(this.props.mode == 'content'){
 			let helperClassName = (this.state.isHelperVisible ? 'searchbar__helper searchbar__helper--visible' : 'searchbar__helper');
+			let counterClassName = (!this.state.isHelperVisible ? 'counter counter--visible' : 'counter');
 			return(
 				<div className={className} style={prsRsp.style.wrap}>
 					<div className="searchbar__header"><span style={prsRsp.style.header}>민변 디지털 도서관</span></div>
 					{searchBar}
+					<div className={counterClassName}>
+						<div className="counter__head"><span>총 자료 건수</span></div>
+						<div className="counter__body">
+							<div><img src={site_base_uri+'/themes/minbyun/images/db.png'} /></div>
+							<div>{this.displayCount()}</div>
+						</div>
+					</div>
 					<div className={helperClassName}>
 						<div>
 							<div className="searchbar__helper-title"><span>※ 검색 연산자 안내</span></div>

@@ -29,10 +29,8 @@ class Login extends Component {
 		let formData = new FormData;
 		for(let prop in data){
 			formData.append(prop, data[prop]);
-		}
-		this.props.onLogin(loginUrl, formData,
-			() => this.props.showMessage('로그인 정보가 올바르지 않습니다.', () => {this.refs.id.focus()})
-		);
+		};
+		this.props.onLogin(loginUrl, formData, () => {this.refs.id.focus()});
 	}
 	render(){
 		return (
@@ -60,8 +58,7 @@ Login.propTypes = {
 	password: PropTypes.string.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
-	fetchAdminInfo: PropTypes.func.isRequired,
-	showMessage: PropTypes.func.isRequired
+	fetchAdminInfo: PropTypes.func.isRequired
 };
 
 export default Login;
