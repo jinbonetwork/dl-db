@@ -186,7 +186,7 @@ class DBM extends \DLDB\Objects {
 		if($uid) {
 			$dbm = \DLDB\DBM::instance();
 			
-			$que = "SELECT * FROM {user_roles) WHERE uid = ".$uid;
+			$que = "SELECT * FROM {user_roles} WHERE uid = ".$uid;
 			$row = $dbm->getFetchArray($que);
 			$role = unserialize($row['role']);
 		}
