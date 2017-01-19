@@ -30,7 +30,8 @@ class UserList extends Component {
 						<button className="userlist__search">검색</button>
 					</div>
 					<div>
-						<Link className="userlist__add-user" to="/admin/user/new">
+						{/*<Link className="userlist__add-user" to="/admin/user/new">*/}
+						<Link className="userlist__add-user">
 							<i className="pe-7s-add-user pe-va"></i><span>추가</span>
 						</Link>
 						<button className="userlist__delete-user">
@@ -72,7 +73,8 @@ class UserList extends Component {
 					<td className="userlist__table-padding"></td>
 					{userInfo}
 					<td className="userlist__edit">
-						<Link to={'/admin/user/'+item.id+'/edit'}><i className="pe-7s-note pe-va"></i></Link>
+						{/*<Link to={'/admin/user/'+item.id+'/edit'}><i className="pe-7s-note pe-va"></i></Link>*/}
+						<Link><i className="pe-7s-note pe-va"></i></Link>
 					</td>
 					<td className="userlist__table-padding"></td>
 					<td className="userlist__table-margin"></td>
@@ -97,7 +99,6 @@ UserList.propTypes = {
 	userFieldData: PropTypes.shape({
 		fProps: PropTypes.object, fSlug: PropTypes.object, fID: PropTypes.object, empty: PropTypes.object, taxonomy: PropTypes.object, terms: PropTypes.object, roles: PropTypes.object
 	}).isRequired,
-	originalList: PropTypes.array.isRequired,
 	list: PropTypes.array.isRequired,
 	lastPage: PropTypes.number.isRequired,
 	selected: PropTypes.array.isRequired,

@@ -8,7 +8,7 @@ import adminActionCreators from './actions/adminActionCreators';
 import Admin from './components/Admin';
 import UserList from './components/UserList';
 import User from './components/User';
-import UserForm from './components/UserFrom';
+import UserForm from './components/UserForm';
 import Agreement from './components/Agreement';
 import './style/admin.less';
 import './style/login.less';
@@ -38,7 +38,6 @@ const UserListContainer = connect(
 	(state) => ({
 		userFieldData: state.userList.userFieldData,
 		list: state.userList.list,
-		originalList: state.userList.originalList,
 		lastPage: state.userList.lastPage,
 		selected: state.userList.selected
 	}),
@@ -52,7 +51,6 @@ const UserContainer = connect(
 	(state) => ({
 		userFieldData: state.user.userFieldData,
 		originalUserList: state.user.originalUserList,
-		originalUser: state.user.originalUser,
 		user: state.user.user
 	}),
 	(dispatch) => ({
@@ -64,7 +62,6 @@ const UserFormContainer = connect(
 	(state) => ({
 		userFieldData: state.userForm.userFieldData,
 		originalUserList: state.userForm.originalUserList,
-		originalUser: state.userForm.originalUser,
 		user: state.userForm.user
 	}),
 	(dispatch) => ({
@@ -87,9 +84,8 @@ render(
 			<Route path="/admin" component={AdminContainer}>
 				<IndexRoute component={UserListContainer} />
 				<Route path="userlist(/page/:page)" component={UserListContainer} />
-				<Route path="user/:id" component={UserContainer}>
-					<Route path="edit" component={UserFormContainer} />
-				</Route>
+				<Route path="user/:id" component={UserContainer} />
+				<Route path="user/:id/edit" component={UserFormContainer} />
 				<Route path="user/new" component={UserFormContainer} />
 				<Route path="agreement" component={AgreementContainer} />
 			</Route>

@@ -5,7 +5,7 @@ import Item from './accessories/Item';
 import Toggle from './accessories/Toggle';
 import {Accordian, AcdItem} from './accessories/Accordian';
 import LinkIf from './accessories/LinkIf';
-import {_isCommon, _interpolate} from './accessories/functions';
+import {_isCommon, _interpolate, _wrap} from './accessories/functions';
 import {_mainMenu, _userMenu} from './schema/menuSchema';
 import {_screen} from './schema/screenSchema';
 
@@ -47,25 +47,33 @@ class MainMenu extends Component {
 	childrenOfMenu(name, tag){
 		switch(name){
 			case 'user':
-				let items = _userMenu.map((item) => {
-					const child = <Link to={'/user/'+item.path}><i className={item.icon+' pe-va'}></i><span>{item.name}</span></Link>
-					if(tag == 'li'){
-						return <li key={item.path}>{child}</li>
-					} else {
-						return <Item key={item.path}>{child}</Item>
+				return _userMenu.map((item) => {
+					const child = _wrap(() => {
+						if(!item.path){
+							return (
+								<div onClick={this.handleClick.bind(this, 'logout')}>
+									<i className={item.icon+' pe-va'}></i><span>{item.name}</span>
+								</div>
+							);
+						}
+						else if(item.path == '/admin'){
+							if(this.props.userRole.indexOf('admin') >= 0){
+								return <a href={item.path} target="_blank"><i className={item.icon+' pe-va'}></i><span>{item.name}</span></a>
+							} else {
+								return null;
+							}
+						} else {
+							return <Link to={item.path}><i className={item.icon+' pe-va'}></i><span>{item.name}</span></Link>
+						}
+					});
+					if(child){
+						if(tag == 'li'){
+							return <li key={item.path}>{child}</li>
+						} else {
+							return <Item key={item.path}>{child}</Item>
+						}
 					}
 				});
-				const child = (
-					<div onClick={this.handleClick.bind(this, 'logout')}>
-						<i className="pe-7s-unlock pe-va"></i><span>로그아웃</span>
-					</div>
-				);
-				if(tag == 'li'){
-					items.push(<li key={items.length}>{child}</li>);
-				} else {
-					items.push(<Item key={items.length}>{child}</Item>);
-				}
-				return items;
 			case 'boards':
 				return this.menuItems(name, this.props.menuData[0], tag);
 			case 'links':

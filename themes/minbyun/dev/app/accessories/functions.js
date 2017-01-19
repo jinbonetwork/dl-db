@@ -145,5 +145,12 @@ const _notNull = (values) => {
 const _wrap = (callBack) => {
 	return callBack();
 };
+const _padNumber = (number, digits) => {
+	let strNumber = '' + number;
+	for(let i = digits, len = strNumber.length; i > len; i--){
+		strNumber = '0'+strNumber;
+	}
+	return strNumber;
+};
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _findProp, _copyOf, _pushpull, _interpolate, _notNull, _wrap};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _findProp, _copyOf, _pushpull, _interpolate, _notNull, _wrap, _padNumber};

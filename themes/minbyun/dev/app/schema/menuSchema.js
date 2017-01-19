@@ -17,21 +17,29 @@ const _mainMenu = [
 
 const _userMenu = [
 	{
-		path: 'profile',
+		path: '/user/profile',
 		name: '내정보',
 		icon: 'pe-7s-user'
 	},{
-		path: 'bookmarks',
+		path: '/user/bookmarks',
 		name: '북마크',
 		icon: 'pe-7s-bookmarks'
 	},{
-		path: 'history',
+		path: '/user/history',
 		name: '검색기록',
 		icon: 'pe-7s-search'
 	},{
-		path: 'documents',
+		path: '/user/documents',
 		name: '내가 올린 자료',
 		icon: 'pe-7s-file'
+	},{
+		path: '/admin',
+		name: '관리',
+		icon: 'pe-7s-config'
+	},{
+		path: '',
+		name: '로그아웃',
+		icon: 'pe-7s-unlock'
 	}
 ];
 

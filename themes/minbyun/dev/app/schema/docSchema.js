@@ -69,11 +69,9 @@ const _docData = (data) => {
 		}
 	});
 	// numOfDocs ////
-	let numOfDocs = data.total_cnt;
-	for(let i = 5, len = numOfDocs.length; i > len; i--){
-		numOfDocs = '0'+numOfDocs;
-	}
-	if(numOfDocs.length > 5) numOfDocs = '99999';
+	let numOfDocs = parseInt(data.total_cnt);
+	if(numOfDocs > 99999) numOfDocs = 99999;
+	
 	// return ////
 	return {
 		fname: fname, sFname: sFname, fAttrs: fAttrs, emptyDoc: emptyDoc, taxonomy: taxonomy, terms: terms, numOfDocs: numOfDocs

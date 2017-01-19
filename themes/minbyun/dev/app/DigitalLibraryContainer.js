@@ -24,7 +24,7 @@ class DigitalLibraryContainer extends Component {
 				sFname: _sFname,
 				taxonomy: {},
 				terms: {},
-				numOfDocs: ''
+				numOfDocs: 0
 			},
 			searchQuery: {
 				doctypes: [],

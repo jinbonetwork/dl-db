@@ -2,8 +2,8 @@
 
 /*--- index --------------------------------------------
 .user
-.user__menu
-.user__table:not(.user__inner-table)
+.user .user__menu
+.user .user__table:not(.user__inner-table)
 --------------------------------------------------------*/
 
 .user {
@@ -37,7 +37,7 @@
 		background-color: @minor-color-2;
 	}
 }
-.user__menu {
+.user .user__menu {
 	padding: 1em 0;
 	text-align: right;
 	.user__register-user, .user__edit-user, .user__delete-user {
@@ -65,7 +65,7 @@
 		color: @main-color;
 	}
 }
-.user__table:not(.user__inner-table) {
+.user .user__table:not(.user__inner-table) {
 	min-width: 500px;
 	background-color: @minor-color-2;
 	tr:first-child {

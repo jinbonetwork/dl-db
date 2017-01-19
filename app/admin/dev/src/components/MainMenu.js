@@ -6,7 +6,8 @@ class MainMenu extends Component {
 		return (
 			<div className="main-menu">
 				<Link to="/admin/userlist"><span>회원관리</span></Link>
-				<Link to="/admin/agreement"><span>이용자 약관 수정</span></Link>
+				{/*<Link to="/admin/agreement"><span>이용자 약관 수정</span></Link>*/}
+				<Link><span>이용자 약관 수정</span></Link>
 			</div>
 		);
 	}

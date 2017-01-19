@@ -8,7 +8,7 @@ import {Table, Row, Column} from './accessories/Table';
 import {_termsOf} from './schema/docSchema';
 import {_query, _period, _params} from './schema/searchSchema';
 import {_screen} from './schema/screenSchema';
-import {_isEmpty, _mapO, _interpolate, _notNull} from './accessories/functions';
+import {_isEmpty, _mapO, _interpolate, _notNull, _padNumber} from './accessories/functions';
 
 class SearchBar extends Component {
 	constructor(){
@@ -24,23 +24,36 @@ class SearchBar extends Component {
 		this.countIntv = undefined;
 	}
 	componentDidMount(){
-		if(this.props.mode == 'content'){
-			this.countIntv = setInterval(() => {
-				if(this.props.docData.numOfDocs != this.state.count){
-					let newCount = '' + (parseInt(this.state.count) + 1);
-					for(let i = 5, len = newCount.length; i > len; i--){
-						newCount = '0'+newCount;
-					}
-					this.setState({count: newCount})
-				} else {
-					clearInterval(this.countIntv);
-				}
-			}, 50);
-		}
+		this.setCounter();
+	}
+	componentDidUpdate(){
+		this.setCounter();
 	}
 	componentWillUnmount(){
 		if(this.props.mode == 'content'){
 			clearInterval(this.countIntv);
+		}
+	}
+	setCounter(){
+		if(this.countIntv === undefined && this.props.mode == 'content' && this.props.docData.numOfDocs > 0){
+			const numOfDocs = this.props.docData.numOfDocs;
+			const duration = 600;
+			const minInterval = 10;
+			let increment = 1;
+			let interval = Math.ceil(duration / parseInt(numOfDocs));
+			if(interval < minInterval){
+				interval = minInterval;
+				increment = Math.ceil(numOfDocs/duration*interval);
+			}
+			this.countIntv = setInterval(() => {
+				if(numOfDocs > this.state.count){
+					let newCount = parseInt(this.state.count) + increment;
+					if(newCount > numOfDocs) newCount = numOfDocs;
+					this.setState({count: _padNumber(newCount, 5)});
+				} else {
+					clearInterval(this.countIntv);
+				}
+			}, interval);
 		}
 	}
 	query(sQuery){

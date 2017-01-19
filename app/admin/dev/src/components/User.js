@@ -79,7 +79,8 @@ class User extends Component {
 							<button className="user__register-user">
 								<i className="pe-7s-id pe-va"></i><span>등록</span>
 							</button>}
-							<Link className="user__edit-user" to={'/admin/user/'+this.props.params.id+'/edit'}>
+							{/*<Link className="user__edit-user" to={'/admin/user/'+this.props.params.id+'/edit'}>*/}
+							<Link className="user__edit-user">
 								<i className="pe-7s-note pe-va"></i><span>수정</span>
 							</Link>
 							<button className="user__delete-user">
@@ -105,7 +106,6 @@ class User extends Component {
 User.propTypes = {
 	userFieldData: PropTypes.object.isRequired,
 	originalUserList: PropTypes.array.isRequired,
-	originalUser: PropTypes.object.isRequired,
 	user: PropTypes.object.isRequired,
 	fetchUser: PropTypes.func.isRequired
 };
