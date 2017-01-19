@@ -5,12 +5,12 @@
 <load target="/themes/minbyun/contrib/pe-icon-7-filled/css/pe-icon-7-filled.css" />
 <load target="/themes/minbyun/contrib/pe-icon-7-filled/css/helper.css" />
 <load target="/themes/minbyun/css/style.css" />
-<load target="minbyun_layout.css" />
-<load target="minbyun_layout.js" />
+<load target="/xe/layouts/minbyun/minbyun_layout.css" />
+<load target="/xe/layouts/minbyun/minbyun_layout.js" />
 <div id="root" class="minbyun_layout">
 	<div class="digital-library">
 		<div class="digital-library__header">
-			<a class="digital-library__logo" href="/"><img src="/themes/minbyun/images/logo-text.svg"></a>
+			<a class="digital-library__logo" href="/"><img src="/themes/minbyun/images/logo.png"><span>민주사회를 위한 변호사모임</span></a>
 			<span>&nbsp;</span>
 			<div class="main-menu">
 				<div class="dropdown main-menu__user">
@@ -18,7 +18,7 @@
 						<div class="dropdown__head">
 							<div class="ddhead">
 							<!--@if($is_logged)-->
-								<i class="pe-7f-user pe-va"></i><span>{$logged_info->nick_name}</span>
+								<i class="pe-7f-user pe-va"></i><span cond="$logged_info->is_admin == 'Y'">관리자</span><span cond="$logged_info->is_admin != 'Y'">회원</span>
 								<div class="ddarrow">
 									<i class="pe-7s-angle-down pe-va"></i>
 									<i class="pe-7s-angle-up pe-va"></i>
@@ -34,12 +34,12 @@
 							<div class="dropdown__items-top-border"></div>
 							<!--@if($is_logged)-->
 							<ul>
-								<li class="dditem"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
-								<li class="dditem"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
-								<li class="dditem"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
-								<li class="dditem"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
-								<li class="dditem" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
-								<li class="dditem"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+								<li class="item dditem"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+								<li class="item dditem"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+								<li class="item dditem"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+								<li class="item dditem"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+								<li class="item dditem" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+								<li class="item dditem"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
 							</ul>
 							<!--@end-->
 						</div>
@@ -48,7 +48,7 @@
 						<div>
 							<div class="ddhead">
 							<!--@if($is_logged)-->
-								<i class="pe-7f-user pe-va"></i><span>{$logged_info->nick_name}</span>
+								<i class="pe-7f-user pe-va"></i><span cond="$logged_info->is_admin == 'Y'">관리자</span><span cond="$logged_info->is_admin != 'Y'">회원</span>
 								<div class="ddarrow">
 									<i class="pe-7s-angle-down pe-va"></i>
 								</div>
@@ -59,12 +59,12 @@
 						</div>
 						<!--@if($is_logged)-->
 						<ul>
-							<li class="dditem"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
-							<li class="dditem"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
-							<li class="dditem"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
-							<li class="dditem"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
-							<li class="dditem" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
-							<li class="dditem"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+							<li class="item dditem"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+							<li class="item dditem"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+							<li class="item dditem"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+							<li class="item dditem"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+							<li class="item dditem" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+							<li class="item dditem"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
 						</ul>
 						<!--@end-->
 					</div>
@@ -117,7 +117,7 @@
 										<div class="main-menu__user">
 										<!--@if($is_logged)-->
 											<i class="pe-7f-user pe-va"></i>
-											<span><span>{$logged_info->nick_name}</span></span>
+											<span><span cond="$logged_info->is_admin == 'Y'">관리자</span><span cond="$logged_info->is_admin != 'Y'"></span></span>
 										<!--@else-->
 											<i class="pe-7f-user pe-va"></i>
 											<a href="/login/"><span>로그인</span></a>
@@ -127,12 +127,12 @@
 									<div class="acditem__children">
 										<!--@if($is_logged)-->
 										<ul>
-											<li><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
-											<li><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
-											<li><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
-											<li><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
-											<li cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
-											<li><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+											<li class="item"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+											<li class="item"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+											<li class="item"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+											<li class="item"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+											<li class="item" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+											<li class="item"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
 										</ul>
 										<!--@end-->
 									</div>
@@ -145,7 +145,7 @@
 									</div>
 									<div class="acditem__children">
 										<ul>
-											<li loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
+											<li class="item" loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
 										</ul>
 									</div>
 								</div>
@@ -159,7 +159,7 @@
 									<div class="main-menu__user">
 										<!--@if($is_logged)-->
 										<i class="pe-7f-user pe-va"></i>
-										<span><span>{$logged_info->nick_name}</span></span>
+										<span><span cond="$logged_info->is_admin == 'Y'">관리자</span><span cond="$logged_info->is_admin != 'Y'">회원</span></span>
 										<!--@else-->
 										<i class="pe-7f-user pe-va"></i>
 										<a href="/login/"><span>로그인</span></a>
@@ -169,12 +169,12 @@
 								<div class="acditem__children">
 									<!--@if($is_logged)-->
 									<ul>
-										<li><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
-										<li><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
-										<li><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
-										<li><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
-										<li cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
-										<li><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
+										<li class="item"><a href="/user/profile"><i class="pe-7s-user pe-va"></i><span>내정보</span></a></li>
+										<li class="item"><a href="/user/bookmarks"><i class="pe-7s-bookmarks pe-va"></i><span>북마크</span></a></li>
+										<li class="item"><a href="/user/history"><i class="pe-7s-search pe-va"></i><span>검색기록</span></a></li>
+										<li class="item"><a href="/user/documents"><i class="pe-7s-file pe-va"></i><span>내가 올린 자료</span></a></li>
+										<li class="item" cond="$logged_info->is_admin == 'Y'"><a href="/admin"><i class="pe-7s-config pe-va"></i><span>관리</span></a></li>
+										<li class="item"><a href="{getUrl('act','dispMemberLogout')}"><i class="pe-7s-unlock pe-va"></i><span>로그아웃</span></a></li>
 									</ul>
 									<!--@end-->
 								</div>
@@ -188,7 +188,7 @@
 								</div>
 								<div class="acditem__children">
 									<ul>
-										<li loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
+										<li class="item" loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
 									</ul>
 								</div>
 							</div>
