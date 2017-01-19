@@ -117,7 +117,8 @@ class Resource extends \DLDB\Objects {
 				self::$css[$key]['priority'] = $priority;
 			}
 		} else {
-			self::$css[$key] = array('css'=>$css,'id'=>'cadb_css_'.self::getUniqueID($key),'priority'=>($priority ? $priority : 0),'type'=>$type,'options'=>$options);
+			$stat = stat(DLDB_PATH.$css);
+			self::$css[$key] = array('css'=>$css."?ver=".$stat['mtime'],'id'=>'dldb_css_'.self::getUniqueID($key),'priority'=>($priority ? $priority : 0),'type'=>$type,'options'=>$options);
 		}
 	}
 
@@ -173,7 +174,8 @@ class Resource extends \DLDB\Objects {
 				self::$js[$key]['priority'] = $priority;
 			}
 		} else {
-			self::$js[$key] = array('script'=>$js,'id'=>'cadb_js_'.self::getUniqueID($key),'priority'=>($priority ? $priority : 0),'type'=>$type,'options'=>$options);
+			$stat = stat(DLDB_PATH.$js);
+			self::$js[$key] = array('script'=>$js."?ver=".$stat['mtime'],'id'=>'dldb_js_'.self::getUniqueID($key),'priority'=>($priority ? $priority : 0),'type'=>$type,'options'=>$options);
 		}
 	}
 
@@ -262,7 +264,7 @@ class Resource extends \DLDB\Objects {
 				'remove_comments' => true
 			);
 			$minified = new \Minifier( $vars );
-			$stylesheet .= "\t".'<link id="cadb_css_'.self::getUniqueID($compress_uri).'" rel="stylesheet" href="'.DLDB_URI.ltrim($minified->merge($compress_file,'css',$compress_array),DLDB_PATH).'">'."\n";
+			$stylesheet .= "\t".'<link id="dldb_css_'.self::getUniqueID($compress_uri).'" rel="stylesheet" href="'.DLDB_URI.ltrim($minified->merge($compress_file,'css',$compress_array),DLDB_PATH).'">'."\n";
 		}
 		return $stylesheet;
 	}
