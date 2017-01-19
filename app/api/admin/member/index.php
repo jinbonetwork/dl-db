@@ -29,7 +29,7 @@ class index extends \DLDB\Controller {
 						'id' => $this->params['id'],
 						'page' => $this->params['page']
 					),
-					'mmeber' => $member
+					'member' => $member
 				);
 			}
 		} else {
