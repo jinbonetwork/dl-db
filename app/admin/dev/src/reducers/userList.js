@@ -1,10 +1,11 @@
-import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, REFINE_USERDATA, CHANGE_PROPS_IN_USERLIST} from '../constants';
-import userFieldData from '../fieldData/userFieldData';
+import {RECEIVE_USERLIST, RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERLIST} from '../constants';
+import {initUsrFData} from '../fieldData/userFieldData';
+import {updateUserFieldData} from './common';
 import update from 'react-addons-update';
 import {_copyOf, _forIn} from '../accessories/functions';
 
 const initialState = {
-	userFieldData: userFieldData.getInitialData(),
+	userFieldData: initUsrFData,
 	list: [],
 	originalList: [],
 	lastPage: 1,
@@ -23,7 +24,8 @@ const refineList = (original, {fID, fProps}) => {
 const userList = (state = initialState, action) => {
 	switch (action.type) {
 		case RECEIVE_USER_FIELD_DATA:
-			return update(state, {userFieldData: {$set: action.userFieldData}});
+			let newState = updateUserFieldData(state, action);
+			return update(newState, {list: {$set: refineList(state.originalList, newState.userFieldData)}});
 		case RECEIVE_USERLIST:
 			return update(state, {
 				showProc: {$set: false},
@@ -31,8 +33,6 @@ const userList = (state = initialState, action) => {
 				list: {$set: refineList(action.userList, state.userFieldData)},
 				lastPage: {$set: action.lastPage}
 			});
-		case REFINE_USERDATA:
-			return update(state, {list: {$set: refineList(state.originalList, action.userFieldData)}});
 		case CHANGE_PROPS_IN_USERLIST:
 			return update(state, {[action.which]: {$set: action.value}});
 		default:

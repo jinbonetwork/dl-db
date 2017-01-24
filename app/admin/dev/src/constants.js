@@ -1,5 +1,4 @@
 export const RECEIVE_USERLIST = 'receive userlist';
-export const REFINE_USERDATA = 'refine userdata';
 export const RECEIVE_USER_FIELD_DATA = 'receive user field data';
 export const CHANGE_PROPS_IN_USERS = 'change props in users';
 export const RECEIVE_AGREEMENT = 'receive agreement';
@@ -12,3 +11,8 @@ export const HIDE_MESSAGE = 'hide message';
 export const SHOW_PROCESS = 'show process';
 export const HIDE_PROCESS = 'hide process';
 export const RECEIVE_USER = 'receive user';
+export const CHANGE_USER_PROPS = 'change user porps';
+export const BLUR_USERFORM = 'blur userform';
+export const SET_FOCUS_IN_USERFORM = 'set foucs in userform';
+export const SUBMIT_USERFORM = 'submit userform';
+export const REQUEST_SUBMIT_USERFORM = 'request submit userform';

@@ -1,27 +1,29 @@
-import {RECEIVE_USER_FIELD_DATA, RECEIVE_USERLIST, RECEIVE_USER, REFINE_USERDATA} from '../constants';
-import userFieldData from '../fieldData/userFieldData';
+import {RECEIVE_USER_FIELD_DATA, RECEIVE_USERLIST, RECEIVE_USER, REQUEST_SUBMIT_USERFORM} from '../constants';
+import {initUsrFData, refineUser} from '../fieldData/userFieldData';
+import {updateUserListOnSubmit, updateUserFieldData, updateUser, updateUserList} from './common';
 import update from 'react-addons-update';
 
 const initialState = {
-	userFieldData: userFieldData.getInitialData(),
-	originalUserList: [],
+	user: initUsrFData.empty,
 	originalUser: {},
-	user: userFieldData.getInitialData().empty
+	userFieldData: initUsrFData,
+	originalUserList: [],
 };
 
 const user = (state = initialState, action) => {
 	switch(action.type){
 		case RECEIVE_USER_FIELD_DATA:
-			return update(state, {userFieldData: {$set: action.userFieldData}});
+			let newState = updateUserFieldData(state, action);
+			return update(newState, {user: {$set: refineUser(state.originalUser, newState.userFieldData)}});
 		case RECEIVE_USERLIST:
-			return update(state, {originalUserList: {$set: action.userList}});
+			return updateUserList(state, action);
 		case RECEIVE_USER:
-			return update(state, {$merge: {
-				originalUser: action.user,
-				user: userFieldData.refineUser(action.user, state.userFieldData)
-			}});
-		case REFINE_USERDATA:
-			return update(state, {user: {$set: userFieldData.refineUser(state.originalUser, action.userFieldData)}});
+			return updateUser(state, action);
+		case REQUEST_SUBMIT_USERFORM:
+			//console.log('in user.js');
+			//console.log(state);
+			//console.log();
+			return updateUserListOnSubmit(state, action);
 		default:
 			return state;
 	}

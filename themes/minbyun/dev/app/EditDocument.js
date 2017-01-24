@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import DocumentFormContainer from './documentForm/DocumentFormContainer';
-//import {_convertToDoc} from './schema/docSchema';
 import update from 'react-addons-update';  // for update()
 import 'babel-polyfill'; // for update(), find() ...
 

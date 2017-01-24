@@ -1,13 +1,15 @@
 import {
-	RECEIVE_USERLIST, REFINE_USERDATA,
-	RECEIVE_USER_FIELD_DATA, CHANGE_PROPS_IN_USERLIST, REFINE_ROLES,
+	RECEIVE_USER_FIELD_DATA, REFINE_ROLES,
+	RECEIVE_USERLIST, CHANGE_PROPS_IN_USERLIST,
 	RECEIVE_AGREEMENT,
 	RECEIVE_ADMIN_INFO,
 	CHANGE_PROPS_IN_ADMIN,
 	SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS,
- 	RECEIVE_USER} from '../constants';
+ 	RECEIVE_USER,
+	CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, REQUEST_SUBMIT_USERFORM} from '../constants';
 import adminApi from '../api/adminApi';
+import {refineUserFData, makeUserFormData} from '../fieldData/userFieldData';
 
 const dispatchError = (dispatch, error) => {
 	if(error.code !== -9999){
@@ -22,14 +24,13 @@ const dispatchError = (dispatch, error) => {
 };
 const dispatchUserFieldData = (dispatch) => {
 	adminApi.fetchUserFieldData(
-		(userFieldData) => {
-			dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData}),
-			dispatch({type: REFINE_USERDATA, userFieldData})
+		(orginUsrFData) => {
+			const userFieldData = refineUserFData(orginUsrFData);
+			dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData});
 		},
 		(error) => dispatchError(dispatch, error)
 	);
 };
-
 const adminActionCreators = {
 	fetchAdminInfo(){
 		return (dispatch) => {
@@ -39,7 +40,6 @@ const adminActionCreators = {
 			}, (error) => dispatchError(dispatch, error));
 		}
 	},
-
 	changePropsInAdmin(which, value){
 		return {type: CHANGE_PROPS_IN_ADMIN, which, value};
 	},
@@ -102,6 +102,23 @@ const adminActionCreators = {
 				);
 			};
 		}
+	},
+	changeUserProps(args){
+		return {type: CHANGE_USER_PROPS, args};
+	},
+	setFocus(fSlug, index){
+		return {type: SET_FOCUS_IN_USERFORM, fSlug, index}
+	},
+	blurUserForm(){
+		return {type: BLUR_USERFORM};
+	},
+	submitUserForm(id, userFormData, callback){
+		return (dispatch) => {
+			adminApi.submitUserForm(id, userFormData,
+				(data) => {console.log(data)},
+				(error) => dispatchError(dispatch, error)
+			);
+		};
 	},
 	fetchAgreement(){
 		return (dispatch) => {

@@ -3,7 +3,6 @@ import {
 	CHANGE_PROPS_IN_ADMIN,
 	REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS } from '../constants';
-import userFieldData from '../fieldData/userFieldData';
 import update from 'react-addons-update';
 import {_findProp} from '../accessories/functions';
 
