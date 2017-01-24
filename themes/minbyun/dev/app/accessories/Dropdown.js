@@ -67,17 +67,16 @@ class Dropdown extends Component {
 			if(!isUnfolded) this.setState({isUnfolded: false, focused: -1});
 		}
 	}
-	handleKeyDown(which, arg1st, arg2nd){
+	handleKeyDown(which, arg1st, arg2nd, arg3nd){
 		if(which == 'head'){
 			const event = arg1st;
 			if(event.key == 'Enter') this.setState({isUnfolded: !this.state.isUnfolded});
-			else if(event.key == 'ArrowDown') this.setState({isUnfolded: true, focused: 1});
+			else if(event.key == 'ArrowDown'){ this.setState({isUnfolded: true, focused: 1}); event.preventDefault(); }
 		}
 		else if(which == 'item'){
-			const index = arg1st;
-			const key = arg2nd;
-			if(key == 'ArrowDown') this.setState({focused: index+1});
-			else if(key == 'ArrowUp') this.setState({focused: index-1})
+			const index = arg1st, key = arg2nd, event = arg3nd;
+			if(key == 'ArrowDown'){ this.setState({focused: index+1}); event.preventDefault(); }
+			else if(key == 'ArrowUp'){ this.setState({focused: index-1}); event.preventDefault(); }
 		}
 	}
 	render(){
@@ -123,9 +122,7 @@ class Dropdown extends Component {
 				<div className="dropdown__innerwrap">
 					<div className="dropdown__items">
 						<div className="dropdown__items-top-border" style={{width: itemWidth}}></div>
-						<ul style={{width: itemWidth}}>
-							{items}
-						</ul>
+						<ul style={{width: itemWidth}}>{items}</ul>
 					</div>
 				</div>
 				<div className="dropdown__invisible" ref="invisible">

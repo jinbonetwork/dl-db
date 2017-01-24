@@ -1,6 +1,5 @@
 .pagination {
 	text-align: center;
-
 	.pagination__page {
 		display: inline-block;
 		line-height: 2em;
@@ -121,11 +120,14 @@
 	&:not(.dropdown--unfolded) .dropdown__items {
 		border: 0 !important;
 		z-index: 1;
+		visibility: hidden;
 	}
+	/*
 	&:not(.dropdown--unfolded) .dropdown__items > ul {
 		height: 0;
 		display: none;
 	}
+	*/
 }
 .check {
 	.item {

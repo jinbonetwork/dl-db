@@ -42,7 +42,7 @@ class Item extends Component {
 		if(event.key === 'Enter'){
 			jQ(this.refs.li).find('*').click();
 		} else {
-			if(this.props.onKeyDown) this.props.onKeyDown(event.key);
+			if(this.props.onKeyDown) this.props.onKeyDown(event.key, event);
 		}
 	}
 	render(){

@@ -28,13 +28,10 @@
 }
 .user-form .form {
 	width: 100%;
-	.field-content {
-		height: 3em;
-		margin: 0.25em 0;
-	}
 	.field-content input {
 		width: 100%;
-		height: 100%;
+		height: 3em;
+		margin: 0.25em 0;
 	}
 	.field-content .check {
 		line-height: 3em;
@@ -85,9 +82,13 @@
 }
 .user-form .select {
 	line-height: 3em;
+	margin: 0.25em 0;
 	.dropdown__headwrap, .dropdown__items {
 		border-color: @main-color;
 		background-color: @minor-color-2;
+	}
+	&.dropdown--unfolded .dropdown__items {
+		top: -1px;
 	}
 	.dropdown__head:focus {
 		background-color: @focus-color-1
