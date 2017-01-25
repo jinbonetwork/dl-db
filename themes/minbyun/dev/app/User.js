@@ -28,9 +28,9 @@ class User extends Component {
 				default:
 			}
 		}
-		let menuItems = _userMenu.map((item) => (
-			<li key={item.path} className={(path == item.path ? 'user__selected' : null)}>
-				<Link to={'/user/'+item.path}>
+		let menuItems = _userMenu.map((item) => item.path.match('/user/') && (
+			<li key={item.path} className={('/user/'+path == item.path ? 'user__selected' : null)}>
+				<Link to={item.path}>
 					<i className={item.icon+' pe-va'}></i>
 					<span>{item.name}</span>
 					<span><i className="pe-7s-angle-right pe-va"></i></span>

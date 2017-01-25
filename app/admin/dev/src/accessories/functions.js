@@ -3,7 +3,7 @@ const _isEmpty = (value) => {
 	else if(!value) return true;
 	else if(typeof value !== 'object'){
 		return false;
-	} else if(value.length === 0){
+	} else if(Array.isArray(value) && value.length === 0){
 		return true;
 	} else {
 		for(var p in value) {
@@ -85,10 +85,14 @@ const _mapAO = (array, callBacks) => { // array -> object
 	}
 	return object;
 };
-const _mapOO = (obj, callBack) => { // object -> object
+const _mapOO = (obj, callBack, mapPropName) => { // object -> object
 	let newObj = {};
 	for(let prop in obj){
-		newObj[prop] = callBack(prop, obj[prop]);
+		if(!mapPropName){
+			newObj[prop] = callBack(prop, obj[prop]);
+		} else {
+			newObj[mapPropName(prop, obj[prop])] = callBack(prop, obj[prop]);
+		}
 	}
 	return newObj;
 };

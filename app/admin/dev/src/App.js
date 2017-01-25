@@ -16,6 +16,7 @@ import './style/mainMenu.less';
 import './style/userlist.less';
 import './style/accessories.less';
 import './style/user.less';
+import './style/userForm.less';
 
 const AdminContainer = connect(
 	(state) => ({
@@ -43,7 +44,8 @@ const UserListContainer = connect(
 	}),
 	(dispatch) => ({
 		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
-		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value))
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value)),
+		getUserFromList: (id) => dispatch(adminActionCreators.getUserFromList(id))
 	})
 )(UserList);
 
@@ -60,14 +62,21 @@ const UserContainer = connect(
 
 const UserFormContainer = connect(
 	(state) => ({
+		user: state.userForm.user,
 		userFieldData: state.userForm.userFieldData,
 		originalUserList: state.userForm.originalUserList,
-		user: state.userForm.user
+		focused: state.userForm.focused,
+		formData: state.userForm.formData
 	}),
 	(dispatch) => ({
-		fetchUser: (id, list) => dispatch(adminActionCreators.fetchUser(id, list))
+		fetchUser: (id, list) => dispatch(adminActionCreators.fetchUser(id, list)),
+		onChange: (args) => dispatch(adminActionCreators.changeUserProps(args)),
+		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
+		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
+		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
+		submit: (id, userFormData, callback) => dispatch(adminActionCreators.submitUserForm(id, userFormData, callback))
 	})
-)(UserForm)
+)(UserForm);
 
 const AgreementContainer = connect(
 	(state) => ({
@@ -84,9 +93,9 @@ render(
 			<Route path="/admin" component={AdminContainer}>
 				<IndexRoute component={UserListContainer} />
 				<Route path="userlist(/page/:page)" component={UserListContainer} />
+				<Route path="user/new" component={UserFormContainer} />
 				<Route path="user/:id" component={UserContainer} />
 				<Route path="user/:id/edit" component={UserFormContainer} />
-				<Route path="user/new" component={UserFormContainer} />
 				<Route path="agreement" component={AgreementContainer} />
 			</Route>
 		</Router>

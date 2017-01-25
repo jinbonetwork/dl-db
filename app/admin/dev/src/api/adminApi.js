@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {refineFieldData} from '../accessories/docManager/refiner';
 import userFieldData from '../fieldData/userFieldData';
 import {_findProp} from '../accessories/functions';
 
@@ -8,7 +9,7 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 	let fail = (method == 'get' ? arg3 : arg4)
 	axios({method: method, url: url, data: data, timeout: 60000}).then((response) => {
 		if(response.statusText == 'OK'){
-			if(!response.data.error || response.data.error == 0){
+			if(!response.data.hasOwnProperty('error') || response.data.error == 0){
 				succeed(response.data);
 			} else {
 				let message = (response.data.message ? response.data.message : response.data);
@@ -58,7 +59,9 @@ const adminApi = {
 		}, fail);
 	},
 	fetchUserFieldData(succeed, fail){
-		fetchData('get', '/api/admin/member/fields', (fData) => succeed(userFieldData.refineData(fData)), fail);
+		fetchData('get', '/api/admin/member/fields',
+			(fData) => succeed(fData), fail
+		);
 	},
 	fetchUserList(page, succeed, fail){
 		fetchData('get', '/api/admin/member?page='+(page ? page : 1),
@@ -66,7 +69,15 @@ const adminApi = {
 		);
 	},
 	fetchUser(id, succeed, fail){
-		fetchData('get', '/api/admin/member?id='+id, ({member}) => succeed(member), fail)
+		fetchData('get', '/api/admin/member?id='+id, ({member}) => succeed(member), fail);
+	},
+	submitUserForm(id, userFormData, succeed, fail){
+		if(id){
+			fetchData('post', '/api/admin/member/save?mode=modify&id='+id, userFormData, (data) => succeed(data), fail);
+		} else {
+			fetchData('post', '/api/admin/member/save?mode=add', userFormData, (data) => succeed(data), fail);
+		}
+
 	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
