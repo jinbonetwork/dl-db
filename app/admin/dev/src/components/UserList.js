@@ -20,23 +20,37 @@ class UserList extends Component {
 			this.props.onChange('selected', _pushpull(this.props.selected, id));
 		}
 	}
-	handleClick(which, arg){
-		if(which == 'view'){
-			let {id} = arg;
-			if(!this.props.openUsers[id]){
-				let originalUser = this.props.originalUsers.find((usr) => (id == usr.id));
-				//this.props.addUserToOpenUsers(refineUser(originalUser, this.props.userFieldData));
-				this.props.addUserToOpenUsers(originalUser);
-			}
-			/*
-			let originalUser = this.props.originalUsers.find((usr) => (id == usr.id));
-			this.props.addUserToOpenUsers(originalUser, this.props.userFieldData);
-			*/
-			this.props.router.push('/admin/user/'+id);
+	handleClick(which, arg1st){
+		switch(which){
+			case 'view':
+				const id = arg1st;
+				if(!this.props.openUsers[id]){
+					let originalUser = this.props.originalUsers.find((usr) => (id == usr.id));
+					this.props.addUserToOpenUsers(originalUser);
+				}
+				this.props.router.push('/admin/user/'+id); break;
+			case 'delete user':
+				if(!this.props.isDelBtnYesOrNo){
+					this.props.onChange('isDelBtnYesOrNo', true); break;
+				} else {
+					break;
+				}
+			case 'cancel deleting user':
+				this.props.onChange('isDelBtnYesOrNo', false); break;
+			default:
 		}
 	}
 	render(){
 		const fProps = this.props.userFieldData.fProps;
+		const deletButton = (!this.props.isDelBtnYesOrNo ?
+			<button className="userlist__delete-user" onClick={this.handleClick.bind(this, 'delete user')}>
+				<i className="pe-7s-delete-user pe-va"></i><span>삭제</span>
+			</button> :
+			<div className="userlist__confirm-del">
+				<button onClick={this.handleClick.bind(this, 'delete user')}>예</button>
+				<button onClick={this.handleClick.bind(this, 'cancel deleting user')}>아니오</button>
+			</div>
+		);
 		const listMenu = (
 			<tr className="userlist__menu">
 				<td className="userlist__table-margin"></td>
@@ -49,9 +63,7 @@ class UserList extends Component {
 						<Link className="userlist__add-user" to="/admin/user/new">
 							<i className="pe-7s-add-user pe-va"></i><span>추가</span>
 						</Link>
-						<button className="userlist__delete-user">
-							<i className="pe-7s-delete-user pe-va"></i><span>삭제</span>
-						</button>
+						{deletButton}
 					</div>
 				</td>
 				<td className="userlist__table-margin"></td>
@@ -76,9 +88,8 @@ class UserList extends Component {
 						</td>
 					);
 				}
-				else if(pn == 'name'){
-					//return <td key={pn}><Link to={'/admin/user/'+item.id}>{pv}</Link></td>
-					return <td key={pn}><a onClick={this.handleClick.bind(this, 'view', {id: item.id})}>{pv}</a></td>
+				else if(pn == 'name'){1
+					return <td key={pn}><a onClick={this.handleClick.bind(this, 'view', item.id)}>{pv}</a></td>
 				} else {
 					return <td key={pn}>{pv}</td>
 				}
@@ -117,6 +128,7 @@ UserList.propTypes = {
 	userList: PropTypes.array.isRequired,
 	lastPage: PropTypes.number.isRequired,
 	selected: PropTypes.array.isRequired,
+	isDelBtnYesOrNo: PropTypes.bool,
 	fetchUserList: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	addUserToOpenUsers: PropTypes.func.isRequired,

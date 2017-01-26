@@ -64,6 +64,30 @@
 		border: solid 1px @main-color;
 		color: @main-color;
 	}
+	.user__confirm-del {
+		display: inline-block;
+		margin-left: 0.5em;
+	}
+	.user__confirm-del button {
+		height: 32px;
+	}
+	.user__confirm-del button:first-child {
+		color: @minor-color-2;
+		background-color: @main-color;
+		border-right: 0;
+		padding: 0 1.5em;
+		&:focus {
+			background-color: @focus-color-2;
+		}
+	}
+	.user__confirm-del button:last-child {
+		color: @main-color;
+		background-color: @minor-color-2;
+		padding: 0 0.5em;
+		&:focus {
+			background-color: @focus-color-1;
+		}
+	}
 }
 .user__body table:not(.inner-table) {
 	min-width: 500px;

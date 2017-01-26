@@ -6,6 +6,7 @@ import {
 	CHANGE_PROPS_IN_ADMIN,
 	SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS,
+	CHANGE_PROPS_IN_USER,
 	CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, REQUEST_SUBMIT_USERFORM,
 	CHANGE_AGREEMENT} from '../constants';
 import adminApi from '../api/adminApi';
@@ -80,6 +81,9 @@ const adminActionCreators = {
 	},
 	changePropsInUserList(which, value){
 		return {type: CHANGE_PROPS_IN_USERLIST, which, value};
+	},
+	changePropsInUser(which, value){
+		return {type: CHANGE_PROPS_IN_USER, which, value};
 	},
 	addUserToOpenUsers(user){
 		return {type: ADD_USER_TO_OPEN_USERS, user}

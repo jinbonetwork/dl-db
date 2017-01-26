@@ -1,13 +1,12 @@
 import {RECEIVE_USERLIST, CHANGE_PROPS_IN_USERLIST} from '../constants';
-import {refineUserList} from '../fieldData/userFieldData';
-import {updateUserFieldData} from './common';
 import update from 'react-addons-update';
 import {_copyOf, _forIn} from '../accessories/functions';
 
 const initialState = {
 	originalUsers: [],
 	lastPage: 1,
-	selected: []
+	selected: [],
+	isDelBtnYesOrNo: false
 };
 
 const userList = (state = initialState, action) => {

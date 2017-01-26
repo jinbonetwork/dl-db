@@ -10,11 +10,11 @@ export const HIDE_PROCESS = 'hide process';
 export const ADD_USER_TO_OPEN_USERS = 'add user to open users';
 
 export const RECEIVE_USERLIST = 'receive userlist';
-export const CHANGE_PROPS_IN_USERS = 'change props in users';
+export const CHANGE_PROPS_IN_USERLIST = 'change props in userlist';
 
-export const RECEIVE_USER = 'receive user';
+export const CHANGE_PROPS_IN_USER = 'change props in user';
+
 export const CHANGE_USER_PROPS = 'change user porps';
-
 export const BLUR_USERFORM = 'blur userform';
 export const SET_FOCUS_IN_USERFORM = 'set foucs in userform';
 export const SUBMIT_USERFORM = 'submit userform';

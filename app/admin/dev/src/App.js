@@ -44,11 +44,12 @@ const UserListContainer = connect(
 		userList: state.admin.userList,
 		originalUsers: state.userList.originalUsers,
 		lastPage: state.userList.lastPage,
-		selected: state.userList.selected
+		selected: state.userList.selected,
+		isDelBtnYesOrNo: state.userList.isDelBtnYesOrNo
 	}),
 	(dispatch) => ({
 		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
-		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value)),
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUserList(which, value)),
 		addUserToOpenUsers: (user) => dispatch(adminActionCreators.addUserToOpenUsers(user))
 	})
 )(UserList);
@@ -56,10 +57,12 @@ const UserListContainer = connect(
 const UserContainer = connect(
 	(state) => ({
 		userFieldData: state.admin.userFieldData,
-		openUsers: state.admin.openUsers
+		openUsers: state.admin.openUsers,
+		isDelBtnYesOrNo: state.user.isDelBtnYesOrNo
 	}),
 	(dispatch) => ({
-		fetchUser: (id) => dispatch(adminActionCreators.fetchUser(id))
+		fetchUser: (id) => dispatch(adminActionCreators.fetchUser(id)),
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUser(which, value))
 	})
 )(User);
 

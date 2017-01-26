@@ -41,7 +41,7 @@
 			background-color: @focus-color-2;
 		}
 	}
-	.userlist__add-user, .userlist__delete-user {
+	.userlist__add-user, .userlist__delete-user, .userlist__confirm-del button {
 		height: 100%;
 		padding: 0 0.5em;
 		i + span {
@@ -58,6 +58,10 @@
 			background-color: @focus-color-1;
 		}
 	}
+	.userlist__add-user + .userlist__delete-user,
+	 .userlist__add-user + .userlist__confirm-del {
+		margin-left: 0.5em;
+	}
 	.userlist__delete-user {
 		color: @minor-color-2;
 		background-color: @main-color;
@@ -65,8 +69,25 @@
 			background-color: @focus-color-2;
 		}
 	}
-	.userlist__add-user + .userlist__delete-user {
-		margin-left: 0.5em;
+	.userlist__confirm-del {
+		display: inline-block;
+		height: 100%;
+	}
+	.userlist__confirm-del button:first-child {
+		color: @minor-color-2;
+		background-color: @main-color;
+		border-right: 0;
+		padding: 0 1em;
+		&:focus {
+			background-color: @focus-color-2;
+		}
+	}
+	.userlist__confirm-del button:last-child {
+		color: @main-color;
+		background-color: @minor-color-2;
+		&:focus {
+			background-color: @focus-color-1;
+		}
 	}
 	.userlist__menu td > div i {
 		font-size: 1.5em;
