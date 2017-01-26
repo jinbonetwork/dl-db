@@ -1,5 +1,5 @@
 import {
-	RECEIVE_USER_FIELD_DATA, ADD_USER_TO_OPEN_USERS,
+	RECEIVE_USER_FIELD_DATA, REFINE_ROLES,
 	RECEIVE_USERLIST, CHANGE_PROPS_IN_USERLIST,
 	RECEIVE_AGREEMENT,
 	RECEIVE_ADMIN_INFO,
@@ -10,6 +10,7 @@ import {
 	CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, REQUEST_SUBMIT_USERFORM,
 	CHANGE_AGREEMENT} from '../constants';
 import adminApi from '../api/adminApi';
+import {refineUserFData, makeUserFormData} from '../fieldData/userFieldData';
 
 const dispatchError = (dispatch, error) => {
 	if(error.code !== -9999){
@@ -25,7 +26,8 @@ const dispatchError = (dispatch, error) => {
 const dispatchUserFieldData = (dispatch) => {
 	adminApi.fetchUserFieldData(
 		(orginUsrFData) => {
-			dispatch({type: RECEIVE_USER_FIELD_DATA, orginUsrFData});
+			const userFieldData = refineUserFData(orginUsrFData);
+			dispatch({type: RECEIVE_USER_FIELD_DATA, userFieldData});
 		},
 		(error) => dispatchError(dispatch, error)
 	);
@@ -64,13 +66,13 @@ const adminActionCreators = {
 	hideMessage(){
 		return {type: HIDE_MESSAGE}
 	},
-	fetchUserList(page, fData){
+	fetchUserList(page){
 		return (dispatch) => {
 			dispatch({type: SHOW_PROCESS});
 			adminApi.fetchUserList(page,
-				(originalUsers, lastPage) => {
+				(userList, lastPage) => {
 					dispatch({type: HIDE_PROCESS});
-					dispatch({type: RECEIVE_USERLIST, originalUsers, lastPage})
+					dispatch({type: RECEIVE_USERLIST, userList, lastPage})
 				},
 				(error) => {
 					dispatch({type: HIDE_PROCESS});
@@ -82,23 +84,25 @@ const adminActionCreators = {
 	changePropsInUserList(which, value){
 		return {type: CHANGE_PROPS_IN_USERLIST, which, value};
 	},
-	addUserToOpenUsers(user){
-		return {type: ADD_USER_TO_OPEN_USERS, user}
-	},
-	fetchUser(id){
-		return (dispatch) => {
-			dispatch({type: SHOW_PROCESS});
-			adminApi.fetchUser(id,
-				(user) => {
-					dispatch({type: HIDE_PROCESS});
-					dispatch({type: ADD_USER_TO_OPEN_USERS, user})
-				},
-				(error) => {
-					dispatch({type: HIDE_PROCESS});
-					dispatchError(dispatch, error);
-				}
-			);
-		};
+	fetchUser(id, list){
+		let user = list.find((usr) => (usr.id == id));
+		if(user){
+			return {type: RECEIVE_USER, user}
+		} else {
+			return (dispatch) => {
+				dispatch({type: SHOW_PROCESS});
+				adminApi.fetchUser(id,
+					(user) => {
+						dispatch({type: HIDE_PROCESS});
+						dispatch({type: RECEIVE_USER, user})
+					},
+					(error) => {
+						dispatch({type: HIDE_PROCESS});
+						dispatchError(dispatch, error);
+					}
+				);
+			};
+		}
 	},
 	changeUserProps(args){
 		return {type: CHANGE_USER_PROPS, args};

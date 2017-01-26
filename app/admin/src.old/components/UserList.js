@@ -1,8 +1,7 @@
 import React, {Component, PropTypes} from 'react';
-import {Link, withRouter} from 'react-router';
+import {Link} from 'react-router';
 import CheckBox from '../accessories/CheckBox';
 import Pagination from '../accessories/Pagination';
-import {refineUser} from '../fieldData/userFieldData';
 import {_mapO, _pushpull} from '../accessories/functions';
 
 class UserList extends Component {
@@ -10,7 +9,7 @@ class UserList extends Component {
 		this.props.fetchUserList(this.props.params.page);
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(prevProps.params.page != this.props.params.page || this.props.userList.length == 0){
+		if(prevProps.params.page != this.props.params.page || this.props.list.length == 0){
 			this.props.fetchUserList(this.props.params.page);
 		}
 	}
@@ -18,21 +17,6 @@ class UserList extends Component {
 		if(which == 'check'){
 			let id = arg1st, isChecked = arg2nd;
 			this.props.onChange('selected', _pushpull(this.props.selected, id));
-		}
-	}
-	handleClick(which, arg){
-		if(which == 'view'){
-			let {id} = arg;
-			if(!this.props.openUsers[id]){
-				let originalUser = this.props.originalUsers.find((usr) => (id == usr.id));
-				//this.props.addUserToOpenUsers(refineUser(originalUser, this.props.userFieldData));
-				this.props.addUserToOpenUsers(originalUser);
-			}
-			/*
-			let originalUser = this.props.originalUsers.find((usr) => (id == usr.id));
-			this.props.addUserToOpenUsers(originalUser, this.props.userFieldData);
-			*/
-			this.props.router.push('/admin/user/'+id);
 		}
 	}
 	render(){
@@ -61,13 +45,13 @@ class UserList extends Component {
 			<tr className="userlist__head">
 				<td className="userlist__table-margin"></td>
 				<td className="userlist__table-padding"></td>
-				{_mapO(this.props.userList[0], (pn, pv) => <td key={pn}>{fProps[pn].dispName}</td>)}
+				{_mapO(this.props.list[0], (pn, pv) => <td key={pn}>{fProps[pn].dispName}</td>)}
 				<td></td>
 				<td className="userlist__table-padding"></td>
 				<td className="userlist__table-margin"></td>
 			</tr>
 		);
-		const list = this.props.userList.map((item, index) => {
+		const list = this.props.list.map((item, index) => {
 			let userInfo = _mapO(item, (pn, pv) => {
 				if(pn == 'id'){
 					return (
@@ -77,8 +61,7 @@ class UserList extends Component {
 					);
 				}
 				else if(pn == 'name'){
-					//return <td key={pn}><Link to={'/admin/user/'+item.id}>{pv}</Link></td>
-					return <td key={pn}><a onClick={this.handleClick.bind(this, 'view', {id: item.id})}>{pv}</a></td>
+					return <td key={pn}><Link to={'/admin/user/'+item.id}>{pv}</Link></td>
 				} else {
 					return <td key={pn}>{pv}</td>
 				}
@@ -112,17 +95,12 @@ class UserList extends Component {
 }
 UserList.propTypes = {
 	userFieldData: PropTypes.object.isRequired,
-	openUsers: PropTypes.object.isRequired,
-	originalUsers: PropTypes.array.isRequired,
-	userList: PropTypes.array.isRequired,
+	list: PropTypes.array.isRequired,
 	lastPage: PropTypes.number.isRequired,
 	selected: PropTypes.array.isRequired,
 	fetchUserList: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
-	addUserToOpenUsers: PropTypes.func.isRequired,
-	router: PropTypes.shape({
-		push: PropTypes.func.isRequired
-	}).isRequired
-};
+	getUserFromList: PropTypes.func.isRequired
+}
 
-export default withRouter(UserList);
+export default UserList;

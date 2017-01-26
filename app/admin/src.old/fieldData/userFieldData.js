@@ -52,20 +52,10 @@ const custom = {
 
 export const refineUserFData = (fData) => {
 	 return refineFieldData(fData, initUsrFData, custom.refineFData);
-};
-export const refineUserList = (original, {fID, fProps}) => {
-	return original.map((item) => ({
-		id: parseInt(item[fID.id]),
-		name: item[fID.name],
-		class: item[fID.class],
-		email: item[fID.email],
-		phone: item[fID.phone],
-		uid: (item[fID.uid] > 0 ? '등록' : '')
-	}));
-};
+}
 export const refineUser = (user, fData) => {
 	return refineDoc(user, fData, custom.refineDocBySlug, custom.refineDocByType);
-};
+}
 export const makeUserFormData = (user, fData) => {
 	return makeFormData(user, fData, custom.refineDocToSubmitBySlug, custom.refineDocToSubmitByType);
-};
+}

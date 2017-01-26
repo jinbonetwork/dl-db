@@ -1,14 +1,11 @@
 import React, {Component, PropTypes} from 'react';
 import View from '../accessories/docManager/View';
 import {Link} from 'react-router';
-import {initUsrFData} from '../fieldData/userFieldData';
 import {_mapO, _mapAO} from '../accessories/functions';
 
 class User extends Component {
 	componentDidMount(){
-		if(!this.props.openUsers[this.props.params.id]){
-			this.props.fetchUser(this.props.params.id);
-		}
+		this.props.fetchUser(this.props.params.id, this.props.originalUserList);
 	}
 	customize(){ return {
 		renderValueBySlug: {
@@ -19,7 +16,6 @@ class User extends Component {
 		}
 	}}
 	render(){
-		const user = (this.props.openUsers[this.props.params.id] ? this.props.openUsers[this.props.params.id] : initUsrFData.empty);
 		return (
 			<div className="user">
 				<h1>회원정보</h1>
@@ -27,7 +23,7 @@ class User extends Component {
 					<tr>
 						<td className="user__table-margin"></td>
 						<td className="user__menu" colSpan="3">
-							{(!user.uid) &&
+							{(!this.props.user.uid) &&
 							<button className="user__register-user">
 								<i className="pe-7s-id pe-va"></i><span>등록</span>
 							</button>}
@@ -44,7 +40,7 @@ class User extends Component {
 					<tr className="user__body">
 						<td className="user__table-margin"></td>
 						<td className="user__table-padding"></td>
-						<td><View doc={user} fieldData={this.props.userFieldData} {...this.customize()} /></td>
+						<td><View doc={this.props.user} fieldData={this.props.userFieldData} {...this.customize()} /></td>
 						<td className="user__table-padding"></td>
 						<td className="user__table-margin"></td>
 					</tr>
@@ -56,7 +52,8 @@ class User extends Component {
 }
 User.propTypes = {
 	userFieldData: PropTypes.object.isRequired,
-	openUsers: PropTypes.object.isRequired,
+	originalUserList: PropTypes.array.isRequired,
+	user: PropTypes.object.isRequired,
 	fetchUser: PropTypes.func.isRequired
 };
 

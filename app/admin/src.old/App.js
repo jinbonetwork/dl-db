@@ -22,7 +22,6 @@ import './style/agreement.less';
 const AdminContainer = connect(
 	(state) => ({
 		isAdmin: state.admin.isAdmin,
-		didReceiveUserFieldData: state.admin.didReceiveUserFieldData,
 		loginType: state.admin.loginType,
 		id: state.admin.id,
 		password: state.admin.password,
@@ -39,38 +38,39 @@ const AdminContainer = connect(
 
 const UserListContainer = connect(
 	(state) => ({
-		userFieldData: state.admin.userFieldData,
-		openUsers: state.admin.openUsers,
-		userList: state.admin.userList,
-		originalUsers: state.userList.originalUsers,
+		userFieldData: state.userList.userFieldData,
+		list: state.userList.list,
 		lastPage: state.userList.lastPage,
 		selected: state.userList.selected
 	}),
 	(dispatch) => ({
 		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUsers(which, value)),
-		addUserToOpenUsers: (user) => dispatch(adminActionCreators.addUserToOpenUsers(user))
+		getUserFromList: (id) => dispatch(adminActionCreators.getUserFromList(id))
 	})
 )(UserList);
 
 const UserContainer = connect(
 	(state) => ({
-		userFieldData: state.admin.userFieldData,
-		openUsers: state.admin.openUsers
+		userFieldData: state.user.userFieldData,
+		originalUserList: state.user.originalUserList,
+		user: state.user.user
 	}),
 	(dispatch) => ({
-		fetchUser: (id) => dispatch(adminActionCreators.fetchUser(id))
+		fetchUser: (id, list) => dispatch(adminActionCreators.fetchUser(id, list))
 	})
 )(User);
 
 const UserFormContainer = connect(
 	(state) => ({
-		userFieldData: state.admin.userFieldData,
-		openUsers: state.admin.openUsers,
-		focused: state.userForm.focused
+		user: state.userForm.user,
+		userFieldData: state.userForm.userFieldData,
+		originalUserList: state.userForm.originalUserList,
+		focused: state.userForm.focused,
+		formData: state.userForm.formData
 	}),
 	(dispatch) => ({
-		fetchUser: (id) => dispatch(adminActionCreators.fetchUser(id)),
+		fetchUser: (id, list) => dispatch(adminActionCreators.fetchUser(id, list)),
 		onChange: (args) => dispatch(adminActionCreators.changeUserProps(args)),
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),

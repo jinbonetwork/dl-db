@@ -32,7 +32,7 @@ class Admin extends Component {
 			</div>
 		)
 		const content = _wrap(() => {
-			if(this.props.didReceiveUserFieldData){
+			if(this.props.isAdmin){
 				return [
 					<MainMenu key="main-menu" />,
 					<div key="children">{this.props.children}</div>
@@ -59,7 +59,6 @@ class Admin extends Component {
 }
 Admin.propTypes = {
 	isAdmin: PropTypes.bool,
-	didReceiveUserFieldData: PropTypes.bool,
 	loginType: PropTypes.string.isRequired,
 	id: PropTypes.string.isRequired,
 	password: PropTypes.string.isRequired,

@@ -1,14 +1,30 @@
-import {CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, REQUEST_SUBMIT_USERFORM} from '../constants';
+import {
+	RECEIVE_USER_FIELD_DATA, RECEIVE_USERLIST, RECEIVE_USER,
+	CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, REQUEST_SUBMIT_USERFORM} from '../constants';
+import {initUsrFData, refineUser} from '../fieldData/userFieldData';
+import {updateUserListOnSubmit, updateUserFieldData, updateUser, updateUserList} from './common';
 import update from 'react-addons-update';
 import {_wrap} from '../accessories/functions';
 
 const initialState = {
-	openUsers: {},
-	focused: {fSlug: undefined, index: undefined}
+	user: initUsrFData.empty,
+	originalUser: {},
+	userFieldData: initUsrFData,
+	originalUserList: [],
+	focused: {fSlug: undefined, index: undefined},
+	formData: null
 };
 
 const userForm = (state = initialState, action) => {
+	let newState;
 	switch(action.type){
+		case RECEIVE_USER_FIELD_DATA:
+			newState = updateUserFieldData(state, action);
+			return update(newState, {user: {$set: refineUser(state.originalUser, newState.userFieldData)}});
+		case RECEIVE_USERLIST:
+			return updateUserList(state, action);
+		case RECEIVE_USER:
+			return updateUser(state, action);
 		case CHANGE_USER_PROPS:
 			let {mode, fSlug, index, value} = action.args;
 			switch(mode){
