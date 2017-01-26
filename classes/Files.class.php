@@ -27,6 +27,15 @@ class Files extends \DLDB\Objects {
 		return self::fetchFiles($row);
 	}
 
+	public static function getFileByPath($filepath) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT * FROM {files} WHERE `filepath` = '".addslashes($filepath)."'";
+		$row = $dbm->getFetchArray($que);
+
+		return self::fetchFiles($row);
+	}
+
 	public static function getFilePath($file) {
 		$filename = DLDB_DATA_PATH."/".$file['filepath'];
 		return $filename;
@@ -112,6 +121,15 @@ class Files extends \DLDB\Objects {
 
 		$que = "DELETE FROM {files} WHERE fid = ?";
 		$dbm->execute($que,array("d",$fid));
+	}
+
+	public static function anonymity($fid,$anonymity) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {files} SET `anonymity` = ? WHERE fid = ?";
+		$dbm->execute( $que, array("dd", $anonymity, $fid ) );
+
+		return 0;
 	}
 
 	public static function errMsg() {

@@ -9,7 +9,7 @@ class save extends \DLDB\Controller {
 			if(!$this->params['id']) {
 				\DLDB\RespondJson::ResultPage( array( -2, '회원번호를 입력하세요') );
 			}
-			$member = \DLDB\Members:get($this->params['id']);
+			$member = \DLDB\Members::get($this->params['id']);
 			if(!$member) {
 				\DLDB\RespondJson::ResultPage( array( -2, '존재하지 않는 회원입니다.') );
 			}

@@ -21,6 +21,11 @@ class text extends \DLDB\Controller {
 			if( $this->file['did'] != $this->params['id'] ) {
 				\DLDB\RespondJson::ResultPage( array( -2, '권한이 없습니다') );
 			}
+			if(!preg_match("/image/i",$this->file['mimetype'])) { 
+				if(!$this->file['anonymity'] && !$acl->imMaster() && $this->user['uid'] != $this->file['uid']) {
+					\DLDB\RespondJson::ResultPage( array( -2, "아직 볼수 없는 파일입니다. 운영자가 확인한 파일만 보실 수 있습니다.") );
+				}
+			}
 		}
 		if($this->params['mode'] == 'modify') {
 			if($this->params['fid']) {
