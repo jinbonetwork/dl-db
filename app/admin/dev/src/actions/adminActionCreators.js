@@ -6,7 +6,6 @@ import {
 	CHANGE_PROPS_IN_ADMIN,
 	SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS,
- 	RECEIVE_USER,
 	CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, REQUEST_SUBMIT_USERFORM,
 	CHANGE_AGREEMENT} from '../constants';
 import adminApi from '../api/adminApi';
@@ -85,13 +84,14 @@ const adminActionCreators = {
 	addUserToOpenUsers(user){
 		return {type: ADD_USER_TO_OPEN_USERS, user}
 	},
-	fetchUser(id){
+	fetchUser(id, callback){
 		return (dispatch) => {
 			dispatch({type: SHOW_PROCESS});
 			adminApi.fetchUser(id,
 				(user) => {
 					dispatch({type: HIDE_PROCESS});
-					dispatch({type: ADD_USER_TO_OPEN_USERS, user})
+					dispatch({type: ADD_USER_TO_OPEN_USERS, user});
+					if(typeof callback === 'function') callback();
 				},
 				(error) => {
 					dispatch({type: HIDE_PROCESS});
@@ -109,7 +109,7 @@ const adminActionCreators = {
 	blurUserForm(){
 		return {type: BLUR_USERFORM};
 	},
-	submitUserForm(id, userFormData, callback){
+	submitUserForm(id, userFormData){
 		return (dispatch) => {
 			adminApi.submitUserForm(id, userFormData,
 				(data) => {console.log(data)},

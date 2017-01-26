@@ -67,10 +67,11 @@ const UserFormContainer = connect(
 	(state) => ({
 		userFieldData: state.admin.userFieldData,
 		openUsers: state.admin.openUsers,
+		user: state.userForm.user,
 		focused: state.userForm.focused
 	}),
 	(dispatch) => ({
-		fetchUser: (id) => dispatch(adminActionCreators.fetchUser(id)),
+		fetchUser: (id, callback) => dispatch(adminActionCreators.fetchUser(id, callback)),
 		onChange: (args) => dispatch(adminActionCreators.changeUserProps(args)),
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),

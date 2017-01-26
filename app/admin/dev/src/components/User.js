@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import View from '../accessories/docManager/View';
 import {Link} from 'react-router';
-import {initUsrFData} from '../fieldData/userFieldData';
 import {_mapO, _mapAO} from '../accessories/functions';
 
 class User extends Component {
@@ -19,7 +18,7 @@ class User extends Component {
 		}
 	}}
 	render(){
-		const user = (this.props.openUsers[this.props.params.id] ? this.props.openUsers[this.props.params.id] : initUsrFData.empty);
+		const user = (this.props.openUsers[this.props.params.id] ? this.props.openUsers[this.props.params.id] : this.props.userFieldData.empty);
 		return (
 			<div className="user">
 				<h1>회원정보</h1>

@@ -2,15 +2,22 @@ import React, {Component, PropTypes, cloneElement} from 'react';
 import {withRouter} from 'react-router';
 import Form from '../accessories/docManager/Form';
 import Item from '../accessories/Item';
-import {initUsrFData} from '../fieldData/userFieldData';
+import {makeUserFormData} from '../fieldData/userFieldData';
 import {_mapO} from '../accessories/functions';
 
 class UserForm extends Component {
 	componentDidMount(){
-		if(this.props.params.id){
-			if(!this.props.openUsers[this.props.params.id]){
-				this.props.fetchUser(this.props.params.id);
+		const id = this.props.params.id;
+		if(id){
+			if(this.props.openUsers[id]){
+				this.props.onChange({mode: 'merge', value: this.props.openUsers[id]});
+			} else {
+				this.props.fetchUser(id, () => {
+					this.props.onChange({mode: 'merge', value: this.props.openUsers[id]});
+				});
 			}
+		} else {
+			this.props.onChange({mode: 'merge', value: this.props.userFieldData.empty});
 		}
 	}
 	customize(){ return {
@@ -51,20 +58,15 @@ class UserForm extends Component {
 		if(error){
 			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
 		} else {
-			/*
 			this.props.submit(
 				this.props.params.id, makeUserFormData(this.props.user, this.props.userFieldData),
 				() => {
 					this.props.router.push('/admin/user/'+this.props.params.id);
 				}
 			);
-			*/
 		}
 	}
 	render(){
-		const user = (this.props.params.id && this.props.openUsers[this.props.params.id] ?
-			this.props.openUsers[this.props.params.id] : initUsrFData.empty
-		);
 		let title = (this.props.params.id ? '회원정보 수정' : '회원추가')
 		let submitLabel = (this.props.params.id ? '수정' : '저장');
 		return (
@@ -75,7 +77,7 @@ class UserForm extends Component {
 						<td className="user-form__table-margin"></td>
 						<td>
 							<Form
-								doc={user}
+								doc={this.props.user}
 								fieldData={this.props.userFieldData}
 								focused={this.props.focused}
 								submitLabel={submitLabel}
@@ -94,6 +96,7 @@ class UserForm extends Component {
 }
 UserForm.propTypes = {
 	userFieldData: PropTypes.object.isRequired,
+	user: PropTypes.object.isRequired,
 	openUsers: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	submitLabel: PropTypes.string,
