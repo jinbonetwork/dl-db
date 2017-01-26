@@ -141,9 +141,9 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 		}
 	}, (fs, value) => (fData.fID[fs]));
 };
-const makeFormData = (doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
+const makeFormData = (name, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
 	let formData = new FormData();
-	formData.append('document', JSON.stringify(
+	formData.append(name, JSON.stringify(
 		refineDocToSubmit(doc, fData, refineDocToSubmitBySlug, refineDocToSubmitByType)
 	));
 	for(let fs in doc){

@@ -3,35 +3,32 @@ import {Link, withRouter} from 'react-router'
 import Overlay from './accessories/Overlay';
 import 'babel-polyfill'; // for update(), find(), findIndex() ...
 import jQ from 'jquery';
-import {_isEmpty} from './accessories/functions';
+import {_isEmpty, _mapO, _wrap} from './accessories/functions';
 
 class FileTextEditor extends Component {
 	constructor(){
 		super();
 		this.state = {
 			text: '',
+			header: {},
 			textareaStyle: null,
 			isFullScreen: false,
 		};
 	}
-	componentWillMount(){
-		if(!_isEmpty(this.props.fileText)){
-			let text = this.props.fileText[this.props.params.fid].text;
-			this.setState({text: text});
-		}
-
-	}
-	componentWillReceiveProps(nextProps){
-		if(!_isEmpty(nextProps.fileText)){
-			let text = nextProps.fileText[nextProps.params.fid].text;
-			this.setState({text: text});
-		}
-	}
 	componentDidMount(){
+		if(this.props.authorized){
+			this.fetchFileText();
+		}
 		this.setSize();
 	}
-	componentDidUpdate(nextProps, nextState){
-		 this.setSize();
+	componentDidUpdate(prevProps, prevState){
+		this.setSize();
+	}
+	fetchFileText(){
+		const textApi = '/api/document/text?id='+this.props.docId+'&fid='+this.props.params.fid;
+		this.props.fetchData('get', textApi, (data) => { if(data){
+			this.setState({text: data.text, header: data.header});
+		}});
 	}
 	setSize(){
 		let wrapH = jQ(this.refs.wrap).height();
@@ -47,29 +44,36 @@ class FileTextEditor extends Component {
 	}
 	handleClick(which, event){ switch(which){
 		case 'submit':
-			this.props.submit(this.props.params.fid, this.state.text);
-			this.props.router.goBack('/document/'+this.props.document.id);
+			let api = '/api/document/text?mode=modify&id='+this.props.docId+'&fid='+this.props.params.fid;
+			let formData = new FormData();
+			formData.append('text', this.state.text);
+			this.props.fetchData('post', api, formData, (data) => {
+				this.props.router.goBack('/document/'+this.props.docId);
+			});
 			break;
 		case 'cancel':
-			this.props.router.goBack('/document/'+this.props.document.id);
+			this.props.router.goBack('/document/'+this.props.docId);
 			break;
 		case 'alterScreen':
 			this.setState({isFullScreen: !this.state.isFullScreen});
 			break;
 		default:
 	}}
-	fileMeta(header){
-		let meta = [];
-		for(let prop in header){
-			meta.push(<div key={prop}><span>{prop}: {header[prop]}</span></div>);
-		}
-		return <div className="file-text-editor__filemeta">{meta}</div>
-	}
 	render(){
 		let className = (this.state.isFullScreen ? 'file-text-editor file-text-editor__full-screen' : 'file-text-editor');
-		const fid = this.props.params.fid;
-		const filename = this.props.document.file && this.props.document.file.find((f) => f.fid == fid).filename;
-		const fileMeta = (!_isEmpty(this.props.fileText) ? this.fileMeta(this.props.fileText[fid].header) : null);
+		const filename = _wrap(() => {
+			if(this.props.file){
+				let file = this.props.file.find((f) => f.fid == this.props.params.fid);
+				if(file) return file.filename;
+			}
+		})
+		const fileMeta = !_isEmpty(this.state.header) && (
+			<div className="file-text-editor__filemeta">
+				{_mapO(this.state.header, (pn, pv) => (
+					<div key={pn}><span>{pn}: {pv}</span></div>
+				))}
+			</div>
+		);
 		return (
 			<div>
 				<Overlay />
@@ -92,9 +96,10 @@ class FileTextEditor extends Component {
 	}
 }
 FileTextEditor.propType = {
-	document: PropTypes.object,
-	fileText: PropTypes.object,
-	submit: PropTypes.func,
+	docId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+	file: PropTypes.array,
+	fetchData: PropTypes.func.isRequired,
+	authorized: PropTypes.bool,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired,
