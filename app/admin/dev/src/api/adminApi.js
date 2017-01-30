@@ -81,6 +81,9 @@ const adminApi = {
 	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
+	},
+	submitAgreement(forData, succeed, fail){
+		//fetchData('post', '', formData, ({agreement}) => succeed(agreement), fail);
 	}
 };
 

@@ -1,10 +1,10 @@
-@import 'variables';
-
 /*--- index --------------------------------------------
 .user-form
 .user-form .form
 .user-form .select
 --------------------------------------------------------*/
+
+@import 'variables';
 
 .user-form {
 	margin: 5% 0;
@@ -66,18 +66,38 @@
 		i {font-size: 2em;}
 		&:focus {border-bottom: dotted 1px @main-color}
 	}
-	.form__submit td {
+	.form__submit-wrap td {
 		padding-top: 10%;
 		text-align: center;
 	}
-	.form__submit button {
-		height: 3em;
+	.form__submit, .form__saving {
+		display: inline-block;
 		width: 70%;
+		border-style: solid;
+		border-width: 1px;
+		line-height: 1.5em;
+		padding: 0.75em 0;
+		text-align: center;
+	}
+	.form__submit {
+		border-color: @main-color;
 		background-color: @main-color;
 		color: @minor-color-2;
+		cursor: pointer;
 		&:focus {
 			background-color: @focus-color-2;
 		}
+	}
+	.form__saving {
+		border-color: @main-color;
+		background-color: @focus-color-1;
+		color: @main-color;
+	}
+	.form__saving span {
+		margin-right: 0.5em;
+	}
+	.form__saving i {
+		font-size: 1.5em;
 	}
 }
 .user-form .select {

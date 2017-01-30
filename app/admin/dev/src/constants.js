@@ -17,8 +17,10 @@ export const CHANGE_PROPS_IN_USER = 'change props in user';
 export const CHANGE_USER_PROPS = 'change user porps';
 export const BLUR_USERFORM = 'blur userform';
 export const SET_FOCUS_IN_USERFORM = 'set foucs in userform';
+export const COMPLETE_USERFORM = 'complete userform';
 export const SUBMIT_USERFORM = 'submit userform';
-export const REQUEST_SUBMIT_USERFORM = 'request submit userform';
 
 export const RECEIVE_AGREEMENT = 'receive agreement';
 export const CHANGE_AGREEMENT = 'change agreement';
+export const COMPLETE_AGREEMENT = 'complete agreement';
+export const SUBMIT_AGREEMENT = 'submit agreement';

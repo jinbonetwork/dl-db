@@ -1,7 +1,10 @@
 import {RECEIVE_ADMIN_INFO, RECEIVE_USER_FIELD_DATA, RECEIVE_USERLIST, ADD_USER_TO_OPEN_USERS,
 	CHANGE_PROPS_IN_ADMIN, REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
-	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS} from '../constants';
+	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS,
+	COMPLETE_USERFORM, SUBMIT_USERFORM,
+	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT} from '../constants';
 import {initUsrFData, refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
+import RichTextEditor from 'react-rte';
 import update from 'react-addons-update';
 import {_findProp} from '../accessories/functions';
 
@@ -11,6 +14,7 @@ const initialState = {
 	userFieldData: initUsrFData,
 	openUsers: {},
 	userList: [],
+	openAgreement: null,
 	message: {content: '', callback: null},
 	showProc: false,
 	loginType: '',
@@ -42,9 +46,17 @@ const admin = (state = initialState, action) => {
 		case HIDE_PROCESS:
 			return update(state, {showProc: {$set: false}});
 		case ADD_USER_TO_OPEN_USERS:
+		case SUBMIT_USERFORM:
 			return update(state, {openUsers: {[action.user.id]: {$set: refineUser(action.user, state.userFieldData)}}});
+		case COMPLETE_USERFORM:
+			return update(state, {openUsers: {[action.user.id]: {$set: action.user}}});
 		case RECEIVE_USERLIST:
 			return update(state, {userList: {$set: refineUserList(action.originalUsers, state.userFieldData)}});
+		case RECEIVE_AGREEMENT:
+			return update(state, {openAgreement: {$set: RichTextEditor.createValueFromString(action.agreement, 'html')}});
+		case COMPLETE_AGREEMENT:
+		case SUBMIT_AGREEMENT:
+			return update(state, {openAgreement: {$set: action.agreement}});
 		default:
 			return state;
 	}

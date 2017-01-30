@@ -71,7 +71,8 @@ const UserFormContainer = connect(
 		userFieldData: state.admin.userFieldData,
 		openUsers: state.admin.openUsers,
 		user: state.userForm.user,
-		focused: state.userForm.focused
+		focused: state.userForm.focused,
+		isSaving: state.userForm.isSaving
 	}),
 	(dispatch) => ({
 		fetchUser: (id, callback) => dispatch(adminActionCreators.fetchUser(id, callback)),
@@ -79,17 +80,20 @@ const UserFormContainer = connect(
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
-		submit: (id, userFormData, callback) => dispatch(adminActionCreators.submitUserForm(id, userFormData, callback))
+		submit: (user, formData) => dispatch(adminActionCreators.submitUserForm(user, formData))
 	})
 )(UserForm);
 
 const AgreementContainer = connect(
 	(state) => ({
-		editorState: state.agreement.editorState
+		openAgreement: state.admin.openAgreement,
+		agreement: state.agreement.agreement,
+		isSaving: state.agreement.isSaving
 	}),
 	(dispatch) => ({
-		fetchAgreement: () => dispatch(adminActionCreators.fetchAgreement()),
-		onChange: (editorState) => dispatch(adminActionCreators.changeAgreement(editorState))
+		fetchAgreement: (callback) => dispatch(adminActionCreators.fetchAgreement(callback)),
+		onChange: (agreement) => dispatch(adminActionCreators.changeAgreement(agreement)),
+		onSubmit: (agreement, formData) => dispatch(adminActionCreators.submitAgreement(agreement, formData))
 	})
 )(Agreement);
 

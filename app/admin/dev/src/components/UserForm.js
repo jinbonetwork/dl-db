@@ -21,6 +21,7 @@ class UserForm extends Component {
 		}
 	}
 	customize(){ return {
+		/*
 		fieldFooterBySlug: {
 			name: <span>이름이름</span>
 		},
@@ -39,6 +40,13 @@ class UserForm extends Component {
 		checkValidOnSubmitByType: {
 			something: (slug, value) => {}
 		},
+		renderFormByType: {
+			something: (slug, index, value, formElem) => {}
+		},
+		checkHiddenBySlug: {
+			something: (slug) => {}
+		},
+		*/
 		renderFormBySlug: {
 			role: (slug, index, value, formElem) => {
 				let options = _mapO(this.props.userFieldData.roles, (roleCode, dispName) =>
@@ -46,24 +54,13 @@ class UserForm extends Component {
 				);
 				return cloneElement(formElem, {options});
 			}
-		},
-		renderFormByType: {
-			something: (slug, index, value, formElem) => {}
-		},
-		checkHiddenBySlug: {
-			something: (slug) => {}
 		}
 	}}
 	handleSubmit(error){
 		if(error){
 			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
 		} else {
-			this.props.submit(
-				this.props.params.id, makeUserFormData(this.props.user, this.props.userFieldData),
-				() => {
-					this.props.router.push('/admin/user/'+this.props.params.id);
-				}
-			);
+			this.props.submit(this.props.user, makeUserFormData(this.props.user, this.props.userFieldData));
 		}
 	}
 	render(){
@@ -80,6 +77,7 @@ class UserForm extends Component {
 								doc={this.props.user}
 								fieldData={this.props.userFieldData}
 								focused={this.props.focused}
+								isSaving={this.props.isSaving}
 								submitLabel={submitLabel}
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
@@ -100,6 +98,7 @@ UserForm.propTypes = {
 	openUsers: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	submitLabel: PropTypes.string,
+	isSaving: PropTypes.bool,
 	fetchUser: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	setFocus: PropTypes.func.isRequired,
