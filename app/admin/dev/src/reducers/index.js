@@ -4,13 +4,15 @@ import userList from './userList';
 import user from './user';
 import userForm from './userForm';
 import agreement from './agreement';
+import attachments from './attachments';
 
 const rootReducer = combineReducers({
 	admin,
 	userList,
 	user,
 	userForm,
-	agreement
+	agreement,
+	attachments
 });
 
 export default rootReducer;

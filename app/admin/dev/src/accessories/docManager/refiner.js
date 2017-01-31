@@ -161,4 +161,4 @@ const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {},
 	return formData;
 };
 
-export {refineFieldData, refineDoc, makeFormData};
+export {refineFieldData, refineDoc, refineDocToSubmit, makeFormData};

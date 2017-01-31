@@ -9,6 +9,7 @@ import Admin from './components/Admin';
 import UserList from './components/UserList';
 import User from './components/User';
 import UserForm from './components/UserForm';
+import Attachments from './components/Attachments';
 import Agreement from './components/Agreement';
 import './style/admin.less';
 import './style/login.less';
@@ -22,7 +23,8 @@ import './style/agreement.less';
 const AdminContainer = connect(
 	(state) => ({
 		isAdmin: state.admin.isAdmin,
-		didReceiveUserFieldData: state.admin.didReceiveUserFieldData,
+		userFieldData: state.admin.userFieldData,
+		docFieldData: state.admin.docFieldData,
 		loginType: state.admin.loginType,
 		id: state.admin.id,
 		password: state.admin.password,
@@ -84,6 +86,19 @@ const UserFormContainer = connect(
 	})
 )(UserForm);
 
+const AttachmentsContainer = connect(
+	(state) => ({
+		attachments: state.admin.attachments,
+		lastPage: state.attachments.lastPage,
+		selected: state.attachments.selected,
+		isDelBtnYesOrNo: state.attachments.isDelBtnYesOrNo
+	}),
+	(dispatch) => ({
+		fetchAttachments: (page) => dispatch(adminActionCreators.fetchAttachments(page)),
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value))
+	})
+)(Attachments);
+
 const AgreementContainer = connect(
 	(state) => ({
 		openAgreement: state.admin.openAgreement,
@@ -106,6 +121,7 @@ render(
 				<Route path="user/new" component={UserFormContainer} />
 				<Route path="user/:id" component={UserContainer} />
 				<Route path="user/:id/edit" component={UserFormContainer} />
+				<Route path="attachments(/page:/:page)" component={AttachmentsContainer} />
 				<Route path="agreement" component={AgreementContainer} />
 			</Route>
 		</Router>

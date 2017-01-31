@@ -1,14 +1,10 @@
 import {
-	RECEIVE_USER_FIELD_DATA, ADD_USER_TO_OPEN_USERS,
-	RECEIVE_USERLIST, CHANGE_PROPS_IN_USERLIST,
-	RECEIVE_AGREEMENT,
-	RECEIVE_ADMIN_INFO,
-	CHANGE_PROPS_IN_ADMIN,
-	SUCCEED_LOGIN, SHOW_LOGIN,
-	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS,
-	CHANGE_PROPS_IN_USER,
-	CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM, COMPLETE_USERFORM, SUBMIT_USERFORM,
-	CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT} from '../constants';
+	RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, ADD_USER_TO_OPEN_USERS, RECEIVE_USERLIST, CHANGE_PROPS_IN_USERLIST,
+	RECEIVE_AGREEMENT, RECEIVE_ADMIN_INFO, CHANGE_PROPS_IN_ADMIN, SUCCEED_LOGIN, SHOW_LOGIN, SHOW_MESSAGE, HIDE_MESSAGE,
+	SHOW_PROCESS, HIDE_PROCESS, CHANGE_PROPS_IN_USER, CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM,
+	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
+	CHANGE_PROPS_IN_ATTACHMENTS
+} from '../constants';
 import adminApi from '../api/adminApi';
 
 const dispatchError = (dispatch, error) => {
@@ -30,12 +26,23 @@ const dispatchUserFieldData = (dispatch) => {
 		(error) => dispatchError(dispatch, error)
 	);
 };
+const dispatchDocFieldData = (dispatch) => {
+	adminApi.fetchDocFieldData(
+		(originDocFData) => {
+			dispatch({type: RECEIVE_DOC_FIELD_DATA, originDocFData});
+		},
+		(error) => dispatchError(dispatch, error)
+	);
+};
 const adminActionCreators = {
 	fetchAdminInfo(){
 		return (dispatch) => {
 			adminApi.fetchAdminInfo((adminInfo) => {
 				dispatch({type: RECEIVE_ADMIN_INFO, adminInfo});
-				if(adminInfo.isAdmin) dispatchUserFieldData(dispatch);
+				if(adminInfo.isAdmin){
+					dispatchUserFieldData(dispatch);
+					dispatchDocFieldData(dispatch);
+				}
 			}, (error) => dispatchError(dispatch, error));
 		}
 	},
@@ -49,6 +56,7 @@ const adminActionCreators = {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: SUCCEED_LOGIN});
 				dispatchUserFieldData(dispatch);
+				dispatchDocFieldData(dispatch);
 			} else {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({
@@ -65,21 +73,19 @@ const adminActionCreators = {
 	hideMessage(){
 		return {type: HIDE_MESSAGE}
 	},
-	fetchUserList(page, fData){
-		return (dispatch) => {
-			dispatch({type: SHOW_PROCESS});
-			adminApi.fetchUserList(page,
-				(originalUsers, lastPage) => {
-					dispatch({type: HIDE_PROCESS});
-					dispatch({type: RECEIVE_USERLIST, originalUsers, lastPage})
-				},
-				(error) => {
-					dispatch({type: HIDE_PROCESS});
-					dispatchError(dispatch, error);
-				}
-			);
-		}
-	},
+	fetchUserList(page){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.fetchUserList(page,
+			(originalUsers, lastPage) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_USERLIST, originalUsers, lastPage})
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	};},
 	changePropsInUserList(which, value){
 		return {type: CHANGE_PROPS_IN_USERLIST, which, value};
 	},
@@ -147,7 +153,23 @@ const adminActionCreators = {
 			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);};
 		);
 		*/
-	};}
+	};},
+	fetchAttachments(page){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.fetchAttachments(page,
+			(original, lastPage) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_ATTACHMENTS, original, lastPage})
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	};},
+	changePropsInAttachments(which, value){
+		return {type: CHANGE_PROPS_IN_ATTACHMENTS, which, value};
+	},
 }
 
 export default adminActionCreators;

@@ -1,5 +1,6 @@
 export const RECEIVE_ADMIN_INFO = 'receive administrator information';
 export const RECEIVE_USER_FIELD_DATA = 'receive user field data';
+export const RECEIVE_DOC_FIELD_DATA = 'receive doc filed data';
 export const CHANGE_PROPS_IN_ADMIN = 'change props in admin';
 export const SUCCEED_LOGIN = 'succeed login';
 export const SHOW_LOGIN = 'show login';
@@ -24,3 +25,6 @@ export const RECEIVE_AGREEMENT = 'receive agreement';
 export const CHANGE_AGREEMENT = 'change agreement';
 export const COMPLETE_AGREEMENT = 'complete agreement';
 export const SUBMIT_AGREEMENT = 'submit agreement';
+
+export const RECEIVE_ATTACHMENTS = 'receive attachments';
+export const CHANGE_PROPS_IN_ATTACHMENTS = 'change props in attachements';
