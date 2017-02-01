@@ -126,9 +126,42 @@ class Document extends \DLDB\Objects {
 
 		$que = "SELECT * FROM {documents} ".( $uid ? "WHERE `uid` = ".$uid." " : '' )."ORDER BY `id` DESC LIMIT " .( ( $page-1 ) * $limit ) . ", ". $limit;
 		$documents = array();
+		$dids = array();
 		while($row = $dbm->getFetchArray($que)) {
 			$documents[] = self::fetchDocument($row,'view');
+			$dids[] = $row['id'];
 		}
+
+		$file_fields = array();
+		if( is_array($fields) ) {
+			foreach( $fields as $fid => $field ) {
+				if( $field['type'] == 'file' ) {
+					$file_fields[] = $fid;
+				}
+			}
+		}
+
+		if( count($file_fields) > 0 ) {
+			$que = "SELECT * FROM {files} WHERE did IN (".implode(',',$dids).") ORDER BY did ASC, fid ASC";
+			while($row = $dbm->getFetchArray($que)) {
+				$files[$row['did']][$row['fid']] = \DLDB\Files::fetchFiles($row);
+			}
+
+			for($i=0; $i<@count($documents); $i++) {
+				foreach($file_fields as $fid) {
+					if( $documents[$i]['f'.$fid] && is_array($documents[$i]['f'.$fid]) ) {
+						foreach( $documents[$i]['f'.$fid] as $fd => $file ) {
+							if($files[$documents[$i]['id']][$fd]) {
+								$documents[$i]['f'.$fid][$fd]['status'] = $files[$documents[$i]['id']][$fd]['status'];
+								$documents[$i]['f'.$fid][$fd]['anonymity'] = $files[$documents[$i]['id']][$fd]['anonymity'];
+								$documents[$i]['f'.$fid][$fd]['textsize'] = $files[$documents[$i]['id']][$fd]['textsize'];
+							}
+						}
+					}
+				}
+			}
+		}
+
 		return $documents;
 	}
 

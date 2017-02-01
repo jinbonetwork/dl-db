@@ -136,7 +136,7 @@ class Files extends \DLDB\Objects {
 		return self::$errmsg;
 	}
 
-	private static function fetchFiles($row) {
+	public static function fetchFiles($row) {
 		if(!$row) return null;
 		foreach($row as $k => $v) {
 			if($k == 'header') $v = unserialize($v);
