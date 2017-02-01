@@ -81,7 +81,6 @@ const adminApi = {
 		} else {
 			fetchData('post', '/api/admin/member/save?mode=add', userFormData, (data) => succeed(data), fail);
 		}
-
 	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);

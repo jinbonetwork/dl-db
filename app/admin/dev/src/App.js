@@ -92,7 +92,8 @@ const AttachmentsContainer = connect(
 		attachments: state.admin.attachments,
 		lastPage: state.attachments.lastPage,
 		selected: state.attachments.selected,
-		isDelBtnYesOrNo: state.attachments.isDelBtnYesOrNo
+		isDelBtnYesOrNo: state.attachments.isDelBtnYesOrNo,
+		sortedBy: state.attachments.sortedBy
 	}),
 	(dispatch) => ({
 		fetchAttachments: (page) => dispatch(adminActionCreators.fetchAttachments(page)),

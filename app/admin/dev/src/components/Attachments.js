@@ -1,4 +1,6 @@
 import React, {Component, PropTypes} from 'react';
+import Check from '../accessories/Check';
+import Item from '../accessories/Item';
 import CheckBox from '../accessories/CheckBox';
 import Pagination from '../accessories/Pagination';
 import {_mapO, _pushpull} from '../accessories/functions';
@@ -17,6 +19,10 @@ class Attachments extends Component {
 			let docId = arg1st, isChecked = arg2nd;
 			this.props.onChange('selected', _pushpull(this.props.selected, docId));
 		}
+		else if(which == 'sorted by'){
+			let sortedBy = arg1st;
+			this.props.onChange('sortedBy', sortedBy);
+		}
 	}
 	handleClick(which, arg1st){
 		switch(which){
@@ -34,35 +40,36 @@ class Attachments extends Component {
 	render(){
 		const deleteButton = (!this.props.isDelBtnYesOrNo ?
 			<a className="attachments__delete-docs" onClick={this.handleClick.bind(this, 'delete docs')}>
-				<i className="pe-7s-less pe-va"></i><span>삭제</span>
+				<i className="pe-7s-close pe-va"></i><span>삭제</span>
 			</a> :
-			<div className="attachments__confirm-del-docs">
+			<span className="attachments__confirm-del-docs">
 				<a onClick={this.handleClick.bind(this, 'delete docs')}>예</a>
 				<a onClick={this.handleClick.bind(this, 'cancel deleting docs')}>아니오</a>
-			</div>
+			</span>
 		);
 		const listMenu = (
-			<tr>
+			<tr className="attachments__menu">
 				<td className="table-margin"></td>
-				<td className="table-padding"></td>
-				<td colSpan="4">
+				<td colSpan="7">
 					<div className="attachments__sort">
 						<span>정렬</span>
-						<a>텍스트화</a>
-						<a>익명화</a>
+						<Check type="radio" selected={this.props.sortedBy} onChange={this.handleChange.bind(this, 'sorted by')}>
+							<Item value="time">시간</Item>
+							<Item value="parsing">텍스트화</Item>
+							<Item value="anonymity">익명화</Item>
+						</Check>
 					</div>
 					{deleteButton}
 				</td>
-				<td className="table-padding"></td>
 				<td className="table-margin"></td>
 			</tr>
 		);
 		const listHead = (
-			<tr>
+			<tr className="attachments__head">
 				<td className="table-margin"></td>
 				<td className="table-padding"></td>
 				<td></td>
-				<td>문서 제목 및 첨부파일</td>
+				<td colSpan="2">문서 제목 및 첨부파일</td>
 				<td>텍스트화</td>
 				<td>익명화</td>
 				<td className="table-padding"></td>
@@ -70,7 +77,7 @@ class Attachments extends Component {
 			</tr>
 		);
 		const list = this.props.attachments.map((item) => {
-			let rowSpan = item.files.length + 2;
+			let rowSpan = item.files.length + 1;
 			let title = (
 				<tr key={'title'+item.docId}>
 					<td className="table-margin" rowSpan={rowSpan}></td>
@@ -81,10 +88,8 @@ class Attachments extends Component {
 							onChange={this.handleChange.bind(this, 'check', item.docId)}
 						/>
 					</td>
-					<td>
-						<a href={'/document/'+item.docId}>{item.title}</a>
-						<a href={'/document/'+item.docId+'/edit'}><i className="pe-7s-note pe-va"></i></a>
-					</td>
+					<td className="attachments__title"><a href={'/document/'+item.docId}>{item.title}</a></td>
+					<td className="attachments__edit-doc"><a href={'/document/'+item.docId+'/edit'}><i className="pe-7s-note pe-va"></i></a></td>
 					<td colSpan="2"></td>
 					<td className="table-padding" rowSpan={rowSpan}></td>
 					<td className="table-margin" rowSpan={rowSpan}></td>
@@ -92,23 +97,29 @@ class Attachments extends Component {
 			);
 			let files = item.files.map((file) => (
 				<tr key={'file'+file.fileId}>
-					<td>
-						<a href={file.fileUri} target="_blank">{file.fileName}</a>
-						<span>TEXT</span>
+					<td className="attachments__filename"><i className="pe-7s-file pe-va"></i><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
+					<td className="attachments__edit-text"><span>TEXT</span></td>
+					<td className="attachments__toggle">
+						{file.parsed === false && <span className="attachments__toggle--off"><i className="pe-7s-switch pe-va"></i></span>}
+						{file.parsed === true && <span className="attachments__toggle--on"><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
+						{file.parsed === undefined && <span className="attachments__toggle--ing"><i className="pe-7s-config pe-va pe-spin"></i></span>}
 					</td>
-					<td>
-						{file.parsed === false && <span><i className="pe-7s-switch pe-va"></i></span>}
-						{file.parsed === true && <span><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
-						{file.parsed === undefined && <span><i className="pe-7s-config pe-va pe-spin"></i></span>}
-					</td>
-					<td>
-						{file.anonymity === false && <span><i className="pe-7s-switch pe-va"></i></span>}
-						{file.anonymity === true && <span><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
-						{file.anonymity === undefined && <span><i className="pe-7s-config pe-va pe-spin"></i></span>}
+					<td className="attachments__toggle">
+						{file.anonymity === false && <span className="attachments__toggle--off"><i className="pe-7s-switch pe-va"></i></span>}
+						{file.anonymity === true && <span className="attachments__toggle--on"><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
+						{file.anonymity === undefined && <span className="attachments__toggle--ing"><i className="pe-7s-config pe-va pe-spin"></i></span>}
 					</td>
 				</tr>
 			));
-			let divisionLine = (<tr key={'divisionLine'+item.docId} className="table-division-line" colSpan="8"></tr>);
+			let divisionLine = (
+				<tr className="table-division-line" key={'divisionLine'+item.docId}>
+					<td className="table-margin"></td>
+					<td className="table-padding"></td>
+					<td colSpan="5"></td>
+					<td className="table-padding"></td>
+					<td className="table-margin"></td>
+				</tr>
+			);
 			return [title, files, divisionLine];
 		});
 		const page = (this.props.params.page ? parseInt(this.props.params.page) : 1);
@@ -131,6 +142,7 @@ Attachments.propTypes = {
 	lastPage: PropTypes.number.isRequired,
 	selected: PropTypes.array.isRequired,
 	isDelBtnYesOrNo: PropTypes.bool,
+	sortedBy: PropTypes.string.isRequired,
 	fetchAttachments: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 };

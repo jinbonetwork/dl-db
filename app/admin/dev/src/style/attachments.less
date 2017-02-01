@@ -1,6 +1,7 @@
 /*--- index --------------------------------------------
 .attachments
-.attachments__list
+	.attachments__list
+		.attachments__menu
 --------------------------------------------------------*/
 
 @import 'variables';
@@ -17,8 +18,140 @@
 	& > h1 + .attachments__list {
 		margin-top: 5%;
 	}
+	.attachments__list + .pagination {
+		margin-top: 5%;
+	}
 }
 
 .attachments__list {
 	margin-left: auto; margin-right: auto;
+	td {
+		padding: 0 0.5em;
+	}
+	tr:last-child td {
+		padding-bottom: 0.5em;
+	}
+	.table-margin, .table-padding {
+		width: 1em;
+		border-bottom: 0 !important;
+	}
+	tr:not(.attachments__menu) td:not(.table-margin) {
+		background-color: @minor-color-2;
+	}
+	.attachments__head td {
+		padding: 1em 0.5em;
+		border-bottom: solid 1px  @font-color;
+		text-align: center;
+	}
+	.attachments__head + tr td {
+		padding-top: 0.5em;
+	}
+	.attachments__title a {
+		color: @main-color;
+	}
+	.attachments__filename a {
+		color: @main-color
+	}
+	.attachments__filename i + a {
+		margin-left: 0.5em;
+	}
+	.table-division-line:not(:last-child) td {
+		border-bottom: dotted 1px @font-color;
+		padding: 0.5em 0 0 0;
+	}
+	.table-division-line + tr td {
+		padding-top: 0.5em;
+	}
+	.attachments__edit-doc {
+		text-align: center;
+	}
+	.attachments__edit-doc i {
+		display: inline-block;
+		font-size: 1.5em;
+		margin: 5px 0;
+		color: @main-color;
+	}
+	.attachments__edit-text span {
+		display: inline-block;
+		font-size: 0.8em;
+		padding: 0.3em;
+		margin: 5px 0;
+		background-color: transparent;
+		color: @main-color;
+		border: solid 1px @main-color;
+		cursor: pointer;
+	}
+	.attachments__toggle {
+		text-align: center;
+		cursor: pointer;
+	}
+	.attachments__toggle i {
+		font-size: 1.5em;
+	}
+	.attachments__toggle--off {
+		color: lighten(@font-color, 30%);
+	}
+	.attachments__toggle--on {
+		color: @main-color;
+	}
+}
+
+.attachments__menu {
+	text-align: right;
+	td {
+		padding: 0 0 1em 0;
+	}
+	.attachments__sort {
+		float: left;
+		margin-top: 0.5em;
+	}
+	//.check ////
+	span + .check {
+		margin-left: 0.5em;
+	}
+	.check {
+		display: inline-block;
+	}
+	.check .item + .item {
+		margin-left: 0.5em;
+	}
+	.item__checkicon, .item__uncheckicon {
+		width: 1em;
+		text-align: center;
+	}
+	.item__checkicon {
+		color: @main-color;
+	}
+	// .attachments__delete-docs, attachments__confirm-del-docs ////
+	.attachments__delete-docs, .attachments__confirm-del-docs a {
+		display: inline-block;
+		border-style: solid;
+		border-width: 1px;
+		padding: 0.5em;
+		line-height: 1em;
+	}
+	.attachments__delete-docs {
+		position: relative;
+		border-color: @main-color;
+		background-color: @main-color;
+		color: @minor-color-2;
+		padding-left: 2em;
+	}
+	.attachments__delete-docs i {
+		position: absolute;
+		top: 0.2em; left: 0.2em;
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	.attachments__confirm-del-docs a:first-child {
+		border-color: @main-color;
+		background-color: @main-color;
+		color: @minor-color-2;
+		padding: 0.5em 1em;
+	}
+	.attachments__confirm-del-docs a:last-child {
+		border-color: @main-color;
+		background-color: @minor-color-2;
+		color: @main-color;
+	}
 }

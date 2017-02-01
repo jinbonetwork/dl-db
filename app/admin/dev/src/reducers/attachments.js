@@ -4,7 +4,8 @@ import update from 'react-addons-update';
 const initialState = {
 	lastPage: 1,
 	selected: [],
-	isDelBtnYesOrNo: false
+	isDelBtnYesOrNo: false,
+	sortedBy: 'time'
 };
 
 const attachments = (state = initialState, action) => {
