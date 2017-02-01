@@ -32,16 +32,31 @@ class Attachments extends Component {
 		}
 	}
 	render(){
-		const deletButton = (!this.props.isDelBtnYesOrNo ?
-			<button className="attachments__delete-docs" onClick={this.handleClick.bind(this, 'delete docs')}>
+		const deleteButton = (!this.props.isDelBtnYesOrNo ?
+			<a className="attachments__delete-docs" onClick={this.handleClick.bind(this, 'delete docs')}>
 				<i className="pe-7s-less pe-va"></i><span>삭제</span>
-			</button> :
+			</a> :
 			<div className="attachments__confirm-del-docs">
-				<button onClick={this.handleClick.bind(this, 'delete docs')}>예</button>
-				<button onClick={this.handleClick.bind(this, 'cancel deleting docs')}>아니오</button>
+				<a onClick={this.handleClick.bind(this, 'delete docs')}>예</a>
+				<a onClick={this.handleClick.bind(this, 'cancel deleting docs')}>아니오</a>
 			</div>
 		);
-		const listMenu = null;
+		const listMenu = (
+			<tr>
+				<td className="table-margin"></td>
+				<td className="table-padding"></td>
+				<td colSpan="4">
+					<div className="attachments__sort">
+						<span>정렬</span>
+						<a>텍스트화</a>
+						<a>익명화</a>
+					</div>
+					{deleteButton}
+				</td>
+				<td className="table-padding"></td>
+				<td className="table-margin"></td>
+			</tr>
+		);
 		const listHead = (
 			<tr>
 				<td className="table-margin"></td>
@@ -86,7 +101,11 @@ class Attachments extends Component {
 						{file.parsed === true && <span><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
 						{file.parsed === undefined && <span><i className="pe-7s-config pe-va pe-spin"></i></span>}
 					</td>
-					<td><span><i className="pe-7s-switch pe-va"></i></span></td>
+					<td>
+						{file.anonymity === false && <span><i className="pe-7s-switch pe-va"></i></span>}
+						{file.anonymity === true && <span><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
+						{file.anonymity === undefined && <span><i className="pe-7s-config pe-va pe-spin"></i></span>}
+					</td>
 				</tr>
 			));
 			let divisionLine = (<tr key={'divisionLine'+item.docId} className="table-division-line" colSpan="8"></tr>);

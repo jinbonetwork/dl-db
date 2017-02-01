@@ -19,6 +19,7 @@ import './style/accessories.less';
 import './style/user.less';
 import './style/userForm.less';
 import './style/agreement.less';
+import './style/attachments.less';
 
 const AdminContainer = connect(
 	(state) => ({
