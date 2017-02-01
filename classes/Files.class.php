@@ -123,6 +123,15 @@ class Files extends \DLDB\Objects {
 		$dbm->execute($que,array("d",$fid));
 	}
 
+	public static function status($fid,$status) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {files} SET `status` = ? WHERE fid = ?";
+		$dbm->execute( $que, array("sd", $status, $fid ) );
+
+		return 0;
+	}
+
 	public static function anonymity($fid,$anonymity) {
 		$dbm = \DLDB\DBM::instance();
 
