@@ -17,7 +17,6 @@ class Document extends Component {
 		this.state = {
 			sDocument: {},
 			document: {},
-			fileText: {},
 			dispBtnOfYesOrNo: false
 		};
 	}
@@ -31,29 +30,13 @@ class Document extends Component {
 				sDocument: data.document,
 				document: document
 			});
-			if(fAttrs.file) this.setFileText(document.file);
 		}});
 	}
 	componentDidUpdate(prevProps, prevState){
 		if(JSON.stringify(prevProps.docData) != JSON.stringify(this.props.docData)){
 			const document = _convertToDoc(this.state.sDocument, this.props.docData);
 			this.setState({document: document});
-			if(this.props.docData.fAttrs.file) this.setFileText(document.file);
 		}
-	}
-	setFileText(docFile){
-		const fAttr = this.props.docData.fAttrs.file;
-		const file = (fAttr.multiple ? docFile : [docFile]);
-		const textApi = '/api/document/text?id='+this.props.params.did+'&fid=';
-		file.forEach((f) => {if(f.fid){
-			this.props.fetchData('get', textApi+f.fid, (data) => { if(data){
-				this.setState({
-					fileText: update(this.state.fileText, {$merge: {[f.fid]: {
-						text: data.text, header: data.header
-					}}})
-				});
-			}});
-		}});
 	}
 	handleClick(which){
 		const document = this.state.document;
@@ -89,21 +72,6 @@ class Document extends Component {
 				break;
 			default:
 		}
-	}
-	submitFileText(fileId, text){
-		let prevFiletext = this.state.fileText;
-		this.setState({
-			fileText: update(this.state.fileText, {[fileId]: {text: {$set: text}}})
-		});
-
-		let formData = new FormData();
-		formData.append('text', text);
-
-		this.props.fetchData('post', '/api/document/text?mode=modify&id='+this.props.params.did+'&fid='+fileId, formData, (data) => {
-			if(!data){
-				this.setState({fileText: prevFiletext});
-			}
-		});
 	}
 	bookmark(){
 		if(!this.state.document.bookmark){ return (
@@ -167,7 +135,7 @@ class Document extends Component {
 			if(!fAttr.parent && fn != 'title'){
 				if(fn == 'image' || fn == 'file' || fn == 'date'){
 					fieldsInHeader[fn] = !_isEmpty(document[fn]) && (
-						<FieldInHeader fname={fn} document={document} fileText={fileText} userRole={userRole} docData={this.props.docData} />
+						<FieldInHeader fname={fn} document={document} userRole={userRole} docData={this.props.docData} />
 					);
 				}
 				else if(!_isHiddenField(fn, 'view', document, this.props.docData)){
@@ -175,9 +143,11 @@ class Document extends Component {
 				}
 			}
 		};
-
 		const children = this.props.children && cloneElement(this.props.children, {
-			document: document,  fileText: fileText, submit: this.submitFileText.bind(this)
+			docId: this.props.params.did,
+			file: document.file,
+			fetchData: this.props.fetchData,
+			authorized: (userRole.indexOf('admin') >= 0 || document.owner)
 		});
 
 		return (

@@ -24,11 +24,11 @@ class FieldInHeader extends Component {
 		let canYouDownload = _isCommon(['download'], userRole) || areYouOwner;
 		let isAccessDownload = fAttrs.access && !fAttrs.access.multiple && document['access'] && (terms[document['access']].slug == 'download');
 
-		let fileList = document[this.props.fname].map((file, i) => (
+		let fileList = document.file.map((file, i) => (
 			<li key={i}>
 				<LinkIf tag="a" to={file.fileuri} if={isAccessDownload && canYouDownload} notIf="visible">{file.filename}</LinkIf>
 				{(file.status != 'parsed' && areYouOwner) && <span className="document__attention"><span>&#9888;</span></span>}
-				{(areYouOwner && this.props.fileText[file.fid]) &&
+				{areYouOwner &&
 					<Link className="document__filetext" to={'/document/'+document.id+'/text/'+file.fid}>
 						<span>TEXT</span>
 					</Link>
@@ -63,7 +63,6 @@ class FieldInHeader extends Component {
 FieldInHeader.propTypes = {
 	fname: PropTypes.string.isRequired,
 	document: PropTypes.object.isRequired,
-	fileText: PropTypes.object.isRequired,
 	userRole: PropTypes.array.isRequired,
 	docData: PropTypes.object.isRequired
 };

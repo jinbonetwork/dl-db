@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import CheckBox from '../accessories/CheckBox';
 import Pagination from '../accessories/Pagination';
-import {refineUser} from '../fieldData/userFieldData';
 import {_mapO, _pushpull} from '../accessories/functions';
 
 class UserList extends Component {

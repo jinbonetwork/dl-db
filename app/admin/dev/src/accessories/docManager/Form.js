@@ -139,9 +139,16 @@ class Form extends Component {
 			);
 		});
 		const submitButton = !isChild && (
-			<tr className="form__submit">
+			<tr className="form__submit-wrap">
 				<td colSpan="2">
-					<button onClick={this.handleSubmit.bind(this)}>{this.props.submitLabel}</button>
+					{!this.props.isSaving && (
+						<a tabIndex="0" className="form__submit" onClick={this.handleSubmit.bind(this)}>{this.props.submitLabel}</a>
+					)}
+					{this.props.isSaving && (
+						<span className="form__saving">
+							<span>{this.props.submitLabel}</span>{this.props.savingStateIcon}
+						</span>
+					)}
 				</td>
 			</tr>
 		);
@@ -164,12 +171,14 @@ Form.propTypes = {
 		fSlug: PropTypes.string, index: PropTypes.number
 	}).isRequired,
 	submitLabel: PropTypes.string,
+	isSaving: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
 	// For customization ////
 	addButtonIcon: PropTypes.element,
 	deleteButtonIcon: PropTypes.element,
+	savingStateIcon: PropTypes.element,
 	fieldFooterBySlug: PropTypes.objectOf(PropTypes.element),
 	fieldFooterByType: PropTypes.objectOf(PropTypes.element),
 	checkValidBySlug: PropTypes.objectOf(PropTypes.func),
@@ -183,6 +192,7 @@ Form.propTypes = {
 Form.defaultProps = {
 	addButtonIcon: <i className="pe-7s-plus pe-va"></i>,
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
+	savingStateIcon: <i className="pe-7f-config pe-va pe-spin"></i>,
 	submitLabel: '저장',
 	checkValidBySlug: {},
 	checkValidByType: {},

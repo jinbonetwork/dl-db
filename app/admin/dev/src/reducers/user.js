@@ -2,7 +2,8 @@ import {CHANGE_PROPS_IN_USER} from '../constants';
 import update from 'react-addons-update';
 
 const initialState = {
-	isDelBtnYesOrNo: false
+	isDelBtnYesOrNo: false,
+	isSaving: false
 };
 
 const user = (state = initialState, action) => {

@@ -67,5 +67,5 @@ export const refineUser = (user, fData) => {
 	return refineDoc(user, fData, custom.refineDocBySlug, custom.refineDocByType);
 };
 export const makeUserFormData = (user, fData) => {
-	return makeFormData(user, fData, custom.refineDocToSubmitBySlug, custom.refineDocToSubmitByType);
+	return makeFormData('member', user, fData, custom.refineDocToSubmitBySlug, custom.refineDocToSubmitByType);
 };

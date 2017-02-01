@@ -31,7 +31,9 @@ class User extends Component {
 		}
 	}}
 	render(){
-		const user = (this.props.openUsers[this.props.params.id] ? this.props.openUsers[this.props.params.id] : this.props.userFieldData.empty);
+		const user = (this.props.openUsers[this.props.params.id] ?
+			this.props.openUsers[this.props.params.id] : this.props.userFieldData.empty
+		);
 		const deletButton = (!this.props.isDelBtnYesOrNo ?
 			<button className="user__delete-user" onClick={this.handleClick.bind(this, 'delete user')}>
 				<i className="pe-7s-delete-user pe-va"></i><span>삭제</span>

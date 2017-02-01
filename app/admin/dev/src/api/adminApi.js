@@ -1,6 +1,4 @@
 import axios from 'axios';
-import {refineFieldData} from '../accessories/docManager/refiner';
-import userFieldData from '../fieldData/userFieldData';
 import {_findProp} from '../accessories/functions';
 
 const fetchData = (method, url, arg2, arg3, arg4) => {
@@ -59,13 +57,19 @@ const adminApi = {
 		}, fail);
 	},
 	fetchUserFieldData(succeed, fail){
-		fetchData('get', '/api/admin/member/fields',
-			(fData) => succeed(fData), fail
-		);
+		fetchData('get', '/api/admin/member/fields',(fData) => succeed(fData), fail);
+	},
+	fetchDocFieldData(succeed, fail){
+		fetchData('get', '/api/fields', (fData) => succeed(fData), fail);
 	},
 	fetchUserList(page, succeed, fail){
 		fetchData('get', '/api/admin/member?page='+(page ? page : 1),
 			(data) => succeed(data.members, parseInt(data.result.total_page)), fail
+		);
+	},
+	fetchAttachments(page, succeed, fail){
+		fetchData('get', '/api/document?page='+(page ? page : 1),
+			(data) => succeed(data.documents, parseInt(data.result.total_page)), fail
 		);
 	},
 	fetchUser(id, succeed, fail){
@@ -81,6 +85,9 @@ const adminApi = {
 	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
+	},
+	submitAgreement(forData, succeed, fail){
+		//fetchData('post', '', formData, ({agreement}) => succeed(agreement), fail);
 	}
 };
 

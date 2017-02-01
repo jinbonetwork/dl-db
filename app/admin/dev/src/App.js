@@ -9,6 +9,7 @@ import Admin from './components/Admin';
 import UserList from './components/UserList';
 import User from './components/User';
 import UserForm from './components/UserForm';
+import Attachments from './components/Attachments';
 import Agreement from './components/Agreement';
 import './style/admin.less';
 import './style/login.less';
@@ -18,11 +19,13 @@ import './style/accessories.less';
 import './style/user.less';
 import './style/userForm.less';
 import './style/agreement.less';
+import './style/attachments.less';
 
 const AdminContainer = connect(
 	(state) => ({
 		isAdmin: state.admin.isAdmin,
-		didReceiveUserFieldData: state.admin.didReceiveUserFieldData,
+		userFieldData: state.admin.userFieldData,
+		docFieldData: state.admin.docFieldData,
 		loginType: state.admin.loginType,
 		id: state.admin.id,
 		password: state.admin.password,
@@ -71,7 +74,8 @@ const UserFormContainer = connect(
 		userFieldData: state.admin.userFieldData,
 		openUsers: state.admin.openUsers,
 		user: state.userForm.user,
-		focused: state.userForm.focused
+		focused: state.userForm.focused,
+		isSaving: state.userForm.isSaving
 	}),
 	(dispatch) => ({
 		fetchUser: (id, callback) => dispatch(adminActionCreators.fetchUser(id, callback)),
@@ -79,17 +83,33 @@ const UserFormContainer = connect(
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
-		submit: (id, userFormData, callback) => dispatch(adminActionCreators.submitUserForm(id, userFormData, callback))
+		submit: (user, formData) => dispatch(adminActionCreators.submitUserForm(user, formData))
 	})
 )(UserForm);
 
-const AgreementContainer = connect(
+const AttachmentsContainer = connect(
 	(state) => ({
-		editorState: state.agreement.editorState
+		attachments: state.admin.attachments,
+		lastPage: state.attachments.lastPage,
+		selected: state.attachments.selected,
+		isDelBtnYesOrNo: state.attachments.isDelBtnYesOrNo
 	}),
 	(dispatch) => ({
-		fetchAgreement: () => dispatch(adminActionCreators.fetchAgreement()),
-		onChange: (editorState) => dispatch(adminActionCreators.changeAgreement(editorState))
+		fetchAttachments: (page) => dispatch(adminActionCreators.fetchAttachments(page)),
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value))
+	})
+)(Attachments);
+
+const AgreementContainer = connect(
+	(state) => ({
+		openAgreement: state.admin.openAgreement,
+		agreement: state.agreement.agreement,
+		isSaving: state.agreement.isSaving
+	}),
+	(dispatch) => ({
+		fetchAgreement: (callback) => dispatch(adminActionCreators.fetchAgreement(callback)),
+		onChange: (agreement) => dispatch(adminActionCreators.changeAgreement(agreement)),
+		onSubmit: (agreement, formData) => dispatch(adminActionCreators.submitAgreement(agreement, formData))
 	})
 )(Agreement);
 
@@ -102,6 +122,7 @@ render(
 				<Route path="user/new" component={UserFormContainer} />
 				<Route path="user/:id" component={UserContainer} />
 				<Route path="user/:id/edit" component={UserFormContainer} />
+				<Route path="attachments(/page:/:page)" component={AttachmentsContainer} />
 				<Route path="agreement" component={AgreementContainer} />
 			</Route>
 		</Router>
