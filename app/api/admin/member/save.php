@@ -5,6 +5,7 @@ $Acl = 'administrator';
 
 class save extends \DLDB\Controller {
 	public function process() {
+		$this->params['output'] = 'json';
 		if($this->params['mode'] != 'add') {
 			if(!$this->params['member']['id']) {
 				\DLDB\RespondJson::ResultPage( array( -2, '회원번호를 입력하세요') );

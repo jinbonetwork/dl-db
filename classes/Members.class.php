@@ -73,12 +73,12 @@ class Members extends \DLDB\Objects {
 	public static function modify($member,$args) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ?, `custom` = ? WHERE id = ?";
+		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ?, `custom` = ?";
 		$array1 = 'array("sssss';
-		$array2 = ($args['name'] ? '$'."args['name']" : '').", ";
-		$array2 .= ($args['class'] ? '$'."args['class']" : '').", ";
-		$array2 .= ($args['email'] ? '$'."args['email']" : '').", ";
-		$array2 .= ($args['phone'] ? '$'."args['phone']" : '').", ";
+		$array2 = ($args['name'] ? '$'."args['name']" : "''").", ";
+		$array2 .= ($args['class'] ? '$'."args['class']" : "''").", ";
+		$array2 .= ($args['email'] ? '$'."args['email']" : "''").", ";
+		$array2 .= ($args['phone'] ? '$'."args['phone']" : "''").", ";
 		$array2 .= "serialize(".'$'."custom)";
 
 		$fieldquery = \DLDB\FieldsQuery::instance();
