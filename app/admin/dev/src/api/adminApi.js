@@ -31,7 +31,9 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 const isAdmin = ({role, roles}) => {
 	return (role ? role.indexOf(parseInt(_findProp(roles, 'administrator'))) >= 0 : false);
 };
-
+const deleteOneDoc = (docId, succeed, fail) => {
+	fetchData('post', 'api/document/save?mode=delete&id='+docId, null, succeed, fail);
+};
 const adminApi = {
 	fetchAdminInfo(succeed, fail){
 		fetchData('get', '/api', ({role, roles, sessiontype}) => {
@@ -95,6 +97,13 @@ const adminApi = {
 	toggleAnonymity(fileId, status, succeed, fail){
 		let anonymity = (status ? 1 : 0);
 		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, (data) => succeed(), fail);
+	},
+	deleteDocs(selected, succeed, fail){
+		let numOfSel = selected.length;
+		for(let i in selected){
+			fetchData('post', 'api/document/save?mode=delete&id='+selected[i], null, () => {numOfSel--}, fail);
+		}
+
 	}
 };
 

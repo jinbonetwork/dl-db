@@ -30,7 +30,7 @@ class Attachments extends Component {
 				if(!this.props.isDelBtnYesOrNo){
 					this.props.onChange('isDelBtnYesOrNo', true); break;
 				} else {
-					break;
+					this.props.deleteDocs(this.props.selected); break;
 				}
 			case 'cancel deleting docs':
 				this.props.onChange('isDelBtnYesOrNo', false); break;

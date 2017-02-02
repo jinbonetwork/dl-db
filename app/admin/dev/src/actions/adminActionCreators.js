@@ -188,6 +188,18 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
+	}},
+	deleteDocs(selected){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.deleteDocs(selected,
+			() => {
+				dispatch({type: HIDE_PROCESS});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
 	}}
 }
 
