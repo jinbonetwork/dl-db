@@ -28,3 +28,7 @@ export const SUBMIT_AGREEMENT = 'submit agreement';
 
 export const RECEIVE_ATTACHMENTS = 'receive attachments';
 export const CHANGE_PROPS_IN_ATTACHMENTS = 'change props in attachements';
+export const REQUEST_TOGGLING_PARSED = 'request toggling parsed';
+export const TOGGLE_PARSED = 'toggle parsed';
+export const REQUEST_TOGGLING_ANONYMITY = 'request toggling anonymity';
+export const TOGGLE_ANONYMITY = 'toggle anonymity';

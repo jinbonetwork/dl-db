@@ -97,7 +97,9 @@ const AttachmentsContainer = connect(
 	}),
 	(dispatch) => ({
 		fetchAttachments: (page) => dispatch(adminActionCreators.fetchAttachments(page)),
-		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value))
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value)),
+		toggleParsed: ({idxOfList, idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleParsed(idxOfList, idxOfFiles, fileId, status)),
+		toggleAnonymity: ({idxOfList, idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfList, idxOfFiles, fileId, status))
 	})
 )(Attachments);
 

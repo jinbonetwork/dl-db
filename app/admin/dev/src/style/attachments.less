@@ -24,6 +24,7 @@
 }
 
 .attachments__list {
+	min-width: 41em;
 	margin-left: auto; margin-right: auto;
 	td {
 		padding: 0 0.5em;
@@ -56,7 +57,7 @@
 		margin-left: 0.5em;
 	}
 	.table-division-line:not(:last-child) td {
-		border-bottom: dotted 1px @font-color;
+		border-bottom: solid 1px lighten(@font-color, 30%);
 		padding: 0.5em 0 0 0;
 	}
 	.table-division-line + tr td {
@@ -82,14 +83,27 @@
 		cursor: pointer;
 	}
 	.attachments__toggle {
+		position: relative;
 		text-align: center;
 		cursor: pointer;
+	}
+	.attachments__toggle span:first-child {
+		position: relative;
+		top: -0.3em;
+	}
+	.attachments__toggle span + span {
+		position: absolute;
+		bottom: 0.2em; left: 0;
+		display: block;
+		width: 100%;
+		text-align: center;
+		font-size: 0.7em;
 	}
 	.attachments__toggle i {
 		font-size: 1.5em;
 	}
 	.attachments__toggle--off {
-		color: lighten(@font-color, 30%);
+		&, & + span {color: lighten(@font-color, 30%);}
 	}
 	.attachments__toggle--on {
 		color: @main-color;
@@ -106,9 +120,6 @@
 		margin-top: 0.5em;
 	}
 	//.check ////
-	span + .check {
-		margin-left: 0.5em;
-	}
 	.check {
 		display: inline-block;
 	}
@@ -116,8 +127,9 @@
 		margin-left: 0.5em;
 	}
 	.item__checkicon, .item__uncheckicon {
-		width: 1em;
+		width: 1.5em;
 		text-align: center;
+		i {font-size: 1.5em;}
 	}
 	.item__checkicon {
 		color: @main-color;

@@ -3,7 +3,7 @@ import {
 	RECEIVE_AGREEMENT, RECEIVE_ADMIN_INFO, CHANGE_PROPS_IN_ADMIN, SUCCEED_LOGIN, SHOW_LOGIN, SHOW_MESSAGE, HIDE_MESSAGE,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_PROPS_IN_USER, CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM,
 	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
-	CHANGE_PROPS_IN_ATTACHMENTS
+	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -66,7 +66,7 @@ const adminActionCreators = {
 				});
 			}
 		}, (error) => dispatchError(dispatch, error));
-	};},
+	}},
 	showMessage(message, callback){
 		return {type: SHOW_MESSAGE, message, callback};
 	},
@@ -85,7 +85,7 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	};},
+	}},
 	changePropsInUserList(which, value){
 		return {type: CHANGE_PROPS_IN_USERLIST, which, value};
 	},
@@ -127,7 +127,7 @@ const adminActionCreators = {
 			//(user) => dispatch({type: SUBMIT_USERFORM, user}),
 			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
 		);
-	};},
+	}},
 	fetchAgreement(callback){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		adminApi.fetchAgreement(
@@ -141,19 +141,18 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	};},
+	}},
 	changeAgreement(agreement){
 		return {type: CHANGE_AGREEMENT, agreement};
 	},
 	submitAgreement(agreement, formData){ return (dispatch) => {
 		dispatch({type: COMPLETE_AGREEMENT, agreement});
-		/*
 		adminApi.submitAgreement(formData,
-			(agreement) => dispatch({type: SUBMIT_AGREEMENT, agreement}),
-			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);};
+			//(agreement) => dispatch({type: SUBMIT_AGREEMENT, agreement}),
+			(agreement) => {console.log(agreement);},
+			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);}
 		);
-		*/
-	};},
+	}},
 	fetchAttachments(page){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		adminApi.fetchAttachments(page,
@@ -166,10 +165,30 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	};},
+	}},
 	changePropsInAttachments(which, value){
 		return {type: CHANGE_PROPS_IN_ATTACHMENTS, which, value};
 	},
+	toggleParsed(idxOfList, idxOfFiles, fileId, status){ return (dispatch) => {
+		dispatch({type: REQUEST_TOGGLING_PARSED, idxOfList, idxOfFiles});
+		adminApi.toggleParsed(fileId, status,
+			() => dispatch({type: TOGGLE_PARSED, idxOfList, idxOfFiles, status}),
+			(error) => {
+				dispatch({type: TOGGLE_PARSED, idxOfList, idxOfFiles, status});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	toggleAnonymity(idxOfList, idxOfFiles, fileId, status){ return (dispatch) => {
+		dispatch({type: REQUEST_TOGGLING_ANONYMITY, idxOfList, idxOfFiles});
+		adminApi.toggleAnonymity(fileId, status,
+			() => dispatch({type: TOGGLE_ANONYMITY, idxOfList, idxOfFiles, status}),
+			(error) => {
+				dispatch({type: TOGGLE_ANONYMITY, idxOfList, idxOfFiles, status});
+				dispatchError(dispatch, error);
+			}
+		);
+	}}
 }
 
 export default adminActionCreators;

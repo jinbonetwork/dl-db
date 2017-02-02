@@ -2,7 +2,8 @@ import {
 	RECEIVE_ADMIN_INFO, RECEIVE_USER_FIELD_DATA, RECEIVE_USERLIST, RECEIVE_DOC_FIELD_DATA,
 	ADD_USER_TO_OPEN_USERS, CHANGE_PROPS_IN_ADMIN, REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS, COMPLETE_USERFORM, SUBMIT_USERFORM,
-	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS
+	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
+	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
@@ -60,6 +61,22 @@ const admin = (state = initialState, action) => {
 			return update(state, {userList: {$set: refineUserList(action.originalUsers, state.userFieldData)}});
 		case RECEIVE_ATTACHMENTS:
 			return update(state, {attachments: {$set: refineDocList(action.original, state.docFieldData)}});
+		case REQUEST_TOGGLING_PARSED:
+			return update(state, {attachments: {
+				[action.idxOfList]: {files: {[action.idxOfFiles]: {status: {$set: 'ing'}}}}
+			}});
+		case TOGGLE_PARSED:
+			return update(state, {attachments: {
+				[action.idxOfList]: {files: {[action.idxOfFiles]: {status: {$set: action.status}}}}
+			}});
+		case REQUEST_TOGGLING_ANONYMITY:
+			return update(state, {attachments: {
+				[action.idxOfList]: {files: {[action.idxOfFiles]: {anonymity: {$set: undefined}}}}
+			}});
+		case TOGGLE_ANONYMITY:
+			return update(state, {attachments: {
+				[action.idxOfList]: {files: {[action.idxOfFiles]: {anonymity: {$set: action.status}}}}
+			}});
 		case RECEIVE_AGREEMENT:
 			return update(state, {openAgreement: {$set: RichTextEditor.createValueFromString(action.agreement, 'html')}});
 		case COMPLETE_AGREEMENT:

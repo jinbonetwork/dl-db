@@ -1,4 +1,4 @@
-import {RECEIVE_ATTACHMENTS, CHANGE_PROPS_IN_ATTACHMENTS} from '../constants';
+import {RECEIVE_ATTACHMENTS, CHANGE_PROPS_IN_ATTACHMENTS, TOGGLE_PARSED} from '../constants';
 import update from 'react-addons-update';
 
 const initialState = {

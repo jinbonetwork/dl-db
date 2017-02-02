@@ -83,10 +83,18 @@ const adminApi = {
 		}
 	},
 	fetchAgreement(succeed, fail){
-		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
+		fetchData('get', '/api/admin/agreement', ({agreement}) => succeed(agreement), fail);
 	},
-	submitAgreement(forData, succeed, fail){
-		//fetchData('post', '', formData, ({agreement}) => succeed(agreement), fail);
+	submitAgreement(formData, succeed, fail){
+		//fetchData('post', '/api/admin/api/admin/agreement?mode=modify', formData, ({agreement}) => succeed(agreement), fail);
+		fetchData('post', '/api/admin/agreement?mode=modify', formData, (data) => succeed(data), fail);
+	},
+	toggleParsed(fileId, status, succeed, fail){
+		fetchData('post', '/api/document/status?fid='+fileId+'&status='+status, null, (data) => succeed(), fail);
+	},
+	toggleAnonymity(fileId, status, succeed, fail){
+		let anonymity = (status ? 1 : 0);
+		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, (data) => succeed(), fail);
 	}
 };
 

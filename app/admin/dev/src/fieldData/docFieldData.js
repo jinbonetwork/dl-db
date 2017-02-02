@@ -13,7 +13,7 @@ export const refineDocList = (original, {fID}) => {
 			fileId: parseInt(fileId),
 			fileName: props.filename,
 			fileUri: props.fileuri,
-			parsed: (props.status == 'parsed' ? true : false),
+			status: props.status,
 			anonymity: (props.anonymity == 1 ? true : false)
 		}));
 		return {

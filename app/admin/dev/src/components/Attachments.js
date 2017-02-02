@@ -34,6 +34,10 @@ class Attachments extends Component {
 				}
 			case 'cancel deleting docs':
 				this.props.onChange('isDelBtnYesOrNo', false); break;
+			case 'toggle parsed':
+				this.props.toggleParsed(arg1st); break;
+			case 'toggle anonymity':
+				this.props.toggleAnonymity(arg1st); break;
 			default:
 		}
 	}
@@ -52,11 +56,10 @@ class Attachments extends Component {
 				<td className="table-margin"></td>
 				<td colSpan="7">
 					<div className="attachments__sort">
-						<span>정렬</span>
 						<Check type="radio" selected={this.props.sortedBy} onChange={this.handleChange.bind(this, 'sorted by')}>
-							<Item value="time">시간</Item>
-							<Item value="parsing">텍스트화</Item>
-							<Item value="anonymity">익명화</Item>
+							<Item value="time">최신순</Item>
+							<Item value="parsing">텍스트화 미완료</Item>
+							<Item value="anonymity">익명화 미완료</Item>
 						</Check>
 					</div>
 					{deleteButton}
@@ -76,7 +79,7 @@ class Attachments extends Component {
 				<td className="table-margin"></td>
 			</tr>
 		);
-		const list = this.props.attachments.map((item) => {
+		const list = this.props.attachments.map((item, idxOfList) => {
 			let rowSpan = item.files.length + 1;
 			let title = (
 				<tr key={'title'+item.docId}>
@@ -95,19 +98,60 @@ class Attachments extends Component {
 					<td className="table-margin" rowSpan={rowSpan}></td>
 				</tr>
 			);
-			let files = item.files.map((file) => (
+			let files = item.files.map((file, idxOfFiles) => (
 				<tr key={'file'+file.fileId}>
 					<td className="attachments__filename"><i className="pe-7s-file pe-va"></i><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
 					<td className="attachments__edit-text"><span>TEXT</span></td>
 					<td className="attachments__toggle">
-						{file.parsed === false && <span className="attachments__toggle--off"><i className="pe-7s-switch pe-va"></i></span>}
-						{file.parsed === true && <span className="attachments__toggle--on"><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
-						{file.parsed === undefined && <span className="attachments__toggle--ing"><i className="pe-7s-config pe-va pe-spin"></i></span>}
+						{file.status === 'uploaded' && [
+							<span key="button" className="attachments__toggle--off"
+								onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfList, idxOfFiles, fileId: file.fileId, status: 'parsed'})}
+							>
+								<i className="pe-7s-switch pe-va"></i>
+							</span>,
+							<span key="label">미완료</span>
+						]}
+						{file.status === 'parsed' && [
+							<span key="button" className="attachments__toggle--on"
+								onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfList, idxOfFiles, fileId: file.fileId, status: 'uploaded'})}
+							>
+								<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
+							</span>,
+							<span key="label">완료</span>
+						]}
+						{file.status === 'ing' && (
+							<span className="attachments__toggle--off">
+								<i className="pe-7s-switch pe-va"></i>
+							</span>)
+						}
+						{file.status === 'uploading' && (
+							<span className="attachments__toggle--ing">
+								<i className="pe-7s-config pe-va pe-spin"></i>
+							</span>)
+						}
 					</td>
 					<td className="attachments__toggle">
-						{file.anonymity === false && <span className="attachments__toggle--off"><i className="pe-7s-switch pe-va"></i></span>}
-						{file.anonymity === true && <span className="attachments__toggle--on"><i className="pe-7f-switch pe-flip-horizontal pe-va"></i></span>}
-						{file.anonymity === undefined && <span className="attachments__toggle--ing"><i className="pe-7s-config pe-va pe-spin"></i></span>}
+						{file.anonymity === false && [
+							<span key="button" className="attachments__toggle--off"
+								onClick={this.handleClick.bind(this, 'toggle anonymity', {idxOfList, idxOfFiles, fileId: file.fileId, status: true})}
+							>
+								<i className="pe-7s-switch pe-va"></i>
+							</span>,
+							<span key="label">미완료</span>
+						]}
+						{file.anonymity === true && [
+							<span key="button" className="attachments__toggle--on"
+								onClick={this.handleClick.bind(this, 'toggle anonymity', {idxOfList, idxOfFiles, fileId: file.fileId, status: false})}
+							>
+								<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
+							</span>,
+							<span key="label">완료</span>
+						]}
+						{file.anonymity === undefined && (
+							<span className="attachments__toggle--off">
+								<i className="pe-7s-switch pe-va"></i>
+							</span>
+						)}
 					</td>
 				</tr>
 			));
