@@ -1,8 +1,9 @@
 import {refineFieldData, refineDoc, makeFormData} from '../accessories/docManager/refiner';
-import {_forIn} from '../accessories/functions';
+import update from 'react-addons-update';
+import {_forIn, _delete} from '../accessories/functions';
 
 export const initUsrFData = {
-	empty: {id: 0, uid: 0, license: false, name: '', class: '', email: '', phone: '', role: []},
+	empty: {id: 0, uid: 0, license: false, name: '', class: '', email: '', phone: '', role: [], password: ''},
 	fProps: {
 		id: {type: 'meta', form: 'number'},
 		uid: {type: 'meta', form: 'number', dispName: '등록여부'},
@@ -11,10 +12,11 @@ export const initUsrFData = {
 		class: {type: 'char', dispName: '구분', form: 'text', parent: '', children: [], multiple: false, required: false},
 		email: {type: 'email', dispName: '이메일', form: 'text', parent: '', children: [], multiple: false, required: false},
 		phone: {type: 'phone', dispName: '전화번호', form: 'text', parent: '', children: [], multiple: false, required: false},
-		role: {type: 'role', dispName: '권한', form: 'check', parent: '', children: [], multiple: false, required: false}
+		role: {type: 'role', dispName: '권한', form: 'check', parent: '', children: [], multiple: false, required: false},
+		password: {type: 'password', dispName: '비밀번호', form: 'text', parent: '', children: [], multiple: false, required: false}
 	},
-	fSlug: {id: 'id', uid: 'uid', license: 'license', name: 'name', class: 'class', email: 'email', phone: 'phone', role: 'role'},
-	fID: {id: 'id', uid: 'uid', license: 'license', name: 'name', class: 'class', email: 'email', phone: 'phone', role: 'role'},
+	fSlug: {id: 'id', uid: 'uid', license: 'license', name: 'name', class: 'class', email: 'email', phone: 'phone', role: 'role', password: 'password'},
+	fID: {id: 'id', uid: 'uid', license: 'license', name: 'name', class: 'class', email: 'email', phone: 'phone', role: 'role', password: 'password'},
 	taxonomy: {},
 	terms: {},
 	roles: {}
@@ -51,7 +53,7 @@ const custom = {
 };
 
 export const refineUserFData = (fData) => {
-	 return refineFieldData(fData, initUsrFData, custom.refineFData);
+	return refineFieldData(fData, initUsrFData, custom.refineFData);
 };
 export const refineUserList = (original, {fID, fProps}) => {
 	return original.map((item) => ({

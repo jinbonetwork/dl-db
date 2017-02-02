@@ -88,7 +88,6 @@ const adminApi = {
 		fetchData('get', '/api/admin/agreement', ({agreement}) => succeed(agreement), fail);
 	},
 	submitAgreement(formData, succeed, fail){
-		//fetchData('post', '/api/admin/api/admin/agreement?mode=modify', formData, ({agreement}) => succeed(agreement), fail);
 		fetchData('post', '/api/admin/agreement?mode=modify', formData, (data) => succeed(data), fail);
 	},
 	toggleParsed(fileId, status, succeed, fail){
@@ -97,13 +96,6 @@ const adminApi = {
 	toggleAnonymity(fileId, status, succeed, fail){
 		let anonymity = (status ? 1 : 0);
 		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, (data) => succeed(), fail);
-	},
-	deleteDocs(selected, succeed, fail){
-		let numOfSel = selected.length;
-		for(let i in selected){
-			fetchData('post', 'api/document/save?mode=delete&id='+selected[i], null, () => {numOfSel--}, fail);
-		}
-
 	}
 };
 

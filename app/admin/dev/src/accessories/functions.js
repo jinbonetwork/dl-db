@@ -102,13 +102,20 @@ const _forIn = (obj, callBack) => {
 		if(rtn === false) break;
 	}
 };
+const _delete = (obj, prop) => {
+	let newObj = {};
+	for(let pn in obj){
+		if(pn != prop) newObj[pn] = obj[pn];
+	}
+	return newObj;
+}
 const _findProp = (obj, propValue) => {
 	for(let pn in obj){
 		if(obj[pn] == propValue) return pn;
 	}
 };
 const _copyOf = (obj, excludeNull) => {
-	if(obj.hasOwnProperty('length')){ // in the case of array
+	if(Array.isArray(obj)){
 		let array = [];
 		for(let i in obj){
 			if(excludeNull){
@@ -157,4 +164,4 @@ const _padNumber = (number, digits) => {
 	return strNumber;
 };
 
-export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _findProp, _copyOf, _pushpull, _interpolate, _notNull, _wrap, _padNumber};
+export {_isEmpty, _isEmailValid, _isPhoneValid, _isDateValid, _displayDate, _displayDateOfMilliseconds, _isCommon, _mapO, _mapAO, _mapOO, _forIn, _delete, _findProp, _copyOf, _pushpull, _interpolate, _notNull, _wrap, _padNumber};

@@ -38,6 +38,8 @@ class Attachments extends Component {
 				this.props.toggleParsed(arg1st); break;
 			case 'toggle anonymity':
 				this.props.toggleAnonymity(arg1st); break;
+			case 'edit text':
+				//this.props.onChange('fileTextToEdit', arg1st);
 			default:
 		}
 	}
@@ -54,7 +56,8 @@ class Attachments extends Component {
 		const listMenu = (
 			<tr className="attachments__menu">
 				<td className="table-margin"></td>
-				<td colSpan="7">
+				{/*<td colSpan="7">*/}
+				<td colSpan="6">
 					<div className="attachments__sort">
 						<Check type="radio" selected={this.props.sortedBy} onChange={this.handleChange.bind(this, 'sorted by')}>
 							<Item value="time">최신순</Item>
@@ -62,7 +65,7 @@ class Attachments extends Component {
 							<Item value="anonymity">익명화 미완료</Item>
 						</Check>
 					</div>
-					{deleteButton}
+					{/*deleteButton*/}
 				</td>
 				<td className="table-margin"></td>
 			</tr>
@@ -71,7 +74,7 @@ class Attachments extends Component {
 			<tr className="attachments__head">
 				<td className="table-margin"></td>
 				<td className="table-padding"></td>
-				<td></td>
+				{/*<td></td>*/}
 				<td colSpan="2">문서 제목 및 첨부파일</td>
 				<td>텍스트화</td>
 				<td>익명화</td>
@@ -85,12 +88,12 @@ class Attachments extends Component {
 				<tr key={'title'+item.docId}>
 					<td className="table-margin" rowSpan={rowSpan}></td>
 					<td className="table-padding" rowSpan={rowSpan}></td>
-					<td rowSpan={rowSpan}>
+					{/*<td rowSpan={rowSpan}>
 						<CheckBox
 							check={this.props.selected.indexOf(item.docId) >= 0}
 							onChange={this.handleChange.bind(this, 'check', item.docId)}
 						/>
-					</td>
+					</td>*/}
 					<td className="attachments__title"><a href={'/document/'+item.docId}>{item.title}</a></td>
 					<td className="attachments__edit-doc"><a href={'/document/'+item.docId+'/edit'}><i className="pe-7s-note pe-va"></i></a></td>
 					<td colSpan="2"></td>
@@ -101,7 +104,10 @@ class Attachments extends Component {
 			let files = item.files.map((file, idxOfFiles) => (
 				<tr key={'file'+file.fileId}>
 					<td className="attachments__filename"><i className="pe-7s-file pe-va"></i><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
-					<td className="attachments__edit-text"><span>TEXT</span></td>
+					<td className="attachments__edit-text">
+						{/*<a onClick={this.handleClick.bind(this, 'edit text', {docId: item.docId, fileId: file.fileId})}>TEXT</a>*/}
+						<a href={'/document/'+item.docId+'/text/'+file.fileId}>TEXT</a>
+					</td>
 					<td className="attachments__toggle">
 						{file.status === 'uploaded' && [
 							<span key="button" className="attachments__toggle--off"
@@ -159,7 +165,8 @@ class Attachments extends Component {
 				<tr className="table-division-line" key={'divisionLine'+item.docId}>
 					<td className="table-margin"></td>
 					<td className="table-padding"></td>
-					<td colSpan="5"></td>
+					{/*<td colSpan="5"></td>*/}
+					<td colSpan="4"></td>
 					<td className="table-padding"></td>
 					<td className="table-margin"></td>
 				</tr>

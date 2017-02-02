@@ -124,9 +124,9 @@ class Form extends Component {
 			return this.renderTable(_mapAO(fProp.children, (cfs) => this.props.doc[cfs]), true);
 		}
 	}
-	renderTable(userProps, isChild){
+	renderTable(doc, isChild){
 		const {fSlug, fProps} = this.props.fieldData;
-		const rows  = _mapO(userProps, (fs, value) => {
+		const rows  = _mapO(doc, (fs, value) => {
 			let isRendered = (
 				fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent) &&
 				!this.isHidden(fs) && !this.isHidden(fProps[fs].parent)

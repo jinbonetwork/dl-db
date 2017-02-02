@@ -29,7 +29,7 @@ class TextInput extends Component {
 		if(this.props.onBlur) this.props.onBlur();
 	}
 	render(){
-		const type = (['text', 'email'].indexOf(this.props.type) >= 0 ? this.props.type : 'text');
+		const type = (['text', 'email', 'password'].indexOf(this.props.type) >= 0 ? this.props.type : 'text');
 		return (
 			<input ref="text"
 				type={type} value={this.props.value} placeholder={this.props.placeholder}
