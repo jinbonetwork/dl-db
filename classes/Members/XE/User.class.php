@@ -1,5 +1,5 @@
 <?php
-namespace DLDB\Member\DBM\XE;
+namespace DLDB\Members\XE;
 
 class User extends \DLDB\Objects {
 	private static $prefix;
@@ -19,7 +19,7 @@ class User extends \DLDB\Objects {
 	}
 
 	public static function getMember($member_srl) {
-		$dbm = \CADB\DBM::instance();
+		$dbm = \DLDB\DBM::instance();
 
 		$prefix = self::getPrefix();
 
@@ -42,7 +42,7 @@ class User extends \DLDB\Objects {
 	}
 
 	public static function add($args) {
-		$dbm = \CADB\DBM::instance();
+		$dbm = \DLDB\DBM::instance();
 
 		$prefix = self::getPrefix();
 
@@ -62,7 +62,7 @@ class User extends \DLDB\Objects {
 		$que = "SELECT max(member_srl) AS new FROM `".$prefix."member`";
 		$row = $dbm->getFetchArray($que);
 
-		$member_srl = ($row['new'] ? ( $row['new'] + 1 ) : 1)
+		$member_srl = ($row['new'] ? ( $row['new'] + 1 ) : 1);
 
 		$user_id = preg_split("/@/i",$args['email']);
 		$password = self::makePassword($args['password']);
@@ -117,7 +117,7 @@ class User extends \DLDB\Objects {
 	}
 
 	public static function modify($member,$args) {
-		$dbm = \CADB\DBM::instance();
+		$dbm = \DLDB\DBM::instance();
 
 		$prefix = self::getPrefix();
 
@@ -159,7 +159,7 @@ class User extends \DLDB\Objects {
 	}
 
 	public static function delete($member_srl) {
-		$dbm = \CADB\DBM::instance();
+		$dbm = \DLDB\DBM::instance();
 
 		$prefix = self::getPrefix();
 
@@ -173,7 +173,7 @@ class User extends \DLDB\Objects {
 	}
 
 	public static function changePassword($member_srl,$password) {
-		$dbm = \CADB\DBM::instance();
+		$dbm = \DLDB\DBM::instance();
 
 		$prefix = self::getPrefix();
 
@@ -322,7 +322,7 @@ class User extends \DLDB\Objects {
 
 	private static function getXeMemberConfig() {
 		if(!self::$xe_config) {
-			$dbm = \CADB\DBM::instance();
+			$dbm = \DLDB\DBM::instance();
 
 			$prefix = self::getPrefix();
 
