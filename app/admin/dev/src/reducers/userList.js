@@ -6,7 +6,9 @@ const initialState = {
 	originalUsers: [],
 	lastPage: 1,
 	selected: [],
-	isDelBtnYesOrNo: false
+	isDelBtnYesOrNo: false,
+	fieldSearching: 'default',
+	keywordSearching: ''
 };
 
 const userList = (state = initialState, action) => {

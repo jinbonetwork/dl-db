@@ -1,3 +1,8 @@
+/*--- index --------------------------------------------
+.userlist
+.userlist .select
+--------------------------------------------------------*/
+
 @import 'variables';
 
 .userlist {
@@ -13,8 +18,10 @@
 		margin-top: 5%;
 	}
 	.userlist__menu td {
-		overflow: hidden;
 		padding: 1em 0;
+	}
+	.userlist__menu td:nth-child(2) {
+		min-width: 40em;
 	}
 	.userlist__menu td > div {
 		height: 2em;
@@ -31,6 +38,7 @@
 	.userlist__keyword {
 		width: 13em;
 		border-right-width: 0;
+		border-left-width: 0;
 	}
 	.userlist__search {
 		display: inline-block;
@@ -101,7 +109,7 @@
 	.userlist__list tr:not(.userlist__menu) td {
 		padding: 0.7em 0.5em;
 		background-color: @minor-color-2;
-		border-bottom: dotted 1px @main-color;
+		border-bottom: solid 1px lighten(@main-color, 15%);
 	}
 	.userlist__list tr.userlist__head td {
 		padding-top: 1.5em;
@@ -126,5 +134,39 @@
 		border-bottom: 0;
 		width: 1em;
 		background-color: transparent;
+	}
+}
+.userlist .select {
+	height: 100%;
+	vertical-align: middle;
+	.dropdown__headwrap, .dropdown__head, .ddhead {
+		height: 100%;
+	}
+	.ddhead {
+		line-height: 2em;
+	}
+	.dropdown__headwrap, .dropdown__items {
+		border-color: @main-color;
+		background-color: @minor-color-2;
+	}
+	&.dropdown--unfolded .dropdown__items {
+		top: -1px;
+	}
+	.dropdown__head:focus {
+		background-color: @focus-color-1
+	}
+	.ddarrow i {
+		font-size: 1.5em;
+		color: @main-color;
+		font-weight: bold;
+	}
+	.ddhead, .item {
+		text-align: left;
+		padding-right: 2em;
+	}
+	.item {
+		line-height: 2em;
+		cursor: pointer;
+		&:focus {background-color: @focus-color-1}
 	}
 }

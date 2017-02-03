@@ -11,6 +11,7 @@ import User from './components/User';
 import UserForm from './components/UserForm';
 import Attachments from './components/Attachments';
 import Agreement from './components/Agreement';
+import NotFound from './components/NotFound';
 import './style/admin.less';
 import './style/login.less';
 import './style/mainMenu.less';
@@ -48,10 +49,12 @@ const UserListContainer = connect(
 		originalUsers: state.userList.originalUsers,
 		lastPage: state.userList.lastPage,
 		selected: state.userList.selected,
-		isDelBtnYesOrNo: state.userList.isDelBtnYesOrNo
+		isDelBtnYesOrNo: state.userList.isDelBtnYesOrNo,
+		fieldSearching: state.userList.fieldSearching,
+		keywordSearching: state.userList.keywordSearching
 	}),
 	(dispatch) => ({
-		fetchUserList: (page) => dispatch(adminActionCreators.fetchUserList(page)),
+		fetchUserList: (params) => dispatch(adminActionCreators.fetchUserList(params)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUserList(which, value)),
 		addUserToOpenUsers: (user) => dispatch(adminActionCreators.addUserToOpenUsers(user))
 	})
@@ -121,12 +124,13 @@ render(
 		<Router history={browserHistory}>
 			<Route path="/admin" component={AdminContainer}>
 				<IndexRoute component={UserListContainer} />
-				<Route path="userlist(/page/:page)" component={UserListContainer} />
+				<Route path="userlist(/:param1/:param2)(/:param3/:param4)" component={UserListContainer} />
 				<Route path="user/new" component={UserFormContainer} />
 				<Route path="user/:id" component={UserContainer} />
 				<Route path="user/:id/edit" component={UserFormContainer} />
-				<Route path="attachments(/page:/:page)" component={AttachmentsContainer} />
+				<Route path="attachments(/page/:page)" component={AttachmentsContainer} />
 				<Route path="agreement" component={AgreementContainer} />
+				<Route path="*" component={NotFound} />
 			</Route>
 		</Router>
 	</Provider>,

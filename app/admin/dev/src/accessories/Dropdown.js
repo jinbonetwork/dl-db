@@ -135,7 +135,7 @@ class Dropdown extends Component {
 }
 Dropdown.propTypes = {
 	className: PropTypes.string,
-	head: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	head: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 	arrow: PropTypes.element,
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

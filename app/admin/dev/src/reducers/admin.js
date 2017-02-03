@@ -54,7 +54,11 @@ const admin = (state = initialState, action) => {
 			return update(state, {showProc: {$set: false}});
 		case ADD_USER_TO_OPEN_USERS:
 		case SUBMIT_USERFORM:
-			return update(state, {openUsers: {[action.user.id]: {$set: refineUser(action.user, state.userFieldData)}}});
+			if(action.user){
+				return update(state, {openUsers: {[action.user.id]: {$set: refineUser(action.user, state.userFieldData)}}});
+			} else {
+				return state;
+			}
 		case COMPLETE_USERFORM:
 			return update(state, {openUsers: {[action.user.id]: {$set: action.user}}});
 		case RECEIVE_USERLIST:

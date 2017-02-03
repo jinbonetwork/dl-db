@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {_findProp} from '../accessories/functions';
+import {_findProp, _isEmpty} from '../accessories/functions';
 
 const fetchData = (method, url, arg2, arg3, arg4) => {
 	let data = (method == 'get' ? null : arg2);
@@ -64,8 +64,17 @@ const adminApi = {
 	fetchDocFieldData(succeed, fail){
 		fetchData('get', '/api/fields', (fData) => succeed(fData), fail);
 	},
-	fetchUserList(page, succeed, fail){
-		fetchData('get', '/api/admin/member?page='+(page ? page : 1),
+	fetchUserList(params, succeed, fail){
+		const {param1, param2, param3, param4} = params;
+		let options = 'page=1';
+		if(param1 == 'page'){
+			options = 'page='+param2;
+		}
+		else if(param1 && param2){
+			options = 's_mode='+param1+'&s_args='+param2+'&page=';
+			if(param3 == 'page' && param4 > 0) options += param4; else options += '1';
+		}
+		fetchData('get', '/api/admin/member?'+options,
 			(data) => succeed(data.members, parseInt(data.result.total_page)), fail
 		);
 	},
@@ -79,9 +88,9 @@ const adminApi = {
 	},
 	submitUserForm(id, userFormData, succeed, fail){
 		if(id){
-			fetchData('post', '/api/admin/member/save?mode=modify&id='+id, userFormData, (data) => succeed(data), fail);
+			fetchData('post', '/api/admin/member/save?mode=modify&id='+id, userFormData, ({member}) => succeed(member), fail);
 		} else {
-			fetchData('post', '/api/admin/member/save?mode=add', userFormData, (data) => succeed(data), fail);
+			fetchData('post', '/api/admin/member/save?mode=add', userFormData, ({member}) => succeed(member), fail);
 		}
 	},
 	fetchAgreement(succeed, fail){

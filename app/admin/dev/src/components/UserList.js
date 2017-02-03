@@ -1,22 +1,32 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import CheckBox from '../accessories/CheckBox';
+import Select from '../accessories/Select';
+import Item from '../accessories/Item';
 import Pagination from '../accessories/Pagination';
-import {_mapO, _pushpull} from '../accessories/functions';
+import {_mapO, _pushpull, _wrap} from '../accessories/functions';
 
 class UserList extends Component {
 	componentDidMount(){
-		this.props.fetchUserList(this.props.params.page);
+		this.props.fetchUserList(this.props.params);
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(prevProps.params.page != this.props.params.page || this.props.userList.length == 0){
-			this.props.fetchUserList(this.props.params.page);
+		if(JSON.stringify(prevProps.params) != JSON.stringify(this.props.params) || this.props.userList.length == 0){
+			this.props.fetchUserList(this.props.params);
 		}
 	}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'check'){
 			let id = arg1st, isChecked = arg2nd;
 			this.props.onChange('selected', _pushpull(this.props.selected, id));
+		}
+		else if(which == 'fieldSearching'){
+			let value = arg1st;
+			this.props.onChange('fieldSearching', value);
+		}
+		else if(which == 'keywordSearching'){
+			let value = arg1st.target.value;
+			this.props.onChange('keywordSearching', value);
 		}
 	}
 	handleClick(which, arg1st){
@@ -36,7 +46,20 @@ class UserList extends Component {
 				}
 			case 'cancel deleting user':
 				this.props.onChange('isDelBtnYesOrNo', false); break;
+			case 'search':
+				if(this.props.fieldSearching == 'default' || !this.props.keywordSearching){
+					this.props.router.push('/admin/userlist');
+				} else {
+					this.props.router.push('/admin/userlist/'+this.props.fieldSearching+'/'+this.props.keywordSearching);
+				}
+				break;
 			default:
+		}
+	}
+	handleKeyDown(which, arg1st, arg2nd){
+		if(which == 'keywordSearching'){
+			let key = arg1st.key;
+			if(key == 'Enter') this.handleClick('search');
 		}
 	}
 	render(){
@@ -55,8 +78,18 @@ class UserList extends Component {
 				<td className="userlist__table-margin"></td>
 				<td colSpan="9">
 					<div>
-						<input type="text" className="userlist__keyword" />
-						<button className="userlist__search">검색</button>
+						<Select selected={this.props.fieldSearching} onChange={this.handleChange.bind(this, 'fieldSearching')}>
+							<Item value="default">전체목록</Item>
+							<Item value="name">이름</Item>
+							<Item value="class">구분</Item>
+							<Item value="email">이메일</Item>
+							<Item value="phone">전화번호</Item>
+						</Select>
+						<input type="text" className="userlist__keyword" value={this.props.keywordSearching}
+							onChange={this.handleChange.bind(this, 'keywordSearching')}
+							onKeyDown={this.handleKeyDown.bind(this, 'keywordSearching')}
+						/>
+						<button className="userlist__search" onClick={this.handleClick.bind(this, 'search')}>검색</button>
 					</div>
 					<div>
 						<Link className="userlist__add-user" to="/admin/user/new">
@@ -87,7 +120,7 @@ class UserList extends Component {
 						</td>
 					);
 				}
-				else if(pn == 'name'){1
+				else if(pn == 'name'){
 					return <td key={pn}><a onClick={this.handleClick.bind(this, 'view', item.id)}>{pv}</a></td>
 				} else {
 					return <td key={pn}>{pv}</td>
@@ -106,7 +139,14 @@ class UserList extends Component {
 				</tr>
 			);
 		});
-		const page = (this.props.params.page ? parseInt(this.props.params.page) : 1);
+		const {urlOptions, page} = _wrap(() => {
+			let {param1, param2, param3, param4} = this.props.params;
+			if(param1 == 'page') return {urlOptions: 'page/', page: parseInt(param2)};
+			if(param1 && param2){
+				return {urlOptions: param1+'/'+param2+'/page/', page: (param3 == 'page' && param4 > 0 ? parseInt(param4) : 1)}
+			}
+			return {urlOptions: 'page/', page: 1};
+		});
 		return(
 			<div className="userlist">
 				<h1>회원목록</h1>
@@ -115,7 +155,7 @@ class UserList extends Component {
 					{listHead}
 					{list}
 				</tbody></table>
-				<Pagination url="/admin/userlist/page/" page={page} lastPage={this.props.lastPage} />
+				<Pagination url={'/admin/userlist/'+urlOptions} page={page} lastPage={this.props.lastPage} />
 			</div>
 		);
 	}
@@ -128,6 +168,8 @@ UserList.propTypes = {
 	lastPage: PropTypes.number.isRequired,
 	selected: PropTypes.array.isRequired,
 	isDelBtnYesOrNo: PropTypes.bool,
+	fieldSearching: PropTypes.string.isRequired,
+	keywordSearching: PropTypes.string.isRequired,
 	fetchUserList: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	addUserToOpenUsers: PropTypes.func.isRequired,

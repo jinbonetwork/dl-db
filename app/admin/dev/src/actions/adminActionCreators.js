@@ -73,9 +73,9 @@ const adminActionCreators = {
 	hideMessage(){
 		return {type: HIDE_MESSAGE}
 	},
-	fetchUserList(page){ return (dispatch) => {
+	fetchUserList(params){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
-		adminApi.fetchUserList(page,
+		adminApi.fetchUserList(params,
 			(originalUsers, lastPage) => {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: RECEIVE_USERLIST, originalUsers, lastPage})
@@ -123,8 +123,7 @@ const adminActionCreators = {
 	submitUserForm(user, userFormData){ return (dispatch) => {
 		dispatch({type: COMPLETE_USERFORM, user});
 		adminApi.submitUserForm(user.id, userFormData,
-			(data) => {console.log(data)},
-			//(user) => dispatch({type: SUBMIT_USERFORM, user}),
+			(user) => dispatch({type: SUBMIT_USERFORM, user}),
 			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
 		);
 	}},

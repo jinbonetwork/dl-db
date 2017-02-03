@@ -12,7 +12,7 @@ class Select extends Component {
 	}
 	render(){
 		let head, items = [];
-		Children.map(this.props.children, (child) => { if(child){
+		Children.forEach(this.props.children, (child) => { if(child){
 			if(child.props.value == this.props.selected){
 				head = child.props.children;
 			} else {

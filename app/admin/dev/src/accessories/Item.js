@@ -40,7 +40,8 @@ class Item extends Component {
 	}
 	handleKeyDown(event){
 		if(event.key === 'Enter'){
-			jQ(this.refs.li).find('*').click();
+			//jQ(this.refs.li).find('*').click();
+			this.handleClick();
 		} else {
 			if(this.props.onKeyDown) this.props.onKeyDown(event.key, event);
 		}

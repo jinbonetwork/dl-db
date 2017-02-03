@@ -146,7 +146,8 @@ class Form extends Component {
 					)}
 					{this.props.isSaving && (
 						<span className="form__saving">
-							<span>{this.props.submitLabel}</span>{this.props.savingStateIcon}
+							<span className="form__saving-label">{this.props.submitLabel}</span>
+							<span className="form__saving-icon">{this.props.savingStateIcon}</span>
 						</span>
 					)}
 				</td>
@@ -192,7 +193,7 @@ Form.propTypes = {
 Form.defaultProps = {
 	addButtonIcon: <i className="pe-7s-plus pe-va"></i>,
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
-	savingStateIcon: <i className="pe-7f-config pe-va pe-spin"></i>,
+	savingStateIcon: <i className="pe-7s-config pe-va pe-spin"></i>,
 	submitLabel: '저장',
 	checkValidBySlug: {},
 	checkValidByType: {},
