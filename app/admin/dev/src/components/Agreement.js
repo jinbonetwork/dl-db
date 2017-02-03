@@ -35,7 +35,7 @@ class Agreement extends Component {
 		};
 		const submitButton = (!this.props.isSaving ?
 			<a className="agreement__submit" onClick={this.handleClick.bind(this, 'submit')}>수정</a> :
-			<span className="agreement__saving"><span>저장중</span><i className="pe-7f-config pe-va pe-spin"></i></span>
+			<span className="agreement__saving">수정<i className="pe-7s-config pe-va pe-spin"></i></span>
 		);
 		return (
 			<div className="agreement">

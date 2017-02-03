@@ -147,8 +147,8 @@ const adminActionCreators = {
 	submitAgreement(agreement, formData){ return (dispatch) => {
 		dispatch({type: COMPLETE_AGREEMENT, agreement});
 		adminApi.submitAgreement(formData,
-			//(agreement) => dispatch({type: SUBMIT_AGREEMENT, agreement}),
-			(agreement) => {console.log(agreement);},
+			(agreement) => dispatch({type: SUBMIT_AGREEMENT, agreement}),
+			//(agreement) => {console.log(agreement);},
 			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);}
 		);
 	}},

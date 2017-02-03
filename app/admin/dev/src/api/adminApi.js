@@ -97,7 +97,7 @@ const adminApi = {
 		fetchData('get', '/api/admin/agreement', ({agreement}) => succeed(agreement), fail);
 	},
 	submitAgreement(formData, succeed, fail){
-		fetchData('post', '/api/admin/agreement?mode=modify', formData, (data) => succeed(data), fail);
+		fetchData('post', '/api/admin/agreement?mode=modify', formData, ({agreement}) => succeed(agreement), fail);
 	},
 	toggleParsed(fileId, status, succeed, fail){
 		fetchData('post', '/api/document/status?fid='+fileId+'&status='+status, null, (data) => succeed(), fail);

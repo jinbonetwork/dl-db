@@ -48,6 +48,7 @@ class UserList extends Component {
 				this.props.onChange('isDelBtnYesOrNo', false); break;
 			case 'search':
 				if(this.props.fieldSearching == 'default' || !this.props.keywordSearching){
+					if(this.props.keywordSearching) this.props.onChange('keywordSearching', '');
 					this.props.router.push('/admin/userlist');
 				} else {
 					this.props.router.push('/admin/userlist/'+this.props.fieldSearching+'/'+this.props.keywordSearching);

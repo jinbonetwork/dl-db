@@ -85,7 +85,11 @@ const admin = (state = initialState, action) => {
 			return update(state, {openAgreement: {$set: RichTextEditor.createValueFromString(action.agreement, 'html')}});
 		case COMPLETE_AGREEMENT:
 		case SUBMIT_AGREEMENT:
-			return update(state, {openAgreement: {$set: action.agreement}});
+			if(action.agreement){
+				return update(state, {openAgreement: {$set: action.agreement}});
+			} else {
+				return state;
+			}
 		default:
 			return state;
 	}
