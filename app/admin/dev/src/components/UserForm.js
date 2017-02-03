@@ -3,6 +3,7 @@ import {withRouter} from 'react-router';
 import Form from '../accessories/docManager/Form';
 import Item from '../accessories/Item';
 import {makeUserFormData} from '../fieldData/userFieldData';
+import update from 'react-addons-update';
 import {_mapO} from '../accessories/functions';
 
 class UserForm extends Component {
@@ -60,12 +61,19 @@ class UserForm extends Component {
 		if(error){
 			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
 		} else {
-			this.props.submit(this.props.user, makeUserFormData(this.props.user, this.props.userFieldData));
+			const formData = makeUserFormData(this.props.user, this.props.userFieldData);
+			if(this.props.user.id > 0){
+				this.props.submitForm(this.props.user, formData);
+			} else {
+				this.props.submitNewForm(this.props.user, formData,
+					(userId) => this.props.onChange({mode: 'set', fSlug: 'id', value: userId})
+				);
+			}
 		}
 	}
 	render(){
-		let title = (this.props.params.id ? '회원정보 수정' : '회원추가')
-		let submitLabel = (this.props.params.id ? '수정' : '저장');
+		let title = (this.props.user.id > 0 ? '회원정보 수정' : '회원추가');
+		let submitLabel = (this.props.user.id > 0 ? '수정' : '저장');
 		return (
 			<div className="user-form">
 				<h1>{title}</h1>
@@ -104,7 +112,8 @@ UserForm.propTypes = {
 	setFocus: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,
-	submit: PropTypes.func.isRequired,
+	submitForm: PropTypes.func.isRequired,
+	submitNewForm: PropTypes.func.isRequired,
 	formData: PropTypes.object,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired

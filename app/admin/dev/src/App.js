@@ -86,7 +86,8 @@ const UserFormContainer = connect(
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
-		submit: (user, formData) => dispatch(adminActionCreators.submitUserForm(user, formData))
+		submitForm: (user, formData) => dispatch(adminActionCreators.submitUserForm(user, formData)),
+		submitNewForm: (user, formData, callback) => dispatch(adminActionCreators.submitNewUserForm(user, formData, callback)),
 	})
 )(UserForm);
 

@@ -123,7 +123,18 @@ const adminActionCreators = {
 	submitUserForm(user, userFormData){ return (dispatch) => {
 		dispatch({type: COMPLETE_USERFORM, user});
 		adminApi.submitUserForm(user.id, userFormData,
-			(user) => dispatch({type: SUBMIT_USERFORM, user}),
+			(user) => {
+				dispatch({type: SUBMIT_USERFORM, user});
+			},
+			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
+		);
+	}},
+	submitNewUserForm(user, userFormData, callback){ return (dispatch) => {
+		adminApi.submitUserForm(user.id, userFormData,
+			(user) => {
+				dispatch({type: SUBMIT_USERFORM, user});
+				callback(parseInt(user.id));
+			},
 			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
 		);
 	}},
