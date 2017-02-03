@@ -82,7 +82,11 @@ const admin = (state = initialState, action) => {
 				[action.idxOfList]: {files: {[action.idxOfFiles]: {anonymity: {$set: action.status}}}}
 			}});
 		case RECEIVE_AGREEMENT:
-			return update(state, {openAgreement: {$set: RichTextEditor.createValueFromString(action.agreement, 'html')}});
+			let agreement = (action.agreement ?
+				RichTextEditor.createValueFromString(action.agreement, 'html') :
+				RichTextEditor.createEmptyValue()
+			);
+			return update(state, {openAgreement: {$set: agreement}});
 		case COMPLETE_AGREEMENT:
 		case SUBMIT_AGREEMENT:
 			if(action.agreement){
