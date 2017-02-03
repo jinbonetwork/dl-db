@@ -81,7 +81,7 @@ final class DBM extends \DLDB\Objects {
 			if($this->_mysqli->errno == '2006' || $this->_mysqli->errno =='2013')
 				$this->reConnect();
 			else
-				throw new \Exception("Prepare Statement Exception : ".$this->_mysqli->error, $this->_mysqli->errno);
+				throw new \Exception("Prepare Statement Exception : ".$query." ".$this->_mysqli->error, $this->_mysqli->errno);
 		}
 
 		$this->_query = $query;
