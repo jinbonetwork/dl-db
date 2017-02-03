@@ -8,7 +8,7 @@ class index extends \DLDB\Controller {
 		$this->params['output'] = 'json';
 
 		if($this->params['mode'] == 'modify') {
-			\DLDB\Options\saveOption('agreement',$this->params['content']);
+			\DLDB\Options::saveOption('agreement',$this->params['content']);
 			$this->result = array(
 				'error' => 0,
 				'message' => '저장되었습니다.'

@@ -69,7 +69,7 @@ class DBM extends \DLDB\Objects {
 		$fields = self::getFields();
 
 		$que = "INSERT INTO {members} (`name`,`class`, `email`, `phone`, `custom`, `license`";
-		$que2 .= ") VALUES (?,?,?,?,?,?)";
+		$que2 .= ") VALUES (?,?,?,?,?,?";
 		$array1 = 'array("sssssd';
 		$array2 = '$'."args['name'], ".'$'."args['class'], ".'$'."args['email'], ".'$'."args['phone'], serialize(".'$'."custom), 0";
 
