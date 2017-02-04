@@ -1,13 +1,16 @@
-import { SET_USER_OF_USERFORM, CHANGE_USER_PROPS, BLUR_USERFORM,
-	SET_FOCUS_IN_USERFORM, COMPLETE_USERFORM, SUBMIT_USERFORM} from '../constants';
+import {
+	SET_USER_OF_USERFORM, CHANGE_USER_PROPS, BLUR_USERFORM,SET_FOCUS_IN_USERFORM, COMPLETE_USERFORM,
+	SUBMIT_USERFORM, SHOW_PASSWORD
+} from '../constants';
 import {initUsrFData} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
 import {_wrap} from '../accessories/functions';
 
 const initialState = {
-	user: initUsrFData.empty,
+	user: {},
 	focused: {fSlug: undefined, index: undefined},
-	isSaving: false
+	isSaving: false,
+	isPwShown: false
 };
 
 const userForm = (state = initialState, action) => {
@@ -38,6 +41,8 @@ const userForm = (state = initialState, action) => {
 			return update(state, {isSaving: {$set: true}});
 		case SUBMIT_USERFORM:
 			return update(state, {isSaving: {$set: false}});
+		case SHOW_PASSWORD:
+			return update(state, {isPwShown: {$set: action.state}});
 		default:
 			return state;
 	}

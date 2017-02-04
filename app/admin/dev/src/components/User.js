@@ -22,18 +22,25 @@ class User extends Component {
 			default:
 		}
 	}
-	customize(){ return {
+	customize(){ return {/*
 		renderValueBySlug: {
 			something: (slug, value) => {}
 		},
 		renderValueByType: {
 			something: (slug, value) => {}
+		},*/
+		checkHiddenBySlug: {
+			password: (slug, value) => true,
+			confirmPw: (slug, value) => true,
 		}
 	}}
-	render(){
-		const user = (this.props.openUsers[this.props.params.id] ?
+	getUser(){
+		return (this.props.openUsers[this.props.params.id] ?
 			this.props.openUsers[this.props.params.id] : this.props.userFieldData.empty
 		);
+	}
+	render(){
+		const user = this.getUser();
 		const deletButton = (!this.props.isDelBtnYesOrNo ?
 			<button className="user__delete-user" onClick={this.handleClick.bind(this, 'delete user')}>
 				<i className="pe-7s-delete-user pe-va"></i><span>삭제</span>
@@ -43,6 +50,7 @@ class User extends Component {
 				<button onClick={this.handleClick.bind(this, 'cancel deleting user')}>아니오</button>
 			</div>
 		);
+		const rowsBefore = (user.uid > 0 ? null : <tr><td>등록여부</td><td>미등록</td></tr>);
 		return (
 			<div className="user">
 				<h1>회원정보</h1>
@@ -50,10 +58,10 @@ class User extends Component {
 					<tr>
 						<td className="user__table-margin"></td>
 						<td className="user__menu" colSpan="3">
-							{(!user.uid) &&
+							{/*(!user.uid) &&
 							<button className="user__register-user">
 								<i className="pe-7s-id pe-va"></i><span>등록</span>
-							</button>}
+							</button>*/}
 							<Link className="user__edit-user" to={'/admin/user/'+this.props.params.id+'/edit'}>
 								<i className="pe-7s-note pe-va"></i><span>수정</span>
 							</Link>
@@ -65,7 +73,9 @@ class User extends Component {
 					<tr className="user__body">
 						<td className="user__table-margin"></td>
 						<td className="user__table-padding"></td>
-						<td><View doc={user} fieldData={this.props.userFieldData} {...this.customize()} /></td>
+						<td>
+							<View doc={user} fieldData={this.props.userFieldData} {...this.customize()} rowsBefore={rowsBefore} />
+						</td>
 						<td className="user__table-padding"></td>
 						<td className="user__table-margin"></td>
 					</tr>

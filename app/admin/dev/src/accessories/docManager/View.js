@@ -53,20 +53,26 @@ class View extends Component {
 			}
 		}
 	}
-	renderTable(userProps, isChild){
+	renderTable(doc, isChild){
 		const {fSlug, fProps} = this.props.fieldData;
-		const rows  = _mapO(userProps, (fs, value) => (
-			(fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)) && (
-				<tr key={fs} className={'view-table__field-'+fs}>
-					<td>{fProps[fs].dispName}</td>
-					<td>{this.renderValue(value, fProps[fs], fs)}</td>
-				</tr>
-			)
-		));
+		const rows  = _mapO(doc, (fs, value) => {
+			if(fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)){
+				if(!this.props.checkHiddenBySlug[fs] || !this.props.checkHiddenBySlug[fs](fs, value)){
+					return (
+						<tr key={fs} className={'view-table__field-'+fs}>
+							<td>{fProps[fs].dispName}</td>
+							<td>{this.renderValue(value, fProps[fs], fs)}</td>
+						</tr>
+					)
+				}
+			}
+		});
 		const className = (isChild ? 'view-table__inner-table' : 'view-table');
 		return (
 			<table className={className}><tbody>
+				{!isChild && this.props.rowsBefore}
 				{rows}
+				{!isChild && this.props.rowsAfter}
 			</tbody></table>
 		);
 	}
@@ -77,12 +83,17 @@ class View extends Component {
 View.propTypes = {
 	doc: PropTypes.object.isRequired,
 	fieldData: PropTypes.object.isRequired,
+	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	//customization ////
 	renderValueBySlug: PropTypes.object,
-	renderValueByType: PropTypes.object
+	renderValueByType: PropTypes.object,
+	checkHiddenBySlug: PropTypes.object
 };
 View.defaultProps = {
 	renderValueBySlug: {},
-	renderValueByType: {}
+	renderValueByType: {},
+	checkHiddenBySlug: {}
 };
 
 export default View;

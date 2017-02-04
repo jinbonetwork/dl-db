@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, PropTypes, cloneElement} from 'react';
 import FormElem from './FormElem';
 import Item from '../Item';
-import {_mapO, _wrap, _isEmpty, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
+import {_mapO, _forIn, _wrap, _isEmpty, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
 
 class Form extends Component {
 	isHidden(fs){
@@ -126,17 +126,22 @@ class Form extends Component {
 	}
 	renderTable(doc, isChild){
 		const {fSlug, fProps} = this.props.fieldData;
-		const rows  = _mapO(doc, (fs, value) => {
+		const rows = [];
+		_forIn(doc, (fs, value) => {
 			let isRendered = (
 				fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent) &&
 				!this.isHidden(fs) && !this.isHidden(fProps[fs].parent)
 			);
-			if(isRendered) return (
-				<tr key={fs} className={'form__field form__slug-'+fs+' form__type'+fProps[fs].type}>
-					<td>{fProps[fs].dispName}</td>
-					<td>{this.renderField(fs, value, fProps[fs])}</td>
-				</tr>
-			);
+			if(isRendered){
+				if(this.props.rowsBeforeSlug[fs]) rows.push(cloneElement(this.props.rowsBeforeSlug[fs], {key: 'befor '+fs}));
+				let className = 'form__field form__slug-'+fs+' form__type-'+fProps[fs].type+' form__'+(fProps[fs].required ? 'required' : 'elective');
+				rows.push(
+					<tr key={fs} className={className}>
+						<td>{fProps[fs].dispName}</td>
+						<td>{this.renderField(fs, value, fProps[fs])}</td>
+					</tr>
+				);
+			}
 		});
 		const submitButton = !isChild && (
 			<tr className="form__submit-wrap">
@@ -156,7 +161,9 @@ class Form extends Component {
 		const className = (isChild ? 'form__inner-table' : 'form');
 		return (
 			<table className={className}><tbody>
+				{!isChild && this.props.rowsBefore}
 				{rows}
+				{!isChild && this.props.rowsAfter}
 				{submitButton}
 			</tbody></table>
 		);
@@ -173,6 +180,9 @@ Form.propTypes = {
 	}).isRequired,
 	submitLabel: PropTypes.string,
 	isSaving: PropTypes.bool,
+	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	rowsBeforeSlug: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])),
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
@@ -195,6 +205,7 @@ Form.defaultProps = {
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
 	savingStateIcon: <i className="pe-7s-config pe-va pe-spin"></i>,
 	submitLabel: '저장',
+	rowsBeforeSlug: {},
 	checkValidBySlug: {},
 	checkValidByType: {},
 	checkValidOnSubmitBySlug: {},

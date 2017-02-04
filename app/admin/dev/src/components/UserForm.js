@@ -2,9 +2,10 @@ import React, {Component, PropTypes, cloneElement} from 'react';
 import {withRouter} from 'react-router';
 import Form from '../accessories/docManager/Form';
 import Item from '../accessories/Item';
+import CheckBox from '../accessories/CheckBox';
 import {makeUserFormData} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
-import {_mapO} from '../accessories/functions';
+import {_mapO, _wrap} from '../accessories/functions';
 
 class UserForm extends Component {
 	componentDidMount(){
@@ -20,6 +21,7 @@ class UserForm extends Component {
 		} else {
 			this.props.onChange({mode: 'merge', value: this.props.userFieldData.empty});
 		}
+		this.props.showPassword(false);
 	}
 	customize(){ return {
 		/*
@@ -36,18 +38,21 @@ class UserForm extends Component {
 			something: (slug, value) => {}
 		},
 		checkValidOnSubmitBySlug: {
-			something: (slug, value) => {}
-		},
-		checkValidOnSubmitByType: {
-			something: (slug, value) => {}
+			email: (slug, value) => {}
 		},
 		renderFormByType: {
 			something: (slug, index, value, formElem) => {}
 		},
-		checkHiddenBySlug: {
-			something: (slug) => {}
-		},
 		*/
+		checkValidOnSubmitByType: {
+			password: (slug, value) => {
+				if(value === this.props.user.confirmPw) return true; else return false;
+			}
+		},
+		checkHiddenBySlug: {
+			password: (slug) => !this.props.isPwShown,
+			confirmPw: (slug) => !this.props.isPwShown
+		},
 		renderFormBySlug: {
 			role: (slug, index, value, formElem) => {
 				let options = _mapO(this.props.userFieldData.roles, (roleCode, dispName) =>
@@ -57,11 +62,17 @@ class UserForm extends Component {
 			}
 		}
 	}}
+	handleChange(which, arg1st, arg2nd){
+		if(which == 'show password'){
+			this.props.showPassword(!this.props.isPwShown);
+			if(this.props.isPwShown) this.props.onChange({mode: 'merge', value: {password: '', confirmPw: ''}});
+		}
+	}
 	handleSubmit(error){
 		if(error){
 			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
 		} else {
-			const formData = makeUserFormData(this.props.user, this.props.userFieldData);
+			let formData = makeUserFormData(this.props.user, this.props.userFieldData);
 			if(this.props.user.id > 0){
 				this.props.submitForm(this.props.user, formData);
 			} else {
@@ -72,8 +83,18 @@ class UserForm extends Component {
 		}
 	}
 	render(){
-		let title = (this.props.user.id > 0 ? '회원정보 수정' : '회원추가');
+		let title = (this.props.user.id > 0 ? '회원정보 수정' : '회원 추가');
 		let submitLabel = (this.props.user.id > 0 ? '수정' : '저장');
+		let userFieldData = (this.props.user.uid > 0 || this.props.isPwShown ?
+			update(this.props.userFieldData, {fProps: {email: {required: {$set: true}}}}) :
+			this.props.userFieldData
+		);
+		let rowsBefore = (
+			<tr className="form__show-password"><td colSpan="2">
+				<CheckBox check={this.props.isPwShown} onChange={this.handleChange.bind(this, 'show password')} />
+				<span>{(this.props.user.uid > 0 ? '비밀번호 변경' : '이용자로 등록')}</span>
+			</td></tr>
+		);
 		return (
 			<div className="user-form">
 				<h1>{title}</h1>
@@ -83,10 +104,11 @@ class UserForm extends Component {
 						<td>
 							<Form
 								doc={this.props.user}
-								fieldData={this.props.userFieldData}
+								fieldData={userFieldData}
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
 								submitLabel={submitLabel}
+								rowsBefore={rowsBefore}
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
@@ -107,6 +129,7 @@ UserForm.propTypes = {
 	focused: PropTypes.object.isRequired,
 	submitLabel: PropTypes.string,
 	isSaving: PropTypes.bool,
+	isPwShown: PropTypes.bool,
 	fetchUser: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	setFocus: PropTypes.func.isRequired,
@@ -114,7 +137,7 @@ UserForm.propTypes = {
 	showMessage: PropTypes.func.isRequired,
 	submitForm: PropTypes.func.isRequired,
 	submitNewForm: PropTypes.func.isRequired,
-	formData: PropTypes.object,
+	showPassword: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired
 	}).isRequired

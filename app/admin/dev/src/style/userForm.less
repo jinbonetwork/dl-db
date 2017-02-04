@@ -25,6 +25,23 @@
 	.user-form__table-margin {
 		width: 1em;
 	}
+	.form__show-password td {
+		height: 3em;
+	}
+	.form__show-password .checkbox + span {
+		margin-left: 0.5em;
+	}
+	.form__required td:first-child {
+		position: relative;
+		color: @main-color;
+	}
+	.form__required td:first-child:after {
+		content: '(필수)';
+		position: absolute;
+		top: 3.3em; left: 0;
+		font-size: 0.7em;
+		color: @font-color;
+	}
 }
 .user-form .form {
 	width: 100%;

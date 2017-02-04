@@ -134,10 +134,10 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 					}
 					else if(value.fid) return value.fid;
 				default:
-					return '';
+					return undefined;
 			}
 		} else {
-			return '';
+			return undefined;
 		}
 	}, (fs, value) => (fData.fID[fs]));
 };
@@ -148,7 +148,7 @@ const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {},
 	));
 	for(let fs in doc){
 		const fProp = fData.fProps[fs];
-		if(fProp.form == 'file'){
+		if(fProp && fProp.form == 'file'){
 			if(fProp.multiple){
 				doc[fs].forEach((file) => {
 					if(file.name) formData.append(fData.fID[fs]+'[]', file);

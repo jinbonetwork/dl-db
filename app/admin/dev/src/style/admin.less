@@ -92,10 +92,14 @@ table {
 	}
 }
 .admin .checkbox {
-	font-size: 1.5em;
+	display: inline-block;
+	width: 1.5em;
 	&:focus {
 		border-bottom: dotted 1px @main-color;
 	}
+	 .checkbox__check-icon, .checkbox__uncheck-icon {
+		 font-size: 1.5em;
+	 }
 	.checkbox__check-icon {
 		color: @main-color;
 	}

@@ -78,7 +78,8 @@ const UserFormContainer = connect(
 		openUsers: state.admin.openUsers,
 		user: state.userForm.user,
 		focused: state.userForm.focused,
-		isSaving: state.userForm.isSaving
+		isSaving: state.userForm.isSaving,
+		isPwShown: state.userForm.isPwShown
 	}),
 	(dispatch) => ({
 		fetchUser: (id, callback) => dispatch(adminActionCreators.fetchUser(id, callback)),
@@ -88,6 +89,7 @@ const UserFormContainer = connect(
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
 		submitForm: (user, formData) => dispatch(adminActionCreators.submitUserForm(user, formData)),
 		submitNewForm: (user, formData, callback) => dispatch(adminActionCreators.submitNewUserForm(user, formData, callback)),
+		showPassword: (state) => dispatch(adminActionCreators.showPassword(state))
 	})
 )(UserForm);
 

@@ -20,6 +20,7 @@ export const BLUR_USERFORM = 'blur userform';
 export const SET_FOCUS_IN_USERFORM = 'set foucs in userform';
 export const COMPLETE_USERFORM = 'complete userform';
 export const SUBMIT_USERFORM = 'submit userform';
+export const SHOW_PASSWORD = 'show password';
 
 export const RECEIVE_AGREEMENT = 'receive agreement';
 export const CHANGE_AGREEMENT = 'change agreement';
