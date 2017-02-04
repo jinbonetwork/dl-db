@@ -5,6 +5,7 @@ class Members extends \DLDB\Objects {
 	private static $fields;
 	private static $cids;
 	private static $taxonomy;
+	private static $taxonomy_terms;
 	private static $errmsg;
 
 	public static function instance() {
@@ -23,7 +24,10 @@ class Members extends \DLDB\Objects {
 			}
 		}
 		if(!self::$taxonomy) {
-			self::$taxonomy = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
+			self::$taxonomy = \DLDB\Taxonomy::getTaxonomy(self::$cids);
+		}
+		if(!self::$taxonomy_terms) {
+			self::$taxonomy_terms = \DLDB\Taxonomy::getTaxonomyTerms(self::$cids);
 		}
 		return self::$fields;
 	}
@@ -71,6 +75,8 @@ class Members extends \DLDB\Objects {
 	}
 
 	public static function modify($member,$args) {
+		$fields = self::getFields();
+
 		$dbm = \DLDB\DBM::instance();
 
 		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ?, `custom` = ?";
@@ -84,6 +90,7 @@ class Members extends \DLDB\Objects {
 		$fieldquery = \DLDB\FieldsQuery::instance();
 		$fieldquery->setFields(self::$fields);
 		$fieldquery->setTaxonomy(self::$taxonomy);
+		$fieldquery->setTaxonomyTerms(self::$taxonomy_terms);
 		$result = $fieldquery->modifyQue($que,$array1,$array2,$member,$args);
 		@extract($result);
 

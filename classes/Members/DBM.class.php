@@ -63,6 +63,19 @@ class DBM extends \DLDB\Objects {
 		return $members;
 	}
 
+	public static function getMembers($ids) {
+		$dbm = \DLDB\DBM::instance();
+
+		if( is_array($ids) ) {
+			$que = "SELECT * FROM {members} WHERE id IN (".implode(",",$ids).")";
+			$members = array();
+			while($row = $dbm->getFetchArray($que)) {
+				$members[] = self::fetchMember($row);
+			}
+		}
+		return $members;
+	}
+
 	public static function insert($args) {
 		$dbm = \DLDB\DBM::instance();
 
@@ -111,6 +124,8 @@ class DBM extends \DLDB\Objects {
 	public static function modify($member,$args) {
 		$dbm = \DLDB\DBM::instance();
 
+		$fields = self::getFields();
+
 		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ? WHERE id = ?";
 		$dbm->execute($que,array("ssssd",$args['name'],$args['class'],$args['email'],$args['phone'],$member['id']));
 
@@ -134,6 +149,22 @@ class DBM extends \DLDB\Objects {
 
 		$que = "DELETE FROM {members} WHERE id = ?";
 		$dbm->execute($que,array("d",$member['id']));
+
+		$que = "DELETE FROM {taxonomy_term_relative} WHERE `tables` = ? AND `did` = ?";
+		$dbm->execute($que,array("sd",'members',$member['id']));
+
+		$que = "DELETE FROM {user_roles} WHERE `uid` = ?";
+		$dbm->execute($que,array("d",$member['id']));
+
+		return 0;
+	}
+
+	public static function deletes($members) {
+		if(is_array($members) && @count($members) > 0) {
+			foreach($members as $member) {
+				self::delete($member);
+			}
+		}
 
 		return 0;
 	}
