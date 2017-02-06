@@ -75,21 +75,13 @@ const admin = (state = initialState, action) => {
 		case RECEIVE_ATTACHMENTS:
 			return update(state, {attachments: {$set: refineFileList(action.original)}});
 		case REQUEST_TOGGLING_PARSED:
-			return update(state, {attachments: {
-				[action.idxOfList]: {files: {[action.idxOfFiles]: {status: {$set: 'ing'}}}}
-			}});
+			return update(state, {attachments: {[action.idxOfFiles]: {status: {$set: 'ing'}}}});
 		case TOGGLE_PARSED:
-			return update(state, {attachments: {
-				[action.idxOfList]: {files: {[action.idxOfFiles]: {status: {$set: action.status}}}}
-			}});
+			return update(state, {attachments: {[action.idxOfFiles]: {status: {$set: action.status}}}});
 		case REQUEST_TOGGLING_ANONYMITY:
-			return update(state, {attachments: {
-				[action.idxOfList]: {files: {[action.idxOfFiles]: {anonymity: {$set: undefined}}}}
-			}});
+			return update(state, {attachments: {[action.idxOfFiles]: {anonymity: {$set: undefined}}}});
 		case TOGGLE_ANONYMITY:
-			return update(state, {attachments: {
-				[action.idxOfList]: {files: {[action.idxOfFiles]: {anonymity: {$set: action.status}}}}
-			}});
+			return update(state, {attachments: {[action.idxOfFiles]: {anonymity: {$set: action.status}}}});
 		case RECEIVE_AGREEMENT:
 			let agreement = (action.agreement ?
 				RichTextEditor.createValueFromString(action.agreement, 'html') :

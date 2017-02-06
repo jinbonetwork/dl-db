@@ -187,22 +187,22 @@ const adminActionCreators = {
 	changePropsInAttachments(which, value){
 		return {type: CHANGE_PROPS_IN_ATTACHMENTS, which, value};
 	},
-	toggleParsed(idxOfList, idxOfFiles, fileId, status){ return (dispatch) => {
-		dispatch({type: REQUEST_TOGGLING_PARSED, idxOfList, idxOfFiles});
+	toggleParsed(idxOfFiles, fileId, status){ return (dispatch) => {
+		dispatch({type: REQUEST_TOGGLING_PARSED, idxOfFiles});
 		adminApi.toggleParsed(fileId, status,
-			() => dispatch({type: TOGGLE_PARSED, idxOfList, idxOfFiles, status}),
+			() => dispatch({type: TOGGLE_PARSED, idxOfFiles, status}),
 			(error) => {
-				dispatch({type: TOGGLE_PARSED, idxOfList, idxOfFiles, status});
+				dispatch({type: TOGGLE_PARSED, idxOfFiles, status});
 				dispatchError(dispatch, error);
 			}
 		);
 	}},
-	toggleAnonymity(idxOfList, idxOfFiles, fileId, status){ return (dispatch) => {
-		dispatch({type: REQUEST_TOGGLING_ANONYMITY, idxOfList, idxOfFiles});
+	toggleAnonymity(idxOfFiles, fileId, status){ return (dispatch) => {
+		dispatch({type: REQUEST_TOGGLING_ANONYMITY, idxOfFiles});
 		adminApi.toggleAnonymity(fileId, status,
-			() => dispatch({type: TOGGLE_ANONYMITY, idxOfList, idxOfFiles, status}),
+			() => dispatch({type: TOGGLE_ANONYMITY, idxOfFiles, status}),
 			(error) => {
-				dispatch({type: TOGGLE_ANONYMITY, idxOfList, idxOfFiles, status});
+				dispatch({type: TOGGLE_ANONYMITY, idxOfFiles, status});
 				dispatchError(dispatch, error);
 			}
 		);

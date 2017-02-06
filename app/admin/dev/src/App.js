@@ -98,15 +98,14 @@ const AttachmentsContainer = connect(
 	(state) => ({
 		attachments: state.admin.attachments,
 		lastPage: state.attachments.lastPage,
-		selected: state.attachments.selected,
-		isDelBtnYesOrNo: state.attachments.isDelBtnYesOrNo,
-		sortedBy: state.attachments.sortedBy
+		fieldSearching: state.attachments.fieldSearching,
+		keywordSearching: state.attachments.keywordSearching
 	}),
 	(dispatch) => ({
 		fetchAttachments: (page) => dispatch(adminActionCreators.fetchAttachments(page)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value)),
-		toggleParsed: ({idxOfList, idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleParsed(idxOfList, idxOfFiles, fileId, status)),
-		toggleAnonymity: ({idxOfList, idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfList, idxOfFiles, fileId, status))
+		toggleParsed: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleParsed(idxOfFiles, fileId, status)),
+		toggleAnonymity: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfFiles, fileId, status))
 	})
 )(Attachments);
 
@@ -132,7 +131,7 @@ render(
 				<Route path="user/new" component={UserFormContainer} />
 				<Route path="user/:id" component={UserContainer} />
 				<Route path="user/:id/edit" component={UserFormContainer} />
-				<Route path="attachments(/page/:page)" component={AttachmentsContainer} />
+				<Route path="attachments(/:param1/:param2)(/:param3/:param4)" component={AttachmentsContainer} />
 				<Route path="agreement" component={AgreementContainer} />
 				<Route path="*" component={NotFound} />
 			</Route>

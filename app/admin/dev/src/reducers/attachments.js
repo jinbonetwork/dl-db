@@ -3,9 +3,8 @@ import update from 'react-addons-update';
 
 const initialState = {
 	lastPage: 1,
-	selected: [],
-	isDelBtnYesOrNo: false,
-	sortedBy: 'time'
+	fieldSearching: 'default',
+	keywordSearching: ''
 };
 
 const attachments = (state = initialState, action) => {

@@ -89,7 +89,7 @@ const adminApi = {
 			if(param3 == 'page' && param4 > 0) options += param4; else options += '1';
 		}
 		fetchData('get', '/api/admin/files?'+options,
-			(data) => succeed(data.files, parseInt(data.files.total_page)), fail
+			(data) => succeed(data.files, parseInt(data.result.total_page)), fail
 		);
 	},
 	fetchUser(id, succeed, fail){

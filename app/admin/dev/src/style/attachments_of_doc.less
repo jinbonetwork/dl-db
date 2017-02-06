@@ -2,13 +2,13 @@
 .attachments
 	.attachments__list
 		.attachments__menu
-		.attachments__menu .select
 --------------------------------------------------------*/
 
 @import 'variables';
 
 .attachments {
 	margin: 5% 0;
+
 	& > h1 {
 		color: @main-color;
 		font-weight: @font-normal;
@@ -27,43 +27,65 @@
 	min-width: 41em;
 	margin-left: auto; margin-right: auto;
 	td {
-		padding-top: 0.7em; padding-bottom: 0.7em;
+		padding: 0 0.5em;
+	}
+	tr:last-child td {
+		padding-bottom: 0.5em;
 	}
 	.table-margin, .table-padding {
 		width: 1em;
 		border-bottom: 0 !important;
 	}
-	.table-margin {
-		background-color: transparent !important;
-	}
-	tr:not(.attachments__menu) td {
+	tr:not(.attachments__menu) td:not(.table-margin) {
 		background-color: @minor-color-2;
-		border-bottom: solid 1px lighten(@font-color, 30%);
 	}
-	tr.attachments__head td {
-		padding: 1em 0;
+	.attachments__head td {
+		padding: 1em 0.5em;
 		border-bottom: solid 1px  @font-color;
 		text-align: center;
 	}
-	tr:last-child td {
-		border-bottom-color: transparent;
+	.attachments__head + tr td {
+		padding-top: 0.5em;
 	}
-	.attachments__filename {
-		padding-left: 1em;
+	.attachments__title a {
+		color: @main-color;
 	}
+	/*
+	.attachments__head td:nth-child(3), .attachments__checkbox {
+		padding: 0 !important;
+		width: 0 !important;
+	}
+	.attachments__checkbox .checkbox {
+		display: none;
+	}
+	*/
 	.attachments__filename a {
 		color: @main-color
 	}
 	.attachments__filename i + a {
 		margin-left: 0.5em;
 	}
-	.attachments__edit-text {
+	.table-division-line:not(:last-child) td {
+		border-bottom: solid 1px lighten(@font-color, 30%);
+		padding: 0.5em 0 0 0;
+	}
+	.table-division-line + tr td {
+		padding-top: 0.5em;
+	}
+	.attachments__edit-doc {
 		text-align: center;
+	}
+	.attachments__edit-doc i {
+		display: inline-block;
+		font-size: 1.5em;
+		margin: 5px 0;
+		color: @main-color;
 	}
 	.attachments__edit-text a {
 		display: inline-block;
 		font-size: 0.8em;
 		padding: 0.3em;
+		margin: 5px 0;
 		background-color: transparent;
 		color: @main-color;
 		border: solid 1px @main-color;
@@ -80,7 +102,7 @@
 	}
 	.attachments__toggle span + span {
 		position: absolute;
-		bottom: 0.5em; left: 0;
+		bottom: 0.2em; left: 0;
 		display: block;
 		width: 100%;
 		text-align: center;
@@ -98,36 +120,17 @@
 }
 
 .attachments__menu {
+	text-align: right;
 	td {
 		padding: 0 0 1em 0;
 	}
-	td > div {
-		height: 2em;
-	}
-	.attachments__keyword, .attachments__search {
-		height: 100%;
-	}
-	.attachments__keyword {
-		width: 13em;
-		border-right-width: 0;
-		border-left-width: 0;
-	}
-	.attachments__search {
-		display: inline-block;
-		vertical-align: bottom;
-		padding: 0 1em;
-		color: @minor-color-2;
-		background-color: @main-color;
-		&:focus {
-			background-color: @focus-color-2;
-		}
-		line-height: 2em;
+	.attachments__sort {
+		float: left;
+		margin-top: 0.5em;
 	}
 	//.check ////
 	.check {
 		display: inline-block;
-		line-height: 2em;
-		margin-left: 1em;
 	}
 	.check .item + .item {
 		margin-left: 0.5em;
@@ -140,38 +143,36 @@
 	.item__checkicon {
 		color: @main-color;
 	}
-}
-.attachments__menu .select {
-	height: 100%;
-	vertical-align: bottom;
-	.dropdown__headwrap, .dropdown__head, .ddhead {
-		height: 100%;
+	// .attachments__delete-docs, attachments__confirm-del-docs ////
+	.attachments__delete-docs, .attachments__confirm-del-docs a {
+		display: inline-block;
+		border-style: solid;
+		border-width: 1px;
+		padding: 0.5em;
+		line-height: 1em;
 	}
-	.ddhead {
-		line-height: 2em;
-	}
-	.dropdown__headwrap, .dropdown__items {
+	.attachments__delete-docs {
+		position: relative;
 		border-color: @main-color;
-		background-color: @minor-color-2;
+		background-color: @main-color;
+		color: @minor-color-2;
+		padding-left: 2em;
 	}
-	&.dropdown--unfolded .dropdown__items {
-		top: -1px;
-	}
-	.dropdown__head:focus {
-		background-color: @focus-color-1
-	}
-	.ddarrow i {
+	.attachments__delete-docs i {
+		position: absolute;
+		top: 0.2em; left: 0.2em;
 		font-size: 1.5em;
-		color: @main-color;
 		font-weight: bold;
 	}
-	.ddhead, .item {
-		text-align: left;
-		padding-right: 2em;
+	.attachments__confirm-del-docs a:first-child {
+		border-color: @main-color;
+		background-color: @main-color;
+		color: @minor-color-2;
+		padding: 0.5em 1em;
 	}
-	.item {
-		line-height: 2em;
-		cursor: pointer;
-		&:focus {background-color: @focus-color-1}
+	.attachments__confirm-del-docs a:last-child {
+		border-color: @main-color;
+		background-color: @minor-color-2;
+		color: @main-color;
 	}
 }

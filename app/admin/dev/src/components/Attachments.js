@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from 'react';
+import {Link, withRouter} from 'react-router';
 import Check from '../accessories/Check';
 import Item from '../accessories/Item';
-import CheckBox from '../accessories/CheckBox';
+import Select from '../accessories/Select';
 import Pagination from '../accessories/Pagination';
-import {_mapO, _pushpull} from '../accessories/functions';
+import {_mapO, _pushpull, _wrap} from '../accessories/functions';
 
 class Attachments extends Component {
 	componentDidMount(){
@@ -15,25 +16,41 @@ class Attachments extends Component {
 		}
 	}
 	handleChange(which, arg1st, arg2nd){
+		const keyword = this.props.keywordSearching;
+		const field = this.props.fieldSearching;
 		if(which == 'check'){
 			let docId = arg1st, isChecked = arg2nd;
 			this.props.onChange('selected', _pushpull(this.props.selected, docId));
 		}
-		else if(which == 'sorted by'){
-			let sortedBy = arg1st;
-			this.props.onChange('sortedBy', sortedBy);
+		else if(which == 'fieldSearching'){
+			let value = arg1st;
+			if(value == 'default' && keyword) this.props.onChange('keywordSearching', '');
+			else if((value == 'filename' || value == 'subject') && (field == 'status' || field == 'anonymity')) this.props.onChange('keywordSearching', '');
+			else if(value == 'parsed') this.props.onChange('keywordSearching', '');
+			else if(value == 'anonymity') this.props.onChange('keywordSearching', '');
+			this.props.onChange('fieldSearching', value);
+		}
+		else if(which == 'keywordSearching'){
+			if(field == 'status' || field == 'anonymity'){
+				let value = arg1st;
+				this.props.onChange('keywordSearching', value);
+				this.props.router.push('/admin/attachments/'+field+'/'+value);
+			} else {
+				let value = arg1st.target.value;
+				if(field != 'default') this.props.onChange('keywordSearching', value);
+			}
 		}
 	}
 	handleClick(which, arg1st){
 		switch(which){
-			case 'delete docs':
-				if(!this.props.isDelBtnYesOrNo){
-					this.props.onChange('isDelBtnYesOrNo', true); break;
+			case 'search':
+				if(this.props.fieldSearching == 'default' || !this.props.keywordSearching){
+					if(this.props.keywordSearching) this.props.onChange('keywordSearching', '');
+					this.props.router.push('/admin/attachments');
 				} else {
-					this.props.deleteDocs(this.props.selected); break;
+					this.props.router.push('/admin/attachments/'+this.props.fieldSearching+'/'+this.props.keywordSearching);
 				}
-			case 'cancel deleting docs':
-				this.props.onChange('isDelBtnYesOrNo', false); break;
+				break;
 			case 'toggle parsed':
 				this.props.toggleParsed(arg1st); break;
 			case 'toggle anonymity':
@@ -43,25 +60,17 @@ class Attachments extends Component {
 			default:
 		}
 	}
+	handleKeyDown(which, arg1st, arg2nd){
+		if(which == 'keywordSearching'){
+			let key = arg1st.key;
+			if(key == 'Enter') this.handleClick('search');
+		}
+	}
 	render(){
-
-		console.log(this.props.attachments);
-		return null;
-
-
-		const deleteButton = (!this.props.isDelBtnYesOrNo ?
-			<a className="attachments__delete-docs" onClick={this.handleClick.bind(this, 'delete docs')}>
-				<i className="pe-7s-close pe-va"></i><span>삭제</span>
-			</a> :
-			<span className="attachments__confirm-del-docs">
-				<a onClick={this.handleClick.bind(this, 'delete docs')}>예</a>
-				<a onClick={this.handleClick.bind(this, 'cancel deleting docs')}>아니오</a>
-			</span>
-		);
+		/*
 		const listMenu = (
 			<tr className="attachments__menu">
 				<td className="table-margin"></td>
-				{/*<td colSpan="7">*/}
 				<td colSpan="6">
 					<div className="attachments__sort">
 						<Check type="radio" selected={this.props.sortedBy} onChange={this.handleChange.bind(this, 'sorted by')}>
@@ -70,7 +79,43 @@ class Attachments extends Component {
 							<Item value="anonymity">익명화 미완료</Item>
 						</Check>
 					</div>
-					{/*deleteButton*/}
+				</td>
+				<td className="table-margin"></td>
+			</tr>
+		);
+		*/
+		const listMenu = (
+			<tr className="attachments__menu">
+				<td className="table-margin"></td>
+				<td colSpan="6">
+					<div>
+						<Select selected={this.props.fieldSearching} onChange={this.handleChange.bind(this, 'fieldSearching')}>
+							<Item value="default">전체목록</Item>
+							<Item value="filename">파일이름</Item>
+							<Item value="subject">문서제목</Item>
+							<Item value="status">텍스트화</Item>
+							<Item value="anonymity">익명화</Item>
+						</Select>
+						{(this.props.fieldSearching != 'status' && this.props.fieldSearching != 'anonymity') && [
+							<input key="0" type="text" className="attachments__keyword" value={this.props.keywordSearching}
+								onChange={this.handleChange.bind(this, 'keywordSearching')}
+								onKeyDown={this.handleKeyDown.bind(this, 'keywordSearching')}
+							/>,
+							<a key="1" className="attachments__search" tabIndex="0" onClick={this.handleClick.bind(this, 'search')}><span>검색</span></a>
+						]}
+						{(this.props.fieldSearching == 'status') && (
+							<Check type="radio" selected={this.props.keywordSearching} onChange={this.handleChange.bind(this, 'keywordSearching')}>
+								<Item value="uploaded">미완료</Item>
+								<Item value="parsed">완료</Item>
+							</Check>
+						)}
+						{(this.props.fieldSearching == 'anonymity') && (
+							<Check type="radio" selected={this.props.keywordSearching} onChange={this.handleChange.bind(this, 'keywordSearching')}>
+								<Item value="0">미완료</Item>
+								<Item value="1">완료</Item>
+							</Check>
+						)}
+					</div>
 				</td>
 				<td className="table-margin"></td>
 			</tr>
@@ -79,106 +124,85 @@ class Attachments extends Component {
 			<tr className="attachments__head">
 				<td className="table-margin"></td>
 				<td className="table-padding"></td>
-				{/*<td></td>*/}
-				<td colSpan="2">문서 제목 및 첨부파일</td>
+				<td colSpan="2">파일이름</td>
 				<td>텍스트화</td>
 				<td>익명화</td>
 				<td className="table-padding"></td>
 				<td className="table-margin"></td>
 			</tr>
 		);
-		const list = this.props.attachments.map((item, idxOfList) => {
-			let rowSpan = item.files.length + 1;
-			let title = (
-				<tr key={'title'+item.docId}>
-					<td className="table-margin" rowSpan={rowSpan}></td>
-					<td className="table-padding" rowSpan={rowSpan}></td>
-					{/*<td rowSpan={rowSpan}>
-						<CheckBox
-							check={this.props.selected.indexOf(item.docId) >= 0}
-							onChange={this.handleChange.bind(this, 'check', item.docId)}
-						/>
-					</td>*/}
-					<td className="attachments__title"><a href={'/document/'+item.docId}>{item.title}</a></td>
-					<td className="attachments__edit-doc"><a href={'/document/'+item.docId+'/edit'}><i className="pe-7s-note pe-va"></i></a></td>
-					<td colSpan="2"></td>
-					<td className="table-padding" rowSpan={rowSpan}></td>
-					<td className="table-margin" rowSpan={rowSpan}></td>
-				</tr>
-			);
-			let files = item.files.map((file, idxOfFiles) => (
-				<tr key={'file'+file.fileId}>
-					<td className="attachments__filename"><i className="pe-7s-file pe-va"></i><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
-					<td className="attachments__edit-text">
-						{/*<a onClick={this.handleClick.bind(this, 'edit text', {docId: item.docId, fileId: file.fileId})}>TEXT</a>*/}
-						<a href={'/document/'+item.docId+'/text/'+file.fileId}>TEXT</a>
-					</td>
-					<td className="attachments__toggle">
-						{file.status === 'uploaded' && [
-							<span key="button" className="attachments__toggle--off"
-								onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfList, idxOfFiles, fileId: file.fileId, status: 'parsed'})}
-							>
-								<i className="pe-7s-switch pe-va"></i>
-							</span>,
-							<span key="label">미완료</span>
-						]}
-						{file.status === 'parsed' && [
-							<span key="button" className="attachments__toggle--on"
-								onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfList, idxOfFiles, fileId: file.fileId, status: 'uploaded'})}
-							>
-								<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
-							</span>,
-							<span key="label">완료</span>
-						]}
-						{file.status === 'ing' && (
-							<span className="attachments__toggle--off">
-								<i className="pe-7s-switch pe-va"></i>
-							</span>)
-						}
-						{file.status === 'uploading' && (
-							<span className="attachments__toggle--ing">
-								<i className="pe-7s-config pe-va pe-spin"></i>
-							</span>)
-						}
-					</td>
-					<td className="attachments__toggle">
-						{file.anonymity === false && [
-							<span key="button" className="attachments__toggle--off"
-								onClick={this.handleClick.bind(this, 'toggle anonymity', {idxOfList, idxOfFiles, fileId: file.fileId, status: true})}
-							>
-								<i className="pe-7s-switch pe-va"></i>
-							</span>,
-							<span key="label">미완료</span>
-						]}
-						{file.anonymity === true && [
-							<span key="button" className="attachments__toggle--on"
-								onClick={this.handleClick.bind(this, 'toggle anonymity', {idxOfList, idxOfFiles, fileId: file.fileId, status: false})}
-							>
-								<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
-							</span>,
-							<span key="label">완료</span>
-						]}
-						{file.anonymity === undefined && (
-							<span className="attachments__toggle--off">
-								<i className="pe-7s-switch pe-va"></i>
-							</span>
-						)}
-					</td>
-				</tr>
-			));
-			let divisionLine = (
-				<tr className="table-division-line" key={'divisionLine'+item.docId}>
-					<td className="table-margin"></td>
-					<td className="table-padding"></td>
-					{/*<td colSpan="5"></td>*/}
-					<td colSpan="4"></td>
-					<td className="table-padding"></td>
-					<td className="table-margin"></td>
-				</tr>
-			);
-			return [title, files, divisionLine];
+		const list = this.props.attachments.map((file, idxOfFiles) => (
+			<tr key={'file'+file.fileId}>
+				<td className="table-margin"></td>
+				<td className="table-padding"></td>
+				<td className="attachments__filename"><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
+				<td className="attachments__edit-text">
+					{/*<a onClick={this.handleClick.bind(this, 'edit text', {docId: item.docId, fileId: file.fileId})}>TEXT</a>*/}
+					<a>TEXT</a>
+				</td>
+				<td className="attachments__toggle">
+					{file.status === 'uploaded' && [
+						<span key="button" className="attachments__toggle--off"
+							onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfFiles, fileId: file.fileId, status: 'parsed'})}
+						>
+							<i className="pe-7s-switch pe-va"></i>
+						</span>,
+						<span key="label">미완료</span>
+					]}
+					{file.status === 'parsed' && [
+						<span key="button" className="attachments__toggle--on"
+							onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfFiles, fileId: file.fileId, status: 'uploaded'})}
+						>
+							<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
+						</span>,
+						<span key="label">완료</span>
+					]}
+					{file.status === 'ing' && (
+						<span className="attachments__toggle--off">
+							<i className="pe-7s-switch pe-va"></i>
+						</span>)
+					}
+					{file.status === 'uploading' && (
+						<span className="attachments__toggle--ing">
+							<i className="pe-7s-config pe-va pe-spin"></i>
+						</span>)
+					}
+				</td>
+				<td className="attachments__toggle">
+					{file.anonymity === false && [
+						<span key="button" className="attachments__toggle--off"
+							onClick={this.handleClick.bind(this, 'toggle anonymity', {idxOfFiles, fileId: file.fileId, status: true})}
+						>
+							<i className="pe-7s-switch pe-va"></i>
+						</span>,
+						<span key="label">미완료</span>
+					]}
+					{file.anonymity === true && [
+						<span key="button" className="attachments__toggle--on"
+							onClick={this.handleClick.bind(this, 'toggle anonymity', {idxOfFiles, fileId: file.fileId, status: false})}
+						>
+							<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
+						</span>,
+						<span key="label">완료</span>
+					]}
+					{file.anonymity === undefined && (
+						<span className="attachments__toggle--off">
+							<i className="pe-7s-switch pe-va"></i>
+						</span>
+					)}
+				</td>
+				<td className="table-padding"></td>
+				<td className="table-margin"></td>
+			</tr>
+		));
+		const {urlOptions, page} = _wrap(() => {
+			let {param1, param2, param3, param4} = this.props.params;
+			if(param1 == 'page') return {urlOptions: 'page/', page: parseInt(param2)};
+			if(param1 && param2){
+				return {urlOptions: param1+'/'+param2+'/page/', page: (param3 == 'page' && param4 > 0 ? parseInt(param4) : 1)}
+			}
+			return {urlOptions: 'page/', page: 1};
 		});
-		const page = (this.props.params.page ? parseInt(this.props.params.page) : 1);
 		return (
 			<div className="attachments">
 				<h1>첨부파일 목록</h1>
@@ -187,7 +211,7 @@ class Attachments extends Component {
 					{listHead}
 					{list}
 				</tbody></table>
-				<Pagination url="/admin/attachments/page/" page={page} lastPage={this.props.lastPage} />
+				<Pagination url={'/admin/attachments/'+urlOptions} page={page} lastPage={this.props.lastPage} />
 			</div>
 		);
 	}
@@ -196,11 +220,13 @@ class Attachments extends Component {
 Attachments.propTypes = {
 	attachments: PropTypes.array.isRequired,
 	lastPage: PropTypes.number.isRequired,
-	selected: PropTypes.array.isRequired,
-	isDelBtnYesOrNo: PropTypes.bool,
-	sortedBy: PropTypes.string.isRequired,
+	fieldSearching: PropTypes.string.isRequired,
+	keywordSearching: PropTypes.string.isRequired,
 	fetchAttachments: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired
+	}).isRequired
 };
 
-export default Attachments;
+export default withRouter(Attachments);

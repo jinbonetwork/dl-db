@@ -5,7 +5,7 @@ export const refineFileList = (original) => {
 			docId: parseInt(file.did),
 			fileName: file.filename,
 			docTitle: file.subject,
-			//fileUri: file.fileuri,
+			fileUri: file.fileuri,
 			status: file.status,
 			anonymity: (file.anonymity == 1 ? true : false)
 		};
