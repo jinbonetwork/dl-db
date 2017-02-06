@@ -10,7 +10,7 @@ class DBM extends \DLDB\Objects {
 	public static function totalFileCnt($s_mode='',$s_args='') {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "SELECT count(*) AS cnt FROM {files} AS f LEFT JOIN {documents} AS d ON f.did = d.id WHERE ".self::makeFileQuery($s_mode,$s_arg);
+		$que = "SELECT count(*) AS cnt FROM {files} AS f LEFT JOIN {documents} AS d ON f.did = d.id WHERE ".self::makeFileQuery($s_mode,$s_args);
 
 		$row = $dbm->getFetchArray($que);
 		return ($row['cnt'] ? $row['cnt'] : 0);
@@ -19,7 +19,7 @@ class DBM extends \DLDB\Objects {
 	public static function getFiles($page,$limit,$order="desc",$s_mode='',$s_args='') {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "SELECT f.fid, f.did, f.filepath, f.filename, f.mimetype, f.uid, f.download, f.filesize, f.regdate, f.status, f.anonymity, f.textsize, d.id, d.subject FROM {files} AS f LEFT JOIN {documents} AS d ON f.did = d.id WHERE ".self::makeFileQuery($s_mode,$s_arg);
+		$que = "SELECT f.fid, f.did, f.filepath, f.filename, f.mimetype, f.uid, f.download, f.filesize, f.regdate, f.status, f.anonymity, f.textsize, d.id, d.subject FROM {files} AS f LEFT JOIN {documents} AS d ON f.did = d.id WHERE ".self::makeFileQuery($s_mode,$s_args);
 		$que .= " ORDER BY f.fid ".strtolower($order)." LIMIT ".( ( $page - 1 ) * $limit ).",".$limit;
 		$files = array();
 		while( $row = $dbm->getFetchArray($que) ) {
@@ -28,7 +28,7 @@ class DBM extends \DLDB\Objects {
 		return $files;
 	}
 
-	private static function makeFileQuery($s_mode='',$s_arg='') {
+	private static function makeFileQuery($s_mode='',$s_args='') {
 		$que = '';
 		if($s_mode && $s_args) {
 			switch($s_mode) {
