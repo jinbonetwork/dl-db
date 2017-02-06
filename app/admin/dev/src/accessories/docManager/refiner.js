@@ -134,10 +134,10 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 					}
 					else if(value.fid) return value.fid;
 				default:
-					return undefined;
+					return '';
 			}
 		} else {
-			return undefined;
+			return '';
 		}
 	}, (fs, value) => (fData.fID[fs]));
 };

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {withRouter} from 'react-router';
 import View from '../accessories/docManager/View';
 import {Link} from 'react-router';
 import {_mapO, _mapAO} from '../accessories/functions';
@@ -15,7 +16,10 @@ class User extends Component {
 				if(!this.props.isDelBtnYesOrNo){
 					this.props.onChange('isDelBtnYesOrNo', true); break;
 				} else {
-					break;
+					let formData = new FormData(); formData.append('member', JSON.stringify({id: this.props.params.id}));
+					this.props.delete(this.props.params.id, formData, () => {
+						this.props.router.push('/admin/userlist');
+					});
 				}
 			case 'cancel deleting user':
 				this.props.onChange('isDelBtnYesOrNo', false); break;
@@ -30,6 +34,7 @@ class User extends Component {
 			something: (slug, value) => {}
 		},*/
 		checkHiddenBySlug: {
+			role: (slug, value) => this.getUser().uid <= 0, 
 			password: (slug, value) => true,
 			confirmPw: (slug, value) => true,
 		}
@@ -58,10 +63,6 @@ class User extends Component {
 					<tr>
 						<td className="user__table-margin"></td>
 						<td className="user__menu" colSpan="3">
-							{/*(!user.uid) &&
-							<button className="user__register-user">
-								<i className="pe-7s-id pe-va"></i><span>등록</span>
-							</button>*/}
 							<Link className="user__edit-user" to={'/admin/user/'+this.props.params.id+'/edit'}>
 								<i className="pe-7s-note pe-va"></i><span>수정</span>
 							</Link>
@@ -90,7 +91,10 @@ User.propTypes = {
 	openUsers: PropTypes.object.isRequired,
 	isDelBtnYesOrNo: PropTypes.bool,
 	fetchUser: PropTypes.func.isRequired,
-	onChange: PropTypes.func.isRequired
+	onChange: PropTypes.func.isRequired,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired
+	}).isRequired
 };
 
-export default User;
+export default withRouter(User);

@@ -9,6 +9,7 @@ export const HIDE_MESSAGE = 'hide message';
 export const SHOW_PROCESS = 'show process';
 export const HIDE_PROCESS = 'hide process';
 export const ADD_USER_TO_OPEN_USERS = 'add user to open users';
+export const DELETE_USERS = 'delete users';
 
 export const RECEIVE_USERLIST = 'receive userlist';
 export const CHANGE_PROPS_IN_USERLIST = 'change props in userlist';

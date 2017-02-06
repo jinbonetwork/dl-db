@@ -3,7 +3,8 @@ import {
 	ADD_USER_TO_OPEN_USERS, CHANGE_PROPS_IN_ADMIN, REQUEST_LOGIN, SUCCEED_LOGIN, SHOW_LOGIN,
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS, COMPLETE_USERFORM, SUBMIT_USERFORM,
 	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
-	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY
+	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
+	DELETE_USERS
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
@@ -59,6 +60,12 @@ const admin = (state = initialState, action) => {
 			} else {
 				return state;
 			}
+		case DELETE_USERS:
+			let userIds = (Array.isArray(action.userIds) ? action.userIds : [action.userIds]);
+			return update(state, {openUsers: {$apply: (opUsr) => {
+				userIds.forEach((id) => {opUsr[id] = undefined});
+				return opUsr;
+			}}});
 		case COMPLETE_USERFORM:
 			return update(state, {openUsers: {[action.user.id]: {$set: action.user}}});
 		case RECEIVE_USERLIST:

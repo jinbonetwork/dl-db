@@ -4,7 +4,7 @@ import {
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_PROPS_IN_USER, CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM,
 	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
-	SHOW_PASSWORD
+	SHOW_PASSWORD, DELETE_USERS
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -96,22 +96,34 @@ const adminActionCreators = {
 	addUserToOpenUsers(user){
 		return {type: ADD_USER_TO_OPEN_USERS, user};
 	},
-	fetchUser(id, callback){
-		return (dispatch) => {
-			dispatch({type: SHOW_PROCESS});
-			adminApi.fetchUser(id,
-				(user) => {
-					dispatch({type: HIDE_PROCESS});
-					dispatch({type: ADD_USER_TO_OPEN_USERS, user});
-					if(typeof callback === 'function') callback();
-				},
-				(error) => {
-					dispatch({type: HIDE_PROCESS});
-					dispatchError(dispatch, error);
-				}
-			);
-		};
-	},
+	fetchUser(id, callback){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.fetchUser(id,
+			(user) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: ADD_USER_TO_OPEN_USERS, user});
+				if(typeof callback === 'function') callback();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	deleteUsers(userIds, formData, callback){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.deleteUsers(formData,
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: DELETE_USERS, userIds});
+				callback();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 	changeUserProps(args){
 		return {type: CHANGE_USER_PROPS, args};
 	},
@@ -121,20 +133,21 @@ const adminActionCreators = {
 	blurUserForm(){
 		return {type: BLUR_USERFORM};
 	},
-	submitUserForm(user, userFormData){ return (dispatch) => {
+	submitUserForm(user, userFormData, callback){ return (dispatch) => {
 		dispatch({type: COMPLETE_USERFORM, user});
-		adminApi.submitUserForm(user.id, userFormData,
+		adminApi.submitUserForm(userFormData,
 			(user) => {
 				dispatch({type: SUBMIT_USERFORM, user});
+				if(typeof callback === 'function') callback();
 			},
 			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
 		);
 	}},
 	submitNewUserForm(user, userFormData, callback){ return (dispatch) => {
-		adminApi.submitUserForm(user.id, userFormData,
+		adminApi.submitNewUserForm(userFormData,
 			(user) => {
 				dispatch({type: SUBMIT_USERFORM, user});
-				callback(parseInt(user.id));
+				if(typeof callback === 'function') callback(parseInt(user.id));
 			},
 			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
 		);

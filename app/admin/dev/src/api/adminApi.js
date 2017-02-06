@@ -86,12 +86,14 @@ const adminApi = {
 	fetchUser(id, succeed, fail){
 		fetchData('get', '/api/admin/member?id='+id, ({member}) => succeed(member), fail);
 	},
-	submitUserForm(id, userFormData, succeed, fail){
-		if(id){
-			fetchData('post', '/api/admin/member/save?mode=modify&id='+id, userFormData, ({member}) => succeed(member), fail);
-		} else {
-			fetchData('post', '/api/admin/member/save?mode=add', userFormData, ({member}) => succeed(member), fail);
-		}
+	deleteUsers(formData, succeed, fail){
+		fetchData('post', '/api/admin/member/save?mode=delete', formData, succeed, fail);
+	},
+	submitUserForm(userFormData, succeed, fail){
+		fetchData('post', '/api/admin/member/save?mode=modify', userFormData, ({member}) => succeed(member), fail);
+	},
+	submitNewUserForm(userFormData, succeed, fail){
+		fetchData('post', '/api/admin/member/save?mode=add', userFormData, ({member}) => succeed(member), fail);
 	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/admin/agreement', ({agreement}) => succeed(agreement), fail);
@@ -100,11 +102,11 @@ const adminApi = {
 		fetchData('post', '/api/admin/agreement?mode=modify', formData, ({agreement}) => succeed(agreement), fail);
 	},
 	toggleParsed(fileId, status, succeed, fail){
-		fetchData('post', '/api/document/status?fid='+fileId+'&status='+status, null, (data) => succeed(), fail);
+		fetchData('post', '/api/document/status?fid='+fileId+'&status='+status, null, succeed, fail);
 	},
 	toggleAnonymity(fileId, status, succeed, fail){
 		let anonymity = (status ? 1 : 0);
-		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, (data) => succeed(), fail);
+		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, succeed, fail);
 	}
 };
 

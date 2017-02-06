@@ -56,7 +56,8 @@ const UserListContainer = connect(
 	(dispatch) => ({
 		fetchUserList: (params) => dispatch(adminActionCreators.fetchUserList(params)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUserList(which, value)),
-		addUserToOpenUsers: (user) => dispatch(adminActionCreators.addUserToOpenUsers(user))
+		addUserToOpenUsers: (user) => dispatch(adminActionCreators.addUserToOpenUsers(user)),
+		delete: (ids, formData, callback) => dispatch(adminActionCreators.deleteUsers(ids, formData, callback))
 	})
 )(UserList);
 
@@ -68,7 +69,8 @@ const UserContainer = connect(
 	}),
 	(dispatch) => ({
 		fetchUser: (id) => dispatch(adminActionCreators.fetchUser(id)),
-		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUser(which, value))
+		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUser(which, value)),
+		delete: (id, formData, callback) => dispatch(adminActionCreators.deleteUsers(id, formData, callback))
 	})
 )(User);
 
@@ -87,7 +89,7 @@ const UserFormContainer = connect(
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
-		submitForm: (user, formData) => dispatch(adminActionCreators.submitUserForm(user, formData)),
+		submitForm: (user, formData, callback) => dispatch(adminActionCreators.submitUserForm(user, formData, callback)),
 		submitNewForm: (user, formData, callback) => dispatch(adminActionCreators.submitNewUserForm(user, formData, callback)),
 		showPassword: (state) => dispatch(adminActionCreators.showPassword(state))
 	})

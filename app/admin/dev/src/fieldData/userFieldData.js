@@ -57,8 +57,9 @@ const custom = {
 const rearrangeUser = (user) => {
 	let newUser = {}
 	for(let pn in user){
-		if(pn != 'password' && pn != 'confirmPw') newUser[pn] = user[pn];
+		if(pn != 'role' && pn != 'password' && pn != 'confirmPw') newUser[pn] = user[pn];
 	}
+	newUser.role = user.role;
 	newUser.password = user.password;
 	newUser.confirmPw = user.confirmPw;
 	return newUser;

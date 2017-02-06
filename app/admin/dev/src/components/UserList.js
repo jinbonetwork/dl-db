@@ -11,7 +11,7 @@ class UserList extends Component {
 		this.props.fetchUserList(this.props.params);
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(JSON.stringify(prevProps.params) != JSON.stringify(this.props.params) || this.props.userList.length == 0){
+		if(JSON.stringify(prevProps.params) != JSON.stringify(this.props.params)){
 			this.props.fetchUserList(this.props.params);
 		}
 	}
@@ -42,7 +42,10 @@ class UserList extends Component {
 				if(!this.props.isDelBtnYesOrNo){
 					this.props.onChange('isDelBtnYesOrNo', true); break;
 				} else {
-					break;
+					let formData = new FormData(); formData.append('member', JSON.stringify({id: this.props.selected}));
+					this.props.delete(this.props.selected, formData, () => {
+						this.props.fetchUserList(this.props.params);
+					});
 				}
 			case 'cancel deleting user':
 				this.props.onChange('isDelBtnYesOrNo', false); break;

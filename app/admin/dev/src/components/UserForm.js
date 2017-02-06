@@ -5,7 +5,7 @@ import Item from '../accessories/Item';
 import CheckBox from '../accessories/CheckBox';
 import {makeUserFormData} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
-import {_mapO, _wrap} from '../accessories/functions';
+import {_mapO, _wrap, _forIn} from '../accessories/functions';
 
 class UserForm extends Component {
 	componentDidMount(){
@@ -21,7 +21,7 @@ class UserForm extends Component {
 		} else {
 			this.props.onChange({mode: 'merge', value: this.props.userFieldData.empty});
 		}
-		this.props.showPassword(false);
+		if(this.props.isPwShown) this.props.showPassword(false);
 	}
 	customize(){ return {
 		/*
@@ -50,6 +50,7 @@ class UserForm extends Component {
 			}
 		},
 		checkHiddenBySlug: {
+			role: (slug) => !this.props.isPwShown && this.props.user.uid <= 0,
 			password: (slug) => !this.props.isPwShown,
 			confirmPw: (slug) => !this.props.isPwShown
 		},
@@ -72,12 +73,19 @@ class UserForm extends Component {
 		if(error){
 			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
 		} else {
+			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 저장 결과를 반영해서는 안된다.
 			let formData = makeUserFormData(this.props.user, this.props.userFieldData);
 			if(this.props.user.id > 0){
 				this.props.submitForm(this.props.user, formData);
 			} else {
 				this.props.submitNewForm(this.props.user, formData,
-					(userId) => this.props.onChange({mode: 'set', fSlug: 'id', value: userId})
+					(userId) => {
+						let meta = {};
+						_forIn(this.props.openUsers[userId], (fs, value) => {
+							if(this.props.userFieldData.fProps[fs].type == 'meta'){meta[fs] = value; console.log(value);}
+						});
+						this.props.onChange({mode: 'merge', value: meta});
+					}
 				);
 			}
 		}
