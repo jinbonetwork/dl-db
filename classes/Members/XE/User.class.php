@@ -96,7 +96,7 @@ class User extends \DLDB\Objects {
 			'N',
 			'N',
 			$regdate,
-			($args['admin'] ? 1 : 0),
+			($args['admin'] ? 'Y' : 'N'),
 			(0 - $member_srl)
 		));
 

@@ -38,6 +38,12 @@ class DBM extends \DLDB\Objects {
 				case 'filename':
 					$que .= "f.filename LIKE '%".$s_args."%' AND ";
 					break;
+				case 'status':
+					$que .= "f.status = '".$s_args."' AND ";
+					break;
+				case 'anonymity':
+					$que .= "f.anonymity = '".$s_args."' AND ";
+					break;
 				default:
 					break;
 			}
@@ -57,6 +63,7 @@ class DBM extends \DLDB\Objects {
 				$file[$k] = stripslashes($v);
 			}
 		}
+		$file['fileuri'] = \DLDB\Files::getFileUrl($file);
 		return $file;
 	}
 }
