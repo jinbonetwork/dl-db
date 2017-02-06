@@ -36,7 +36,7 @@ class save extends \DLDB\Controller {
 				$this->params['member']['id'] = $ret;
 				break;
 			case 'modify':
-				$ret = \DLDB\Members::modify($member,$this->params['member']);
+				$ret = \DLDB\Members\DBM::modify($member,$this->params['member']);
 				if($ret < 0) {
 					\DLDB\RespondJson::ResultPage( array( -4, \DLDB\Members::getErrorMsg() ) );
 				}

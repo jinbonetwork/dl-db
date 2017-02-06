@@ -113,9 +113,16 @@ class DBM extends \DLDB\Objects {
 		}
 
 		if($args['password']) {
-			$uid = self::makeID($rows);
-			$que = "UPDATE {members} SET uid = ? WHERE id = ?";
-			$dbm->execute($que,array("dd",$uid,$insert_id));
+			$uid = self::makeID($args);
+			if($uid > 0) {
+				$que = "UPDATE {members} SET uid = ? WHERE id = ?";
+				$dbm->execute($que,array("dd",$uid,$insert_id));
+				if($args['role']) {
+					self::updateRole($uid,$args['role']);
+				}
+			} else {
+				return -1;
+			}
 		}
 
 		return $insert_id;
@@ -126,15 +133,51 @@ class DBM extends \DLDB\Objects {
 
 		$fields = self::getFields();
 
-		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ? WHERE id = ?";
-		$dbm->execute($que,array("ssssd",$args['name'],$args['class'],$args['email'],$args['phone'],$member['id']));
+		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ?, `custom` = ?";
+		$array1 = 'array("sssss';
+		$array2 = ($args['name'] ? '$'."args['name']" : "''").", ";
+		$array2 .= ($args['class'] ? '$'."args['class']" : "''").", ";
+		$array2 .= ($args['email'] ? '$'."args['email']" : "''").", ";
+		$array2 .= ($args['phone'] ? '$'."args['phone']" : "''").", ";
+		$array2 .= "serialize(".'$'."custom)";
+
+		$fieldquery = \DLDB\FieldsQuery::instance();
+		$fieldquery->setFields(self::$fields);
+		$fieldquery->setTaxonomy(self::$taxonomy);
+		$fieldquery->setTaxonomyTerms(self::$taxonomy_terms);
+		$result = $fieldquery->modifyQue($que,$array1,$array2,$member,$args);
+		@extract($result);
+
+		$que .= " WHERE `id` = ?";
+		$array1 .= 'd",';
+		$array2 .= ", ".'$'."args['id'])";
+
+		$eval_str = '$'."q_args = ".$array1.$array2.";";
+		eval($eval_str);
+
+		$dbm->execute($que,$q_args);
+
+		if( is_array($taxonomy_map) ) {
+			if( $fieldquery->reBuildTaxonomy('members', $args['id'], $taxonomy_map) < 0 ) {
+				self::setErrorMsg( $fieldquery->getErrorMsg() );
+				return -1;
+			}
+		}
 
 		if($member['uid']) {
-			self::modifyID($member,$args);
+			\DLDB\Members\DBM::modifyID($member,$args);
+			if($args['role']) {
+				self::updateRole($member['uid'],$args['role']);
+			}
 		} else if(!$member['uid'] && $args['password']) {
-			$uid = self::makeID($args);
-			$que = "UPDATE {members} SET uid = ? WHERE id = ?";
-			$dbm->execute($que,array("dd",$uid,$member['id']));
+			$uid = \DLDB\Members\DBM::makeID($args);
+			if($uid > 0) {
+				$que = "UPDATE {members} SET uid = ? WHERE id = ?";
+				$dbm->execute($que,array("dd",$uid,$args['id']));
+				self::updateRole($uid,$args['role']);
+			} else {
+				return -1;
+			}
 		}
 
 		return 0;
@@ -179,6 +222,9 @@ class DBM extends \DLDB\Objects {
 			case 'xe':
 			default:
 				$uid = \DLDB\Members\XE\User::add($rows);
+				if($uid < 0) {
+					self::setErrorMsg(\DLDB\Members\XE\User::errorMsg());
+				}
 				break;
 		}
 
@@ -224,6 +270,18 @@ class DBM extends \DLDB\Objects {
 		return $role;
 	}
 
+	private static function existsRole($uid) {
+		$exists = 0;
+		if($uid) {
+			$dbm = \DLDB\DBM::instance();
+			
+			$que = "SELECT * FROM {user_roles} WHERE uid = ".$uid;
+			$row = $dbm->getFetchArray($que);
+			if($row['uid']) $exists = 1;
+		}
+		return $exists;
+	}
+
 	public static function updateRole($uid,$roles) {
 		if(!$uid) return 0;
 		if($roles && !is_array($roles)) {
@@ -232,12 +290,12 @@ class DBM extends \DLDB\Objects {
 
 		$dbm = \DLDB\DBM::instance();
 
-		$role = self::getRole($uid);
-		if($role) {
-			$que = "UPDATE {user_roles) SET `role` = ? WHERE `uid` = ?";
+		$role_exists = self::existsRole($uid);
+		if($role_exists) {
+			$que = "UPDATE {user_roles} SET `role` = ? WHERE `uid` = ?";
 			$dbm->execute($que,array("sd",serialize($roles),$uid));
 		} else {
-			$que = "INSERT INTO {user_roles) (`uid`,`role`) VALUES (?,?)";
+			$que = "INSERT INTO {user_roles} (`uid`,`role`) VALUES (?,?)";
 			$dbm->execute($que,array("ds",$uid,serialize($roles)));
 		}
 		return 0;
