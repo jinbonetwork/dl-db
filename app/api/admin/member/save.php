@@ -21,9 +21,22 @@ class save extends \DLDB\Controller {
 			if(!$member && !$members) {
 				\DLDB\RespondJson::ResultPage( array( -2, '존재하지 않는 회원입니다.') );
 			}
-			if($this->params['mode'] != 'delete') {
-				if(!$this->params['member']['name']) {
-					\DLDB\RespondJson::ResultPage( array( -3, '이름을 입력하세요.') );
+		}
+		if($this->params['mode'] != 'delete') {
+			if(!$this->params['member']['name']) {
+				\DLDB\RespondJson::ResultPage( array( -3, '이름을 입력하세요.') );
+			}
+			if($this->params['password']) {
+				if($this->params['password'] != $this->params['password_confirm']) {
+					\DLDB\RespondJson::ResultPage( array( -6, '비밀번호가 일치하지 않습니다.') );
+				}
+				if(!$this->params['email']) {
+					\DLDB\RespondJson::ResultPage( array( -4, '이메일을 입력하셔야 합니다. 로그하기 위해 필요합니다.') );
+				}
+				if(!$this->params['role']
+				|| !is_array($this->params['role'])
+				|| @count($this->params['role']) < 1) {
+					\DLDB\RespondJson::ResultPage( array( -5, '권한을 선택하세요.') );
 				}
 			}
 		}
