@@ -98,11 +98,8 @@ const adminApi = {
 	deleteUsers(formData, succeed, fail){
 		fetchData('post', '/api/admin/member/save?mode=delete', formData, succeed, fail);
 	},
-	submitUserForm(userFormData, succeed, fail){
-		fetchData('post', '/api/admin/member/save?mode=modify', userFormData, ({member}) => succeed(member), fail);
-	},
-	submitNewUserForm(userFormData, succeed, fail){
-		fetchData('post', '/api/admin/member/save?mode=add', userFormData, ({member}) => succeed(member), fail);
+	submitUserForm(mode, userFormData, succeed, fail){
+		fetchData('post', '/api/admin/member/save?mode='+mode, userFormData, ({member}) => succeed(member), fail);
 	},
 	fetchAgreement(succeed, fail){
 		fetchData('get', '/api/admin/agreement', ({agreement}) => succeed(agreement), fail);

@@ -135,19 +135,10 @@ const adminActionCreators = {
 	},
 	submitUserForm(user, userFormData, callback){ return (dispatch) => {
 		dispatch({type: COMPLETE_USERFORM, user});
-		adminApi.submitUserForm(userFormData,
+		adminApi.submitUserForm((user.id > 0 ? 'modify' : 'add'), userFormData,
 			(user) => {
 				dispatch({type: SUBMIT_USERFORM, user});
-				if(typeof callback === 'function') callback();
-			},
-			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
-		);
-	}},
-	submitNewUserForm(user, userFormData, callback){ return (dispatch) => {
-		adminApi.submitNewUserForm(userFormData,
-			(user) => {
-				dispatch({type: SUBMIT_USERFORM, user});
-				if(typeof callback === 'function') callback(parseInt(user.id));
+				if(typeof callback === 'function') callback(user.id);
 			},
 			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
 		);
