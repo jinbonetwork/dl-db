@@ -22,11 +22,15 @@ class UserList extends Component {
 		}
 		else if(which == 'fieldSearching'){
 			let value = arg1st;
+			if(value == 'default'){
+				if(this.props.keywordSearching) this.props.onChange('keywordSearching', '');
+				this.props.router.push('/admin/userlist');
+			}
 			this.props.onChange('fieldSearching', value);
 		}
 		else if(which == 'keywordSearching'){
 			let value = arg1st.target.value;
-			this.props.onChange('keywordSearching', value);
+			if(this.props.fieldSearching != 'default') this.props.onChange('keywordSearching', value);
 		}
 	}
 	handleClick(which, arg1st){

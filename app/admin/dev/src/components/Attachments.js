@@ -24,8 +24,13 @@ class Attachments extends Component {
 		}
 		else if(which == 'fieldSearching'){
 			let value = arg1st;
-			if(value == 'default' && keyword) this.props.onChange('keywordSearching', '');
-			else if((value == 'filename' || value == 'subject') && (field == 'status' || field == 'anonymity')) this.props.onChange('keywordSearching', '');
+			if(value == 'default'){
+				if(keyword) this.props.onChange('keywordSearching', '');
+				this.props.router.push('/admin/attachments');
+			}
+			else if((value == 'filename' || value == 'subject') && (field == 'status' || field == 'anonymity')){
+				this.props.onChange('keywordSearching', '');
+			}
 			else if(value == 'parsed') this.props.onChange('keywordSearching', '');
 			else if(value == 'anonymity') this.props.onChange('keywordSearching', '');
 			this.props.onChange('fieldSearching', value);
