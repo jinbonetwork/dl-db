@@ -3,6 +3,7 @@ import {withRouter} from 'react-router';
 import Form from '../accessories/docManager/Form';
 import Item from '../accessories/Item';
 import CheckBox from '../accessories/CheckBox';
+import Check from '../accessories/Check';
 import {makeUserFormData} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
 import {_mapO, _wrap, _forIn} from '../accessories/functions';
@@ -65,8 +66,9 @@ class UserForm extends Component {
 	}}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'show password'){
-			this.props.showPassword(!this.props.isPwShown);
-			if(this.props.isPwShown) this.props.onChange({mode: 'merge', value: {password: '', confirmPw: ''}});
+			let isPwShown = (arg1st.length > 0);
+			this.props.showPassword(isPwShown);
+			if(!isPwShown) this.props.onChange({mode: 'merge', value: {password: '', confirmPw: ''}});
 		}
 	}
 	handleSubmit(error){
@@ -82,7 +84,7 @@ class UserForm extends Component {
 					(userId) => {
 						let meta = {};
 						_forIn(this.props.openUsers[userId], (fs, value) => {
-							if(this.props.userFieldData.fProps[fs].type == 'meta'){meta[fs] = value; console.log(value);}
+							if(this.props.userFieldData.fProps[fs].type == 'meta') meta[fs] = value;
 						});
 						this.props.onChange({mode: 'merge', value: meta});
 					}
@@ -99,8 +101,13 @@ class UserForm extends Component {
 		);
 		let rowsBefore = (
 			<tr className="form__show-password"><td colSpan="2">
-				<CheckBox check={this.props.isPwShown} onChange={this.handleChange.bind(this, 'show password')} />
-				<span>{(this.props.user.uid > 0 ? '비밀번호 변경' : '이용자로 등록')}</span>
+				{/*<CheckBox check={this.props.isPwShown} onChange={this.handleChange.bind(this, 'show password')} />
+				<span>{(this.props.user.uid > 0 ? '비밀번호 변경' : '이용자로 등록')}</span>*/}
+				<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
+					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
+				>
+					<Item value="checked">{(this.props.user.uid > 0 ? '비밀번호 변경' : '이용자로 등록')}</Item>
+				</Check>
 			</td></tr>
 		);
 		return (

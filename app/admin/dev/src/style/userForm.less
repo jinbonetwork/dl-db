@@ -1,6 +1,7 @@
 /*--- index --------------------------------------------
 .user-form
 .user-form .form
+.user-form .form__show-password .check
 .user-form .select
 --------------------------------------------------------*/
 
@@ -24,12 +25,6 @@
 	}
 	.user-form__table-margin {
 		width: 1em;
-	}
-	.form__show-password td {
-		height: 3em;
-	}
-	.form__show-password .checkbox + span {
-		margin-left: 0.5em;
 	}
 	.form__required td:first-child {
 		position: relative;
@@ -115,6 +110,24 @@
 	}
 	.form__saving-icon i {
 		font-size: 1.5em;
+	}
+}
+.user-form .form__show-password .check {
+	line-height: 3.5em;
+	.item {
+		line-height: 2.5em;
+		color: @minor-color-2;
+		background-color: @main-color;
+		padding: 0 1em 0 0.3em;
+	}
+	.item:focus {
+		border: 0;
+	}
+	.item__checkicon {
+		color: @minor-color-2;
+	}
+	.item__uncheckicon {
+		color: lighten(@main-color, 8%);
 	}
 }
 .user-form .select {
