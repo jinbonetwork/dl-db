@@ -84,7 +84,7 @@ class User extends \DLDB\Objects {
 			`list_order`
 		) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		$dbm->execute($que, array("dsssssssssssd",
+		if($dbm->execute($que, array("dsssssssssssd",
 			$member_srl,
 			$user_id[0],
 			$args['email'],
@@ -98,7 +98,10 @@ class User extends \DLDB\Objects {
 			$regdate,
 			($args['admin'] ? 'Y' : 'N'),
 			(0 - $member_srl)
-		));
+		)) < 1 ) {
+			self::$errmsg = $que." 가 DB에 반영되지 않았습니다.";
+			return -1;
+		}
 
 		$que = "SELECT * FROM `".$prefix."member_group` ORDER BY site_srl ASC";
 		while($row = $dbm->getFetchArray($que)) {

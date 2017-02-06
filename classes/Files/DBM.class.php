@@ -30,7 +30,7 @@ class DBM extends \DLDB\Objects {
 
 	private static function makeFileQuery($s_mode='',$s_args='') {
 		$que = '';
-		if($s_mode && $s_args) {
+		if(isset($s_mode) && isset($s_args)) {
 			switch($s_mode) {
 				case 'subject':
 					$que .= "d.subject LIKE '%".$s_args."%' AND ";
