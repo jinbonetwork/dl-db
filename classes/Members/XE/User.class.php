@@ -88,6 +88,7 @@ class User extends \DLDB\Objects {
 			$member_srl,
 			$user_id[0],
 			$args['email'],
+			$password,
 			$user_id[0],
 			$user_id[1],
 			$args['name'],
@@ -235,7 +236,7 @@ class User extends \DLDB\Objects {
 		return true;
 	}
 
-	private function getWorkFactor() {
+	private static function getWorkFactor() {
 		$config = self::getXeMemberConfig();
 		$work_factor = $config->password_hashing_work_factor;
 		if(!$work_factor || $work_factor < 4 || $work_factor > 31) {
@@ -244,7 +245,7 @@ class User extends \DLDB\Objects {
 		return $work_factor;
 	}
 
-	private function createSecureSalt($length, $format = 'hex') {
+	private static function createSecureSalt($length, $format = 'hex') {
 		// Find out how many bytes of entropy we really need
 		switch($format) {   
 			case 'hex':
