@@ -11,14 +11,14 @@ class save extends \DLDB\Controller {
 				\DLDB\RespondJson::ResultPage( array( -2, '회원번호를 입력하세요') );
 			}
 			if( is_array($this->params['member']['id']) ) {
-				$members = \DLDB\Members\DMB::getMembers($this->params['member']['id']);
+				$members = \DLDB\Members\DBM::getMembers($this->params['member']['id']);
 				if(!$members || count($members) < 1) {
 					\DLDB\RespondJson::ResultPage( array( -2, '삭제할 아이디를 검색할 수 없습니다.') );
 				}
 			} else {
 				$member = \DLDB\Members::get($this->params['member']['id']);
 			}
-			if(!$member) {
+			if(!$member && !$members) {
 				\DLDB\RespondJson::ResultPage( array( -2, '존재하지 않는 회원입니다.') );
 			}
 			if($this->params['mode'] != 'delete') {
