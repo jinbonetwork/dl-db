@@ -180,9 +180,9 @@ const adminActionCreators = {
 			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);}
 		);
 	}},
-	fetchAttachments(page){ return (dispatch) => {
+	fetchAttachments(params){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
-		adminApi.fetchAttachments(page,
+		adminApi.fetchAttachments(params,
 			(original, lastPage) => {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: RECEIVE_ATTACHMENTS, original, lastPage})

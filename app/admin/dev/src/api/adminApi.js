@@ -78,9 +78,18 @@ const adminApi = {
 			(data) => succeed(data.members, parseInt(data.result.total_page)), fail
 		);
 	},
-	fetchAttachments(page, succeed, fail){
-		fetchData('get', '/api/document?page='+(page ? page : 1),
-			(data) => succeed(data.documents, parseInt(data.result.total_page)), fail
+	fetchAttachments(params, succeed, fail){
+		const {param1, param2, param3, param4} = params;
+		let options = 'page=1';
+		if(param1 == 'page'){
+			options = 'page='+param2;
+		}
+		else if(param1 && param2){
+			options = 's_mode='+param1+'&s_args='+param2+'&page=';
+			if(param3 == 'page' && param4 > 0) options += param4; else options += '1';
+		}
+		fetchData('get', '/api/admin/files?'+options,
+			(data) => succeed(data.files, parseInt(data.files.total_page)), fail
 		);
 	},
 	fetchUser(id, succeed, fail){

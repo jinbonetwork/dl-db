@@ -125,9 +125,9 @@ class UserList extends Component {
 					);
 				}
 				else if(pn == 'name'){
-					return <td key={pn}><a onClick={this.handleClick.bind(this, 'view', item.id)}>{pv}</a></td>
+					return <td key={pn} className={'userlist__slug-'+pn}><a onClick={this.handleClick.bind(this, 'view', item.id)}>{pv}</a></td>
 				} else {
-					return <td key={pn}>{pv}</td>
+					return <td key={pn} className={'userlist__slug-'+pn}>{pv}</td>
 				}
 			});
 			return (

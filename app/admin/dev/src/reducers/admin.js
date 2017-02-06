@@ -8,6 +8,7 @@ import {
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
+import {refineFileList} from '../fieldData/fileFieldData.js';
 import RichTextEditor from 'react-rte';
 import update from 'react-addons-update';
 import {_findProp} from '../accessories/functions';
@@ -20,6 +21,7 @@ const initialState = {
 	openUsers: {},
 	userList: [],
 	attachments: [],
+	openFileTexts: [],
 	openAgreement: null,
 	message: {content: '', callback: null},
 	showProc: false,
@@ -71,7 +73,7 @@ const admin = (state = initialState, action) => {
 		case RECEIVE_USERLIST:
 			return update(state, {userList: {$set: refineUserList(action.originalUsers, state.userFieldData)}});
 		case RECEIVE_ATTACHMENTS:
-			return update(state, {attachments: {$set: refineDocList(action.original, state.docFieldData)}});
+			return update(state, {attachments: {$set: refineFileList(action.original)}});
 		case REQUEST_TOGGLING_PARSED:
 			return update(state, {attachments: {
 				[action.idxOfList]: {files: {[action.idxOfFiles]: {status: {$set: 'ing'}}}}

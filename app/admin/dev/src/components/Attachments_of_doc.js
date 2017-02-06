@@ -7,11 +7,11 @@ import {_mapO, _pushpull} from '../accessories/functions';
 
 class Attachments extends Component {
 	componentDidMount(){
-		this.props.fetchAttachments(this.props.params);
+		this.props.fetchAttachments(this.props.params.page);
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(JSON.stringify(prevProps.params) != JSON.stringify(this.props.params)){
-			this.props.fetchAttachments(this.props.params);
+		if(prevProps.params.page != this.props.params.page){
+			this.props.fetchUserList(this.props.params.page);
 		}
 	}
 	handleChange(which, arg1st, arg2nd){
@@ -44,11 +44,6 @@ class Attachments extends Component {
 		}
 	}
 	render(){
-
-		console.log(this.props.attachments);
-		return null;
-
-
 		const deleteButton = (!this.props.isDelBtnYesOrNo ?
 			<a className="attachments__delete-docs" onClick={this.handleClick.bind(this, 'delete docs')}>
 				<i className="pe-7s-close pe-va"></i><span>삭제</span>
