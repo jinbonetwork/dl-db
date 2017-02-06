@@ -4,7 +4,7 @@ import {
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS, COMPLETE_USERFORM, SUBMIT_USERFORM,
 	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
-	DELETE_USERS
+	DELETE_USERS, RECEIVE_FILETEXT
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
@@ -21,7 +21,7 @@ const initialState = {
 	openUsers: {},
 	userList: [],
 	attachments: [],
-	openFileTexts: [],
+	openFileTexts: {},
 	openAgreement: null,
 	message: {content: '', callback: null},
 	showProc: false,
@@ -82,6 +82,8 @@ const admin = (state = initialState, action) => {
 			return update(state, {attachments: {[action.idxOfFiles]: {anonymity: {$set: undefined}}}});
 		case TOGGLE_ANONYMITY:
 			return update(state, {attachments: {[action.idxOfFiles]: {anonymity: {$set: action.status}}}});
+		case RECEIVE_FILETEXT:
+			return update(state, {openFileTexts: {[action.fileId]: {$set: action.fileText}}});
 		case RECEIVE_AGREEMENT:
 			let agreement = (action.agreement ?
 				RichTextEditor.createValueFromString(action.agreement, 'html') :

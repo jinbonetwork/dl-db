@@ -38,17 +38,20 @@ class UserForm extends Component {
 		checkValidByType: {
 			something: (slug, value) => {}
 		},
-		checkValidOnSubmitBySlug: {
-			email: (slug, value) => {}
+		checkValidOnSubmitByType: {
+			something: (slug, value) => {}
 		},
 		renderFormByType: {
 			something: (slug, index, value, formElem) => {}
 		},
 		*/
-		checkValidOnSubmitByType: {
-			password: (slug, value) => {
-				if(value === this.props.user.confirmPw) return true; else return false;
+		checkValidOnSubmitBySlug: {
+			confirmPw: (slug, value) => {
+				if(value == this.props.user.password) return true; else return false;
 			}
+		},
+		errorMessageBySlug: {
+			confirmPw: '비밀번호를 다시 확인하세요'
 		},
 		checkHiddenBySlug: {
 			role: (slug) => !this.props.isPwShown && this.props.user.uid <= 0,
@@ -97,8 +100,6 @@ class UserForm extends Component {
 		);
 		let rowsBefore = (
 			<tr className="form__show-password"><td colSpan="2">
-				{/*<CheckBox check={this.props.isPwShown} onChange={this.handleChange.bind(this, 'show password')} />
-				<span>{(this.props.user.uid > 0 ? '비밀번호 변경' : '이용자로 등록')}</span>*/}
 				<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
 					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
 				>

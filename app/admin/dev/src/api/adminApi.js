@@ -113,6 +113,9 @@ const adminApi = {
 	toggleAnonymity(fileId, status, succeed, fail){
 		let anonymity = (status ? 1 : 0);
 		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, succeed, fail);
+	},
+	fetchFileText(docId, fileId, succeed, fail){
+		fetchData('get', '/api/document/text?id='+docId+'&fid='+fileId, ({header, text}) => succeed({header, text}), fail);
 	}
 };
 

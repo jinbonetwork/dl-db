@@ -2,9 +2,7 @@ import {
 	SET_USER_OF_USERFORM, CHANGE_USER_PROPS, BLUR_USERFORM,SET_FOCUS_IN_USERFORM, COMPLETE_USERFORM,
 	SUBMIT_USERFORM, SHOW_PASSWORD
 } from '../constants';
-import {initUsrFData} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
-import {_wrap} from '../accessories/functions';
 
 const initialState = {
 	user: {},

@@ -11,6 +11,7 @@ import User from './components/User';
 import UserForm from './components/UserForm';
 import Attachments from './components/Attachments';
 import Agreement from './components/Agreement';
+import FileText from './components/FileText';
 import NotFound from './components/NotFound';
 import './style/admin.less';
 import './style/login.less';
@@ -54,7 +55,7 @@ const UserListContainer = connect(
 		keywordSearching: state.userList.keywordSearching
 	}),
 	(dispatch) => ({
-		fetchUserList: (params) => dispatch(adminActionCreators.fetchUserList(params)),
+		fetchUserList: (params, options) => dispatch(adminActionCreators.fetchUserList(params, options)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInUserList(which, value)),
 		addUserToOpenUsers: (user) => dispatch(adminActionCreators.addUserToOpenUsers(user)),
 		delete: (ids, formData, callback) => dispatch(adminActionCreators.deleteUsers(ids, formData, callback))
@@ -105,9 +106,23 @@ const AttachmentsContainer = connect(
 		fetchAttachments: (page) => dispatch(adminActionCreators.fetchAttachments(page)),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value)),
 		toggleParsed: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleParsed(idxOfFiles, fileId, status)),
-		toggleAnonymity: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfFiles, fileId, status))
+		toggleAnonymity: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfFiles, fileId, status)),
+		addTextToOpenFileTexts: (fileText) => dispatch(adminActionCreators.addTextToOpenFileTexts(fileText))
 	})
 )(Attachments);
+
+const FileTextContainer = connect(
+	(state) => ({
+		openFileTexts: state.admin.openFileTexts,
+		fileText: state.fileText.fileText,
+		isSaving: state.fileText.isSaving
+	}),
+	(dispatch) => ({
+		fetchFileText: (docId, fileId, callback) => dispatch(adminActionCreators.fetchFileText(docId, fileId, callback)),
+		onChange: (fileText) => dispatch(adminActionCreators.changeFileText(fileText))
+
+	})
+)(FileText);
 
 const AgreementContainer = connect(
 	(state) => ({
@@ -132,6 +147,7 @@ render(
 				<Route path="user/:id" component={UserContainer} />
 				<Route path="user/:id/edit" component={UserFormContainer} />
 				<Route path="attachments(/:param1/:param2)(/:param3/:param4)" component={AttachmentsContainer} />
+				<Route path="filetext/:docId/:fileId" component={FileTextContainer} />
 				<Route path="agreement" component={AgreementContainer} />
 				<Route path="*" component={NotFound} />
 			</Route>

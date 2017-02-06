@@ -28,9 +28,13 @@ class Form extends Component {
 					(this.props.checkValidOnSubmitBySlug[fs] && !this.props.checkValidOnSubmitBySlug[fs](fs, arrVal[idx])) ||
 					(this.props.checkValidOnSubmitByType[fProp.type] && !this.props.checkValidOnSubmitByType[fProp.type](fs, arrVal[idx]))
 				)){
+					let message = (this.props.errorMessageBySlug[fs] ?
+						this.props.errorMessageBySlug[fs] :
+						fProp.dispName+'의 형식이 적합하지 않습니다.'
+					);
 					return {
 						fSlug: fs, index: (fProp.multiple ? idx : undefined),
-						message: fProp.dispName+'의 형식이 적합하지 않습니다.'
+						message: message
 					};
 				}
 			}
@@ -180,13 +184,13 @@ Form.propTypes = {
 	}).isRequired,
 	submitLabel: PropTypes.string,
 	isSaving: PropTypes.bool,
-	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
-	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
-	rowsBeforeSlug: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])),
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
 	// For customization ////
+	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	rowsBeforeSlug: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])),
 	addButtonIcon: PropTypes.element,
 	deleteButtonIcon: PropTypes.element,
 	savingStateIcon: PropTypes.element,
@@ -199,6 +203,7 @@ Form.propTypes = {
 	checkHiddenBySlug: PropTypes.objectOf(PropTypes.func),
 	renderFormBySlug: PropTypes.objectOf(PropTypes.func),
 	renderFormByType: PropTypes.objectOf(PropTypes.func),
+	errorMessageBySlug: PropTypes.objectOf(PropTypes.string)
 };
 Form.defaultProps = {
 	addButtonIcon: <i className="pe-7s-plus pe-va"></i>,
@@ -213,6 +218,7 @@ Form.defaultProps = {
 	checkHiddenBySlug: {},
 	renderFormBySlug: {},
 	renderFormByType: {},
+	errorMessageBySlug: {}
 };
 
 export default Form;

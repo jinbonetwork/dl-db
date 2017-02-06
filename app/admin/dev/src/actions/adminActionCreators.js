@@ -4,7 +4,7 @@ import {
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_PROPS_IN_USER, CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM,
 	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
-	SHOW_PASSWORD, DELETE_USERS
+	SHOW_PASSWORD, DELETE_USERS, RECEIVE_FILETEXT, CHANGE_FILETEXT
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -74,15 +74,15 @@ const adminActionCreators = {
 	hideMessage(){
 		return {type: HIDE_MESSAGE}
 	},
-	fetchUserList(params){ return (dispatch) => {
-		dispatch({type: SHOW_PROCESS});
+	fetchUserList(params, options){ return (dispatch) => {
+		if(!options || !options.noSpinner) dispatch({type: SHOW_PROCESS});
 		adminApi.fetchUserList(params,
 			(originalUsers, lastPage) => {
-				dispatch({type: HIDE_PROCESS});
+				if(!options || !options.noSpinner) dispatch({type: HIDE_PROCESS});
 				dispatch({type: RECEIVE_USERLIST, originalUsers, lastPage})
 			},
 			(error) => {
-				dispatch({type: HIDE_PROCESS});
+				if(!options || !options.noSpinner) dispatch({type: HIDE_PROCESS});
 				dispatchError(dispatch, error);
 			}
 		);
@@ -111,15 +111,15 @@ const adminActionCreators = {
 		);
 	}},
 	deleteUsers(userIds, formData, callback){ return (dispatch) => {
-		dispatch({type: SHOW_PROCESS});
+		if(!Array.isArray(userIds)) dispatch({type: SHOW_PROCESS});
 		adminApi.deleteUsers(formData,
 			() => {
-				dispatch({type: HIDE_PROCESS});
+				if(!Array.isArray(userIds)) dispatch({type: HIDE_PROCESS});
 				dispatch({type: DELETE_USERS, userIds});
 				callback();
 			},
 			(error) => {
-				dispatch({type: HIDE_PROCESS});
+				if(!Array.isArray(userIds)) dispatch({type: HIDE_PROCESS});
 				dispatchError(dispatch, error);
 			}
 		);
@@ -206,7 +206,24 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	}}
+	}},
+	fetchFileText(docId, fileId, callback){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.fetchFileText(docId, fileId,
+			(fileText) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_FILETEXT, fileId, fileText});
+				if(typeof callback === 'function') callback();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	changeFileText(fileText){
+		return {type: CHANGE_FILETEXT, fileText};
+	}
 }
 
 export default adminActionCreators;

@@ -48,7 +48,7 @@ class UserList extends Component {
 				} else {
 					let formData = new FormData(); formData.append('member', JSON.stringify({id: this.props.selected}));
 					this.props.delete(this.props.selected, formData, () => {
-						this.props.fetchUserList(this.props.params);
+						this.props.fetchUserList(this.props.params, {noSpinner: true});
 					});
 				}
 			case 'cancel deleting user':

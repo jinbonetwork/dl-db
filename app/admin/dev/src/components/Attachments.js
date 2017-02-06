@@ -61,7 +61,8 @@ class Attachments extends Component {
 			case 'toggle anonymity':
 				this.props.toggleAnonymity(arg1st); break;
 			case 'edit text':
-				//this.props.onChange('fileTextToEdit', arg1st);
+				const {docId, fileId} = arg1st;
+				this.props.router.push('/admin/filetext/'+docId+'/'+fileId); break;
 			default:
 		}
 	}
@@ -72,23 +73,6 @@ class Attachments extends Component {
 		}
 	}
 	render(){
-		/*
-		const listMenu = (
-			<tr className="attachments__menu">
-				<td className="table-margin"></td>
-				<td colSpan="6">
-					<div className="attachments__sort">
-						<Check type="radio" selected={this.props.sortedBy} onChange={this.handleChange.bind(this, 'sorted by')}>
-							<Item value="time">최신순</Item>
-							<Item value="parsing">텍스트화 미완료</Item>
-							<Item value="anonymity">익명화 미완료</Item>
-						</Check>
-					</div>
-				</td>
-				<td className="table-margin"></td>
-			</tr>
-		);
-		*/
 		const listMenu = (
 			<tr className="attachments__menu">
 				<td className="table-margin"></td>
@@ -142,8 +126,7 @@ class Attachments extends Component {
 				<td className="table-padding"></td>
 				<td className="attachments__filename"><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
 				<td className="attachments__edit-text">
-					{/*<a onClick={this.handleClick.bind(this, 'edit text', {docId: item.docId, fileId: file.fileId})}>TEXT</a>*/}
-					<a>TEXT</a>
+					<a onClick={this.handleClick.bind(this, 'edit text', {docId: file.docId, fileId: file.fileId})}>TEXT</a>
 				</td>
 				<td className="attachments__toggle">
 					{file.status === 'uploaded' && [
