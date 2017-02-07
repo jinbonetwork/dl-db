@@ -4,11 +4,12 @@ import {
 	SHOW_MESSAGE, HIDE_MESSAGE, SHOW_PROCESS, HIDE_PROCESS, COMPLETE_USERFORM, SUBMIT_USERFORM,
 	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
-	DELETE_USERS, RECEIVE_FILETEXT
+	DELETE_USERS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
+	TOGGLE_PARSED_OF_FILE
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
-import {refineFileList} from '../fieldData/fileFieldData.js';
+import {refineFileList, refineFile} from '../fieldData/fileFieldData.js';
 import RichTextEditor from 'react-rte';
 import update from 'react-addons-update';
 import {_findProp} from '../accessories/functions';
@@ -83,7 +84,18 @@ const admin = (state = initialState, action) => {
 		case TOGGLE_ANONYMITY:
 			return update(state, {attachments: {[action.idxOfFiles]: {anonymity: {$set: action.status}}}});
 		case RECEIVE_FILETEXT:
-			return update(state, {openFileTexts: {[action.fileId]: {$set: action.fileText}}});
+			let dataToSaveInOpenFileTexts = (action.which == 'file' ? refineFile(action.data) : action.data);
+			if(state.openFileTexts[action.fileId]){
+				return update(state, {openFileTexts: {[action.fileId]: {$merge: dataToSaveInOpenFileTexts}}});
+			} else {
+				return update(state, {openFileTexts: {[action.fileId]: {$set: dataToSaveInOpenFileTexts}}});
+			}
+		case ADD_FILE_TO_OPEN_FILETEXTS:
+			return update(state, {openFileTexts: {[action.fileId]: {$set: action.file}}});
+		case COMPLETE_FILETEXT:
+			return update(state, {openFileTexts: {[action.fileId]: {text: {$set: action.text}}}});
+		case TOGGLE_PARSED_OF_FILE:
+			return update(state, {openFileTexts: {[action.fileId]: {status: {$set: action.status}}}});
 		case RECEIVE_AGREEMENT:
 			let agreement = (action.agreement ?
 				RichTextEditor.createValueFromString(action.agreement, 'html') :

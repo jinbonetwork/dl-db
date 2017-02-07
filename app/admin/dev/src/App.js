@@ -13,15 +13,7 @@ import Attachments from './components/Attachments';
 import Agreement from './components/Agreement';
 import FileText from './components/FileText';
 import NotFound from './components/NotFound';
-import './style/admin.less';
-import './style/login.less';
-import './style/mainMenu.less';
-import './style/userlist.less';
-import './style/accessories.less';
-import './style/user.less';
-import './style/userForm.less';
-import './style/agreement.less';
-import './style/attachments.less';
+import './style/index.less';
 
 const AdminContainer = connect(
 	(state) => ({
@@ -98,6 +90,7 @@ const UserFormContainer = connect(
 const AttachmentsContainer = connect(
 	(state) => ({
 		attachments: state.admin.attachments,
+		openFileTexts: state.admin.openFileTexts,
 		lastPage: state.attachments.lastPage,
 		fieldSearching: state.attachments.fieldSearching,
 		keywordSearching: state.attachments.keywordSearching
@@ -107,7 +100,7 @@ const AttachmentsContainer = connect(
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value)),
 		toggleParsed: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleParsed(idxOfFiles, fileId, status)),
 		toggleAnonymity: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfFiles, fileId, status)),
-		addTextToOpenFileTexts: (fileText) => dispatch(adminActionCreators.addTextToOpenFileTexts(fileText))
+		addFileToOpenFileTexts: (fileId, file) => dispatch(adminActionCreators.addFileToOpenFileTexts(fileId, file))
 	})
 )(Attachments);
 
@@ -118,9 +111,10 @@ const FileTextContainer = connect(
 		isSaving: state.fileText.isSaving
 	}),
 	(dispatch) => ({
-		fetchFileText: (docId, fileId, callback) => dispatch(adminActionCreators.fetchFileText(docId, fileId, callback)),
-		onChange: (fileText) => dispatch(adminActionCreators.changeFileText(fileText))
-
+		fetchFileText: (which, docId, fileId, callback) => dispatch(adminActionCreators.fetchFileText(which, docId, fileId, callback)),
+		onChange: (fileText) => dispatch(adminActionCreators.changeFileText(fileText)),
+		onSubmit: (docId, fileId, text, formData) => dispatch(adminActionCreators.submitFileText(docId, fileId, text, formData)),
+		toggleParsed: (fileId, status) => dispatch(adminActionCreators.toggleParsedOfFile(fileId, status)),
 	})
 )(FileText);
 

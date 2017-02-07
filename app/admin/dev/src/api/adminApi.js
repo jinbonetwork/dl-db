@@ -111,12 +111,19 @@ const adminApi = {
 		fetchData('post', '/api/document/status?fid='+fileId+'&status='+status, null, succeed, fail);
 	},
 	toggleAnonymity(fileId, status, succeed, fail){
-		let anonymity = (status ? 1 : 0);
-		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+anonymity, null, succeed, fail);
+		fetchData('post', '/api/document/anonymity?fid='+fileId+'&anonymity='+(status ? 1 : 0), null, succeed, fail);
 	},
-	fetchFileText(docId, fileId, succeed, fail){
-		fetchData('get', '/api/document/text?id='+docId+'&fid='+fileId, ({header, text}) => succeed({header, text}), fail);
-	}
+	fetchFileText(which, docId, fileId, succeed, fail){
+		if(which == 'text'){
+			fetchData('get', '/api/document/text?id='+docId+'&fid='+fileId, ({header, text}) => succeed({header, text}), fail);
+		}
+		else if(which == 'file'){
+			fetchData('get', '/api/admin/files?fid='+fileId, ({file}) => succeed(file), fail);
+		}
+	},
+	submitFileText(docId, fileId, formData, succeed, fail){
+		fetchData('post', '/api/document/text?mode=modify&id='+docId+'&fid='+fileId, formData, succeed, fail);
+	},
 };
 
 export default adminApi;

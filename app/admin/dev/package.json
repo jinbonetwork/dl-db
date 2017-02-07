@@ -46,7 +46,9 @@
     "react-render-html": "^0.1.6",
     "react-router": "^2.8.1",
     "react-rte": "^0.11.0",
+    "react-scroll-box": "^0.3.3-beta",
     "react-select": "^1.0.0-rc.2",
+    "react-text-input": "0.0.8",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0"
   }

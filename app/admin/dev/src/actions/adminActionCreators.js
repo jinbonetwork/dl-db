@@ -4,7 +4,8 @@ import {
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_PROPS_IN_USER, CHANGE_USER_PROPS, BLUR_USERFORM, SET_FOCUS_IN_USERFORM,
 	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
-	SHOW_PASSWORD, DELETE_USERS, RECEIVE_FILETEXT, CHANGE_FILETEXT
+	SHOW_PASSWORD, DELETE_USERS, RECEIVE_FILETEXT, CHANGE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT,
+	SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE, TOGGLE_PARSED_OF_FILE
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -167,7 +168,6 @@ const adminActionCreators = {
 		dispatch({type: COMPLETE_AGREEMENT, agreement});
 		adminApi.submitAgreement(formData,
 			(agreement) => dispatch({type: SUBMIT_AGREEMENT, agreement}),
-			//(agreement) => {console.log(agreement);},
 			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);}
 		);
 	}},
@@ -207,12 +207,15 @@ const adminActionCreators = {
 			}
 		);
 	}},
-	fetchFileText(docId, fileId, callback){ return (dispatch) => {
+	addFileToOpenFileTexts(fileId, file){
+		return {type: ADD_FILE_TO_OPEN_FILETEXTS, fileId, file};
+	},
+	fetchFileText(which, docId, fileId, callback){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
-		adminApi.fetchFileText(docId, fileId,
-			(fileText) => {
+		adminApi.fetchFileText(which, docId, fileId,
+			(data) => {
 				dispatch({type: HIDE_PROCESS});
-				dispatch({type: RECEIVE_FILETEXT, fileId, fileText});
+				dispatch({type: RECEIVE_FILETEXT, which, fileId, data});
 				if(typeof callback === 'function') callback();
 			},
 			(error) => {
@@ -223,7 +226,24 @@ const adminActionCreators = {
 	}},
 	changeFileText(fileText){
 		return {type: CHANGE_FILETEXT, fileText};
-	}
+	},
+	submitFileText(docId, fileId, text, formData){ return (dispatch) => {
+		dispatch({type: COMPLETE_FILETEXT, fileId, text});
+		adminApi.submitFileText(docId, fileId, formData,
+			() => dispatch({type: SUBMIT_FILETEXT}),
+			(error) => {dispatch({type: SUBMIT_FILETEXT}); dispatchError(dispatch, error);}
+		);
+	}},
+	toggleParsedOfFile(fileId, status){ return (dispatch) => {
+		dispatch({type: REQUEST_TOGGLING_PARSED_OF_FILE});
+		adminApi.toggleParsed(fileId, status,
+			() => dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status}),
+			(error) => {
+				dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 }
 
 export default adminActionCreators;

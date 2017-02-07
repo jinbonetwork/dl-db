@@ -61,7 +61,10 @@ class Attachments extends Component {
 			case 'toggle anonymity':
 				this.props.toggleAnonymity(arg1st); break;
 			case 'edit text':
-				const {docId, fileId} = arg1st;
+				const file = arg1st, {docId, fileId} = arg1st;
+				if(!this.props.openFileTexts[fileId]){
+					this.props.addFileToOpenFileTexts(fileId, file);
+				}
 				this.props.router.push('/admin/filetext/'+docId+'/'+fileId); break;
 			default:
 		}
@@ -126,7 +129,7 @@ class Attachments extends Component {
 				<td className="table-padding"></td>
 				<td className="attachments__filename"><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
 				<td className="attachments__edit-text">
-					<a onClick={this.handleClick.bind(this, 'edit text', {docId: file.docId, fileId: file.fileId})}>TEXT</a>
+					<a onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a>
 				</td>
 				<td className="attachments__toggle">
 					{file.status === 'uploaded' && [
@@ -207,11 +210,13 @@ class Attachments extends Component {
 
 Attachments.propTypes = {
 	attachments: PropTypes.array.isRequired,
+	openFileTexts: PropTypes.object.isRequired,
 	lastPage: PropTypes.number.isRequired,
 	fieldSearching: PropTypes.string.isRequired,
 	keywordSearching: PropTypes.string.isRequired,
 	fetchAttachments: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
+	addFileToOpenFileTexts: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired
 	}).isRequired
