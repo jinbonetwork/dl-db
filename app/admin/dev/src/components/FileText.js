@@ -29,7 +29,7 @@ class FileText extends Component {
 		if(which == 'submit'){
 			const {docId, fileId, text} = this.props.fileText;
 			let formData = new FormData(); formData.append('text', text);
-			this.props.onSubmit(docId, fileId, text, formData);
+			this.props.onSubmit(docId, fileId, text, formData, this.props.openFileTexts[fileId]);
 		}
 		else if(which == 'status'){
 			const status = arg1st;

@@ -82,7 +82,7 @@ const UserFormContainer = connect(
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
 		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
-		submit: (user, formData, callback) => dispatch(adminActionCreators.submitUserForm(user, formData, callback)),
+		submit: (user, formData, oldUser, callback) => dispatch(adminActionCreators.submitUserForm(user, formData, oldUser, callback)),
 		showPassword: (state) => dispatch(adminActionCreators.showPassword(state))
 	})
 )(UserForm);
@@ -113,7 +113,7 @@ const FileTextContainer = connect(
 	(dispatch) => ({
 		fetchFileText: (which, docId, fileId, callback) => dispatch(adminActionCreators.fetchFileText(which, docId, fileId, callback)),
 		onChange: (fileText) => dispatch(adminActionCreators.changeFileText(fileText)),
-		onSubmit: (docId, fileId, text, formData) => dispatch(adminActionCreators.submitFileText(docId, fileId, text, formData)),
+		onSubmit: (docId, fileId, text, formData, oldText) => dispatch(adminActionCreators.submitFileText(docId, fileId, text, formData, oldText)),
 		toggleParsed: (fileId, status) => dispatch(adminActionCreators.toggleParsedOfFile(fileId, status)),
 	})
 )(FileText);
@@ -127,7 +127,7 @@ const AgreementContainer = connect(
 	(dispatch) => ({
 		fetchAgreement: (callback) => dispatch(adminActionCreators.fetchAgreement(callback)),
 		onChange: (agreement) => dispatch(adminActionCreators.changeAgreement(agreement)),
-		onSubmit: (agreement, formData) => dispatch(adminActionCreators.submitAgreement(agreement, formData))
+		onSubmit: (agreement, formData, oldAgreement) => dispatch(adminActionCreators.submitAgreement(agreement, formData, oldAgreement))
 	})
 )(Agreement);
 

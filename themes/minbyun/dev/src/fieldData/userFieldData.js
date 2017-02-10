@@ -12,7 +12,7 @@ export const initUsrFData = {
 		class: {type: 'char', dispName: '구분', form: 'text', parent: '', children: [], multiple: false, required: false},
 		email: {type: 'email', dispName: '이메일', form: 'text', parent: '', children: [], multiple: false, required: false},
 		phone: {type: 'phone', dispName: '전화번호', form: 'text', parent: '', children: [], multiple: false, required: false},
-		role: {type: 'role', dispName: '권한', form: 'check', parent: '', children: [], multiple: false, required: true},
+		role: {type: 'role', dispName: '권한', form: 'check', parent: '', children: [], multiple: false, required: false},
 		password: {type: 'password', dispName: '비밀번호', form: 'text', parent: '', children: [], multiple: false, required: true},
 		confirmPw: {type: 'password', dispName: '비밀번호 확인', form: 'text', parent: '', children: [], multiple: false, required: true}
 	},
@@ -36,10 +36,7 @@ const custom = {
 			_forIn(roles, (pn, pv) => {
 				if(roleNames[pv]) newRoles[pn] = roleNames[pv];
 			});
-			return {
-				propName: 'roles',
-				prpsValue: newRoles
-			};
+			return newRoles;
 		}
 	},
 	refineDocBySlug: {

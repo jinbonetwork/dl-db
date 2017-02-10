@@ -1,0 +1,251 @@
+.digital-library__header {
+	position: relative;
+	background-color: @minor-color-2;
+	line-height: 3.3em;
+	border-bottom: solid 2px @main-color;
+}
+.digital-library__logo {
+	display: block;
+	position: relative;
+	float: left;
+	height: 3.3em;
+	padding: 0.4em;
+	& > span {
+		position: absolute;
+		width: 12em;
+		top: 0;
+		left: 55px;
+		color: @main-color;
+		@media screen and (max-width: @small-screen) {
+			font-size: 0.8em;
+		}
+	}
+}
+.digital-library__content {
+	max-width: 56.25em;
+	margin: 0 auto;
+}
+.main-menu .dropdown {
+	height: 100%;
+	.dropdown__headwrap {
+		border: 0;
+		border-left: solid 2px @main-color;
+		height: 100%;
+	}
+	.dropdown__head {
+		height: 100%;
+		@media screen and (max-width: @large-screen){
+			width: auto !important;
+		}
+	}
+	.ddhead {
+		padding-right: 2em;
+		height: 100%;
+		@media screen and (max-width: @large-screen){
+			padding-left: 0.7em;
+			padding-right: 0.7em;
+		}
+	}
+	.ddhead i {
+		font-size: 2em;
+		width: 1em;
+	}
+	.ddhead > i + span {
+		margin-left: 0.5em;
+	}
+	.ddhead span {
+		font-size: 0.8em;
+		padding: 0;
+	}
+	.ddhead span, .ddarrow {
+		@media screen and (max-width: @large-screen){
+			display: none;
+		}
+	}
+	.ddarrow i {
+		color: @main-color;
+		font-weight: bold;
+	}
+	.dropdown__items {
+		border: solid 2px @main-color;
+		text-align: left;
+	}
+	&.dropdown--unfolded .dropdown__items-top-border {
+		height: 2px;
+		background-color: @minor-color-2;
+		@media screen and (max-width: @large-screen){
+			width: 3.4em !important;
+		}
+	}
+	.dropdown__items ul {
+		background-color: @minor-color-2;
+	}
+	.item {
+		line-height: 2.5em;
+		text-align: center;
+		&:hover {
+			background-color: @hover-color-1;
+			font-weight: @font-bold;
+		}
+	}
+	.item a {
+		width: 100%; height: 100%; padding: 0; line-height: inherit; text-align: left;
+	}
+	.item > div {
+		cursor: pointer;
+	}
+}
+.main-menu {
+	position: absolute;
+	top: 0; right: 0;
+	width: @main-menu-width;
+	height: 100%;
+	text-align: right;
+	@media screen and (max-width: @large-screen){
+		width: @large-main-menu-width;
+	}
+	@media screen and (max-width: @m-m-large-screen){
+		width: @m-m-large-main-menu-width !important;
+	}
+	a {
+		display: inline-block;
+		line-height: 3.3em;
+		padding: 0 1.5em;
+		cursor: pointer;
+	}
+	.main-menu__write i + span {
+		margin-left: 0.5em;
+	}
+	.main-menu__write i {
+		font-size: 2em;
+		width: 1em;
+	}
+	.main-menu__write i {
+		color: @main-color;
+	}
+	.main-menu__write span {
+		font-size: 0.8em;
+		padding: 0;
+	}
+	.main-menu__write span {
+		color: @main-color;
+	}
+	.main-menu__write:focus {
+		background-color: @focus-color-1;
+	}
+	.main-menu__write span, .main-menu__links .ddhead span {
+		display: inline-block;
+		line-height: 1.2em;
+		vertical-align: middle;
+		@media screen and (max-width: @large-screen){
+			display: none;
+		}
+	}
+	.main-menu__links .dropdown__items {
+		border-right: 0;
+		@media screen and (max-width: @large-screen){
+			left: auto;
+			right: 0;
+		}
+	}
+	.main-menu__links .dropdown__items-top-border {
+		@media screen and (max-width: @large-screen){
+			position: relative;
+			left: 1.34em;
+		}
+	}
+	.main-menu__links .item a,
+	.main-menu__boards .item a {
+		text-align: center;
+	}
+	.main-menu__user .item {
+		text-align: left;
+		padding: 0 0.5em;
+	}
+	.main-menu__user .item i {
+		color: @main-color;
+		font-size: 2em;
+		width: 1em;
+	}
+	.main-menu__user .item span {
+		font-size: 0.8em;
+		margin-left: 0.5em;
+		padding: 0;
+	}
+}
+.main-menu .toggle {
+	height: 100%;
+	border-left: solid 2px @main-color;
+	button {
+		height: 100%;
+		background-color: transparent;
+		border: 0;
+		padding: 0 0.5em;
+	}
+	&:not(.toggle--unfolded) {
+		background-color: @main-color;
+	}
+	&:not(.toggle--unfolded) .toggle__icon {
+		color: @minor-color-2;
+	}
+	&.toggle--unfolded .toggle__icon {
+		color: @main-color;
+	}
+	.accordian {
+		margin-top: 2px;
+		text-align: left;
+		background-color: @minor-color-2;
+		border: solid 2px @main-color;
+		border-width: 0 0 2px 2px;
+	}
+	.accordian i {
+		font-size: 2em;
+		width: 1em;
+		text-align: center;
+	}
+	.accordian i + span {
+		margin-left: 0.5em;
+	}
+	.acditem__head {
+		line-height: 2.5em;
+		padding-left: 0.5em;
+		cursor: pointer;
+	}
+	.acditem__head:hover {
+		color: @minor-color-2;
+		background-color: @main-color * 1.1;
+	}
+	.acditem__children ul {
+		border: dotted @main-color;
+		border-width: 2px 0;
+		background-color: @main-color * 1.6;
+	}
+	.acditem__children li {
+		line-height: 2.5em;
+		padding-left: 0.5em;
+	}
+	.acditem__children li > div {
+		cursor: pointer;
+	}
+	.acditem__children li:hover {
+		background-color: @main-color * 1.5;
+	}
+	.acditem__children a {
+		display: block;
+		padding-left: 0;
+		padding-right: 0.5em;
+		line-height: inherit;
+	}
+	.acditem__children i {
+		color: @main-color;
+	}
+	.acditem__children i + span {
+		font-size: 0.8em;
+	}
+	.acditem + .acditem li {
+		padding-left: 0.8em;
+	}
+	.acditem:last-child ul {
+		border-width: 2px 0 0 0;
+	}
+}

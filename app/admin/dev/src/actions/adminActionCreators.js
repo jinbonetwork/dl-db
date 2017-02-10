@@ -134,14 +134,14 @@ const adminActionCreators = {
 	blurUserForm(){
 		return {type: BLUR_USERFORM};
 	},
-	submitUserForm(user, userFormData, callback){ return (dispatch) => {
+	submitUserForm(user, userFormData, oldUser, callback){ return (dispatch) => {
 		dispatch({type: COMPLETE_USERFORM, user});
 		adminApi.submitUserForm((user.id > 0 ? 'modify' : 'add'), userFormData,
 			(user) => {
 				dispatch({type: SUBMIT_USERFORM, user});
 				if(typeof callback === 'function') callback(user.id);
 			},
-			(error) => {dispatch({type: SUBMIT_USERFORM}); dispatchError(dispatch, error)}
+			(error) => {dispatch({type: COMPLETE_USERFORM, user: oldUser}); dispatchError(dispatch, error)}
 		);
 	}},
 	showPassword(state){
@@ -164,11 +164,11 @@ const adminActionCreators = {
 	changeAgreement(agreement){
 		return {type: CHANGE_AGREEMENT, agreement};
 	},
-	submitAgreement(agreement, formData){ return (dispatch) => {
+	submitAgreement(agreement, formData, oldAgreement){ return (dispatch) => {
 		dispatch({type: COMPLETE_AGREEMENT, agreement});
 		adminApi.submitAgreement(formData,
-			(agreement) => dispatch({type: SUBMIT_AGREEMENT, agreement}),
-			(error) => {dispatch({type: SUBMIT_AGREEMENT}); dispatchError(dispatch, error);}
+			() => dispatch({type: SUBMIT_AGREEMENT}),
+			(error) => {dispatch({type: COMPLETE_AGREEMENT, agreement: oldAgreement}); dispatchError(dispatch, error);}
 		);
 	}},
 	fetchAttachments(params){ return (dispatch) => {
@@ -227,11 +227,11 @@ const adminActionCreators = {
 	changeFileText(fileText){
 		return {type: CHANGE_FILETEXT, fileText};
 	},
-	submitFileText(docId, fileId, text, formData){ return (dispatch) => {
+	submitFileText(docId, fileId, text, formData, oldText){ return (dispatch) => {
 		dispatch({type: COMPLETE_FILETEXT, fileId, text});
 		adminApi.submitFileText(docId, fileId, formData,
 			() => dispatch({type: SUBMIT_FILETEXT}),
-			(error) => {dispatch({type: SUBMIT_FILETEXT}); dispatchError(dispatch, error);}
+			(error) => {dispatch({type: SUBMIT_FILETEXT, fileId, text: oldText}); dispatchError(dispatch, error);}
 		);
 	}},
 	toggleParsedOfFile(fileId, status){ return (dispatch) => {

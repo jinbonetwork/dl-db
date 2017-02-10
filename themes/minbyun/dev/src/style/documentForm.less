@@ -1,0 +1,187 @@
+@document-from-button-width: 2.5em;
+@label-width: 8em;
+
+.document-form {
+	max-width: 39em;
+	padding-right: 1em;
+	margin: 3em auto;
+	@media screen and (max-width: @s-medium-screen) {
+		max-width: 500px;
+		padding-left: 1em;
+		margin: 1em auto;
+	}
+
+	h1 {
+		margin: 0 0 1em 0;
+		text-align: center;
+		color: @accent-font-color;
+		@media screen and (max-width: @s-medium-screen) {
+			margin: 0
+		}
+	}
+	.table__row.document-form__section-title {
+		line-height: 3em;
+	}
+	h2 {
+		font-weight: @font-bold;
+		font-size: 1.25em;
+		margin: 0;
+	}
+	input[type=text], input[type=email] {
+		width: 100%;
+	}
+	.select {
+		min-width: 50%;
+	}
+	.check {
+		line-height: 3em;
+	}
+	.check .item {
+		line-height: 2em;
+	}
+	.check i {
+		font-size: 1.5em;
+	}
+	.check .item__checkicon {
+		color: @main-color;
+	}
+	.check .item__checkicon, .check .item__uncheckicon {
+		width: 1.5em;
+	}
+	.document-form__input-with-buttons {
+		position: relative;
+	}
+	.document-form__input-with-buttons + .document-form__input-with-buttons,
+	.document-form__input-with-buttons + .document-form__bottom-message,
+	.document-form__input-with-buttons + .document-form__bottom-message div + div {
+		margin-top: 0.5em;
+	}
+	.document-form__input-with-buttons + .document-form__bottom-message div {
+		line-height: 1.5em;
+	}
+	.document-form__middle {
+		margin-right: @document-from-button-width * 2 + 0.5em;
+	}
+	.document-form__middle > * {
+		width: 100%;
+	}
+	.document-from__buttons {
+		position: absolute;
+		top: 0; right: 0;
+		height: 100%;
+	}
+	.document-from__buttons button {
+		float: left;
+		width: @document-from-button-width; height: 100%;
+		background-color: transparent;
+		color: @main-color;
+		border: 0;
+		padding: 0;
+		cursor: pointer;
+	}
+	.document-from__buttons button:focus i:before {
+		border-bottom: dotted 1px @main-color;
+	}
+	.document-from__buttons button i {
+		font-size: @document-from-button-width;
+	}
+	.searchinput {
+		width: 100%;
+	}
+	.searchinput .item {
+		outline: none;
+	}
+	.searchinput .item:focus {
+		background-color: @focus-color-2;
+	}
+	.searchinput__button:focus i {
+		border-bottom: dotted 1px @main-color;
+	}
+	& > .table > .table__row {
+		padding: 0.5em 0;
+		@media screen and (max-width: @s-medium-screen){
+			padding: 0 0 0.5em 0;
+		}
+	}
+	& > .table > .table__row > .table__col:first-child {
+		width: @label-width;
+		line-height: 1.2em;
+		padding-top: 0.9em;
+		padding-bottom: 0.9em;
+		padding-right: 1em;
+		text-align: right;
+		@media screen and (max-width: @s-medium-screen){
+			float: none;
+			text-align: left;
+			padding-bottom: 0.4em;
+		}
+	}
+	& > .table > .table__row > .table__col {
+		min-height: 3em;
+		@media screen and (max-width: @s-medium-screen){
+			min-height: 0;
+		}
+	}
+	& > .table > .table__row > .table__col:last-child {
+		margin-left: @label-width + 1em;
+		@media screen and (max-width: @s-medium-screen){
+			margin-left: 0;
+		}
+	}
+	.inner-table .table__row {
+		background-color: @minor-color-2;
+		border: solid @main-color;
+		border-width: 1px 1px 0 1px;
+	}
+	.inner-table .table__row:last-child {
+		border-width: 1px;
+	}
+	.inner-table input[type=text], .inner-table input[type=email], .inner-table textarea {
+		border: 0;
+	}
+	.inner-table .table__col:first-child {
+		width: 5em;
+		line-height: 3em;
+		text-align: center;
+	}
+	.inner-table .table__col:last-child{
+		margin-left: 5em;
+		border-left: solid 1px @main-color
+	}
+	button.document-form__submit {
+		line-height: 3em;
+		width: 100%;
+		color: @minor-color-2;
+		background-color: @main-color;
+		border: 0;
+		padding: 0 0.5em;
+		cursor: pointer;
+		margin-top: 2em;
+	}
+	button.document-form__submit:focus {
+		background-color: @focus-color-2;
+	}
+	textarea {
+		//min-height: 11em;
+	}
+	textarea:focus {
+		background-color: @focus-color-1;
+	}
+}
+
+.dateform {
+	display: inline-block;
+	input[type=text] {
+		margin-right: 1em;
+		text-align: center;
+	}
+	input[type=text].dateform__year {
+		width: 5em;
+	}
+	.dateform__year + span {
+		margin-right: 1em;
+	}
+	input[type=text].dateform__month {
+		width: 4em;
+	}
+}

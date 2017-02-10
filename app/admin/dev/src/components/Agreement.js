@@ -15,7 +15,7 @@ class Agreement extends Component {
 		if(which == 'submit'){
 			let formData = new FormData();
 			formData.append('content', this.props.agreement.toString('html'));
-			this.props.onSubmit(this.props.agreement, formData);
+			this.props.onSubmit(this.props.agreement, formData, this.props.openAgreement);
 		}
 	}
 	render(){

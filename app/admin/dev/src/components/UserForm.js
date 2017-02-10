@@ -79,8 +79,10 @@ class UserForm extends Component {
 			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
 		} else {
 			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
+			const id = this.props.params.id;
 			let formData = makeUserFormData(this.props.user, this.props.userFieldData);
-			this.props.submit(this.props.user, formData,
+			let oldUser = (id ? this.props.openUsers[id] : this.props.userFieldData.empty);
+			this.props.submit(this.props.user, formData, oldUser,
 				(userId) => {
 					let meta = {};
 					_forIn(this.props.openUsers[userId], (fs, value) => {
