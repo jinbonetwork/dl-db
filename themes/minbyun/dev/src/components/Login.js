@@ -10,17 +10,19 @@ const pathOfImage = site_base_uri+'/themes/minbyun/images';
 class Login extends Component {
 	componentDidMount(){
 		this.refs.id.focus();
+		if(this.props.didLogIn) this.props.fetchAgreement();
 	}
-	componentDidUpdate(prevProps, prevState){
-		/*
+	componentDidUpdate(prevProps){
+		if(!prevProps.didLogIn && this.props.didLogIn) this.props.fetchAgreement();
+	}
+	/*
+	componentDidUpdate(prevProps){
 		if(!prevState.showAgreement && this.props.showAgreement){
 			this.props.fetchData('get', '/api/agreement', (data) => { if(data){
 				this.setState({agreement: data.agreement});
 			}});
 		}
-		*/
 	}
-	/*
 	submit(){ if(this.props.userData.type){
 		let data, loginUrl;
 		if(this.props.userData.type == 'xe'){
@@ -85,10 +87,7 @@ class Login extends Component {
 			this.submit()
 		}
 		else if(which == 'agree'){
-			this.props.fetchData('post', '/api/agreement?agreement=1', null, (data) => { if(data){
-				this.props.setAgreement();
-				this.props.router.goBack();
-			}});
+			this.props.onAgree();
 		}
 	}
 	handleKeyDown(which, event){
@@ -174,7 +173,7 @@ class Login extends Component {
 			<div className="login__agreement">
 				<Scrollbars className="login__agreement-wrap">
 					<div className="login__agreement-content">
-						{/*renderHTML(this.props.agreement)*/}
+						{renderHTML(this.props.agreement)}
 					</div>
 				</Scrollbars>
 				<button onClick={this.handleClick.bind(this, 'agree')}>이용약관에 동의합니다</button>
@@ -214,10 +213,13 @@ Login.propTypes = {
 	id: PropTypes.string.isRequired,
 	password: PropTypes.string.isRequired,
 	type: PropTypes.string.isRequired,
-	agreement: PropTypes.bool,
+	doAgree: PropTypes.bool,
+	agreement: PropTypes.string.isRequired,
 	window: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
-	onLogin: PropTypes.func.isRequired
+	onLogin: PropTypes.func.isRequired,
+	fetchAgreement: PropTypes.func.isRequired,
+	onAgree: PropTypes.func.isRequired
 	/*
 	userData: PropTypes.object,
 

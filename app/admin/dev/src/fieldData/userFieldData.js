@@ -38,7 +38,7 @@ const custom = {
 			});
 			return {
 				propName: 'roles',
-				prpsValue: newRoles
+				propValue: newRoles
 			};
 		}
 	},

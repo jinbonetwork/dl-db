@@ -1,5 +1,5 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
-	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN
+	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT
 } from '../constants';
 import api from '../api/dlDbApi';
 
@@ -16,17 +16,13 @@ const dispatchError = (dispatch, error) => {
 };
 const dispatchUserFieldData = (dispatch) => {
 	api.fetchUserFieldData(
-		(orginUsrFData) => {
-			dispatch({type: RECEIVE_USER_FIELD_DATA, orginUsrFData});
-		},
+		(orginUsrFData) => dispatch({type: RECEIVE_USER_FIELD_DATA, orginUsrFData}),
 		(error) => dispatchError(dispatch, error)
 	);
 };
 const dispatchDocFieldData = (dispatch) => {
 	api.fetchDocFieldData(
-		(originDocFData) => {
-			dispatch({type: RECEIVE_DOC_FIELD_DATA, originDocFData});
-		},
+		(originDocFData) => dispatch({type: RECEIVE_DOC_FIELD_DATA, originDocFData}),
 		(error) => dispatchError(dispatch, error)
 	);
 };
@@ -56,10 +52,10 @@ const actionCreators = {
 	},
 	login(loginUrl, formData, failLogin){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
-		api.login(loginUrl, formData, ({role, roles}) => {
+		api.login(loginUrl, formData, (role, roles, agreement) => {
 			if(role){
 				dispatch({type: HIDE_PROCESS});
-				dispatch({type: SUCCEED_LOGIN}, role, roles);
+				dispatch({type: SUCCEED_LOGIN, role, roles, agreement});
 				dispatchDocFieldData(dispatch);
 				//dispatchUserFieldData(dispatch);
 			} else {
@@ -72,6 +68,25 @@ const actionCreators = {
 			}
 		}, (error) => dispatchError(dispatch, error));
 	}},
+	fetchAgreement(){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.fetchAgreement(
+			(agreement) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_AGREEMENT, agreement});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	agreeWithAgreement(){ return (dispatch) => {
+		dispatch({type: AGREE_WITH_AGREEMENT});
+		api.agreeWithAgreement(
+			() => {}, (error) => dispatchError(dispatch, error)
+		);
+	}}
 }
 
 export default actionCreators;

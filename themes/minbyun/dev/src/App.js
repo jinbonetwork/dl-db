@@ -23,7 +23,9 @@ const DlDbContainer = connect(
 		hideMessage: () => dispatch(dlDbActions.hideMessage()),
 		onResize: (size) => dispatch(dlDbActions.resize(size)),
 		onChangeLogin: (which, value) => dispatch(dlDbActions.changeLogin(which, value)),
-		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin))
+		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin)),
+		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
+		onAgree: () => dispatch(dlDbActions.agreeWithAgreement())
 		/*
 		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),

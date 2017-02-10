@@ -1,5 +1,5 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
-	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN
+	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
@@ -16,7 +16,7 @@ const initialState = {
 	openedDocs: [],
 	message: {content: '', callback: undefined},
 	showProc: false,
-	login: {type: '', id: '', password: '', agreement: undefined},
+	login: {type: '', id: '', password: '', didLogIn: false, doAgree: false, agreement: ''},
 	window: {width: 0, height: 0}
 };
 
@@ -39,7 +39,11 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {
 				role: {$set: (action.rootData.role ? action.rootData.role.map((r) => (action.rootData.roles[r])) : null)},
 				menuData: {$set: refinMenuData(action.rootData.menu)},
-				login: {$merge: {type: action.rootData.sessiontype, agreement: (action.rootData.agreement == 1)}}
+				login: {$merge: {
+					type: action.rootData.sessiontype,
+					didLogIn: (action.rootData.role ? true : false),
+					doAgree: (action.rootData.agreement == 1)}
+				}
 			});
 		case RECEIVE_DOC_FIELD_DATA:
 			return update(state, {docFieldData: {$set: refineDocFData(action.originDocFData)}});
@@ -55,6 +59,15 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {window: {$merge: action.size}});
 		case CHANGE_LOGIN:
 			return update(state, {login: {[action.which]: {$set: action.value}}});
+		case SUCCEED_LOGIN:
+			return update(state, {
+				role: {$set: action.role.map((r) => (action.roles[r]))},
+				login: {$merge: {id: '', password: '', didLogIn: true, doAgree: (action.agreement == 1)}}
+			});
+		case RECEIVE_AGREEMENT:
+			return update(state, {login: {agreement: {$set: action.agreement}}});
+		case AGREE_WITH_AGREEMENT:
+			return update(state, {login: {doAgree: {$set: true}}});
 		default:
 			return state;
 	}

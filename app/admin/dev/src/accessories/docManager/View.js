@@ -78,7 +78,7 @@ class View extends Component {
 	}
 	render(){
 		return this.renderTable(this.props.doc);
-	}
+	} 
 }
 View.propTypes = {
 	doc: PropTypes.object.isRequired,

@@ -40,12 +40,18 @@ const api = {
 	},
 	login(loginUrl, formData, succeed, fail){
 		fetchData('post', loginUrl, formData, () => {
-			fetchData('get', '/api', ({role, roles}) => {
-				if(role) succeed({role, roles});
-				else succeed({});
+			fetchData('get', '/api', ({role, roles, agreement}) => {
+				if(role) succeed(role, roles, agreement);
+				else succeed();
 			}, fail)
 		}, fail);
 	},
+	fetchAgreement(succeed, fail){
+		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
+	},
+	agreeWithAgreement(succeed, fail){
+		fetchData('post', '/api/agreement?agreement=1', null, succeed, fail);
+	}
 }
 
 export default api;

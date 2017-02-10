@@ -14,7 +14,7 @@ class DlDb extends Component {
 		if(this.refs.message) this.refs.message.focus();
 	}
 	componentWillUnmount(){
-		jQ(window).off('resize')
+		jQ(window).off('resize');
 	}
 	handleResize(){
 		this.props.onResize({width: window.innerWidth, height: window.innerHeight});
@@ -41,7 +41,7 @@ class DlDb extends Component {
 			</div>
 		)
 		const content = _wrap(() => {
-			if(this.props.docFieldData){
+			if(this.props.docFieldData && this.props.login.doAgree){
 				/*
 				return [
 					<MainMenu key="main-menu" />,
@@ -50,10 +50,11 @@ class DlDb extends Component {
 				*/
 				return <div>content</div>;
 			}
-			else if(this.props.login.type){
+			else if(this.props.login.type && !this.props.login.doAgree){
 				return (
 					<Login {...this.props.login} window={this.props.window}
-						onChange={this.props.onChangeLogin} onLogin={this.props.onLogin}
+						onChange={this.props.onChangeLogin} onLogin={this.props.onLogin} fetchAgreement={this.props.fetchAgreement}
+						onAgree={this.props.onAgree}
 					/>
 				);
 			}
@@ -81,7 +82,9 @@ DlDb.propTypes = {
 	fetchRootData: PropTypes.func.isRequired,
 	hideMessage: PropTypes.func.isRequired,
 	onResize: PropTypes.func.isRequired,
-	onLogin: PropTypes.func.isRequired
+	onLogin: PropTypes.func.isRequired,
+	fetchAgreement: PropTypes.func.isRequired,
+	onAgree: PropTypes.func.isRequired
 	/*
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
