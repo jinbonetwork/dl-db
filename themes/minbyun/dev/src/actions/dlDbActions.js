@@ -1,5 +1,6 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
-	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT
+	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
+	LOGOUT
 } from '../constants';
 import api from '../api/dlDbApi';
 
@@ -85,6 +86,19 @@ const actionCreators = {
 		dispatch({type: AGREE_WITH_AGREEMENT});
 		api.agreeWithAgreement(
 			() => {}, (error) => dispatchError(dispatch, error)
+		);
+	}},
+	logout(){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.logout(
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: LOGOUT});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
 		);
 	}}
 }

@@ -51,6 +51,9 @@ const api = {
 	},
 	agreeWithAgreement(succeed, fail){
 		fetchData('post', '/api/agreement?agreement=1', null, succeed, fail);
+	},
+	logout(succeed, fail){
+		fetchData('post', '/api/logout', null, succeed, fail);
 	}
 }
 

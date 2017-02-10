@@ -18,3 +18,4 @@ export const CHANGE_LOGIN = 'change login';
 export const RESIZE = 'resize';
 export const RECEIVE_AGREEMENT = 'receive agreement';
 export const AGREE_WITH_AGREEMENT = 'agree with agreement';
+export const LOGOUT = 'logout';

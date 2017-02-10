@@ -1,11 +1,12 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
-	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT
+	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
+	LOGOUT
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
-import {refineFileList, refineFile} from '../fieldData/fileFieldData.js';
+import {refineFileList, refineFile} from '../fieldData/fileFieldData';
 import update from 'react-addons-update';
-import {_mapO} from '../accessories/functions';
+import {_mapO, _mapOO} from '../accessories/functions';
 
 const initialState = {
 	docFieldData: undefined,
@@ -68,6 +69,10 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {login: {agreement: {$set: action.agreement}}});
 		case AGREE_WITH_AGREEMENT:
 			return update(state, {login: {doAgree: {$set: true}}});
+		case LOGOUT:
+			return update(state, {login: {$apply: (curLoginState) =>
+				_mapOO(initialState.login, (pn, pv) => (pn != 'type' ? pv : curLoginState[pn]))
+			}});
 		default:
 			return state;
 	}

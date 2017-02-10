@@ -25,7 +25,8 @@ const DlDbContainer = connect(
 		onChangeLogin: (which, value) => dispatch(dlDbActions.changeLogin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin)),
 		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
-		onAgree: () => dispatch(dlDbActions.agreeWithAgreement())
+		onAgree: () => dispatch(dlDbActions.agreeWithAgreement()),
+		onLogOut: () => dispatch(dlDbActions.logout())
 		/*
 		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),
@@ -39,6 +40,7 @@ render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
+				{/*<Route path="/document/new" component={NewDocument} />*/}
 			</Route>
 		</Router>
 	</Provider>,
