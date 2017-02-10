@@ -88,44 +88,48 @@ div {
 		background-color: @focus-color-1;
 	}
 }
-.select.dropdown {
-	.dropdown__headwrap {
-		border: solid 1px @main-color;
-		border-bottom: 0;
+.select {
+	line-height: 3em;
+	.dropdown__headwrap, .dropdown__items {
+		border-color: @main-color;
 		background-color: @minor-color-2;
 	}
-	.ddhead {
-		text-align: left;
-		padding-left: 1em;
-		line-height: 3em;
+	&.dropdown--unfolded .dropdown__items {
+		top: -1px;
+	}
+	.dropdown__head:focus {
+		background-color: @focus-color-1
 	}
 	.ddarrow i {
-		color: @main-color;
-		font-weight: bold;
 		font-size: 2em;
-		width: 1em;
+		color: @main-color;
 	}
-	.dropdown__items {
-		background-color: @minor-color-2;
-		border: solid 1px @main-color;
+	.ddhead, .item {
 		text-align: left;
-	}
-	&:not(.dropwdown--unfolded) .dropdown__items {
-		border-bottom: solid 1px @main-color !important;
+		padding-right: 2em;
 	}
 	.item {
-		padding-right: 3em;
-		line-height: 2.5em;
+		line-height: 2em;
 		cursor: pointer;
+		&:focus {background-color: @focus-color-1}
 	}
 }
 .check {
 	.item {
+		line-height: 2em;
 		outline: none;
 		border-bottom: dotted 1px transparent;
 	}
 	.item:focus {
 		border-bottom: dotted 1px @main-color;
+	}
+	.item__checkicon, .item__uncheckicon {
+		width: 1.5em;
+		text-align: center;
+		color: @main-color;
+		i {
+			font-size: 1.5em;
+		}
 	}
 }
 .fileinput {

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Link, withRouter} from 'react-router';
+import {Link} from 'react-router';
 import Dropdown from '../accessories/Dropdown';
 import Item from '../accessories/Item';
 import Toggle from '../accessories/Toggle';
@@ -190,4 +190,4 @@ MainMenu.propTypes = {
 	menuData: PropTypes.array.isRequired,
 	onLogOut: PropTypes.func.isRequired
 }
-export default withRouter(MainMenu);
+export default MainMenu;

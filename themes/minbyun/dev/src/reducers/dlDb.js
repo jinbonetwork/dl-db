@@ -1,6 +1,6 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
-	LOGOUT
+	LOGOUT, CHANGE_SEARCHBAR_STATE
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
@@ -13,12 +13,22 @@ const initialState = {
 	userFieldData: undefined,
 	role: undefined,
 	menuData: [],
-	searchQuery: {doctypes: [], keyword: '', from: '', to: ''},
-	openedDocs: [],
+	openDocs: [],
 	message: {content: '', callback: undefined},
 	showProc: false,
-	login: {type: '', id: '', password: '', didLogIn: false, doAgree: false, agreement: ''},
-	window: {width: 0, height: 0}
+	window: {width: 0, height: 0},
+	login: {
+		type: '', id: '', password: '', didLogIn: false, doAgree: false, agreement: ''
+	},
+	searchBar: {
+		doctypes: [], keyword: '', from: '', to: '',
+		keywordMarginLeft: null,
+		isPeriodVisible: false,
+		isPeriodFocused: false,
+		isHelperVisible: false,
+		isKeywordFocused: false,
+		count: '00000'
+	}
 };
 
 const refinMenuData = (data) => {
@@ -70,9 +80,11 @@ const dlDb = (state = initialState, action) => {
 		case AGREE_WITH_AGREEMENT:
 			return update(state, {login: {doAgree: {$set: true}}});
 		case LOGOUT:
-			return update(state, {login: {$apply: (curLoginState) =>
-				_mapOO(initialState.login, (pn, pv) => (pn != 'type' ? pv : curLoginState[pn]))
-			}});
+			return update(state, {$apply: (curState) =>
+				update(initialState, {menuData: {$set: curState.menuData}, login: {type: {$set: curState.login.type}}})
+			});
+		case CHANGE_SEARCHBAR_STATE:
+			return update(state, {searchBar: {$merge: action.value}});
 		default:
 			return state;
 	}

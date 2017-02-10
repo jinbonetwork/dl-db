@@ -58,8 +58,9 @@ class FormElem extends Component {
 			case 'textarea':
 				return (
 					<Textarea
-						value={this.props.value} focus={this.props.focus} message={message} displayCount={displayCount} rows={rows}
-						onChange={this.props.onChange} onBlur={this.handleBlur.bind(this)}
+						value={this.props.value} focus={this.props.focus} message={this.props.message}
+						displayCount={this.props.displayCount} rows={this.props.rows}
+						onChange={this.props.onChange} onBlur={this.props.onBlur}
 					/>
 				);
 			default:

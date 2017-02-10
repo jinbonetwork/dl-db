@@ -1,6 +1,6 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
-	LOGOUT
+	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM
 } from '../constants';
 import api from '../api/dlDbApi';
 
@@ -100,7 +100,16 @@ const actionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	}}
+	}},
+	changeSearchBarState(value){
+		return {type: CHANGE_SEARCHBAR_STATE, value};
+	},
+	changeDocForm(args){
+		return {type: CHANGE_DOCFORM, args};
+	},
+	focusOutDocForm(){
+		return {type: FOCUSOUT_DOCFORM};
+	}
 }
 
 export default actionCreators;

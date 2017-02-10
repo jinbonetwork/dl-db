@@ -15,69 +15,6 @@ class Login extends Component {
 	componentDidUpdate(prevProps){
 		if(!prevProps.didLogIn && this.props.didLogIn) this.props.fetchAgreement();
 	}
-	/*
-	componentDidUpdate(prevProps){
-		if(!prevState.showAgreement && this.props.showAgreement){
-			this.props.fetchData('get', '/api/agreement', (data) => { if(data){
-				this.setState({agreement: data.agreement});
-			}});
-		}
-	}
-	submit(){ if(this.props.userData.type){
-		let data, loginUrl;
-		if(this.props.userData.type == 'xe'){
-			data = {
-				user_id: this.props.id,
-				password: this.props.password,
-				success_return_url: '/'
-			}
-			loginUrl = '/xe/?act=procMemberLogin';
-		}
-		else{
-			data = {
-				mb_id: this.props.id,
-				mb_password: this.props.password,
-				url: '/'
-			}
-			loginUrl = '/gnu5/bbs/login_check.php';
-		}
-
-		let formData = new FormData;
-		for(let prop in data){
-			formData.append(prop, data[prop]);
-		}
-		if(this.props.userData.role){
-			this.props.unsetUserData();
-			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
-				this.login(loginUrl, formData, this.props.router.push.bind(this, '/'));
-			}});
-		} else {
-			this.login(loginUrl, formData, this.props.router.goBack);
-		}
-	}}
-	login(loginUrl, formData, callBack){
-		this.props.fetchData('post', loginUrl, formData, (response) => {
-			if(response){
-				this.props.fetchContData((data) => {
-					if(data.role){
-						if(data.agreement != 1){
-							this.props.fetchData('get', '/api/agreement', (data) => { if(data){
-								this.setState({agreement: data.agreement});
-							}});
-						} else {
-							callBack();
-						}
-					} else {
-						this.props.setMessage('로그인 정보가 잘못되었습니다.', () => {
-							this.refs.id.focus();
-						});
-					}
-				});
-			}
-		});
-	}
-	*/
-
 	handleChange(which, arg1st){
 		let value = arg1st.target.value;
 		this.props.onChange(which, value);

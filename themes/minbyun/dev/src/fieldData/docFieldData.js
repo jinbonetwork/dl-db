@@ -6,8 +6,8 @@ export const initDocFData = {
 	empty: {id: 0, uid: 0, created: 0, owner: false, bookmark: false, title: '', content: ''},
 	fProps: {
 		id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
-		title: {type: 'char', displayName: '제목', form: 'text', parent: '', children: [], multiple: false, required: true},
-		content: {type: 'char', displayName: '주요내용', form: 'textarea', parent: '', children: [], multiple: false, required: true}
+		title: {type: 'char', dispName: '제목', form: 'text', parent: '', children: [], multiple: false, required: true},
+		content: {type: 'char', dispName: '주요내용', form: 'textarea', parent: '', children: [], multiple: false, required: true}
 	},
 	fSlug: {
 		id: 'id', uid: 'uid', created: 'created', owner: 'owner', bookmark: 'bookmark', subject: 'title', content: 'content'
@@ -41,7 +41,11 @@ const custom = {
 };
 const rearrangeDoc = (doc, fProps) => {
 	let required = {}, elective = {};
-	for(let fs in doc) if(fProps[fs].required) required[fs] = doc[fs]; else elective[fs] = doc[fs];
+	let content = doc.content;
+	for(let fs in doc){
+		if(fProps[fs].required) required[fs] = doc[fs];
+		else elective[fs] = doc[fs];
+	}
 	return update(required, {$merge: elective});
 };
 export const refineDocFData = (fData) => {

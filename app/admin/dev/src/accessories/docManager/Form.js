@@ -1,7 +1,7 @@
 import React, {Component, PropTypes, cloneElement} from 'react';
 import FormElem from './FormElem';
 import Item from '../Item';
-import {_mapO, _forIn, _wrap, _isEmpty, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
+import {_mapO, _mapAO, _forIn, _wrap, _isEmpty, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
 
 class Form extends Component {
 	isHidden(fs){
@@ -109,7 +109,7 @@ class Form extends Component {
 				));}
 				else if(fProp.form == 'file'){ return (
 					<div className="field-body">
-						<div className="field-body__content">{this.renderForm(fs, val, undefined, fProp)}</div>
+						<div className="field-body__content">{this.renderForm(fs, value, undefined, fProp)}</div>
 						<div className="field-body__buttons">
 							<button onClick={this.handleClick.bind(this, 'delete', fs)}>{this.props.deleteButtonIcon}</button>
 						</div>

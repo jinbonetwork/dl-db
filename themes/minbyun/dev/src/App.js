@@ -6,17 +6,19 @@ import {Provider, connect} from 'react-redux';
 import dlDbStore from './store/dlDbStore';
 import dlDbActions from './actions/dlDbActions';
 import DlDb from './components/DlDb';
+import DocumentForm from './components/DocumentForm';
 import './style/index.less';
 
 const DlDbContainer = connect(
 	(state) => ({
-		login: state.dlDb.login,
 		role: state.dlDb.role,
 		menuData: state.dlDb.menuData,
 		message: state.dlDb.message,
 		showProc: state.dlDb.showProc,
 		docFieldData: state.dlDb.docFieldData,
-		window: state.dlDb.window
+		window: state.dlDb.window,
+		login: state.dlDb.login,
+		searchBar: state.dlDb.searchBar
 	}),
 	(dispatch) => ({
 		fetchRootData: () => dispatch(dlDbActions.fetchRootData()),
@@ -26,21 +28,37 @@ const DlDbContainer = connect(
 		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin)),
 		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
 		onAgree: () => dispatch(dlDbActions.agreeWithAgreement()),
-		onLogOut: () => dispatch(dlDbActions.logout())
-		/*
-		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
-		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),
-
-		hideMessage: () => dispatch(adminActionCreators.hideMessage())
-		*/
+		onLogOut: () => dispatch(dlDbActions.logout()),
+		onChangeQeury: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
+		changeSearchBarState: (value) => dispatch(dlDbActions.changeSearchBarState(value))
 	})
 )(DlDb);
+
+const DocFormContainer = connect(
+	(state) => ({
+		fData: state.dlDb.docFieldData,
+		openDocs: state.dlDb.openDocs,
+		doc: state.documentForm.doc,
+		focused: state.documentForm.focused,
+		isSaving: state.documentForm.isSaving
+	}),
+	(dispatch) => ({
+		onChange: (args) => dispatch(dlDbActions.changeDocForm(args)),
+		onBlur: () => dispatch(dlDbActions.focusOutDocForm())
+		/*
+		fetchDoc:
+		setFocus:
+		showMessage:
+		OnSubmit:
+		*/
+	})
+)(DocumentForm);
 
 render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
-				{/*<Route path="/document/new" component={NewDocument} />*/}
+				<Route path="document/new" component={DocFormContainer} />
 			</Route>
 		</Router>
 	</Provider>,

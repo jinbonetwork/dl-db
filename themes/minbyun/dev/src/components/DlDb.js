@@ -2,9 +2,14 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import MainMenu from './MainMenu';
 import Login from './Login';
+import SearchBar from './SearchBar';
 import {SCREEN} from '../constants';
 import jQ from 'jquery';
 import {_wrap} from '../accessories/functions';
+
+import {Provider, connect} from 'react-redux';
+import dlDbStore from '../store/dlDbStore';
+import dlDbActions from '../actions/dlDbActions';
 
 class DlDb extends Component {
 	componentDidMount(){
@@ -44,28 +49,27 @@ class DlDb extends Component {
 		)
 		const content = _wrap(() => {
 			if(this.props.docFieldData && this.props.login.doAgree){
-				/*const searchBar = (
-					<SearchBar mode={(this.props.children ? null : 'content')} docFData={this.props.docFieldData} query={this.props.searchQuery} window={this.props.window}
-						update={this.props.updateSearchQuery}
+				const child = this.props.children;
+				const searchBar = (
+					<SearchBar mode={(child ? null : 'content')} {...this.props.searchBar} docFData={this.props.docFieldData}
+						window={this.props.window} onChange={this.props.onChangeQeury} changeSearchBarState={this.props.changeSearchBarState}
 					/>
-				);*/
-				const searchBar = <div>Search bar</div>;
+				);
 				return [
 					<div key="header" className="digital-library__header">
 						<Link className="digital-library__logo" to="/">
 							<img src={site_base_uri+'/themes/minbyun/images/logo.png'} />
-							{(!this.props.children || wWidth <= SCREEN.sMedium) && <span>민주사회를 위한 변호사모임</span>}
+							{(!child || this.props.window.with <= SCREEN.sMedium) && <span>민주사회를 위한 변호사모임</span>}
 						</Link>
-						{(this.props.children ? searchBar : <span>&nbsp;</span>)}
+						{(child ? searchBar : <span>&nbsp;</span>)}
 						<MainMenu role={this.props.role} menuData={this.props.menuData} window={this.props.window}
 							onLogOut={this.props.onLogOut}
 						/>
 					</div>,
 					<div key="content" className="digital-library__content">
-						{this.props.chldren || searchBar}
+						{child || searchBar}
 					</div>
 				];
-				return <div>content</div>;
 			}
 			else if(this.props.login.type && !this.props.login.doAgree){
 				return (
@@ -88,7 +92,6 @@ class DlDb extends Component {
 }
 DlDb.propTypes = {
 	role: PropTypes.array,
-	login: PropTypes.object.isRequired,
 	docFieldData: PropTypes.object,
 	menuData: PropTypes.array.isRequired,
 	message: PropTypes.shape({
@@ -97,13 +100,17 @@ DlDb.propTypes = {
 	}).isRequired,
 	showProc: PropTypes.bool,
 	window: PropTypes.object.isRequired,
+	login: PropTypes.object.isRequired,
+	searchBar: PropTypes.object.isRequired,
 	fetchRootData: PropTypes.func.isRequired,
 	hideMessage: PropTypes.func.isRequired,
 	onResize: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
 	fetchAgreement: PropTypes.func.isRequired,
 	onAgree: PropTypes.func.isRequired,
-	onLogOut: PropTypes.func.isRequired
+	onLogOut: PropTypes.func.isRequired,
+	onChangeQeury: PropTypes.func.isRequired,
+	changeSearchBarState: PropTypes.func.isRequired
 };
 
 export default DlDb;
