@@ -22,6 +22,15 @@ class Logger extends \DLDB\Objects {
 		return self::_instance(__CLASS__);
 	}
 
+	public static function debug($file,$line,$message) {
+		if(!file_exists(DLDB_ERROR_LOG_PATH)) {
+			mkdir(DLDB_ERROR_LOG_PATH,0707);
+		}
+		$fp = fopen(DLDB_ERROR_LOG_PATH."/debug.log","a+");
+		fputs($fp,"[".date("Y-m-d H:i:s")."] ".$file."(".$line.") ".$message."\n");
+		fclose($fp);
+	}
+
 	public function setLogType($LOG_TYPE, $LOG_ID=null, $LOG_PATH=null) {
 		$this->_logType = $LOG_TYPE;
 		if($LOG_PATH) $this->_errLogPath = $LOG_PATH;
