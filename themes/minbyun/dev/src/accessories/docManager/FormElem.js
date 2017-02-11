@@ -5,6 +5,7 @@ import FileInput from '../FileInput';
 import Select from '../Select';
 import Check from '../Check';
 import DateForm from '../DateForm';
+import SearchInput from '../SearchInput';
 import {_mapAO} from '../functions';
 
 class FormElem extends Component {
@@ -21,7 +22,7 @@ class FormElem extends Component {
 				return (
 					<FileInput
 						value={this.props.value.name || this.props.value.filename} focus={this.props.focus} accept={this.props.accept}
-						onChange={this.props.onChange} onBlur={this.props.onBlur}
+						disabled={this.props.disabled} onChange={this.props.onChange} onBlur={this.props.onBlur}
 					/>
 				);
 			case 'select':
@@ -63,6 +64,12 @@ class FormElem extends Component {
 						onChange={this.props.onChange} onBlur={this.props.onBlur}
 					/>
 				);
+			case 'search':
+				return (
+					<SearchInput value={this.props.value} focus={this.props.focus} resultSlugs={this.props.resultSlugs}
+						onChange={this.props.onChange} onBlur={this.props.onBlur} onSearch={this.props.onSearch}
+					/>
+				);
 			default:
 				console.error(this.props.form+': 적합한 form이 아닙니다.');
 				return null;
@@ -78,11 +85,13 @@ FormElem.propTypes = {
 	placeholder: PropTypes.string,
 	accept: PropTypes.string,
 	options: PropTypes.arrayOf(PropTypes.element),
-	message: PropTypes.string,
+	message: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 	displayCount: PropTypes.bool,
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	disabled: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
-	onBlur: PropTypes.func.isRequired
+	onBlur: PropTypes.func.isRequired,
+	onSearch: PropTypes.func
 };
 
 export default FormElem;

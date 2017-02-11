@@ -52,7 +52,7 @@ const refineFieldData = (fData, init, custom = {}) => {
 	let resultFData = {fSlug, fID, fProps, empty, taxonomy, terms};
 	_forIn(custom, (pn, refiner) => {
 		let {propName, propValue} = refiner(fData[pn]);
-		resultFData[propName] = propValue; 
+		resultFData[propName] = propValue;
 	});
 
 	// return ////
@@ -142,6 +142,32 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 		}
 	}, (fs, value) => (fData.fID[fs]));
 };
+
+const extracFileData = (doc, fData) => {
+	return _mapOO(
+		doc,
+		(fs, value) => {
+			if(fData.fProps[fs].multiple){
+				return value.map((val) => ({
+					filename: (val.filename || val.name),
+					status: (val.status ? val.status : 'uploading'),
+					anonymity: val.anonymity
+				}));
+			} else {
+				return {
+					filename: (value.filename || value.name),
+					status: (value.status ? value.status : 'uploading'),
+					anonymity: value.anonymity
+				}
+			}
+		},
+		(fs, value) => {
+			const fProp = fData.fProps[fs];
+			if(fProp && fProp.form == 'file') return fs; else return undefined;
+		}
+	)
+};
+
 const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
 	let formData = new FormData();
 	formData.append(docFormPropName, JSON.stringify(
@@ -162,4 +188,29 @@ const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {},
 	return formData;
 };
 
-export {refineFieldData, refineDoc, refineDocToSubmit, makeFormData};
+const makeDocFormData = (propName, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
+	let formData = new FormData();
+	formData.append(propName, JSON.stringify(
+		refineDocToSubmit(doc, fData, refineDocToSubmitBySlug, refineDocToSubmitByType)
+	));
+	return formData;
+};
+
+const makeFileFormData = (doc, fData) => {
+	let formData = new FormData();
+	for(let fs in doc){
+		const fProp = fData.fProps[fs];
+		if(fProp && fProp.form == 'file'){
+			if(fProp.multiple){
+				doc[fs].forEach((file) => {
+					if(file.name) formData.append(fData.fID[fs]+'[]', file);
+				});
+			} else {
+				if(doc[fs].name) formData.append(fData.fID[fs], doc[fs]);
+			}
+		}
+	}
+	return formData;
+}
+
+export {refineFieldData, refineDoc, refineDocToSubmit, extracFileData, makeDocFormData, makeFileFormData, makeFormData};

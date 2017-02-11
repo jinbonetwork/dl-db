@@ -16,7 +16,10 @@ class Textarea extends Component {
 	}
 	render(){
 		const message = (this.props.message ? <span>{this.props.message}</span> : null);
-		const count = (this.props.displayCount ? <span className="textarea__num-of-words">{this.props.value.length}자</span> : null);
+		const count = (this.props.displayCount ?
+			<span className="textarea__num-of-words"><span>{this.props.value.length}</span><span>자</span></span> :
+			null
+		);
 		const footer = (message || count) && (
 			<div className="textarea__footer">
 				{message}
@@ -35,7 +38,7 @@ Textarea.propTypes = {
 	value: PropTypes.string,
 	rows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	focus: PropTypes.bool,
-	message: PropTypes.string,
+	message: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 	limit: PropTypes.number,
 	displayCount: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,

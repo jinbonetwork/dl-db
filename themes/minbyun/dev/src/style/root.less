@@ -88,7 +88,7 @@ div {
 		background-color: @focus-color-1;
 	}
 }
-.select {
+.dropdown.select {
 	line-height: 3em;
 	.dropdown__headwrap, .dropdown__items {
 		border-color: @main-color;
@@ -138,6 +138,10 @@ div {
 	}
 	.fileinput__upload:focus {
 		background-color: @focus-color-2;
+	}
+	.fileinput__upload.disabled {
+		background-color: average(@main-color, @minor-color-1);
+		cursor: default;
 	}
 }
 .message {

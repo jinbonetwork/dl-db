@@ -52,7 +52,7 @@ const refineFieldData = (fData, init, custom = {}) => {
 	let resultFData = {fSlug, fID, fProps, empty, taxonomy, terms};
 	_forIn(custom, (pn, refiner) => {
 		let {propName, propValue} = refiner(fData[pn]);
-		resultFData[propName] = propValue; 
+		resultFData[propName] = propValue;
 	});
 
 	// return ////

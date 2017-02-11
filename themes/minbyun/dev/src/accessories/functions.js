@@ -91,7 +91,8 @@ const _mapOO = (obj, callBack, mapPropName) => { // object -> object
 		if(!mapPropName){
 			newObj[prop] = callBack(prop, obj[prop]);
 		} else {
-			newObj[mapPropName(prop, obj[prop])] = callBack(prop, obj[prop]);
+			let newPn = mapPropName(prop, obj[prop]);
+			if(newPn) newObj[newPn] = callBack(prop, obj[prop]);
 		}
 	}
 	return newObj;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {_findProp, _isEmpty} from '../accessories/functions';
 
-const fetchData = (method, url, arg2, arg3, arg4) => {
+const fetch = (method, url, arg2, arg3, arg4) => {
 	let data = (method == 'get' ? null : arg2);
 	let succeed = (method == 'get' ? arg2 : arg3);
 	let fail = (method == 'get' ? arg3 : arg4)
@@ -29,31 +29,40 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 };
 
 const api = {
+	fetchData(method, url, arg2, arg3, arg4){
+		fetch(method, url, arg2, arg3, arg4);
+	},
 	fetchRootData(succeed, fail){
-		fetchData('get', '/api', succeed, fail);
+		fetch('get', '/api', succeed, fail);
 	},
 	fetchUserFieldData(succeed, fail){
-		fetchData('get', '/api/admin/member/fields', succeed, fail);
+		fetch('get', '/api/admin/member/fields', succeed, fail);
 	},
 	fetchDocFieldData(succeed, fail){
-		fetchData('get', '/api/fields', succeed, fail);
+		fetch('get', '/api/fields', succeed, fail);
 	},
 	login(loginUrl, formData, succeed, fail){
-		fetchData('post', loginUrl, formData, () => {
-			fetchData('get', '/api', ({role, roles, agreement}) => {
+		fetch('post', loginUrl, formData, () => {
+			fetch('get', '/api', ({role, roles, agreement}) => {
 				if(role) succeed(role, roles, agreement);
 				else succeed();
 			}, fail)
 		}, fail);
 	},
 	fetchAgreement(succeed, fail){
-		fetchData('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
+		fetch('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
 	},
 	agreeWithAgreement(succeed, fail){
-		fetchData('post', '/api/agreement?agreement=1', null, succeed, fail);
+		fetch('post', '/api/agreement?agreement=1', null, succeed, fail);
 	},
 	logout(succeed, fail){
-		fetchData('post', '/api/logout', null, succeed, fail);
+		fetch('post', '/api/logout', null, succeed, fail);
+	},
+	fetchDoc(id, succeed, fail){
+		fetch('get', '/api/document?id='+id, ({document}) => succeed(document), fail);
+	},
+	submitDocForm(mode, formData, succeed, fail){
+		fetch('post', '/api/document/save?mode='+mode, formData, ({did}) => succeed(parseInt(did)), fail);
 	}
 }
 

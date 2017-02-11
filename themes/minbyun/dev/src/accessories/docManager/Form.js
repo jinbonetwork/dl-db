@@ -68,11 +68,28 @@ class Form extends Component {
 			){
 				this.props.onChange({mode: 'set', fSlug, index, value});
 			}
+		}
+	}
+	handKeyDown(which, arg1st){
+		if(which == 'submit'){
+			if(arg1st.key == 'Enter') this.handleSubmit();
+		}
+	}
+	isDisabled(fProp, value){
+		if(fProp.form == 'file'){
+			if(value.status == 'uploading' || value.status == 'uploaded' || value.status == 'parsing'){
+				return true;
+			}
+			else if((value.name || value.filename) && !value.status && this.props.isSaving){
+				return true;
+			}
+			else return false;
 		} else {
-			this.props.onChange({mode: 'merge', value});
+			return false;
 		}
 	}
 	renderForm(fs, value, index, fProp){
+		let disabled = this.isDisabled(fProp, value);
 		let options = (fProp.type == 'taxonomy' ?  this.props.fieldData.taxonomy[fs].map((tid) =>
 			<Item key={tid} value={tid}><span>{this.props.fieldData.terms[tid].name}</span></Item>
 		) : undefined);
@@ -82,6 +99,7 @@ class Form extends Component {
 				focus={(this.props.focused.fSlug == fs && this.props.focused.index == index)}
 				fProp={this.props.fieldData.fProps[fs]}
 				options={options}
+				disabled={disabled}
 				onChange={this.handleChange.bind(this, fs, index)}
 				onBlur={this.props.onBlur}
 			/>
@@ -103,7 +121,11 @@ class Form extends Component {
 						<div className="field-body__content">{this.renderForm(fs, val, idx, fProp)}</div>
 						<div className="field-body__buttons">
 							<button onClick={this.handleClick.bind(this, 'add', fs)}>{this.props.addButtonIcon}</button>
-							<button onClick={this.handleClick.bind(this, 'delete', fs, idx)}>{this.props.deleteButtonIcon}</button>
+							<button style={(this.isDisabled(fProp, val) ? {visibility: 'hidden'} : null)}
+								onClick={this.handleClick.bind(this, 'delete', fs, idx)}
+							>
+								{this.props.deleteButtonIcon}
+							</button>
 						</div>
 					</div>
 				));}
@@ -111,7 +133,11 @@ class Form extends Component {
 					<div className="field-body">
 						<div className="field-body__content">{this.renderForm(fs, value, undefined, fProp)}</div>
 						<div className="field-body__buttons">
-							<button onClick={this.handleClick.bind(this, 'delete', fs)}>{this.props.deleteButtonIcon}</button>
+							<button style={(this.isDisabled(fProp, value) ? {visibility: 'hidden'} : null)}
+								onClick={this.handleClick.bind(this, 'delete', fs)}
+							>
+								{this.props.deleteButtonIcon}
+							</button>
 						</div>
 					</div>
 				);} else {
@@ -121,7 +147,8 @@ class Form extends Component {
 			return (
 				<div className="field-content">
 					{fieldBody}
-					{(this.props.getFieldFooter ? this.props.getFieldFooter(fs) : undefined)}
+					{(this.props.fieldFooterByType[fProp.type] ? this.props.fieldFooterByType[fProp.type] : null)}
+					{(this.props.fieldFooterBySlug[fs] ? this.props.fieldFooterBySlug[fs] : null)}
 				</div>
 			);
 		} else {
@@ -130,6 +157,7 @@ class Form extends Component {
 	}
 	renderTable(doc, isChild){
 		const {fSlug, fProps} = this.props.fieldData;
+		const isOneCol = (this.props.window.width <= this.props.widthToChangeOneCol);
 		const rows = [];
 		_forIn(doc, (fs, value) => {
 			let isRendered = (
@@ -137,21 +165,31 @@ class Form extends Component {
 				!this.isHidden(fs) && !this.isHidden(fProps[fs].parent)
 			);
 			if(isRendered){
-				if(this.props.rowsBeforeSlug[fs]) rows.push(cloneElement(this.props.rowsBeforeSlug[fs], {key: 'befor '+fs}));
-				let className = 'form__field form__slug-'+fs+' form__type-'+fProps[fs].type+' form__'+(fProps[fs].required ? 'required' : 'elective');
+				if(this.props.rowsBeforeSlug[fs]) rows.push(cloneElement(this.props.rowsBeforeSlug[fs], {key: 'before '+fs}));
+				let className = [
+					'form__field form__slug-'+fs,
+					'form__type-'+fProps[fs].type,
+					'form__'+(fProps[fs].required ? 'required' : 'elective')
+				].join(' ');
+				let firstCol = <span>{fProps[fs].dispName}</span>;
+				let secondCol = this.renderField(fs, value, fProps[fs]);
 				rows.push(
-					<tr key={fs} className={className}>
-						<td><span>{fProps[fs].dispName}</span></td>
-						<td>{this.renderField(fs, value, fProps[fs])}</td>
-					</tr>
+					<tr key={fs} className={className}>{( !isChild && isOneCol ?
+						<td><div className="form__col0">{firstCol}</div><div className="form__col1">{secondCol}</div></td> :
+						[<td key="0" className="form__col0">{firstCol}</td>, <td key="1" className="form__col1">{secondCol}</td>]
+					)}</tr>
 				);
 			}
 		});
-		const submitButton = !isChild && (
+		const submitButton = (!isChild) && (
 			<tr className="form__submit-wrap">
-				<td colSpan="2">
+				<td colSpan={(!isOneCol ? 2 : null)}>
 					{!this.props.isSaving && (
-						<a tabIndex="0" className="form__submit" onClick={this.handleSubmit.bind(this)}>{this.props.submitLabel}</a>
+						<a tabIndex="0" className="form__submit" onClick={this.handleSubmit.bind(this)}
+							onKeyDown={this.handKeyDown.bind(this, 'submit')}
+						>
+							{this.props.submitLabel}
+						</a>
 					)}
 					{this.props.isSaving && (
 						<span className="form__saving">
@@ -184,6 +222,8 @@ Form.propTypes = {
 	}).isRequired,
 	submitLabel: PropTypes.string,
 	isSaving: PropTypes.bool,
+	widthToChangeOneCol: PropTypes.number,
+	window: PropTypes.object,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
@@ -206,6 +246,8 @@ Form.propTypes = {
 	errorMessageBySlug: PropTypes.objectOf(PropTypes.string)
 };
 Form.defaultProps = {
+	widthToChangeOneCol: 500,
+	window: {width: 600, height: 0},
 	addButtonIcon: <i className="pe-7s-plus pe-va"></i>,
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
 	savingStateIcon: <i className="pe-7s-config pe-va pe-spin"></i>,
@@ -218,7 +260,9 @@ Form.defaultProps = {
 	checkHiddenBySlug: {},
 	renderFormBySlug: {},
 	renderFormByType: {},
-	errorMessageBySlug: {}
+	errorMessageBySlug: {},
+	fieldFooterBySlug: {},
+	fieldFooterByType: {}
 };
 
 export default Form;

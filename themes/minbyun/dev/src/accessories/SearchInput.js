@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import Item from './Item';
 import browser from 'detect-browser';
+import {_mapO} from './functions';
 
 class SearchInput extends Component {
 	constructor(){
@@ -28,16 +29,16 @@ class SearchInput extends Component {
 	componentDidUpdate(prevProps, prevState){
 		if(this.state.focused === 0) this.refs.input.focus();
 	}
-	search(keyword){
+	search(keyword){ if(keyword){
 		this.setState({isSearching: true});
-		this.props.search(keyword, (result) => {
+		this.props.onSearch(keyword, (result) => {
 			if(result){
 				this.setState({result: result, isSearching: false});
 			} else {
 				this.setState({result: [], isSearching: false});
 			}
 		});
-	}
+	}}
 	handleChange(event){
 		this.props.onChange(event.target.value);
 	}
@@ -46,17 +47,16 @@ class SearchInput extends Component {
 			this.search(event.target.value);
 		}
 	}
-	handleKeyDown(which, arg1st, arg2nd){
+	handleKeyDown(which, arg1st, arg2nd, arg3rd){
 		if(which == 'input'){
 			const event = arg1st;
-			if(event.key == 'ArrowDown') this.setState({focused: 1});
+			if(event.key == 'ArrowDown'){ this.setState({focused: 1}); event.preventDefault(); }
 			else if(event.key == 'Enter') this.search(event.target.value);
 		}
 		else if(which == 'item'){
-			const index = arg1st;
-			const key = arg2nd;
-			if(key == 'ArrowDown') this.setState({focused: index+1});
-			else if(key == 'ArrowUp') this.setState({focused: index-1});
+			const [index, key, event] = [arg1st, arg2nd, arg3rd];
+			if(key == 'ArrowDown'){ this.setState({focused: index+1}); event.preventDefault(); }
+			else if(key == 'ArrowUp'){ this.setState({focused: index-1}); event.preventDefault(); }
 		}
 	}
 	handleClick(which, value, item){
@@ -84,20 +84,16 @@ class SearchInput extends Component {
 	}
 	render(){
 		const result = this.state.result.map((item, index) => {
-			const itemContent = [];
-			for(let i = 0; i < 2; i++){
-				const pn = this.props.resultFNames[i];
-				itemContent.push(<span key={pn} className="searchinput__col">{item[pn]}</span>);
-			}
+			let slugs = _mapO(item, (pn, pv) => (pn));
 			const indexOfItem = index + 1;
 			return (
-				<Item key={index} tabIndex="-1" onClick={this.handleClick.bind(this, 'item',item[this.props.resultFNames[0]], item)}
+				<Item key={index} tabIndex="-1" onClick={this.handleClick.bind(this, 'item', item[slugs[0]], item)}
 					groupName={this.state.groupName}
 					focus={this.state.focused == indexOfItem}
 					onKeyDown={this.handleKeyDown.bind(this, 'item', indexOfItem)}
 					onBlur={this.handleBlur.bind(this, 'item')}
 				>
-					{itemContent}
+					{item[slugs[0]] + ' ('+item[slugs[1]]+')'}
 				</Item>
 			);
 		});
@@ -135,10 +131,9 @@ class SearchInput extends Component {
 SearchInput.propTypes = {
 	value: PropTypes.string,
 	focus: PropTypes.bool,
-	resultFNames: PropTypes.array.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func,
-	search: PropTypes.func.isRequired,
+	onSearch: PropTypes.func.isRequired,
 };
 
 export default SearchInput;

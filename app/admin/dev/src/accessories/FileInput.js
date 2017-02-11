@@ -22,12 +22,15 @@ class FileInput extends Component {
 		return (
 			<div className="fileinput">
 				<div className="fileinput__filename-wrap">
-					<input type="text" tabIndex="-1" value={this.props.value} readOnly />
+					<input type="text" tabIndex="-1" value={this.props.value} readOnly disabled={this.props.disabled} />
 				</div>
-				<label tabIndex="0" ref="upload" className="fileinput__upload" onKeyDown={this.handleKeyDown.bind(this)} onBlur={this.handleBlur.bind(this)}>
-					<span>찾기</span>
+				<label tabIndex="0" ref="upload"
+					className={'fileinput__upload' + (this.props.disabled ? ' disabled' : '')}
+					onKeyDown={this.handleKeyDown.bind(this)} onBlur={this.handleBlur.bind(this)}
+				>
+					<span className={this.props.disabled ? 'disabled' : null}>찾기</span>
 					<input type="file" ref="file" style={{display: 'none'}} value="" accept={this.props.accept}
-						onChange={this.handleChange.bind(this)}
+						disabled={this.props.disabled} onChange={this.handleChange.bind(this)}
 					/>
 				</label>
 			</div>
@@ -38,6 +41,7 @@ FileInput.propTypes = {
 	value: PropTypes.string,
 	accept: PropTypes.string,
 	focus: PropTypes.bool,
+	disabled: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func
 }

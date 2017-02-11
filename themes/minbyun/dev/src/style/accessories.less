@@ -170,6 +170,9 @@
 		cursor: pointer;
 		line-height: 2.5em;
 		margin: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	li:hover {
 		background-color: #989cff * 1.2;
@@ -180,9 +183,6 @@
 	.searchinput__result {
 		position: relative;
 		width: 100%;
-	}
-	.searchinput__col:first-child {
-		width: 4em;
 	}
 	.searchinput__spinner {
 		display: block;

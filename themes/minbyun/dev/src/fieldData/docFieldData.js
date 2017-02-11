@@ -1,11 +1,14 @@
-import {refineFieldData, refineDoc, makeFormData} from '../accessories/docManager/refiner';
+import {
+	refineFieldData, refineDoc as refine, extracFileData, makeDocFormData as makeDFD, makeFileFormData
+} from '../accessories/docManager/refiner';
 import update from 'react-addons-update';
 import {_mapO} from '../accessories/functions';
 
-export const initDocFData = {
+const initDocFData = {
 	empty: {id: 0, uid: 0, created: 0, owner: false, bookmark: false, title: '', content: ''},
 	fProps: {
-		id: {type: 'meta'}, uid: {type: 'meta'}, created: {type: 'meta'}, owner: {type: 'meta'}, bookmark: {type: 'meta'},
+		id: {type: 'meta', form: 'number'}, uid: {type: 'meta', form: 'number'}, created: {type: 'meta', form: 'number'},
+		owner: {type: 'meta', form: 'bool'}, bookmark: {type: 'meta', form: 'bool'},
 		title: {type: 'char', dispName: '제목', form: 'text', parent: '', children: [], multiple: false, required: true},
 		content: {type: 'char', dispName: '주요내용', form: 'textarea', parent: '', children: [], multiple: false, required: true}
 	},
@@ -48,7 +51,15 @@ const rearrangeDoc = (doc, fProps) => {
 	}
 	return update(required, {$merge: elective});
 };
-export const refineDocFData = (fData) => {
+const refineDocFData = (fData) => {
 	let newFData = refineFieldData(fData, initDocFData, custom.refineFData);
 	return update(newFData, {empty: {$apply: (value) => rearrangeDoc(value, newFData.fProps)}});
 };
+const refineDoc = (doc, fData) => {
+	return rearrangeDoc(refine(doc, fData), fData.fProps);
+};
+const makeDocFormData = (doc, fData) => {
+	return makeDFD('document', doc, fData);
+};
+
+export {initDocFData, refineDocFData, refineDoc, extracFileData, makeDocFormData, makeFileFormData};

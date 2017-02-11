@@ -1,23 +1,37 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, PropTypes, cloneElement} from 'react';
 import Form from '../accessories/docManager/Form';
+import {SCREEN} from '../constants';
+import update from 'react-addons-update';
+import api from '../api/dlDbApi';
+import {extracFileData, makeDocFormData, makeFileFormData} from '../fieldData/docFieldData';
 
 class DocumentForm extends Component {
 	componentDidMount(){
 		const id = this.props.params.id;
-		if(id){/*
-			if(this.props.openUsers[id]){
-				this.props.onChange({mode: 'merge', value: this.props.openUsers[id]});
+		if(id){
+			if(this.props.openDocs[id]){
+				this.props.onChange({mode: 'merge', value: this.props.openDocs[id]});
 			} else {
-				this.props.fetchUser(id, () => {
-					this.props.onChange({mode: 'merge', value: this.props.openUsers[id]});
+				this.props.fetchDoc(id, () => {
+					this.props.onChange({mode: 'merge', value: this.props.openDocs[id]});
 				});
 			}
-			*/
 		} else {
 			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
 		}
+		this.props.focusIn('title');
 	}
 	customize(){ return {
+		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?
+			{
+				title: <tr><td></td><td><h2>필수입력사항</h2></td></tr>,
+				tag: <tr><td></td><td><h2>선택입력사항</h2></td></tr>
+			} :
+			{
+				title: <tr><td><h2>필수입력사항</h2></td></tr>,
+				tag: <tr><td><h2>선택입력사항</h2></td></tr>
+			}
+		),
 		checkHiddenBySlug: {
 			trial: (slug) => {
 				let doctype = this.props.fData.terms[this.props.doc.doctype].slug;
@@ -28,33 +42,73 @@ class DocumentForm extends Component {
 				return (doctype == 'sentencing' ? false : true);
 			}
 		},
+		renderFormBySlug: {
+			content: (fs, index, value, formElem) => cloneElement(formElem, {displayCount: true, message: <span>&nbsp;</span>}),
+			sentence: (fs, index, value, formElem) => cloneElement(formElem, {placeholder: '2015-12-07'}),
+			tag: (fs, index, value, formElem) => cloneElement(formElem, {rows: 2}),
+			name: (fs, index, value ,formElem) => cloneElement(formElem, {
+				onSearch: (keyword, callback) => {
+					api.fetchData('get', '/api/members?q='+encodeURIComponent(keyword), ({members}) => {
+						callback(members.map((member) => (
+							{name: member.name, class: member.class, email: member.email, phone: member.phone}
+						)));
+					});
+				},
+				onChange: (value) => (typeof value === 'object' ?
+					this.props.onChange({mode: 'merge', value}) :
+					this.props.onChange({mode: 'set', fSlug: fs, value})
+				)
+			})
+		},
+		renderFormByType: {
+			image: (fs, index, value, formElem) => cloneElement(formElem, {accept: '.jpg, .png'}),
+			file: (fs, index, value, formElem) => cloneElement(formElem, {accept: '.pdf, .doc, .docx, .hwp'})
+		},
+		fieldFooterBySlug: {
+			tag: <div className="docform__field-footer"><span>쉼표로 구분해주세요.</span></div>,
+			image: <div className="docform__field-footer"><span>파일형식: jpg, png</span></div>,
+			file: (
+				<div className="docform__field-footer">
+					<div><span>파일형식: pdf, doc, docx, hwp</span></div>
+					<div><span>민변 디지털도서관은 첨부파일의 내용을 자동으로 추출하여 검색할 수 있습니다. 다만, 한글(hwp) 파일의 경우 자체 암호화로 내용 검색이 불가능하므로 가능한 'PDF' 파일로 변환하여 주시기를 권장합니다(방법: 파일 &rarr; PDF로 저장하기).</span></div>
+				</div>
+			)
+		}
 	}}
-	handleChange(which, arg1st, arg2nd){
-	}
-	handleSubmit(error){ /*
+	handleSubmit(error){
+
+		/*
+		let fileData = extracFileData(this.props.doc, this.props.fData);
+		makeDocFormData(this.props.doc, this.props.fData)
+		makeFileFormData(this.props.doc, this.props.fData);
+		this.props.onChange({mode: 'merge', value: fileData});
+		console.log(fileData);
+
+		return;
+		*/
+
 		if(error){
-			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
+			this.props.showMessage(error.message, () => this.props.focusIn(error.fSlug, error.index));
 		} else {
 			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
-			let formData = makeUserFormData(this.props.user, this.props.userFieldData);
-			this.props.submit(this.props.user, formData,
-				(userId) => {
-					let meta = {};
-					_forIn(this.props.openUsers[userId], (fs, value) => {
-						if(this.props.userFieldData.fProps[fs].type == 'meta') meta[fs] = value;
-					});
-					this.props.onChange({mode: 'merge', value: meta});
+			const [id, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
+			let oldDoc = (id ? this.props.openDocs[id] : fData.empty);
+			let fileData = extracFileData(doc, fData);
+			let docFormData = makeDocFormData(doc, fData);
+			let fileFormData = makeFileFormData(doc, fData);
+			this.props.onChange({mode: 'merge', value: fileData});
+			this.props.onSubmit(doc, docFormData, oldDoc,
+				(docId) => {
+					if(!id) this.props.onChange({mode: 'set', fSlug: 'id', value: docId});
+					//this.props.uploadFiles
 				}
 			);
-		}*/
+		}
 	}
-	render(){
+	render(){ console.log(this.props.doc);
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
-		let rowsBeforeSlug = {
-			title: <tr><td></td><td><h2>필수입력사항</h2></td></tr>,
-			tag: <tr><td></td><td><h2>선택입력사항</h2></td></tr>
-		};
+		let fieldData = update(this.props.fData, {fProps: {name: {form: {$set: 'search'}}}});
 		return (
 			<div className="docform">
 				<h1>{title}</h1>
@@ -64,14 +118,15 @@ class DocumentForm extends Component {
 						<td>
 							<Form
 								doc={this.props.doc}
-								fieldData={this.props.fData}
+								fieldData={fieldData}
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
 								submitLabel={submitLabel}
+								widthToChangeOneCol={SCREEN.sMedium}
+								window={this.props.window}
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
-								rowsBeforeSlug={rowsBeforeSlug}
 								{...this.customize()}
 							/>
 						</td>
@@ -85,15 +140,15 @@ class DocumentForm extends Component {
 DocumentForm.propTypes = {
 	fData: PropTypes.object.isRequired,
 	doc: PropTypes.object.isRequired,
-	openDocs: PropTypes.array.isRequired,
+	openDocs: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
+	window: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
-	onBlur: PropTypes.func.isRequired
-	/*,
-	fetchDoc: PropTypes.func.isRequired,
-	setFocus: PropTypes.func.isRequired,
+	onBlur: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,
-	OnSubmit: PropTypes.func.isRequired*/
+	focusIn: PropTypes.func.isRequired,
+	fetchDoc: PropTypes.func.isRequired,
+	onSubmit: PropTypes.func.isRequired
 };
 export default DocumentForm;

@@ -1,9 +1,9 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
-	LOGOUT, CHANGE_SEARCHBAR_STATE
+	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
-import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
+import {refineDocFData, refineDoc} from '../fieldData/docFieldData';
 import {refineFileList, refineFile} from '../fieldData/fileFieldData';
 import update from 'react-addons-update';
 import {_mapO, _mapOO} from '../accessories/functions';
@@ -13,7 +13,7 @@ const initialState = {
 	userFieldData: undefined,
 	role: undefined,
 	menuData: [],
-	openDocs: [],
+	openDocs: {},
 	message: {content: '', callback: undefined},
 	showProc: false,
 	window: {width: 0, height: 0},
@@ -85,6 +85,14 @@ const dlDb = (state = initialState, action) => {
 			});
 		case CHANGE_SEARCHBAR_STATE:
 			return update(state, {searchBar: {$merge: action.value}});
+		case ADD_DOC_TO_OPEN_DOCS:
+			if(action.doRefind === false){
+				return update(state, {openDocs: {[action.doc.id]: {$set: action.doc}}});
+			} else {
+				return update(state, {openDocs: {[action.doc.id]: {$set: refineDoc(action.doc, state.docFieldData)}}});
+			}
+		case COMPLETE_DOCFORM:
+			return update(state, {openDocs: {[action.doc.id]: {$set: action.doc}}});
 		default:
 			return state;
 	}

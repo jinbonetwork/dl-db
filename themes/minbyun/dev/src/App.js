@@ -40,17 +40,16 @@ const DocFormContainer = connect(
 		openDocs: state.dlDb.openDocs,
 		doc: state.documentForm.doc,
 		focused: state.documentForm.focused,
-		isSaving: state.documentForm.isSaving
+		isSaving: state.documentForm.isSaving,
+		window: state.dlDb.window,
 	}),
 	(dispatch) => ({
 		onChange: (args) => dispatch(dlDbActions.changeDocForm(args)),
-		onBlur: () => dispatch(dlDbActions.focusOutDocForm())
-		/*
-		fetchDoc:
-		setFocus:
-		showMessage:
-		OnSubmit:
-		*/
+		onBlur: () => dispatch(dlDbActions.focusOutDocForm()),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		focusIn: (slug, index) => dispatch(dlDbActions.focusInDocForm(slug, index)),
+		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
+		onSubmit: (doc, formData, oldDoc, callback) => dispatch(dlDbActions.submitDocForm(doc, formData, oldDoc, callback))
 	})
 )(DocumentForm);
 
@@ -59,6 +58,7 @@ render(
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
 				<Route path="document/new" component={DocFormContainer} />
+				<Route path="document/:id" component={DocFormContainer} />
 			</Route>
 		</Router>
 	</Provider>,

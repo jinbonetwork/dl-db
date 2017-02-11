@@ -1,8 +1,10 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
-	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM
+	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
+	ADD_DOC_TO_OPEN_DOCS
 } from '../constants';
 import api from '../api/dlDbApi';
+import update from 'react-addons-update';
 
 const dispatchError = (dispatch, error) => {
 	if(error.code !== -9999){
@@ -109,7 +111,39 @@ const actionCreators = {
 	},
 	focusOutDocForm(){
 		return {type: FOCUSOUT_DOCFORM};
-	}
+	},
+	focusInDocForm(fSlug, index){
+		return {type: FOCUSIN_DOCFORM, fSlug, index};
+	},
+	fetchDoc(id, callback){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.fetchDoc(id,
+			(doc) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: ADD_DOC_TO_OPEN_DOCS, doc});
+				if(typeof callback === 'function') callback();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	submitDocForm(doc, formData, oldDoc, callback){ return (dispatch) => {
+		let mode = (doc.id > 0 ? 'modify' : 'add');
+		dispatch({type: COMPLETE_DOCFORM, doc});
+		api.submitDocForm(
+			mode, formData,
+			(docId) => {
+				if(mode == 'add'){
+					dispatch({type: ADD_DOC_TO_OPEN_DOCS, doc: update(doc, {id: {$set: docId}}), doRefine: false});
+				}
+				dispatch({type: SUBMIT_DOCFORM});
+				if(typeof callback === 'function') callback(docId);
+			},
+			(error) => {dispatch({type: COMPLETE_DOCFORM, doc: oldDoc}); dispatchError(dispatch, error)}
+		);
+	}}
 }
 
 export default actionCreators;
