@@ -1,7 +1,7 @@
 <?php
 define('__DLDB__',true);
 if(!defined('ROOT'))
-	define('ROOT','.');
+	define('ROOT',dirname(__FILE__));
 
 /**
  * @brief 필요한 설정 파일들 include
@@ -26,63 +26,71 @@ try {
 
 	$handle = fopen('php://stdin','r');
 	$input = trim(fgets($handle));
-	$data = preg_split("/:/i",$input);
-	if(count($data) != 2) {
-		\DLDB\RespondJson::ResultPage( array( -1, '입력형식이 올바르지 않습니다.') );
+	$data = json_decode($input,true);
+	if($data['did']) {
+		$did = (int)$data['did'];
+	} else if($data['fid']) {
+		$fid = (int)$data['fid'];
+	} else {
+		\DLDB\RespondJson::ResultPage( array( -1, 'invalid input') );
 	}
 
-	switch($data[0]) {
-		case 'did':
-			$did = (int)$data[1];
+	openlog("dldb_parser", LOG_PID,LOG_LOCAL0);
+
+	if($did) {
+		syslog(LOG_INFO, "start parsing of did [".$did."]");
+		$document = \DLDB\Document::get($did);
+		if(!$document) {
+			closelog();
+			\DLDB\RespondJson::ResultPage( array( -3, 'no exists document') );
+		}
+		print json_encode(array('error'=>0,'message'=>'parsing start'));
+		$files = \DLDB\Files\DBM::getAttached($did);
+		if(is_array($files)) {
+			foreach($files as $file) {
+				if($file['status'] == 'parsed') {
+					$memo .= $file['text'];
+				} else {
+					$memo .= \DLDB\Parser::parseFile($file);
+				}
+			}
+		}
+	} else if($fid) {
+		syslog(LOG_INFO, "start parsing of fid [".$fid."]");
+		$file = \DLDB\Files::getFile($fid);
+		if($file['fid']) {
+			$did = $file['did'];
 			$document = \DLDB\Document::get($did);
 			if(!$document) {
-				\DLDB\RespondJson::ResultPage( array( -3, '존재하지 않는 문서입니다.') );
+				closelog();
+				\DLDB\RespondJson::ResultPage( array( -3, 'no exists document') );
 			}
-			$files = \DLDB\Files\DBM::getAttached($did);
-			if(is_array($files)) {
-				foreach($files as $file) {
-					if($file['status'] == 'parsed') {
-						$memo .= $file['text'];
-					} else {
-						$memo .= \DLDB\Parser::parseFile($file);
-					}
-				}
-			}
-			break;
-		case 'fid':
-		default:
-			$file = \DLDB\Files::getFile((int)$data[1]);
-			if($file['fid']) {
-				$fid = $file['fid'];
-				$did = $file['did'];
-				$document = \DLDB\Document::get($did);
-				if(!$document) {
-					\DLDB\RespondJson::ResultPage( array( -3, '존재하지 않는 문서입니다.') );
-				}
-				$_memo = \DLDB\Parser::parseFile($file);
-				if($did) {
-					$files = \DLDB\Files\DBM::getAttached($fid);
-					if(is_array($files)) {
-						foreach($files as $file) {
-							if($file['status'] == 'parsed') {
-								$memo .= $file['text'];
-							}
+			print json_encode(array('error'=>0,'message'=>'parsing start'));
+			$_memo = \DLDB\Parser::parseFile($file);
+			if($did) {
+				$files = \DLDB\Files\DBM::getAttached($fid);
+				if(is_array($files)) {
+					foreach($files as $file) {
+						if($file['status'] == 'parsed') {
+							$memo .= $file['text'];
 						}
 					}
 				}
-			} else {
-				\DLDB\RespondJson::ResultPage( array( -2, '파일이 존재하지 않습니다.') );
 			}
-			break;
+		} else {
+			closelog();
+			\DLDB\RespondJson::ResultPage( array( -2, ' no exists file') );
+		}
 	}
+	syslog(LOG_INFO, "success paring file of did [".$did."]");
 
 	if($did && $document) {
+		syslog(LOG_INFO, "start indexing of did [".$did."]");
 		\DLDB\Parser::insert($did,$document,$memo);
+		syslog(LOG_INFO, "success indexing of did [".$did."]");
 	}
 
 	$dbm->release();
-
-	\DLDB\RespondJson::ResultPage( array( 0, '파일 parsing이 완료되었습니다.') );
 } catch(Exception $e) {
 	$logger = \DLDB\Logger::instance();
 	$logger->Error($e,DLDB_ERROR_ACTION_AJAX);
