@@ -3,9 +3,14 @@ import Form from '../accessories/docManager/Form';
 import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 import api from '../api/dlDbApi';
-import {extracFileData, makeDocFormData, makeFileFormData} from '../fieldData/docFieldData';
+import {extracFileData, makeDocFormData, makeFileFormData, extractFileStatusFromOrigin, makeInitParseState} from '../fieldData/docFieldData';
+import {_forIn, _isEmpty} from '../accessories/functions';
 
 class DocumentForm extends Component {
+	constructor(){
+		super();
+		this.intvOfRqstParseState = undefined;
+	}
 	componentDidMount(){
 		const id = this.props.params.id;
 		if(id){
@@ -20,6 +25,34 @@ class DocumentForm extends Component {
 			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
 		}
 		this.props.focusIn('title');
+	}
+	componentDidUpdate(prevProps){
+		if(!this.intvOfRqstParseState){
+			let parseState = makeInitParseState(this.props.doc, this.props.fData);
+			if(!_isEmpty(parseState)){
+				this.props.setParseState({parseState});
+				this.rqstParseState();
+			}
+		}
+	}
+	componentWillUnmount(){
+		clearInterval(this.intvOfRqstParseState);
+	}
+	rqstParseState(){
+		this.intvOfRqstParseState = setInterval(() => {
+			this.props.fetchParseState({
+				docId: this.props.doc.id,
+				afterReceive: (percentages) => {
+					let newParseState = _mapOO(this.props.parseState,
+						(fid, value) => {
+						},
+						(fid, value) => {
+							let  percentages.find((per) => (per.fid == fid))
+						}
+					);
+				}
+			});
+		}, 1000);
 	}
 	customize(){ return {
 		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?
@@ -76,36 +109,22 @@ class DocumentForm extends Component {
 		}
 	}}
 	handleSubmit(error){
-
-		/*
-		let fileData = extracFileData(this.props.doc, this.props.fData);
-		makeDocFormData(this.props.doc, this.props.fData)
-		makeFileFormData(this.props.doc, this.props.fData);
-		this.props.onChange({mode: 'merge', value: fileData});
-		console.log(fileData);
-
-		return;
-		*/
-
 		if(error){
 			this.props.showMessage(error.message, () => this.props.focusIn(error.fSlug, error.index));
 		} else {
 			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
-			const [id, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
-			let oldDoc = (id ? this.props.openDocs[id] : fData.empty);
-			let fileData = extracFileData(doc, fData);
+			const [paramId, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
+			let oldDoc = (paramId ? this.props.openDocs[paramId] : fData.empty);
+			let files = extracFileData(doc, fData);
+			let oldFiles = extracFileData(oldDoc, fData);
 			let docFormData = makeDocFormData(doc, fData);
 			let fileFormData = makeFileFormData(doc, fData);
-			this.props.onChange({mode: 'merge', value: fileData});
-			this.props.onSubmit(doc, docFormData, oldDoc,
-				(docId) => {
-					if(!id) this.props.onChange({mode: 'set', fSlug: 'id', value: docId});
-					//this.props.uploadFiles
-				}
-			);
+			this.props.onSubmit({doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
+				afterUpload: (docId) => this.props.onChange({mode: 'merge', value: this.props.openDocs[docId]})
+			});
 		}
 	}
-	render(){ console.log(this.props.doc);
+	render(){
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		let fieldData = update(this.props.fData, {fProps: {name: {form: {$set: 'search'}}}});
@@ -124,6 +143,7 @@ class DocumentForm extends Component {
 								submitLabel={submitLabel}
 								widthToChangeOneCol={SCREEN.sMedium}
 								window={this.props.window}
+								parseState={this.props.parseState}
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
@@ -144,11 +164,14 @@ DocumentForm.propTypes = {
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
 	window: PropTypes.object.isRequired,
+	parseState: PropTypes.array.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,
 	focusIn: PropTypes.func.isRequired,
 	fetchDoc: PropTypes.func.isRequired,
-	onSubmit: PropTypes.func.isRequired
+	onSubmit: PropTypes.func.isRequired,
+	fetchParseState: PropTypes.func.isRequired,
+	setParseState: PropTypes.func.isRequired
 };
 export default DocumentForm;

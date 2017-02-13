@@ -26,3 +26,5 @@ export const FOCUSOUT_DOCFORM = 'focusout docform';
 export const COMPLETE_DOCFORM = 'complete docform';
 export const SUBMIT_DOCFORM = 'submit docform';
 export const ADD_DOC_TO_OPEN_DOCS = 'add doc to open docs';
+export const UPLOAD = 'upload';
+export const RECEIVE_PARSE_STATE = 'receive parse state';

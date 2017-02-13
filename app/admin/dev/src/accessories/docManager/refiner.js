@@ -103,7 +103,10 @@ const refineDoc = (origin, fData, refineDocBySlug = {}, refineDocByType = {}) =>
 					value = _mapO(originVal, (tid) => parseInt(tid));
 					return (fProp.multiple ? value : value[0]);
 				case 'image': case 'file':
-					value = _mapO(originVal, (fid, val) => update(val, {$merge: {fid: fid}}));
+					value = _mapO(originVal, (fid, val) => update(val, {
+						fid: {$set: parseInt(fid)},
+						anonymity: {$apply: (anony) => (anony == 1)}
+					}));
 					return (fProp.multiple ? value : value[0]);
 				default:
 					return emptyVal;
@@ -113,6 +116,18 @@ const refineDoc = (origin, fData, refineDocBySlug = {}, refineDocByType = {}) =>
 		}
 	})
 );
+const refineFile = (files, fData) => ( _mapOO(files,
+	(fieldID, originVal) => {
+		const slug = fData.fSlug[fieldID];
+		let value = _mapO(originVal, (fid, val) => update(val, {
+			fid: {$set: parseInt(fid)},
+			anonymity: {$apply: (anony) => (anony == 1)}
+		}));
+		if(fData.fProps[slug].multiple) return value;
+		else return value[0];
+	},
+	(fieldID, originVal) => (fData.fSlug[fieldID])
+));
 const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
 	return _mapOO(doc, (fs, value) => {
 		const fProp = fData.fProps[fs];
@@ -142,6 +157,21 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 		}
 	}, (fs, value) => (fData.fID[fs]));
 };
+
+const extracFileData = (doc, fData) => {
+	return _mapOO(
+		doc,
+		(fs, value) => {
+			const extract = (val) => (val.fid || !val.name ? val : {filename: val.name, status: 'uploading'});
+			return (fData.fProps[fs].multiple ? value.map((val) => extract(val)) : extract(value));
+		},
+		(fs, value) => {
+			const fProp = fData.fProps[fs];
+			if(fProp && fProp.form == 'file') return fs; else return undefined;
+		}
+	)
+};
+
 const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
 	let formData = new FormData();
 	formData.append(docFormPropName, JSON.stringify(
@@ -162,4 +192,29 @@ const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {},
 	return formData;
 };
 
-export {refineFieldData, refineDoc, refineDocToSubmit, makeFormData};
+const makeDocFormData = (propName, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
+	let formData = new FormData();
+	formData.append(propName, JSON.stringify(
+		refineDocToSubmit(doc, fData, refineDocToSubmitBySlug, refineDocToSubmitByType)
+	));
+	return formData;
+};
+
+const makeFileFormData = (doc, fData) => {
+	let formData = new FormData();
+	for(let fs in doc){
+		const fProp = fData.fProps[fs];
+		if(fProp && fProp.form == 'file'){
+			if(fProp.multiple){
+				doc[fs].forEach((file) => {
+					if(file.name) formData.append(fData.fID[fs]+'[]', file);
+				});
+			} else {
+				if(doc[fs].name) formData.append(fData.fID[fs], doc[fs]);
+			}
+		}
+	}
+	return formData;
+}
+
+export {refineFieldData, refineDoc, refineFile, refineDocToSubmit, extracFileData, makeDocFormData, makeFileFormData, makeFormData};

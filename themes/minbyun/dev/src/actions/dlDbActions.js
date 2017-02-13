@@ -1,10 +1,12 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
-	ADD_DOC_TO_OPEN_DOCS
+	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
+import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
+import {_isEmpty} from '../accessories/functions';
 
 const dispatchError = (dispatch, error) => {
 	if(error.code !== -9999){
@@ -129,21 +131,52 @@ const actionCreators = {
 			}
 		);
 	}},
-	submitDocForm(doc, formData, oldDoc, callback){ return (dispatch) => {
-		let mode = (doc.id > 0 ? 'modify' : 'add');
-		dispatch({type: COMPLETE_DOCFORM, doc});
-		api.submitDocForm(
-			mode, formData,
+	submitDocForm(args){ return (dispatch) => {
+		const {doc, oldDoc, files, oldFiles, docFormData, fileFormData, afterUpload} = args;
+		let submitMode = (doc.id > 0 ? 'modify' : 'add');
+		let mergedDoc = update(doc, {$merge: files});
+		dispatch({type: COMPLETE_DOCFORM, doc: mergedDoc});
+		dispatch({type: CHANGE_DOCFORM, args: {mode: 'merge', value: files}});
+		api.submitDocForm( submitMode, docFormData,
 			(docId) => {
-				if(mode == 'add'){
-					dispatch({type: ADD_DOC_TO_OPEN_DOCS, doc: update(doc, {id: {$set: docId}}), doRefine: false});
+				if(submitMode == 'add'){
+					let docWithId = update(mergedDoc, {$merge: {id: docId}});
+					dispatch({type: ADD_DOC_TO_OPEN_DOCS, doc: docWithId, doRefine: false});
+					dispatch({type: CHANGE_DOCFORM, args: {mode: 'merge', value: {id: docId}}});
 				}
 				dispatch({type: SUBMIT_DOCFORM});
-				if(typeof callback === 'function') callback(docId);
+				api.upload(docId, fileFormData,
+					(files) => {
+						dispatch({type: UPLOAD, docId, files});
+						afterUpload(docId);
+					},
+					(error) => {
+						let oldDoc = update(doc, {$merge: oldFiles});
+						dispatch({type: COMPLETE_DOCFORM, doc: oldDoc});
+						dispatch({type: CHANGE_DOCFORM, args: {mode: 'merge', value: oldFiles}});
+						dispatchError(dispatch, error);
+					}
+				);
 			},
-			(error) => {dispatch({type: COMPLETE_DOCFORM, doc: oldDoc}); dispatchError(dispatch, error)}
+			(error) => {
+				dispatch({type: COMPLETE_DOCFORM, doc: oldDoc});
+				dispatch({type: CHANGE_DOCFORM, args: {mode: 'merge', value: oldDoc}});
+				dispatchError(dispatch, error);
+			}
 		);
-	}}
+	}},
+	setParseState({parseState}){
+		return {type: RECEIVE_PARSE_STATE, parseState};
+	},
+	fetchParseState({docId, afterReceive}){ return (dispatch) => {
+		api.fetchParseState(docId,
+			(percentages) => afterReceive(percentages),
+			(error) => dispatchError(dispatch, error)
+		);
+	}},
+	renewFileStatus({docId, newFileStatus}){
+		return {type: RENEW_FILE_STATUS, docId, newFileStatus};
+	}
 }
 
 export default actionCreators;

@@ -1,11 +1,12 @@
 import {
-	refineFieldData, refineDoc as refine, extracFileData, makeDocFormData as makeDFD, makeFileFormData
+	refineFieldData, refineDoc as refine, refineFile, extracFileData, makeDocFormData as makeDFD, makeFileFormData,
+	extractFileStatusFromOrigin, makeInitParseState
 } from '../accessories/docManager/refiner';
 import update from 'react-addons-update';
-import {_mapO} from '../accessories/functions';
+import {_mapO, _forIn} from '../accessories/functions';
 
 const initDocFData = {
-	empty: {id: 0, uid: 0, created: 0, owner: false, bookmark: false, title: '', content: ''},
+	empty: {id: 0, uid: 0, created: 0, owner: true, bookmark: false, title: '', content: ''},
 	fProps: {
 		id: {type: 'meta', form: 'number'}, uid: {type: 'meta', form: 'number'}, created: {type: 'meta', form: 'number'},
 		owner: {type: 'meta', form: 'bool'}, bookmark: {type: 'meta', form: 'bool'},
@@ -62,4 +63,6 @@ const makeDocFormData = (doc, fData) => {
 	return makeDFD('document', doc, fData);
 };
 
-export {initDocFData, refineDocFData, refineDoc, extracFileData, makeDocFormData, makeFileFormData};
+export {
+	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData, extractFileStatusFromOrigin, makeInitParseState
+};

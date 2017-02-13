@@ -75,15 +75,20 @@ class Form extends Component {
 			if(arg1st.key == 'Enter') this.handleSubmit();
 		}
 	}
-	isDisabled(fProp, value){
-		if(fProp.form == 'file' && (value.status == 'uploading' || value.status == 'uploaded' || value.status == 'parsing')){
-			return true;
-		} else {
-			return false;
+	getParseState(fProp, value){
+		if(	(fProp.type == 'file' && ['uploading', 'uploaded', 'parsing'].indexOf(value.status) >= 0) ||
+			(fProp.type == 'image' && value.status == 'uploading')
+		){
+			let state = this.props.parseState.find((state) => (state.fid == value.fid));
+			if(state) return state.percentage + '%';
+			else return '0%';
+		}
+		else {
+			return undefined;
 		}
 	}
 	renderForm(fs, value, index, fProp){
-		let disabled = this.isDisabled(fProp, value);
+		let percentage = this.getParseState(fProp, value);
 		let options = (fProp.type == 'taxonomy' ?  this.props.fieldData.taxonomy[fs].map((tid) =>
 			<Item key={tid} value={tid}><span>{this.props.fieldData.terms[tid].name}</span></Item>
 		) : undefined);
@@ -93,7 +98,8 @@ class Form extends Component {
 				focus={(this.props.focused.fSlug == fs && this.props.focused.index == index)}
 				fProp={this.props.fieldData.fProps[fs]}
 				options={options}
-				disabled={disabled}
+				disabled={(percentage ? true : false)}
+				percentage={percentage}
 				onChange={this.handleChange.bind(this, fs, index)}
 				onBlur={this.props.onBlur}
 			/>
@@ -115,7 +121,7 @@ class Form extends Component {
 						<div className="field-body__content">{this.renderForm(fs, val, idx, fProp)}</div>
 						<div className="field-body__buttons">
 							<button onClick={this.handleClick.bind(this, 'add', fs)}>{this.props.addButtonIcon}</button>
-							<button style={(this.isDisabled(fProp, val) ? {visibility: 'hidden'} : null)}
+							<button style={(this.getParseState(fProp, val) ? {visibility: 'hidden'} : null)}
 								onClick={this.handleClick.bind(this, 'delete', fs, idx)}
 							>
 								{this.props.deleteButtonIcon}
@@ -127,7 +133,7 @@ class Form extends Component {
 					<div className="field-body">
 						<div className="field-body__content">{this.renderForm(fs, value, undefined, fProp)}</div>
 						<div className="field-body__buttons">
-							<button style={(this.isDisabled(fProp, value) ? {visibility: 'hidden'} : null)}
+							<button style={(this.getParseState(fProp, value) ? {visibility: 'hidden'} : null)}
 								onClick={this.handleClick.bind(this, 'delete', fs)}
 							>
 								{this.props.deleteButtonIcon}
@@ -218,6 +224,7 @@ Form.propTypes = {
 	isSaving: PropTypes.bool,
 	widthToChangeOneCol: PropTypes.number,
 	window: PropTypes.object,
+	parseState: PropTypes.array,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
@@ -246,6 +253,7 @@ Form.defaultProps = {
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
 	savingStateIcon: <i className="pe-7s-config pe-va pe-spin"></i>,
 	submitLabel: '저장',
+	parseState: [],
 	rowsBeforeSlug: {},
 	checkValidBySlug: {},
 	checkValidByType: {},

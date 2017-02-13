@@ -63,6 +63,41 @@ const api = {
 	},
 	submitDocForm(mode, formData, succeed, fail){
 		fetch('post', '/api/document/save?mode='+mode, formData, ({did}) => succeed(parseInt(did)), fail);
+	},
+	upload(docId, formData, succeed, fail){
+		setTimeout(() => {
+			succeed({
+				f20: {
+					'17': {
+						fileuri: '/files/attach/2016/12/images.jpg',
+						filepath: '/attach/2016/12/images.jpg',
+						filename: 'images.jpg',
+						mimetype: 'image/jpeg',
+						status: 'uploaded'
+					}
+				},
+				f21: {
+					1: {
+						fileuri: '/files/attach/2016/11/(OCR)_작은_파일입니다_1_2.pdf',
+						filepath: '/attach/2016/11/(OCR)_작은_파일입니다_1_2.pdf',
+						filename: '(OCR)_작은_파일입니다_1_2.pdf',
+						mimetype: 'application/pdf',
+						status: 'parsing',
+						anonymity: '1',
+						textsize: '16900'
+					}
+				}
+			});
+		}, 1000);
+	},
+	fetchParseState(docId, succeed, fail){
+		setTimeout(() => {
+			/*
+			succeed([
+				{fid: 1, percentage: 30}
+			]);*/
+			succeed([]);
+		}, 500);
 	}
 }
 

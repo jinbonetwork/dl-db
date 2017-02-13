@@ -1,10 +1,12 @@
-import {CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM} from '../constants';
+import { CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM, UPLOAD, RECEIVE_PARSE_STATE
+} from '../constants';
 import update from 'react-addons-update';
 
 const initialState = {
 	doc: {},
 	focused: {fSlug: undefined, index: undefined},
 	isSaving: false,
+	parseState: {} // {[fid]: {percentage, position: {fSlug, index}}}
 };
 
 const documentForm = (state = initialState, action) => {
@@ -35,6 +37,8 @@ const documentForm = (state = initialState, action) => {
 			return update(state, {isSaving: {$set: true}});
 		case SUBMIT_DOCFORM:
 			return update(state, {isSaving: {$set: false}});
+		case RECEIVE_PARSE_STATE:
+			return update(state, {parseState: {$set: action.parseState}});
 		default:
 			return state;
 	}

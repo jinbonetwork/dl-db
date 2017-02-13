@@ -22,7 +22,8 @@ class FormElem extends Component {
 				return (
 					<FileInput
 						value={this.props.value.name || this.props.value.filename} focus={this.props.focus} accept={this.props.accept}
-						disabled={this.props.disabled} onChange={this.props.onChange} onBlur={this.props.onBlur}
+						disabled={this.props.disabled} percentage={this.props.percentage} onChange={this.props.onChange}
+						onBlur={this.props.onBlur}
 					/>
 				);
 			case 'select':
@@ -89,6 +90,7 @@ FormElem.propTypes = {
 	displayCount: PropTypes.bool,
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	disabled: PropTypes.bool,
+	percentage: PropTypes.string,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSearch: PropTypes.func

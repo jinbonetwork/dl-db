@@ -38,10 +38,11 @@ const DocFormContainer = connect(
 	(state) => ({
 		fData: state.dlDb.docFieldData,
 		openDocs: state.dlDb.openDocs,
+		window: state.dlDb.window,
 		doc: state.documentForm.doc,
 		focused: state.documentForm.focused,
 		isSaving: state.documentForm.isSaving,
-		window: state.dlDb.window,
+		parseState: state.documentForm.parseState
 	}),
 	(dispatch) => ({
 		onChange: (args) => dispatch(dlDbActions.changeDocForm(args)),
@@ -49,7 +50,9 @@ const DocFormContainer = connect(
 		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
 		focusIn: (slug, index) => dispatch(dlDbActions.focusInDocForm(slug, index)),
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
-		onSubmit: (doc, formData, oldDoc, callback) => dispatch(dlDbActions.submitDocForm(doc, formData, oldDoc, callback))
+		onSubmit: (args, callback) => dispatch(dlDbActions.submitDocForm(args, callback)),
+		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
+		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args))
 	})
 )(DocumentForm);
 
