@@ -92,7 +92,7 @@ class DocumentForm extends Component {
 			});
 		}
 	}
-	render(){
+	render(){ console.log(this.props.doc);
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		let fieldData = update(this.props.fData, {fProps: {name: {form: {$set: 'search'}}}});

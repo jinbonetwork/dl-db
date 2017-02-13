@@ -65,6 +65,13 @@ const api = {
 		fetch('post', '/api/document/save?mode='+mode, formData, ({did}) => succeed(parseInt(did)), fail);
 	},
 	upload(docId, formData, succeed, fail){
+		fetch('post', '/api/file/upload?did='+docId, formData, (data) => {console.log(data)}, fail);
+	},
+	fetchParseState(docId, succeed, fail){
+		fetch('get', '/api/file/parsing_state?id='+docId, ({files}) => {console.log(files)}, fail);
+	}
+	/*
+	upload(docId, formData, succeed, fail){
 		setTimeout(() => {
 			succeed({
 				f20: {
@@ -92,10 +99,6 @@ const api = {
 	},
 	fetchParseState(docId, succeed, fail){
 		setTimeout(() => {
-			/*
-			succeed([
-				{fid: 1, percentage: 30}
-			]);*/
 			succeed({
 				1: {
 					did: '7',
@@ -107,6 +110,7 @@ const api = {
 			});
 		}, 500);
 	}
+	*/
 }
 
 export default api;
