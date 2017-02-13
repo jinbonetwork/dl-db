@@ -117,6 +117,7 @@ class DocumentForm extends Component {
 								onSubmit={this.handleSubmit.bind(this)}
 								fetchParseState={this.props.fetchParseState}
 								setParseState={this.props.setParseState}
+								renewFileStatus={this.props.renewFileStatus}
 								{...this.customize()}
 							/>
 						</td>
@@ -142,6 +143,7 @@ DocumentForm.propTypes = {
 	fetchDoc: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
-	setParseState: PropTypes.func.isRequired
+	setParseState: PropTypes.func.isRequired,
+	renewFileStatus: PropTypes.func.isRequired
 };
 export default DocumentForm;

@@ -118,7 +118,7 @@ const refineDoc = (origin, fData, refineDocBySlug = {}, refineDocByType = {}) =>
 );
 const refineFile = (files, fData) => ( _mapOO(files,
 	(fieldID, originVal) => {
-		const fs = fData.fSlug[fieldID];
+		const fs = fData.fSlug['f'+fieldID];
 		let value = _mapO(originVal, (fid, val) => update(val, {
 			fid: {$set: parseInt(fid)},
 			anonymity: {$apply: (anony) => (anony == 1)}
@@ -126,7 +126,7 @@ const refineFile = (files, fData) => ( _mapOO(files,
 		if(fData.fProps[fs].multiple) return value;
 		else return value[0];
 	},
-	(fieldID, originVal) => (fData.fSlug[fieldID])
+	(fieldID, originVal) => (fData.fSlug['f'+fieldID])
 ));
 
 const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {

@@ -36,10 +36,13 @@ class Form extends Component {
 			this.props.fetchParseState({
 				docId: this.props.doc.id,
 				afterReceive: (state) => {
-					let {isInProgress, newFiles} = this.doAfterReceiveParseState(state, this.props.parseState);
+					let {isInProgress, filesWithNewStatus} = this.doAfterReceiveParseState(state, this.props.parseState);
 					this.props.setParseState(state);
-					if(!isInProgress) clearInterval(this.intvOfRqstParseState);
-					if(newFiles) this.props.onChange({mode: 'merge', value: newFiles});
+					if(!isInProgress){
+						clearInterval(this.intvOfRqstParseState);
+						this.intvOfRqstParseState = undefined;
+					}
+					if(filesWithNewStatus) this.props.renewFileStatus({docId: this.props.doc.id, filesWithNewStatus});
 				}
 			});
 		}, 3000);
@@ -60,9 +63,9 @@ class Form extends Component {
 		});
 
 		// doc과 opendocs의 파일 상태를 갱신한다. ////
-		let newFiles;
+		let filesWithNewStatus;
 		if(!_isEmpty(completions)){
-			newFiles = _mapOO(
+			filesWithNewStatus = _mapOO(
 				this.props.doc,
 				(fs, value) => {
 					const fProp = this.props.fieldData.fProps[fs];
@@ -79,7 +82,7 @@ class Form extends Component {
 			);
 		}
 
-		return {isInProgress, newFiles};
+		return {isInProgress, filesWithNewStatus};
 	}
 	isHidden(fs){
 		if(!fs) return false;
@@ -307,6 +310,7 @@ Form.propTypes = {
 	onSubmit: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
 	setParseState: PropTypes.func.isRequired,
+	renewFileStatus: PropTypes.func.isRequired,
 	// For customization ////
 	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),

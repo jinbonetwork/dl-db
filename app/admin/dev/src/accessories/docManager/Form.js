@@ -1,9 +1,89 @@
 import React, {Component, PropTypes, cloneElement} from 'react';
 import FormElem from './FormElem';
 import Item from '../Item';
-import {_mapO, _mapAO, _forIn, _wrap, _isEmpty, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
+import {_mapO, _mapAO, _mapOO, _forIn, _wrap, _isEmpty, _isEmailValid, _isPhoneValid, _isDateValid} from '../functions';
 
 class Form extends Component {
+	constructor(){
+		super();
+		this.intvOfRqstParseState = undefined;
+	}
+	componentDidUpdate(prevProps){
+		if(!this.intvOfRqstParseState){
+			if(this.checkIfParsing()) this.rqstParseState();
+		}
+	}
+	componentWillUnmount(){
+		clearInterval(this.intvOfRqstParseState);
+	}
+	checkIfParsing(){
+		let isParsing = false;
+		_forIn(this.props.doc, (fs, value) => {
+			const fProp = this.props.fieldData.fProps[fs];
+			if(fProp.form == 'file'){
+				let values = (fProp.multiple ? value : [value]);
+				for(let i in values){
+					if(fProp.type == 'file' && ['uploaded', 'parsing'].indexOf(values[i].status) >= 0){
+						isParsing = true; return false;
+					}
+				}
+			}
+		});
+		return isParsing;
+	}
+	rqstParseState(){
+		this.intvOfRqstParseState = setInterval(() => {
+			this.props.fetchParseState({
+				docId: this.props.doc.id,
+				afterReceive: (state) => {
+					let {isInProgress, filesWithNewStatus} = this.doAfterReceiveParseState(state, this.props.parseState);
+					this.props.setParseState(state);
+					if(!isInProgress){
+						clearInterval(this.intvOfRqstParseState);
+						this.intvOfRqstParseState = undefined;
+					}
+					if(filesWithNewStatus) this.props.renewFileStatus({docId: this.props.doc.id, filesWithNewStatus});
+				}
+			});
+		}, 3000);
+	}
+	doAfterReceiveParseState(state, oldState){
+		// 모든 파일의 파싱이 완료되었다면 setInterval를 clear하고, 파싱이 완료된 파일의 상태정보를 추출한다. ////
+		let isInProgress = false;
+		let completions = {};
+		_forIn(state, (fid, value) => {
+			if(	(value.status == 'parsed' || value.status == 'unparsed') &&
+				(_isEmpty(oldState) || oldState[fid].status == 'uploaded' || oldState[fid].status == 'parsing')
+			){
+				completions[fid] = value;
+			}
+			else if(value.status == 'uploaded' || value.status == 'parsing'){
+				isInProgress = true;
+			}
+		});
+
+		// doc과 opendocs의 파일 상태를 갱신한다. ////
+		let filesWithNewStatus;
+		if(!_isEmpty(completions)){
+			filesWithNewStatus = _mapOO(
+				this.props.doc,
+				(fs, value) => {
+					const fProp = this.props.fieldData.fProps[fs];
+					let values = (fProp.multiple ? value : [value]);
+					for(let i in values){
+						if(completions[values[i].fid]) values[i].status = completions[values[i].fid].status;
+					}
+					return (fProp.multiple ? values : values[0]);
+				},
+				(fs, value) => {
+					const fProp = this.props.fieldData.fProps[fs];
+					if(fProp && fProp.form == 'file') return fs; else return undefined;
+				}
+			);
+		}
+
+		return {isInProgress, filesWithNewStatus};
+	}
 	isHidden(fs){
 		if(!fs) return false;
 		return (this.props.checkHiddenBySlug[fs] ? this.props.checkHiddenBySlug[fs](fs) : false);
@@ -79,16 +159,16 @@ class Form extends Component {
 		if(	(fProp.type == 'file' && ['uploading', 'uploaded', 'parsing'].indexOf(value.status) >= 0) ||
 			(fProp.type == 'image' && value.status == 'uploading')
 		){
-			let state = this.props.parseState.find((state) => (state.fid == value.fid));
-			if(state) return state.percentage + '%';
-			else return '0%';
+			let state = this.props.parseState[value.fid];
+			if(state) return <span>{state.progress + '%'}</span>;
+			else return <span>업로드중</span>;
 		}
 		else {
 			return undefined;
 		}
 	}
 	renderForm(fs, value, index, fProp){
-		let percentage = this.getParseState(fProp, value);
+		let parseState = this.getParseState(fProp, value);
 		let options = (fProp.type == 'taxonomy' ?  this.props.fieldData.taxonomy[fs].map((tid) =>
 			<Item key={tid} value={tid}><span>{this.props.fieldData.terms[tid].name}</span></Item>
 		) : undefined);
@@ -98,8 +178,8 @@ class Form extends Component {
 				focus={(this.props.focused.fSlug == fs && this.props.focused.index == index)}
 				fProp={this.props.fieldData.fProps[fs]}
 				options={options}
-				disabled={(percentage ? true : false)}
-				percentage={percentage}
+				disabled={(parseState ? true : false)}
+				parseState={parseState}
 				onChange={this.handleChange.bind(this, fs, index)}
 				onBlur={this.props.onBlur}
 			/>
@@ -224,10 +304,13 @@ Form.propTypes = {
 	isSaving: PropTypes.bool,
 	widthToChangeOneCol: PropTypes.number,
 	window: PropTypes.object,
-	parseState: PropTypes.array,
+	parseState: PropTypes.object,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
+	fetchParseState: PropTypes.func.isRequired,
+	setParseState: PropTypes.func.isRequired,
+	renewFileStatus: PropTypes.func.isRequired,
 	// For customization ////
 	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
@@ -253,7 +336,7 @@ Form.defaultProps = {
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
 	savingStateIcon: <i className="pe-7s-config pe-va pe-spin"></i>,
 	submitLabel: '저장',
-	parseState: [],
+	parseState: {},
 	rowsBeforeSlug: {},
 	checkValidBySlug: {},
 	checkValidByType: {},

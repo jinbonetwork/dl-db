@@ -33,7 +33,7 @@ class FileInput extends Component {
 					className={'fileinput__upload' + (this.props.disabled ? ' disabled' : '')}
 					onKeyDown={this.handleKeyDown.bind(this)} onBlur={this.handleBlur.bind(this)}
 				>
-					{!this.props.disabled ? <span>찾기</span> : <span>{this.props.percentage}</span>}
+					{!this.props.disabled ? <span>찾기</span> : this.props.parseState}
 					<input type="file" ref="file" style={{display: 'none'}} value="" accept={this.props.accept}
 						disabled={this.props.disabled} onChange={this.handleChange.bind(this, 'upload')}
 					/>
@@ -47,12 +47,13 @@ FileInput.propTypes = {
 	accept: PropTypes.string,
 	focus: PropTypes.bool,
 	disabled: PropTypes.bool,
-	percentage: PropTypes.string,
+	parseState: PropTypes.element,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func
 };
 FileInput.defaultProps = {
-	value: ''
+	value: '',
+	parseState: <span>업로드중</span>
 }
 
 export default FileInput;

@@ -65,52 +65,11 @@ const api = {
 		fetch('post', '/api/document/save?mode='+mode, formData, ({did}) => succeed(parseInt(did)), fail);
 	},
 	upload(docId, formData, succeed, fail){
-		fetch('post', '/api/file/upload?did='+docId, formData, (data) => {console.log(data)}, fail);
+		fetch('post', '/api/file/upload?did='+docId, formData, ({files}) => succeed(files), fail);
 	},
 	fetchParseState(docId, succeed, fail){
-		fetch('get', '/api/file/parsing_state?id='+docId, ({files}) => {console.log(files)}, fail);
+		fetch('get', '/api/file/parsing_state?id='+docId, ({files}) => succeed(files), fail);
 	}
-	/*
-	upload(docId, formData, succeed, fail){
-		setTimeout(() => {
-			succeed({
-				f20: {
-					'17': {
-						fileuri: '/files/attach/2016/12/images.jpg',
-						filepath: '/attach/2016/12/images.jpg',
-						filename: 'images.jpg',
-						mimetype: 'image/jpeg',
-						status: 'uploaded'
-					}
-				},
-				f21: {
-					1: {
-						fileuri: '/files/attach/2016/11/(OCR)_작은_파일입니다_1_2.pdf',
-						filepath: '/attach/2016/11/(OCR)_작은_파일입니다_1_2.pdf',
-						filename: '(OCR)_작은_파일입니다_1_2.pdf',
-						mimetype: 'application/pdf',
-						status: 'parsing',
-						anonymity: '1',
-						textsize: '16900'
-					}
-				}
-			});
-		}, 500);
-	},
-	fetchParseState(docId, succeed, fail){
-		setTimeout(() => {
-			succeed({
-				1: {
-					did: '7',
-					mimetype: 'application/pdf',
-					status: 'parsed',
-					anonymity: '1',
-					progress: ''
-				}
-			});
-		}, 500);
-	}
-	*/
 }
 
 export default api;

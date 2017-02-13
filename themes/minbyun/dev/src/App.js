@@ -52,7 +52,8 @@ const DocFormContainer = connect(
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
 		onSubmit: (args, callback) => dispatch(dlDbActions.submitDocForm(args, callback)),
 		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
-		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args))
+		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
+		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args))
 	})
 )(DocumentForm);
 
