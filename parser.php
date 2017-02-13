@@ -41,6 +41,7 @@ try {
 		syslog(LOG_INFO, "start parsing of did [".$did."]");
 		$document = \DLDB\Document::get($did);
 		if(!$document) {
+			syslog(LOG_INFO, "no exists document [".$did."]");
 			closelog();
 			\DLDB\RespondJson::ResultPage( array( -3, 'no exists document') );
 		}
@@ -51,6 +52,7 @@ try {
 				if($file['status'] == 'parsed') {
 					$memo .= $file['text'];
 				} else {
+					syslog(LOG_INFO, "parsing file [".$file['filename']."]");
 					$memo .= \DLDB\Parser::parseFile($file);
 				}
 			}
