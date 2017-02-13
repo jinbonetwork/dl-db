@@ -18,6 +18,8 @@ class upload extends \DLDB\Controller {
 		$fields = \DLDB\Document::getFields();
 		$this->fields = array();
 		$attated_exists = false;
+		$custom_update = false;
+		$custom = $this->document['custom'];
 		foreach( $fields as $fid => $v ) {
 			if( $v['type'] == 'image' || $v['type'] == 'file' ) {
 				if( $_FILES['f'.$fid] ) {
@@ -43,12 +45,23 @@ class upload extends \DLDB\Controller {
 						}
 						$fd = \DLDB\Files::insertFile( ( $this->params['document']['id'] ? $this->params['document']['id'] : 0 ), $filename);
 						if($fd) {
-							if(!isset($this->document['f'.$fid])) $this->document['f'.$fid] = array();
-							$this->document['f'.$fid][] = $fd;
+//							if(!isset($this->document['f'.$fid])) $this->document['f'.$fid] = array();
+//							$this->document['f'.$fid][] = $fd;
+							$fileinfo = \DLDB\Files::getFile($fd);
+							$custom[$fid][$fd] = array(
+								'fileuri' => \DLDB\Files::getFileUrl($fileinfo),
+								'filepath' => $fileinfo['filepath'],
+								'filename' => $fileinfo['filename'],
+								'mimetype' => $fileinfo['mimetype']
+							);
+							$custom_update = true;
 						}
 					}
 				}
 			}
+		}
+		if($custom_update) {
+			\DLDB\Document::updateCustom($this->params['did'],$custom);
 		}
 		if($attated_exists) {
 			$fp = fsockopen("localhost",20031,$errno, $errstr, 30);

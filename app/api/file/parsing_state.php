@@ -11,7 +11,10 @@ class parsing_state extends \DLDB\Controller {
 			\DLDB\RespondJson::ResultPage( array( -1, '문서번호나 파일번호를 입력하세요') );
 		}
 		if($this->params['id']) {
-			$files = \DLDB\Files::getListParseStatus($this->params['id']);
+			$_files = \DLDB\Files::getListParseStatus($this->params['id']);
+			foreach($_files as $_file) {
+				$files[$_file['fid']] = $_file;
+			}
 			if( !$files || @count($files) < 1 ) {
 				\DLDB\RespondJson::ResultPage( array( -2, '첨부파일목록을 검색할 수 없습니다.') );
 			} else {

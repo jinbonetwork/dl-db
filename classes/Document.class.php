@@ -99,6 +99,13 @@ class Document extends \DLDB\Objects {
 		$dbm->execute($que,array("sd",$memo,$id));
 	}
 
+	public static function updateCustom($id,$custom) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {documents} SET `custom` = ? WHERE `id` = ?";
+		$dbm->execute($que,array("sd",serialize($custom),$id));
+	}
+
 	public static function totalCnt($uid=0) {
 		$dbm = \DLDB\DBM::instance();
 
