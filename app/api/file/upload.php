@@ -45,7 +45,7 @@ class upload extends \DLDB\Controller {
 						if(!$filename) {
 							\DLDB\RespondJson::ResultPage( array( $fid, $v['subject'].': '.\DLDB\Files::errMsg() ) );
 						}
-						$fd = \DLDB\Files::insertFile( ( $this->params['document']['id'] ? $this->params['document']['id'] : 0 ), $filename);
+						$fd = \DLDB\Files::insertFile( ( $this->params['did'] ? $this->params['did'] : 0 ), $filename);
 						if($fd) {
 //							if(!isset($this->document['f'.$fid])) $this->document['f'.$fid] = array();
 //							$this->document['f'.$fid][] = $fd;
