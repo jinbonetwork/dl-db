@@ -72,10 +72,7 @@ class upload extends \DLDB\Controller {
 			\DLDB\Document::updateCustom($this->params['did'],$custom);
 		}
 		if($attated_exists) {
-			$fp = fsockopen($context->getProperty('service.parsing_server'),$context->getProperty('service.parsing_port'),$errno, $errstr, 30);
-			$input = array('did'=>$this->params['did']);
-			fwrite($fp, json_encode($input)."\n");
-			fclose($fp);
+			\DLDB\Parser::forkParser($this->params['did']);
 		}
 		$this->result = array(
 			'error' => 0,
