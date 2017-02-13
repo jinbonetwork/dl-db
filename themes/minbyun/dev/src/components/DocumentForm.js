@@ -4,13 +4,9 @@ import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 import api from '../api/dlDbApi';
 import {extracFileData, makeDocFormData, makeFileFormData, extractFileStatusFromOrigin, makeInitParseState} from '../fieldData/docFieldData';
-import {_forIn, _isEmpty} from '../accessories/functions';
+import {_forIn, _isEmpty, _mapOO} from '../accessories/functions';
 
 class DocumentForm extends Component {
-	constructor(){
-		super();
-		this.intvOfRqstParseState = undefined;
-	}
 	componentDidMount(){
 		const id = this.props.params.id;
 		if(id){
@@ -25,34 +21,6 @@ class DocumentForm extends Component {
 			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
 		}
 		this.props.focusIn('title');
-	}
-	componentDidUpdate(prevProps){
-		if(!this.intvOfRqstParseState){
-			let parseState = makeInitParseState(this.props.doc, this.props.fData);
-			if(!_isEmpty(parseState)){
-				this.props.setParseState({parseState});
-				this.rqstParseState();
-			}
-		}
-	}
-	componentWillUnmount(){
-		clearInterval(this.intvOfRqstParseState);
-	}
-	rqstParseState(){
-		this.intvOfRqstParseState = setInterval(() => {
-			this.props.fetchParseState({
-				docId: this.props.doc.id,
-				afterReceive: (percentages) => {
-					let newParseState = _mapOO(this.props.parseState,
-						(fid, value) => {
-						},
-						(fid, value) => {
-							let  percentages.find((per) => (per.fid == fid))
-						}
-					);
-				}
-			});
-		}, 1000);
 	}
 	customize(){ return {
 		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?
@@ -147,6 +115,8 @@ class DocumentForm extends Component {
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
+								fetchParseState={this.props.fetchParseState}
+								setParseState={this.props.setParseState}
 								{...this.customize()}
 							/>
 						</td>
@@ -164,7 +134,7 @@ DocumentForm.propTypes = {
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
 	window: PropTypes.object.isRequired,
-	parseState: PropTypes.array.isRequired,
+	parseState: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,

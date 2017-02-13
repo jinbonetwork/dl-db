@@ -1,6 +1,5 @@
 import {
-	refineFieldData, refineDoc as refine, refineFile, extracFileData, makeDocFormData as makeDFD, makeFileFormData,
-	extractFileStatusFromOrigin, makeInitParseState
+	refineFieldData, refineDoc as refine, refineFile, extracFileData, makeDocFormData as makeDFD, makeFileFormData
 } from '../accessories/docManager/refiner';
 import update from 'react-addons-update';
 import {_mapO, _forIn} from '../accessories/functions';
@@ -64,5 +63,5 @@ const makeDocFormData = (doc, fData) => {
 };
 
 export {
-	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData, extractFileStatusFromOrigin, makeInitParseState
+	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData
 };

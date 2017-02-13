@@ -6,7 +6,7 @@ const initialState = {
 	doc: {},
 	focused: {fSlug: undefined, index: undefined},
 	isSaving: false,
-	parseState: {} // {[fid]: {percentage, position: {fSlug, index}}}
+	parseState: {}
 };
 
 const documentForm = (state = initialState, action) => {

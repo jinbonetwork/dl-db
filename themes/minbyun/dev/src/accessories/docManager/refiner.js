@@ -173,6 +173,7 @@ const extracFileData = (doc, fData) => {
 	)
 };
 
+/*
 const extractFileStatusFromOrigin = (oDoc, fData) => {
 	let fileStatus = {};
 	_forIn(fData.empty, (fs, emptyVal) => {
@@ -203,6 +204,7 @@ const makeInitParseState = (doc, fData) => {
 	});
 	return parseState;
 }
+*/
 
 const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
 	let formData = new FormData();
@@ -249,4 +251,4 @@ const makeFileFormData = (doc, fData) => {
 	return formData;
 }
 
-export {refineFieldData, refineDoc, refineFile, refineDocToSubmit, extracFileData, extractFileStatusFromOrigin, makeInitParseState, makeDocFormData, makeFileFormData, makeFormData};
+export {refineFieldData, refineDoc, refineFile, refineDocToSubmit, extracFileData, makeDocFormData, makeFileFormData, makeFormData};

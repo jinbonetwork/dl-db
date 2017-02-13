@@ -165,12 +165,12 @@ const actionCreators = {
 			}
 		);
 	}},
-	setParseState({parseState}){
+	setParseState(parseState){
 		return {type: RECEIVE_PARSE_STATE, parseState};
 	},
 	fetchParseState({docId, afterReceive}){ return (dispatch) => {
 		api.fetchParseState(docId,
-			(percentages) => afterReceive(percentages),
+			(parseState) => afterReceive(parseState),
 			(error) => dispatchError(dispatch, error)
 		);
 	}},

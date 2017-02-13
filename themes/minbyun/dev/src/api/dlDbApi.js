@@ -88,7 +88,7 @@ const api = {
 					}
 				}
 			});
-		}, 1000);
+		}, 500);
 	},
 	fetchParseState(docId, succeed, fail){
 		setTimeout(() => {
@@ -96,7 +96,15 @@ const api = {
 			succeed([
 				{fid: 1, percentage: 30}
 			]);*/
-			succeed([]);
+			succeed({
+				1: {
+					did: '7',
+					mimetype: 'application/pdf',
+					status: 'parsed',
+					anonymity: '1',
+					progress: ''
+				}
+			});
 		}, 500);
 	}
 }
