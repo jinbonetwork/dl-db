@@ -52,7 +52,8 @@ const DocFormContainer = connect(
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
 		onSubmit: (args, callback) => dispatch(dlDbActions.submitDocForm(args, callback)),
 		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
-		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args))
+		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
+		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args))
 	})
 )(DocumentForm);
 
@@ -61,7 +62,7 @@ render(
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
 				<Route path="document/new" component={DocFormContainer} />
-				<Route path="document/:id" component={DocFormContainer} />
+				<Route path="document/:id/edit" component={DocFormContainer} />
 			</Route>
 		</Router>
 	</Provider>,

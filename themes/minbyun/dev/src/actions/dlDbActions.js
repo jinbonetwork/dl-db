@@ -1,7 +1,7 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
-	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE
+	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -174,8 +174,8 @@ const actionCreators = {
 			(error) => dispatchError(dispatch, error)
 		);
 	}},
-	renewFileStatus({docId, newFileStatus}){
-		return {type: RENEW_FILE_STATUS, docId, newFileStatus};
+	renewFileStatus({docId, filesWithNewStatus}){
+		return {type: RENEW_FILE_STATUS, docId, filesWithNewStatus};
 	}
 }
 
