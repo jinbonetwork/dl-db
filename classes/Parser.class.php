@@ -36,6 +36,11 @@ class Parser extends \DLDB\Objects {
 	public static function parseFile($file) {
 		self::getFilter();
 
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {files} SET `status` = ?, `progress` = ? WHERE fid = ?";
+		$dbm->execute($que, array("sdd", 'parsing', 0, $file['fid'] ) );
+
 		switch($file['mimetype']) {
 			case 'application/pdf':
 				$out = self::parsePDF($file);
@@ -48,19 +53,20 @@ class Parser extends \DLDB\Objects {
 				break;
 		}
 		if($out['text']) {
-			$dbm = \DLDB\DBM::instance();
 			$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ?, `header` = ? WHERE fid = ?";
 			$dbm->execute($que, array('sdssd','parsed', strlen($out['text']), $out['text'], serialize($out['header']), $file['fid'] ) );
 		} else if( $out['header']['error'] ) {
-			$dbm = \DLDB\DBM::instance();
-			$que = "UPDATE {files} SET `header` = ? WHERE fid = ?";
-			$dbm->execute($que, array("sd", serialize($out['header']), $file['fid'] ) );
+			$que = "UPDATE {files} SET `status` = ?, `header` = ? WHERE fid = ?";
+			$dbm->execute($que, array("ssd", 'unparsed',serialize($out['header']), $file['fid'] ) );
 		}
 		return $out['text'];
 	}
 
 	public static function parsePDF($file_info) {
 		include_once DLDB_CONTRIBUTE_PATH."/pdfparser/vendor/autoload.php";
+
+		$dbm = \DLDB\DBM::instance();
+
 		$parser = new \Smalot\PdfParser\Parser();
 		$filename = \DLDB\Files::getFilePath($file_info);
 		try {
@@ -80,9 +86,15 @@ class Parser extends \DLDB\Objects {
 
 			if(!$errmsg) {
 				$pages = $pdf->getPages();
+				$total_page = @count($pages);
 
+				$cnt = 0;
 				foreach( $pages as $page ) {
 					$text .= mb_convert_encoding($page->getText(), 'UTF-8', 'UTF-8')."\n";
+					$cnt++;
+					$progress = (int)( ( $cnt / $total_page ) * 100 );
+					$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
+					$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 				}
 			} else {
 				$header['error'] = $errmsg;

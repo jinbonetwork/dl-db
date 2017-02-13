@@ -65,6 +65,7 @@ class Acl extends \DLDB\Objects {
 	}
 
 	public function imMaster() {
+		if( !is_array($this->acl) ) return 0;
 		if( in_array( BITWISE_ADMINISTRATOR, $this->acl ) ) return 1;
 		else return 0;
 	}

@@ -7,6 +7,18 @@ class DBM extends \DLDB\Objects {
 		return self::_instance(__CLASS__);
 	}
 
+	public static function getAttached($did) {
+		$dbm = \DLDB\DBM::instance();
+
+		$files = array();
+		$que = "SELECT * FROM {files} WHERE `did` = ".$did;
+		while($row = $dbm->getFetchArray($que)) {
+			if(preg_match("/^image/i",$row['mimetype'])) continue;
+			$files[] = self::fetchFile($row);
+		}
+		return $files;
+	}
+
 	public static function totalFileCnt($s_mode='',$s_args='') {
 		$dbm = \DLDB\DBM::instance();
 
