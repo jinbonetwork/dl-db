@@ -94,7 +94,7 @@ const dlDb = (state = initialState, action) => {
 		case UPLOAD:
 			return update(state, {openDocs: {[action.docId]: {$merge: refineFile(action.files, state.docFieldData)}}});
 		case RENEW_FILE_STATUS:
-			return update(state, {openDocs: {[action.doc.id]: {$set: action.filesWithNewStatus}}});
+			return update(state, {openDocs: {[action.docId]: {$set: action.filesWithNewStatus}}});
 		default:
 			return state;
 	}

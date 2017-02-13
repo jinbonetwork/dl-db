@@ -8,6 +8,14 @@ import {_forIn, _isEmpty, _mapOO} from '../accessories/functions';
 
 class DocumentForm extends Component {
 	componentDidMount(){
+		this.initailize();
+	}
+	componentDidUpdate(prevProps){
+		if(prevProps.params.id != this.props.params.id){
+			this.initailize();
+		}
+	}
+	initailize(){
 		const id = this.props.params.id;
 		if(id){
 			if(this.props.openDocs[id]){

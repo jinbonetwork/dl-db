@@ -308,9 +308,9 @@ Form.propTypes = {
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
-	fetchParseState: PropTypes.func.isRequired,
-	setParseState: PropTypes.func.isRequired,
-	renewFileStatus: PropTypes.func.isRequired,
+	fetchParseState: PropTypes.func,
+	setParseState: PropTypes.func,
+	renewFileStatus: PropTypes.func,
 	// For customization ////
 	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),

@@ -62,7 +62,7 @@ render(
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
 				<Route path="document/new" component={DocFormContainer} />
-				<Route path="document/:id" component={DocFormContainer} />
+				<Route path="document/:id/edit" component={DocFormContainer} />
 			</Route>
 		</Router>
 	</Provider>,
