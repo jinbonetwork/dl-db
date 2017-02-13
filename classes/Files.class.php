@@ -18,6 +18,17 @@ class Files extends \DLDB\Objects {
 		return $files;
 	}
 
+	public static function getListParseStatus($did) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT fid,did,mimetype,uid,status,progress,anonymity FROM {files} WHERE did = ".$did;
+		while($row = $dbm->getFetchArray($que)) {
+			if( preg_match("/^image/i",$row['mimetype']) ) continue;
+			$files[] = self::fetchFiles($row);
+		}
+		return $files;
+	}
+
 	public static function getFile($fid) {
 		$dbm = \DLDB\DBM::instance();
 
@@ -25,6 +36,17 @@ class Files extends \DLDB\Objects {
 		$row = $dbm->getFetchArray($que);
 
 		return self::fetchFiles($row);
+	}
+
+	public static function getFileParseStatus($fid) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SELECT fid,did,mimetype,uid,status,progress,anonymity FROM {files} WHERE fid = ".$fid;
+		$row = $dbm->getFetchArray($que);
+		if( preg_match("/^image/i",$row['mimetype']) ) return null;
+		$file = self::fetchFiles($row);
+
+		return $file;
 	}
 
 	public static function getFileByPath($filepath) {
