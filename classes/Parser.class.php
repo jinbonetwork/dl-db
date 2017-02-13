@@ -55,7 +55,7 @@ class Parser extends \DLDB\Objects {
 		if($out['text']) {
 			$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ?, `header` = ? WHERE fid = ?";
 			$dbm->execute($que, array('sdssd','parsed', strlen($out['text']), $out['text'], serialize($out['header']), $file['fid'] ) );
-		} else if( $out['header']['error'] ) {
+		} else if( !trim($out['text']) || $out['header']['error'] ) {
 			$que = "UPDATE {files} SET `status` = ?, `header` = ? WHERE fid = ?";
 			$dbm->execute($que, array("ssd", 'unparsed',serialize($out['header']), $file['fid'] ) );
 		}
