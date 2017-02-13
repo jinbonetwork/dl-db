@@ -7,6 +7,8 @@ class upload extends \DLDB\Controller {
 	public function process() {
 		$this->params['output'] = 'json';
 
+		$context = \DLDB\Model\Context::instance();
+
 		if( !$this->params['did'] ) {
 			\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 입력하세요') );
 		}
@@ -55,6 +57,12 @@ class upload extends \DLDB\Controller {
 								'mimetype' => $fileinfo['mimetype']
 							);
 							$custom_update = true;
+							$this->files[$fid][$fd] = array(
+								'filename' => $fileinfo['filename'],
+								'fileuri' => \DLDB\Files::getFileUrl($fileinfo),
+								'status' => $fileinfo['status'],
+								'anonymity' => $fileinfo['anonymity']
+							);
 						}
 					}
 				}
@@ -64,11 +72,15 @@ class upload extends \DLDB\Controller {
 			\DLDB\Document::updateCustom($this->params['did'],$custom);
 		}
 		if($attated_exists) {
-			$fp = fsockopen("localhost",20031,$errno, $errstr, 30);
+			$fp = fsockopen($context->getProperty('parsing_server'),$contenxt->getProperty('parsing_port'),$errno, $errstr, 30);
 			$input = array('did'=>$this->params['did']);
 			fwrite($fp, json_encode($input)."\n");
 			fclose($fp);
 		}
+		$this->result = array(
+			'error' => 0,
+			'files' => $this->files
+		);
 	}
 }
 ?>
