@@ -2,7 +2,7 @@ import {
 	refineFieldData, refineDoc as refine, refineFile, extracFileData, makeDocFormData as makeDFD, makeFileFormData
 } from '../accessories/docManager/refiner';
 import update from 'react-addons-update';
-import {_mapO, _forIn} from '../accessories/functions';
+import {_mapO, _forIn, _isEmpty, _mapOO} from '../accessories/functions';
 
 const initDocFData = {
 	empty: {id: 0, uid: 0, created: 0, owner: true, bookmark: false, title: '', content: ''},
@@ -61,7 +61,58 @@ const refineDoc = (doc, fData) => {
 const makeDocFormData = (doc, fData) => {
 	return makeDFD('document', doc, fData);
 };
+const checkIfParsing = (doc, fData) => {
+	let isParsing = false;
+	_forIn(doc, (fs, value) => {
+		const fProp = fData.fProps[fs];
+		if(fProp.form == 'file'){
+			let values = (fProp.multiple ? value : [value]);
+			for(let i in values){
+				if(fProp.type == 'file' && ['uploaded', 'parsing'].indexOf(values[i].status) >= 0){
+					isParsing = true; return false;
+				}
+			}
+		}
+	});
+	return isParsing;
+};
+const doAfterReceiveParseState = (state, oldState, doc, fData) => {
+	// 모든 파일의 파싱이 완료되었다면 setInterval를 clear하고, 파싱이 완료된 파일의 상태정보를 추출한다. ////
+	let isInProgress = false;
+	let completions = {};
+	_forIn(state, (fid, value) => {
+		if(	(value.status == 'parsed' || value.status == 'unparsed') &&
+			(_isEmpty(oldState) || oldState[fid].status == 'uploaded' || oldState[fid].status == 'parsing')
+		){
+			completions[fid] = value;
+		}
+		else if(value.status == 'uploaded' || value.status == 'parsing'){
+			isInProgress = true;
+		}
+	});
+	// doc과 opendocs의 파일 상태를 갱신한다. ////
+	let filesWithNewStatus;
+	if(!_isEmpty(completions)){
+		filesWithNewStatus = _mapOO(
+			doc,
+			(fs, value) => {
+				const fProp = fData.fProps[fs];
+				let values = (fProp.multiple ? value : [value]);
+				for(let i in values){
+					if(completions[values[i].fid]) values[i].status = completions[values[i].fid].status;
+				}
+				return (fProp.multiple ? values : values[0]);
+			},
+			(fs, value) => {
+				const fProp = fData.fProps[fs];
+				if(fProp && fProp.form == 'file') return fs; else return undefined;
+			}
+		);
+	}
+	return {isInProgress, filesWithNewStatus};
+};
 
 export {
-	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData
+	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData, checkIfParsing,
+	doAfterReceiveParseState
 };

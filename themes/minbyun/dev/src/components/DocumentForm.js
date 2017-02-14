@@ -3,10 +3,14 @@ import Form from '../accessories/docManager/Form';
 import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 import api from '../api/dlDbApi';
-import {extracFileData, makeDocFormData, makeFileFormData, extractFileStatusFromOrigin, makeInitParseState} from '../fieldData/docFieldData';
+import {extracFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState} from '../fieldData/docFieldData';
 import {_forIn, _isEmpty, _mapOO} from '../accessories/functions';
 
 class DocumentForm extends Component {
+	constructor(){
+		super();
+		this.intvOfRqstParseState = undefined;
+	}
 	componentDidMount(){
 		this.initailize();
 	}
@@ -14,6 +18,12 @@ class DocumentForm extends Component {
 		if(prevProps.params.id != this.props.params.id){
 			this.initailize();
 		}
+		if(!this.intvOfRqstParseState){
+			if(checkIfParsing(this.props.doc, this.props.fData)) this.rqstParseState();
+		}
+	}
+	componentWillUnmount(){
+		clearInterval(this.intvOfRqstParseState);
 	}
 	initailize(){
 		const id = this.props.params.id;
@@ -29,6 +39,24 @@ class DocumentForm extends Component {
 			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
 		}
 		this.props.focusIn('title');
+		if(!this.intvOfRqstParseState) clearInterval(this.intvOfRqstParseState);
+		this.intvOfRqstParseState = undefined;
+	}
+	rqstParseState(){
+		this.intvOfRqstParseState = setInterval(() => {
+			this.props.fetchParseState({
+				docId: this.props.doc.id,
+				afterReceive: (state) => {
+					let {isInProgress, filesWithNewStatus} = doAfterReceiveParseState(state, this.props.parseState, this.props.doc, this.props.fData);
+					this.props.setParseState(state);
+					if(!isInProgress){
+						clearInterval(this.intvOfRqstParseState);
+						this.intvOfRqstParseState = undefined;
+					}
+					if(filesWithNewStatus) this.props.renewFileStatus({docId: this.props.doc.id, filesWithNewStatus});
+				}
+			});
+		}, 3000);
 	}
 	customize(){ return {
 		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?
@@ -57,10 +85,10 @@ class DocumentForm extends Component {
 			tag: (fs, index, value, formElem) => cloneElement(formElem, {rows: 2}),
 			name: (fs, index, value ,formElem) => cloneElement(formElem, {
 				onSearch: (keyword, callback) => {
-					api.fetchData('get', '/api/members?q='+encodeURIComponent(keyword), ({members}) => {
+					this.props.onSearchMember({keyword, afterSearch: (members) => {
 						callback(members.map((member) => (
 							{name: member.name, class: member.class, email: member.email, phone: member.phone}
-						)));
+						)));}
 					});
 				},
 				onChange: (value) => (typeof value === 'object' ?
@@ -100,7 +128,7 @@ class DocumentForm extends Component {
 			});
 		}
 	}
-	render(){ console.log(this.props.doc);
+	render(){
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		let fieldData = update(this.props.fData, {fProps: {name: {form: {$set: 'search'}}}});
@@ -123,9 +151,6 @@ class DocumentForm extends Component {
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
-								fetchParseState={this.props.fetchParseState}
-								setParseState={this.props.setParseState}
-								renewFileStatus={this.props.renewFileStatus}
 								{...this.customize()}
 							/>
 						</td>
@@ -152,6 +177,7 @@ DocumentForm.propTypes = {
 	onSubmit: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
 	setParseState: PropTypes.func.isRequired,
-	renewFileStatus: PropTypes.func.isRequired
+	renewFileStatus: PropTypes.func.isRequired,
+	onSearchMember: PropTypes.func.isRequired
 };
 export default DocumentForm;

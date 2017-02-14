@@ -7,6 +7,7 @@ import dlDbStore from './store/dlDbStore';
 import dlDbActions from './actions/dlDbActions';
 import DlDb from './components/DlDb';
 import DocumentForm from './components/DocumentForm';
+import Document from './components/Document';
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -53,15 +54,28 @@ const DocFormContainer = connect(
 		onSubmit: (args, callback) => dispatch(dlDbActions.submitDocForm(args, callback)),
 		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
 		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
-		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args))
+		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
+		onSearchMember: (args) => dispatch(dlDbActions.searchMember(args))
 	})
 )(DocumentForm);
+
+const DocContainer = connect(
+	(state) => ({
+		fData: state.dlDb.docFieldData,
+		openDocs: state.dlDb.openDocs,
+		window: state.dlDb.window
+	}),
+	(dispatch) => ({
+		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
+	})
+)(Document);
 
 render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
 				<Route path="document/new" component={DocFormContainer} />
+				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:id/edit" component={DocFormContainer} />
 			</Route>
 		</Router>

@@ -69,6 +69,9 @@ const api = {
 	},
 	fetchParseState(docId, succeed, fail){
 		fetch('get', '/api/file/parsing_state?id='+docId, ({files}) => succeed(files), fail);
+	},
+	searchMember(keyword, succeed, fail){
+		fetch('get', '/api/members?q='+encodeURIComponent(keyword), ({members}) => succeed(members), fail);
 	}
 }
 

@@ -176,7 +176,13 @@ const actionCreators = {
 	}},
 	renewFileStatus({docId, filesWithNewStatus}){
 		return {type: RENEW_FILE_STATUS, docId, filesWithNewStatus};
-	}
+	},
+	searchMember({keyword, afterSearch}){ return (dispatch) => {
+		api.searchMember(keyword,
+			(members) => afterSearch(members),
+			(error) => dispatchError(dispatch, error)
+		);
+	}}
 }
 
 export default actionCreators;

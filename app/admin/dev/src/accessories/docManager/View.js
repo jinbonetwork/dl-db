@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {_mapO, _mapAO} from '../functions';
+import {_mapO, _mapAO, _isEmpty} from '../functions';
 
 class View extends Component {
 	renderValue(value, fProp, fs){
@@ -40,11 +40,6 @@ class View extends Component {
 					} else {
 						return null;
 					}
-				case 'role':
-					if(value.length > 0){
-						let role = value.map((v) => fData.roles[v]);
-						return <span>{role.join(', ')}</span>;
-					} else return null;
 				case 'group':
 					return this.renderTable(_mapAO(fProp.children, (fs) => this.props.doc[fs]), true);
 				default:
@@ -55,13 +50,14 @@ class View extends Component {
 	}
 	renderTable(doc, isChild){
 		const {fSlug, fProps} = this.props.fieldData;
-		const rows  = _mapO(doc, (fs, value) => {
-			if(fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)){
+		const rows = _mapO(doc, (fs, value) => {
+			if(!_isEmpty(value) && fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)){
 				if(!this.props.checkHiddenBySlug[fs] || !this.props.checkHiddenBySlug[fs](fs, value)){
-					return (
+					let renderedValue = this.renderValue(value, fProps[fs], fs);
+					return ( renderedValue &&
 						<tr key={fs} className={'view-table__field-'+fs}>
 							<td>{fProps[fs].dispName}</td>
-							<td>{this.renderValue(value, fProps[fs], fs)}</td>
+							<td>{renderedValue}</td>
 						</tr>
 					)
 				}

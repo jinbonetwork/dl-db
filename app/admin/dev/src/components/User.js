@@ -27,14 +27,18 @@ class User extends Component {
 		}
 	}
 	customize(){ return {/*
-		renderValueBySlug: {
-			something: (slug, value) => {}
-		},
 		renderValueByType: {
 			something: (slug, value) => {}
 		},*/
+		renderValueBySlug: {
+			role: (slug, value) => {
+				if(value.length > 0){
+					return <span>{value.map((v) => this.props.userFieldData.roles[v]).join(', ')}</span>;
+				} else return null;
+			}
+		},
 		checkHiddenBySlug: {
-			role: (slug, value) => this.getUser().uid <= 0, 
+			role: (slug, value) => this.getUser().uid <= 0,
 			password: (slug, value) => true,
 			confirmPw: (slug, value) => true,
 		}
