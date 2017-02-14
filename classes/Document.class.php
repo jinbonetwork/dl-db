@@ -201,22 +201,30 @@ class Document extends \DLDB\Objects {
 		}
 		$insert_id = $dbm->getLastInsertId();
 
-		$memo = '';
+//		$memo = '';
+		$attated_exists = false;
 		if(is_array($files)) {
 			foreach($files as $file) {
-				$memo .= \DLDB\Parser::parseFile($file);
+//				$memo .= \DLDB\Parser::parseFile($file);
+				if( !preg_match("/^image/i",$file['mimetype']) ) {
+					$attated_exists = true;
+				}
 				$que = "UPDATE {files} SET `did` = ? WHERE `fid` = ?";
 				$dbm->execute($que,array("dd", $insert_id, $file['fid']));
 			}
 		}
 //		if(trim($memo)) {
-			\DLDB\Parser::insert($insert_id,$args,$memo);
+//			\DLDB\Parser::insert($insert_id,$args,$memo);
 //		}
 		if( is_array($taxonomy_map) ) {
 			if( $fieldquery->reBuildTaxonomy('documents', $insert_id, $taxonomy_map) < 0 ) {
 				self::setErrorMsg( $fieldquery->getErrorMsg() );
 				return -1;
 			}
+		}
+
+		if( $attated_exists ) {
+			\DLDB\Parser::forkParser($insert_id);
 		}
 		return $insert_id;
 	}
@@ -246,33 +254,42 @@ class Document extends \DLDB\Objects {
 
 		$dbm->execute($que,$q_args);
 
-		$memo = '';
-		$new_parse = false;
-		if( is_array($files) ) {
-			foreach($files as $file) {
-				if($old_files[$file['fid']]) {
-					$memo .= $file['text'];
-				} else {
-					$new_parse = true;
-					$memo .= \DLDB\Parser::parseFile($file);
-				}
-			}
-		}
+		$update_parse = false;
 		if( is_array($del_files) ) {
 			foreach($del_files as $d_fd => $d_file) {
+				if(!preg_match("/^image/i",$d_file['mimetype'])) {
+					$update_parse = true;
+				}
 				\DLDB\Files::deleteFile($d_fd);
 				\DLDB\Files::unlinkFile(DLDB_DA_PATH.$d_file['filepath']);
 			}
 		}
-//		if(trim($memo) && $new_parse) {
+
+		$memo = '';
+		$new_parse = false;
+		if( is_array($files) ) {
+			foreach($files as $file) {
+				if( $update_parse && $old_files[$file['fid']] ) {
+					$memo .= $file['text'];
+				} else if(!$old_files[$file['fid']] && !preg_match("/^image/i",$file['mimetype'])) {
+					$new_parse = true;
+				}
+			}
+		}
+		if($update_parse && !$new_parse) {
 			\DLDB\Parser::insert($args['id'],$args,$memo);
-//		}
+		}
 
 		if( is_array($taxonomy_map) ) {
 			if( $fieldquery->reBuildTaxonomy('documents', $args['id'], $taxonomy_map) < 0 ) {
 				return -1;
 			}
 		}
+
+		if( $new_parse ) {
+			\DLDB\Parser::forkParser($args['id']);
+		}
+
 		return 0;
 	}
 

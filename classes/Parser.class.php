@@ -135,6 +135,15 @@ class Parser extends \DLDB\Objects {
 		return '';
 	}
 
+	public static function forkParser($did) {
+		$context = \DLDB\Model\Context::instance();
+
+		$fp = fsockopen($context->getProperty('service.parsing_server'),$context->getProperty('service.parsing_port'),$errno, $errstr, 30);
+		$input = array('did'=>$did);
+		fwrite($fp, json_encode($input)."\n");
+		fclose($fp);
+	}
+
 	private static function fetchFilter($row) {
 		if(!$row) return null;
 		foreach($row as $k => $v) {
