@@ -1,10 +1,11 @@
 import React, {Component, PropTypes, cloneElement} from 'react';
+import {withRouter} from 'react-router';
 import Form from '../accessories/docManager/Form';
 import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 import api from '../api/dlDbApi';
 import {extracFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState} from '../fieldData/docFieldData';
-import {_forIn, _isEmpty, _mapOO} from '../accessories/functions';
+import {_forIn, _isEmpty, _mapOO, _isCommon} from '../accessories/functions';
 
 class DocumentForm extends Component {
 	constructor(){
@@ -12,6 +13,9 @@ class DocumentForm extends Component {
 		this.intvOfRqstParseState = undefined;
 	}
 	componentDidMount(){
+		if(!this.props.doc.owner && !_isCommon([this.props.role], ['administrator', 'write'])){
+			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
+		}
 		this.initailize();
 	}
 	componentDidUpdate(prevProps){
@@ -162,6 +166,7 @@ class DocumentForm extends Component {
 	}
 }
 DocumentForm.propTypes = {
+	role: PropTypes.arrayOf(PropTypes.string).isRequired,
 	fData: PropTypes.object.isRequired,
 	doc: PropTypes.object.isRequired,
 	openDocs: PropTypes.object.isRequired,
@@ -178,6 +183,10 @@ DocumentForm.propTypes = {
 	fetchParseState: PropTypes.func.isRequired,
 	setParseState: PropTypes.func.isRequired,
 	renewFileStatus: PropTypes.func.isRequired,
-	onSearchMember: PropTypes.func.isRequired
+	onSearchMember: PropTypes.func.isRequired,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
+	}).isRequired
 };
-export default DocumentForm;
+export default withRouter(DocumentForm);

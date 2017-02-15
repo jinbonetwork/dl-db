@@ -1,7 +1,21 @@
 import React, {Component, PropTypes} from 'react';
+import {Link} from 'react-router';
+import ViewElem from './ViewElem';
 import {_mapO, _mapAO, _isEmpty} from '../functions';
 
 class View extends Component {
+	getParseState(fProp, value){
+		if(	(fProp.type == 'file' && ['uploading', 'uploaded', 'parsing'].indexOf(value.status) >= 0) ||
+			(fProp.type == 'image' && value.status == 'uploading')
+		){
+			let state = this.props.parseState[value.fid];
+			if(state) return state.progress + '%';
+			else return '업로드중';
+		}
+		else {
+			return undefined;
+		}
+	}
 	renderValue(value, fProp, fs){
 		const fData = this.props.fieldData;
 		if(this.props.renderValueBySlug[fs]){
@@ -10,53 +24,26 @@ class View extends Component {
 		else if(this.props.renderValueByType[fProp.type]){
 			return this.props.renderValueByType[fProp.type](fs, value);
 		} else {
-			let values;
-			switch(fProp.type){
-				case 'taxonomy':
-					values = (!fProp.multiple ? [value] : value);
-					const taxo = [];
-					values.forEach((v) => {
-						let term = fData.terms[v];
-						if(term) taxo.push(term.name);
-					});
-					if(taxo.length) return <span>{taxo.join(', ')}</span>;
-					else return null;
-				case 'char': case 'email': case 'phone':
-					values = (!fProp.multiple ? [value] : value);
-					if(fProp.form !== 'textarea'){
-						return <span>{values.join(', ')}</span>;
-					} else{
-						let texts = [];
-						values.map((text, i) => { if(text){
-							text = text.split(/\n/).map((t, j) => <div key={j}><span>{t}</span></div>);
-							texts.push(<div key={i}>{text}</div>);
-						}});
-						if(texts.length) return texts;
-						else return null;
-					}
-				case 'date':
-					return _mapO(value, (pn, pv) => (pv)).join('/');
-				case 'tag':
-					return <span>{value.split(',').map((v) => '#'+v.trim()).join(' ')}</span>;
-				case 'group':
-					return this.renderTable(_mapAO(fProp.children, (fs) => this.props.doc[fs]), true);
-				case 'image':
-					values = (!fProp.multiple ? [value] : value);
-				case 'file':
-				default:
-					console.error(fProp.type + '은/는 적합한 type이 아닙니다');
-					return null;
+			if(fProp.type != 'group'){
+				return (
+					<ViewElem value={(fProp.multiple ? value : [value])} type={fProp.type} form={fProp.form}
+						owner={this.props.owner} role={this.props.role} terms={this.props.fieldData.terms} fileTextUri={this.props.fileTextUri}
+						parseState={this.props.parseState}
+					/>
+				);
+			} else {
+				return this.renderTable(_mapAO(fProp.children, (cfs) => this.props.doc[cfs]), true);
 			}
 		}
 	}
 	renderTable(doc, isChild){
 		const {fSlug, fProps} = this.props.fieldData;
 		const rows = _mapO(doc, (fs, value) => {
-			if(!_isEmpty(value) && fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)){
+			if((!_isEmpty(value) || fProps[fs].type == 'group') && fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)){
 				if(!this.props.checkHiddenBySlug[fs] || !this.props.checkHiddenBySlug[fs](fs, value)){
 					let renderedValue = this.renderValue(value, fProps[fs], fs);
 					return ( renderedValue &&
-						<tr key={fs} className={'view-table__field-'+fs}>
+						<tr key={fs} className={'view__field view__slug-'+fs+' view__type-'+fProps[fs].type}>
 							<td>{fProps[fs].dispName}</td>
 							<td>{renderedValue}</td>
 						</tr>
@@ -64,7 +51,7 @@ class View extends Component {
 				}
 			}
 		});
-		const className = (isChild ? 'view-table__inner-table' : 'view-table');
+		const className = (isChild ? 'view__inner-table' : 'view');
 		return (
 			<table className={className}><tbody>
 				{!isChild && this.props.rowsBefore}
@@ -73,16 +60,19 @@ class View extends Component {
 			</tbody></table>
 		);
 	}
-	render(){ console.log(this.props.doc);
+	render(){
 		return this.renderTable(this.props.doc);
 	}
 }
 View.propTypes = {
 	doc: PropTypes.object.isRequired,
 	fieldData: PropTypes.object.isRequired,
+	role: PropTypes.arrayOf(PropTypes.string),
+	fileTextUri: PropTypes.string,
+	parseState: PropTypes.object,
+	//customization ////
 	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
-	//customization ////
 	renderValueBySlug: PropTypes.object,
 	renderValueByType: PropTypes.object,
 	checkHiddenBySlug: PropTypes.object
@@ -90,7 +80,9 @@ View.propTypes = {
 View.defaultProps = {
 	renderValueBySlug: {},
 	renderValueByType: {},
-	checkHiddenBySlug: {}
+	checkHiddenBySlug: {},
+	fileTextUri: '',
+	parseState: {}
 };
 
 export default View;

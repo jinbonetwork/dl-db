@@ -1,7 +1,8 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
-	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS
+	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, BOOKMARK, TOGGLE_DEL_DOC_BUTTON,
+	DELETE_DOC_IN_OPEN_DOCS
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -181,6 +182,37 @@ const actionCreators = {
 		api.searchMember(keyword,
 			(members) => afterSearch(members),
 			(error) => dispatchError(dispatch, error)
+		);
+	}},
+	bookmark({docId, bmId}){ return (dispatch) => {
+		let mode = (bmId ? 'delete' : 'add');
+		dispatch({type: BOOKMARK, docId, bmId: -1})
+		api.bookmark({docId, bmId},
+			({bid}) => {
+				if(mode == 'delete') dispatch({type: BOOKMARK, docId, bmId: 0});
+				else dispatch({type: BOOKMARK, docId, bmId: bid});
+			},
+			(error) => {
+				dispatch({type: BOOKMARK, docId, bmId})
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	toggleDelDocButton(){
+		return {type: TOGGLE_DEL_DOC_BUTTON};
+	},
+	delelteDoc({docId, afterDelete}){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.delelteDoc({docId},
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: DELETE_DOC_IN_OPEN_DOCS, docId});
+				if(afterDelete) afterDelete();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
 		);
 	}}
 }

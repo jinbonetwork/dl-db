@@ -37,6 +37,7 @@ const DlDbContainer = connect(
 
 const DocFormContainer = connect(
 	(state) => ({
+		role: state.dlDb.role,
 		fData: state.dlDb.docFieldData,
 		openDocs: state.dlDb.openDocs,
 		window: state.dlDb.window,
@@ -61,12 +62,22 @@ const DocFormContainer = connect(
 
 const DocContainer = connect(
 	(state) => ({
+		role: state.dlDb.role,
 		fData: state.dlDb.docFieldData,
 		openDocs: state.dlDb.openDocs,
-		window: state.dlDb.window
+		window: state.dlDb.window,
+		dispBtnOfYesOrNo: state.document.dispBtnOfYesOrNo,
+		parseState: state.document.parseState
 	}),
 	(dispatch) => ({
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
+		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
+		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
+		bookmark: (args) => dispatch(dlDbActions.bookmark(args)),
+		toggleDelDocButton: (args) => dispatch(dlDbActions.toggleDelDocButton(args)),
+		delelteDoc: (args) => dispatch(dlDbActions.delelteDoc(args))
 	})
 )(Document);
 

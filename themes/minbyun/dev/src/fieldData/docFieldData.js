@@ -5,10 +5,10 @@ import update from 'react-addons-update';
 import {_mapO, _forIn, _isEmpty, _mapOO} from '../accessories/functions';
 
 const initDocFData = {
-	empty: {id: 0, uid: 0, created: 0, owner: true, bookmark: false, title: '', content: ''},
+	empty: {id: 0, uid: 0, created: 0, owner: true, bookmark: 0, title: '', content: ''},
 	fProps: {
 		id: {type: 'meta', form: 'number'}, uid: {type: 'meta', form: 'number'}, created: {type: 'meta', form: 'number'},
-		owner: {type: 'meta', form: 'bool'}, bookmark: {type: 'meta', form: 'bool'},
+		owner: {type: 'meta', form: 'bool'}, bookmark: {type: 'meta', form: 'number'},
 		title: {type: 'char', dispName: '제목', form: 'text', parent: '', children: [], multiple: false, required: true},
 		content: {type: 'char', dispName: '주요내용', form: 'textarea', parent: '', children: [], multiple: false, required: true}
 	},

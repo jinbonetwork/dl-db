@@ -1,6 +1,7 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
-	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS
+	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
+	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS
 } from '../constants';
 import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
@@ -89,12 +90,16 @@ const dlDb = (state = initialState, action) => {
 			} else {
 				return update(state, {openDocs: {[action.doc.id]: {$set: refineDoc(action.doc, state.docFieldData)}}});
 			}
+		case DELETE_DOC_IN_OPEN_DOCS:
+			return update(state, {openDocs: {[action.docId]: {$set: undefined}}});
 		case COMPLETE_DOCFORM:
 			return update(state, {openDocs: {[action.doc.id]: {$set: action.doc}}});
 		case UPLOAD:
 			return update(state, {openDocs: {[action.docId]: {$merge: refineFile(action.files, state.docFieldData)}}});
 		case RENEW_FILE_STATUS:
 			return update(state, {openDocs: {[action.docId]: {$set: action.filesWithNewStatus}}});
+		case BOOKMARK:
+			return update(state, {openDocs: {[action.docId]: {bookmark: {$set: action.bmId}}}});
 		default:
 			return state;
 	}

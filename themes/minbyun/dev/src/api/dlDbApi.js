@@ -72,6 +72,16 @@ const api = {
 	},
 	searchMember(keyword, succeed, fail){
 		fetch('get', '/api/members?q='+encodeURIComponent(keyword), ({members}) => succeed(members), fail);
+	},
+	bookmark({docId, bmId}, succeed, fail){
+		if(bmId){ // delete
+			fetch('post', '/api/user/bookmark?mode=delete&bid='+bmId, null, succeed, fail);
+		} else { // add
+			fetch('post', '/api/user/bookmark?mode=add&did='+docId, null, succeed, fail);
+		}
+	},
+	delelteDoc({docId}, succeed, fail){
+		fetch('post', '/api/document/save?mode=delete&id='+docId, null, succeed, fail);
 	}
 }
 
