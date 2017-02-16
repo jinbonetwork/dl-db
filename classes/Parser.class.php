@@ -119,8 +119,8 @@ class Parser extends \DLDB\Objects {
 	public static function updateParse($file_info,$text) {
 		$dbm = \DLDB\DBM::instance();
 
-		$que = "UPDATE {files} SET `status` = ?, `textsize` = ?, `text` = ? WHERE fid = ?";
-		$dbm->execute($que,array('sdsd','parsed', strlen(trim($text)), trim($text), $file_info['fid']) );
+		$que = "UPDATE {files} SET `textsize` = ?, `text` = ? WHERE fid = ?";
+		$dbm->execute($que,array('dsd', strlen(trim($text)), trim($text), $file_info['fid']) );
 	}
 
 	public static function validPDF($header) {
