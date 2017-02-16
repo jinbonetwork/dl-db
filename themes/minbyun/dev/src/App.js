@@ -9,6 +9,7 @@ import DlDb from './components/DlDb';
 import DocumentForm from './components/DocumentForm';
 import Document from './components/Document';
 import FileText from './components/FileText';
+import NotFound from './components/NotFound';
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -101,11 +102,9 @@ const FileTextContainer = connect(
 	})
 )(FileText);
 
-/*
 const UserContainer = connet(
 
 );
-*/
 
 render(
 	<Provider store={dlDbStore}>
@@ -115,6 +114,13 @@ render(
 				<Route path="document/:id/edit" component={DocFormContainer} />
 				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:docId/text/:fileId" component={FileTextContainer} />
+				<Route path="user" component={User}>
+					{/*<IndexRedirect to="/user/profile" />
+					<Route path="profile" component={UserProfile} />
+					<Route path="bookmarks(/page/:page)" component={Bookmarks} />
+					<Route path="history(/page/:page)" component={History} />
+					<Route path="documents(/page/:page)" component={UserDocuments} />*/}
+				</Route>
 			</Route>
 		</Router>
 	</Provider>,
