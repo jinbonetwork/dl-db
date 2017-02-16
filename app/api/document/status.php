@@ -14,7 +14,7 @@ class status extends \DLDB\Controller {
 		if(!$this->file) {
 			\DLDB\RespondJson::ResultPage( array( -2, '존재하지 않는 파일입니다.') );
 		}
-		if( !in_array($this->params['status'],array('uploaded','parsed')) ) {
+		if( !in_array($this->params['status'],array('uploaded','parsed','unparsed')) ) {
 			\DLDB\RespondJson::ResultPage( array( -3, '허용되지 않는 상태정보입니다.') );
 		}
 
