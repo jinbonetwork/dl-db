@@ -75,9 +75,9 @@ class Members extends \DLDB\Objects {
 	}
 
 	public static function modify($member,$args) {
-		$fields = self::getFields();
-
 		$dbm = \DLDB\DBM::instance();
+
+		$fields = self::getFields();
 
 		$que = "UPDATE {members} SET `name` = ?, `class` = ?, `email` = ?, `phone` = ?, `custom` = ?";
 		$array1 = 'array("sssss';
@@ -104,7 +104,7 @@ class Members extends \DLDB\Objects {
 		$dbm->execute($que,$q_args);
 
 		if( is_array($taxonomy_map) ) {
-			if( $fieldquery->reBuildTaxonomy('members', $args['id'], $taxonomy_map) < 0 ) {             
+			if( $fieldquery->reBuildTaxonomy('members', $args['id'], $taxonomy_map) < 0 ) {
 				self::setErrorMsg( $fieldquery->getErrorMsg() );
 				return -1;
 			}
