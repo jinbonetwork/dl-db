@@ -2,7 +2,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
 	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
-	TOGGLE_PARSED_OF_FILE
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS
 } from '../constants';
 import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
@@ -15,6 +15,7 @@ const initialState = {
 	menuData: [],
 	openDocs: {},
 	openFileTexts: {},
+	documents: [],
 	message: {content: '', callback: undefined},
 	showProc: false,
 	window: {width: 0, height: 0},
@@ -116,6 +117,10 @@ const dlDb = (state = initialState, action) => {
 				files[index].status = action.status;
 				return files;
 			}}}}});
+		case RECEIVE_USER_DOCS:
+			return update(state, {documents: {$set:
+				action.oriDocs.map((doc) => refineDoc(doc, state.docFieldData))
+			}});
 		default:
 			return state;
 	}

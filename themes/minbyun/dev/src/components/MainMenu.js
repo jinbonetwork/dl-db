@@ -6,49 +6,7 @@ import Toggle from '../accessories/Toggle';
 import {Accordian, AcdItem} from '../accessories/Accordian';
 import LinkIf from '../accessories/LinkIf';
 import {_isCommon, _interpolate, _wrap} from '../accessories/functions';
-import {SCREEN} from '../constants';
-
-const mainMenu = [
-	{
-		name: 'user',
-		icon: 'pe-7f-user'
-	},
-	{
-		name: 'boards',
-		icon: 'pe-7s-note2'
-	},
-	{
-		name: 'links',
-		icon: 'pe-7s-star'
-	},
-];
-const userMenu = [
-	{
-		path: '/user/profile',
-		name: '내정보',
-		icon: 'pe-7s-user'
-	},{
-		path: '/user/bookmarks',
-		name: '북마크',
-		icon: 'pe-7s-bookmarks'
-	},{
-		path: '/user/history',
-		name: '검색기록',
-		icon: 'pe-7s-search'
-	},{
-		path: '/user/documents',
-		name: '내가 올린 자료',
-		icon: 'pe-7s-file'
-	},{
-		path: '/admin',
-		name: '관리',
-		icon: 'pe-7s-config'
-	},{
-		path: '',
-		name: '로그아웃',
-		icon: 'pe-7s-unlock'
-	}
-];
+import {SCREEN, MAIN_MENU, USER_MENU} from '../constants';
 
 class MainMenu extends Component {
 	handleClick(which, arg){
@@ -84,7 +42,7 @@ class MainMenu extends Component {
 	childrenOfMenu(name, tag){
 		switch(name){
 			case 'user':
-				return userMenu.map((item) => {
+				return USER_MENU.map((item) => {
 					const child = _wrap(() => {
 						if(!item.path){
 							return (
@@ -118,7 +76,7 @@ class MainMenu extends Component {
 		}
 	}
 	dropdownMenu(){
-		return mainMenu.map((item) => {
+		return MAIN_MENU.map((item) => {
 			return (
 				<Dropdown key={item.name} className={'main-menu__'+item.name} window={this.props.window}
 					head={[<i key="head-icon" className={item.icon+' pe-va'}></i>, this.displayNameOfMenu(item.name, 'normal', 'display-name')]}
@@ -130,7 +88,7 @@ class MainMenu extends Component {
 		});
 	}
 	hamburgerMenu(){
-		let acditems = mainMenu.map((item) => {
+		let acditems = MAIN_MENU.map((item) => {
 			const head = (
 				<div className={'main-menu__'+item.name}>
 					<i className={item.icon+' pe-va'}></i>

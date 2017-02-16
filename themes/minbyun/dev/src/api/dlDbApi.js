@@ -91,6 +91,9 @@ const api = {
 	},
 	submitFileText(docId, fileId, formData, succeed, fail){
 		fetch('post', '/api/document/text?mode=modify&id='+docId+'&fid='+fileId, formData, succeed, fail);
+	},
+	fetchUserDocs(page, succeed, fail){
+		fetch('get', '/api/user/documents?page='+page, ({result, documents}) => succeed({lastPage: result.total_page, documents}), fail);
 	}
 }
 

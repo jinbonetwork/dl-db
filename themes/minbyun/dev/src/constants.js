@@ -6,6 +6,47 @@ export const SCREEN = {
 	mmLarge: 960,
 	large: 1300
 }
+export const MAIN_MENU = [
+	{
+		name: 'user',
+		icon: 'pe-7f-user'
+	},
+	{
+		name: 'boards',
+		icon: 'pe-7s-note2'
+	},
+	{
+		name: 'links',
+		icon: 'pe-7s-star'
+	},
+];
+export const USER_MENU = [
+	{
+		path: '/user/profile',
+		name: '내정보',
+		icon: 'pe-7s-user'
+	},{
+		path: '/user/bookmarks',
+		name: '북마크',
+		icon: 'pe-7s-bookmarks'
+	},{
+		path: '/user/history',
+		name: '검색기록',
+		icon: 'pe-7s-search'
+	},{
+		path: '/user/documents',
+		name: '내가 올린 자료',
+		icon: 'pe-7s-file'
+	},{
+		path: '/admin',
+		name: '관리',
+		icon: 'pe-7s-config'
+	},{
+		path: '',
+		name: '로그아웃',
+		icon: 'pe-7s-unlock'
+	}
+];
 export const SHOW_MESSAGE = 'show message';
 export const HIDE_MESSAGE = 'hide message';
 export const SHOW_PROCESS = 'show process';
@@ -39,3 +80,4 @@ export const CHANGE_FILETEXT = 'change filetext';
 export const ADD_FILE_TO_OPEN_FILETEXTS = 'add filename to open filetexts';
 export const COMPLETE_FILETEXT = 'complete filetext';
 export const SUBMIT_FILETEXT = 'submit filetext';
+export const RECEIVE_USER_DOCS = 'receive user docs';
