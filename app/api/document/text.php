@@ -44,7 +44,7 @@ class text extends \DLDB\Controller {
 					\DLDB\Document::modifyText( $this->params['id'], trim($memo) );
 					switch($context->getProperty('service.search_type')) {
 						case 'elastic':
-							$else = \DLDB\Search\Elastci::instance();
+							$else = \DLDB\Search\Elastic::instance();
 							$else->setFields();
 							$else->update( $this->params['id'], $this->document, $memo);
 							break;
