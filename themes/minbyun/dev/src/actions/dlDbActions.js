@@ -2,7 +2,8 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
 	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, BOOKMARK, TOGGLE_DEL_DOC_BUTTON,
-	DELETE_DOC_IN_OPEN_DOCS
+	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
+	TOGGLE_PARSED_OF_FILE
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -93,12 +94,13 @@ const actionCreators = {
 			() => {}, (error) => dispatchError(dispatch, error)
 		);
 	}},
-	logout(){ return (dispatch) => {
+	logout({afterLogout}){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		api.logout(
 			() => {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: LOGOUT});
+				if(afterLogout) afterLogout();
 			},
 			(error) => {
 				dispatch({type: HIDE_PROCESS});
@@ -211,6 +213,41 @@ const actionCreators = {
 			},
 			(error) => {
 				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	fetchFileText(docId, fileId, callback){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.fetchFileText(docId, fileId,
+			(fileText) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_FILETEXT, fileId, fileText});
+				if(typeof callback === 'function') callback();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	changeFileText(fileText){
+		return {type: CHANGE_FILETEXT, fileText};
+	},
+	submitFileText({docId, fileId, text, formData, oldText}){ return (dispatch) => {
+		dispatch({type: COMPLETE_FILETEXT, fileId, text});
+		api.submitFileText(docId, fileId, formData,
+			() => dispatch({type: SUBMIT_FILETEXT}),
+			(error) => {dispatch({type: SUBMIT_FILETEXT, fileId, text: oldText}); dispatchError(dispatch, error);}
+		);
+	}},
+	toggleParsedOfFile(fileId, oldStatus){ return (dispatch) => {
+		dispatch({type: REQUEST_TOGGLING_PARSED_OF_FILE});
+		let status = (oldStatus == 'parsed' ? 'unparsed' : 'parsed');
+		api.toggleParsed(fileId, status,
+			() => dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status}),
+			(error) => {
+				dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status: oldStatus});
 				dispatchError(dispatch, error);
 			}
 		);

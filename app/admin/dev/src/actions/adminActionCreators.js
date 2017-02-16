@@ -243,7 +243,7 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	}},
+	}}
 }
 
 export default adminActionCreators;

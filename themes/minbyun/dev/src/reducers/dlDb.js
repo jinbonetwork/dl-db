@@ -1,7 +1,8 @@
 import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
-	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS
+	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
+	TOGGLE_PARSED_OF_FILE
 } from '../constants';
 import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
@@ -13,6 +14,7 @@ const initialState = {
 	role: undefined,
 	menuData: [],
 	openDocs: {},
+	openFileTexts: {},
 	message: {content: '', callback: undefined},
 	showProc: false,
 	window: {width: 0, height: 0},
@@ -80,7 +82,11 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {login: {doAgree: {$set: true}}});
 		case LOGOUT:
 			return update(state, {$apply: (curState) =>
-				update(initialState, {menuData: {$set: curState.menuData}, login: {type: {$set: curState.login.type}}})
+				update(initialState, {
+					menuData: {$set: curState.menuData},
+					window: {$set: curState.window},
+					login: {type: {$set: curState.login.type}}
+				})
 			});
 		case CHANGE_SEARCHBAR_STATE:
 			return update(state, {searchBar: {$merge: action.value}});
@@ -100,6 +106,14 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {openDocs: {[action.docId]: {$set: action.filesWithNewStatus}}});
 		case BOOKMARK:
 			return update(state, {openDocs: {[action.docId]: {bookmark: {$set: action.bmId}}}});
+		case RECEIVE_FILETEXT:
+			return update(state, {openFileTexts: {[action.fileId]: {$set: action.fileText}}});
+		case ADD_FILE_TO_OPEN_FILETEXTS:
+			return update(state, {openFileTexts: {[action.fileId]: {$set: action.file}}});
+		case COMPLETE_FILETEXT:
+			return update(state, {openFileTexts: {[action.fileId]: {text: {$set: action.text}}}});
+		case TOGGLE_PARSED_OF_FILE:
+			return update(state, {openFileTexts: {[action.fileId]: {status: {$set: action.status}}}});
 		default:
 			return state;
 	}

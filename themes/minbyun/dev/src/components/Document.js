@@ -13,7 +13,7 @@ class Document extends Component {
 		this.intvOfRqstParseState = undefined;
 	}
 	componentDidMount(){
-		if(!this.getDoc().owner && !_isCommon([this.props.role], ['administrator', 'view'])){
+		if(!_isCommon([this.props.role], ['administrator', 'view'])){
 			this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return null;
 		}
 		if(!this.props.openDocs[this.props.params.id]){
@@ -104,7 +104,7 @@ class Document extends Component {
 					<span>{fProps.file.dispName}</span>
 				</div>
 				<ViewElem value={document.file} type={fProps.file.type} owner={document.owner} role={this.props.role}
-					fileText={'/document/'+document.id+'/text/'} parseState={this.props.parseState}
+					fileTextUri={'/document/'+document.id+'/text/'} parseState={this.props.parseState}
 				/>
 			</div>
 		);

@@ -82,6 +82,15 @@ const api = {
 	},
 	delelteDoc({docId}, succeed, fail){
 		fetch('post', '/api/document/save?mode=delete&id='+docId, null, succeed, fail);
+	},
+	toggleParsed(fileId, status, succeed, fail){
+		fetch('post', '/api/document/status?fid='+fileId+'&status='+status, null, succeed, fail);
+	},
+	fetchFileText(docId, fileId, succeed, fail){
+		fetch('get', '/api/document/text?id='+docId+'&fid='+fileId, ({header, text}) => succeed({header, text}), fail);
+	},
+	submitFileText(docId, fileId, formData, succeed, fail){
+		fetch('post', '/api/document/text?mode=modify&id='+docId+'&fid='+fileId, formData, succeed, fail);
 	}
 }
 

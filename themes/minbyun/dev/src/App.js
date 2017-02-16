@@ -8,6 +8,7 @@ import dlDbActions from './actions/dlDbActions';
 import DlDb from './components/DlDb';
 import DocumentForm from './components/DocumentForm';
 import Document from './components/Document';
+import FileText from './components/FileText';
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -29,7 +30,7 @@ const DlDbContainer = connect(
 		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin)),
 		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
 		onAgree: () => dispatch(dlDbActions.agreeWithAgreement()),
-		onLogOut: () => dispatch(dlDbActions.logout()),
+		onLogOut: (args) => dispatch(dlDbActions.logout(args)),
 		onChangeQeury: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
 		changeSearchBarState: (value) => dispatch(dlDbActions.changeSearchBarState(value))
 	})
@@ -81,13 +82,39 @@ const DocContainer = connect(
 	})
 )(Document);
 
+const FileTextContainer = connect(
+	(state) => ({
+		role: state.dlDb.role,
+		fData: state.dlDb.docFieldData,
+		openDocs: state.dlDb.openDocs,
+		openFileTexts: state.dlDb.openFileTexts,
+		fileText: state.fileText.fileText,
+		//isSaving: state.fileText.isSaving
+	}),
+	(dispatch) => ({
+		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
+		fetchFileText: (docId, fileId, callback) => dispatch(dlDbActions.fetchFileText(docId, fileId, callback)),
+		onChange: (fileText) => dispatch(dlDbActions.changeFileText(fileText)),
+		onSubmit: (args) => dispatch(dlDbActions.submitFileText(args)),
+		toggleParsed: (fileId, oldStatus) => dispatch(dlDbActions.toggleParsedOfFile(fileId, status)),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
+	})
+)(FileText);
+
+/*
+const UserContainer = connet(
+
+);
+*/
+
 render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
 			<Route path="/" component={DlDbContainer}>
 				<Route path="document/new" component={DocFormContainer} />
-				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:id/edit" component={DocFormContainer} />
+				<Route path="document/:id" component={DocContainer} />
+				<Route path="document/:docId/text/:fileId" component={FileTextContainer} />
 			</Route>
 		</Router>
 	</Provider>,

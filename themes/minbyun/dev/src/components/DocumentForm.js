@@ -13,7 +13,7 @@ class DocumentForm extends Component {
 		this.intvOfRqstParseState = undefined;
 	}
 	componentDidMount(){
-		if(!this.props.doc.owner && !_isCommon([this.props.role], ['administrator', 'write'])){
+		if(!_isCommon([this.props.role], ['administrator', 'write'])){
 			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
 		}
 		this.initailize();

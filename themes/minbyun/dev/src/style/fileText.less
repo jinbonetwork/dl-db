@@ -1,0 +1,69 @@
+.filetext {
+	margin: 5% auto;
+	padding: 0 1em;
+	max-width: 50em;
+	.filetext__title {
+		font-size: 2em;
+		color: @main-color;
+		line-height: 1em;
+		text-align: center;
+	}
+	.filetext__title span {
+		display: inline-block;
+		text-align: left;
+	}
+	.filetext__title + .filetext__header {
+		margin-top: 10%;
+	}
+	.filetext__header + .filetext__buttons {
+		margin-top: 5%;
+	}
+	.filetext__buttons {
+		background-color: @minor-color-2;
+		padding: 1em 1em 0 1em;
+	}
+	.filetext__border-of-buttons {
+		border-bottom: solid 1px lighten(@font-color, 30%);
+		padding-bottom: 1em;
+	}
+	.filetext__submit {
+		display: inline-block;
+		width: 5em;
+		padding: 0.3em 0;
+		text-align: center;
+		background-color: @main-color;
+		color: @minor-color-2;
+		border: solid 1px @main-color;
+		&:focus {
+			background-color: @focus-color-2;
+		}
+	}
+	.filetext__submit + .filetext__parsed {
+		margin-left: 1em;
+	}
+	.filetext__parsed {
+		display: inline-block;
+	}
+	.filetext__parsed-label{
+		margin-right: 0.5em;
+	}
+	.filetext__parsed i {
+		font-size: 1.5em;
+		color: @main-color;
+	}
+	.filetext__parsed-state {
+		font-size: 0.8em;
+		margin-left: 0.5em;
+		color: @main-color;
+	}
+	.filetext__textarea {
+		background-color: @minor-color-2;
+		min-height: 10em;
+		width: 100%;
+		line-height: 1.5em;
+		padding: 1em;
+	}
+	.filetext__textarea textarea {
+		color: @font-color;
+	}
+}

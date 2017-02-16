@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Link} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import Dropdown from '../accessories/Dropdown';
 import Item from '../accessories/Item';
 import Toggle from '../accessories/Toggle';
@@ -53,15 +53,7 @@ const userMenu = [
 class MainMenu extends Component {
 	handleClick(which, arg){
 		if(which == 'logout'){
-			this.props.onLogOut();
-			/*
-			this.props.fetchData('post', '/api/logout', null, (data) => {if(data){
-				this.props.unsetUserData();
-				this.props.router.push('/');
-				this.props.router.push('/login');
-			}});
-			*/
-
+			this.props.onLogOut({afterLogout: () => {this.props.router.push('/')}});
 		}
 	}
 	menuItems(name, data, tag){
@@ -188,6 +180,10 @@ MainMenu.propTypes = {
 	role: PropTypes.array.isRequired,
 	window: PropTypes.object.isRequired,
 	menuData: PropTypes.array.isRequired,
-	onLogOut: PropTypes.func.isRequired
+	onLogOut: PropTypes.func.isRequired,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
+	}).isRequired
 }
-export default MainMenu;
+export default withRouter(MainMenu);

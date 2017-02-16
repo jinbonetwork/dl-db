@@ -2,8 +2,7 @@ var webpack = require('webpack');
 var config = require('./config.js');
 
 module.exports = {
-	//devtool: 'eval-source-map',
-	devtool: 'cheap-module-eval-source-map',
+	devtool: 'eval-source-map',
 	entry: config.entry,
 	output: config.output,
 	module: {
