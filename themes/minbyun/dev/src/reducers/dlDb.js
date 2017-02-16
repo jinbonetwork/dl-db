@@ -108,12 +108,14 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {openDocs: {[action.docId]: {bookmark: {$set: action.bmId}}}});
 		case RECEIVE_FILETEXT:
 			return update(state, {openFileTexts: {[action.fileId]: {$set: action.fileText}}});
-		case ADD_FILE_TO_OPEN_FILETEXTS:
-			return update(state, {openFileTexts: {[action.fileId]: {$set: action.file}}});
 		case COMPLETE_FILETEXT:
 			return update(state, {openFileTexts: {[action.fileId]: {text: {$set: action.text}}}});
 		case TOGGLE_PARSED_OF_FILE:
-			return update(state, {openFileTexts: {[action.fileId]: {status: {$set: action.status}}}});
+			return update(state, {openDocs: {[action.docId]: {file: {$apply: (files) => {
+				let index = files.findIndex((file) => (file.fid == action.fileId));
+				files[index].status = action.status;
+				return files;
+			}}}}});
 		default:
 			return state;
 	}

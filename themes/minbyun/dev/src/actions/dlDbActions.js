@@ -238,16 +238,16 @@ const actionCreators = {
 		dispatch({type: COMPLETE_FILETEXT, fileId, text});
 		api.submitFileText(docId, fileId, formData,
 			() => dispatch({type: SUBMIT_FILETEXT}),
-			(error) => {dispatch({type: SUBMIT_FILETEXT, fileId, text: oldText}); dispatchError(dispatch, error);}
+			(error) => {dispatch({type: COMPLETE_FILETEXT, fileId, text: oldText}); dispatchError(dispatch, error);}
 		);
 	}},
-	toggleParsedOfFile(fileId, oldStatus){ return (dispatch) => {
+	toggleParsedOfFile({docId, fileId, oldStatus}){ return (dispatch) => {
 		dispatch({type: REQUEST_TOGGLING_PARSED_OF_FILE});
 		let status = (oldStatus == 'parsed' ? 'unparsed' : 'parsed');
 		api.toggleParsed(fileId, status,
-			() => dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status}),
+			() => dispatch({type: TOGGLE_PARSED_OF_FILE, docId, fileId, status}),
 			(error) => {
-				dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status: oldStatus});
+				dispatch({type: TOGGLE_PARSED_OF_FILE, docId, fileId, status: oldStatus});
 				dispatchError(dispatch, error);
 			}
 		);

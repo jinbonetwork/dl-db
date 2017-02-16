@@ -231,7 +231,7 @@ const adminActionCreators = {
 		dispatch({type: COMPLETE_FILETEXT, fileId, text});
 		adminApi.submitFileText(docId, fileId, formData,
 			() => dispatch({type: SUBMIT_FILETEXT}),
-			(error) => {dispatch({type: SUBMIT_FILETEXT, fileId, text: oldText}); dispatchError(dispatch, error);}
+			(error) => {dispatch({type: COMPLETE_FILETEXT, fileId, text: oldText}); dispatchError(dispatch, error);}
 		);
 	}},
 	toggleParsedOfFile(fileId, status){ return (dispatch) => {

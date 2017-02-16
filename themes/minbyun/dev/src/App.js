@@ -89,14 +89,14 @@ const FileTextContainer = connect(
 		openDocs: state.dlDb.openDocs,
 		openFileTexts: state.dlDb.openFileTexts,
 		fileText: state.fileText.fileText,
-		//isSaving: state.fileText.isSaving
+		isSaving: state.fileText.isSaving
 	}),
 	(dispatch) => ({
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
 		fetchFileText: (docId, fileId, callback) => dispatch(dlDbActions.fetchFileText(docId, fileId, callback)),
 		onChange: (fileText) => dispatch(dlDbActions.changeFileText(fileText)),
 		onSubmit: (args) => dispatch(dlDbActions.submitFileText(args)),
-		toggleParsed: (fileId, oldStatus) => dispatch(dlDbActions.toggleParsedOfFile(fileId, status)),
+		toggleParsed: (args) => dispatch(dlDbActions.toggleParsedOfFile(args)),
 		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
 	})
 )(FileText);

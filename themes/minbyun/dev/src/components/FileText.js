@@ -37,14 +37,13 @@ class FileText extends Component {
 		this.props.onChange({text: event.target.value});
 	}
 	handleClick(which, arg1st){
+		const {docId, fileId} = this.props.params;
 		if(which == 'submit'){
-			const {docId, fileId} = this.props.params;
 			let formData = new FormData(); formData.append('text', this.props.fileText.text);
-			this.props.onSubmit({docId, fileId, text: this.props.fileText.text, formData, oldText: this.props.openFileTexts[fileId]});
+			this.props.onSubmit({docId, fileId, text: this.props.fileText.text, formData, oldText: this.props.openFileTexts[fileId].text});
 		}
 		else if(which == 'status'){
-			const status = arg1st;
-			this.props.toggleParsed(this.props.params.fileId, this.props.fileText.status);
+			this.props.toggleParsed({docId, fileId, oldStatus: this.props.fileText.status});
 		}
 	}
 	render(){
@@ -100,7 +99,7 @@ FileText.propTypes = {
 	openDocs: PropTypes.object.isRequired,
 	openFileTexts: PropTypes.object.isRequired,
 	fileText: PropTypes.object.isRequired,
-	//isSaving: PropTypes.bool,
+	isSaving: PropTypes.bool,
 	fetchDoc: PropTypes.func.isRequired,
 	fetchFileText: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
