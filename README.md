@@ -119,7 +119,9 @@ $ php ~/bin/composer.phar install --dev
 * parser daemon은 xinetd에 의해 구동하도록 설계되어 있습니다.
 
 **xinetd 설정방법**
+
 어떤 포트를 사용할지는 임의로 지정할 수 있습니다. 아래 예제는 20010 port를 사용한다는 것을 가정하여 작성되었습니다.
+
 * /etc/services 설정
 ```bash
 vim /etc/services
