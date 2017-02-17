@@ -1,4 +1,7 @@
 <?php
+set_time_limit(0);
+ini_set("memory_limit", '2048M');
+
 define('__DLDB__',true);
 if(!defined('ROOT'))
 	define('ROOT',dirname(__FILE__));
