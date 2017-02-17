@@ -16,9 +16,8 @@ class UserDocuments extends Component {
 	}
 	handleClick(which, arg1st){
 		if(which == 'title'){
-			let {index} = arg1st;
-			this.props.addDocToOpenDocs(this.props.documents[index]);
-			this.props.router.push('/document/'+this.props.documents[index].id);
+			let docId = arg1st;
+			this.props.router.push('/document/'+docId);
 		}
 	}
 	refineUserDoc(doc){
@@ -53,7 +52,7 @@ class UserDocuments extends Component {
 		const page = parseInt(this.props.params.page ? this.props.params.page : 1);
 		const documentList = documents.map((doc, index) => (
 			<DocListItem key={doc.id} document={doc} fData={this.props.fData} role={this.props.role}
-				onClickTitle={this.handleClick.bind(this, 'title', {index})} showMessage={this.props.showMessage}
+				onClickTitle={this.handleClick.bind(this, 'title', doc.id)} showMessage={this.props.showMessage}
 			/>
 		));
 		return (

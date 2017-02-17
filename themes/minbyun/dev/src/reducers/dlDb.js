@@ -2,11 +2,11 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
 	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
-	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY
 } from '../constants';
 import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
-import {_mapO, _mapOO, _forIn} from '../accessories/functions';
+import {_mapO, _mapOO, _forIn, _displayDateOfMilliseconds} from '../accessories/functions';
 
 const initialState = {
 	docFieldData: undefined,
@@ -17,6 +17,8 @@ const initialState = {
 	openFileTexts: {},
 	documents: [],
 	searchResult: [],
+	bookmarks: [],
+	history: [],
 	message: {content: '', callback: undefined},
 	showProc: false,
 	window: {width: 0, height: 0},
@@ -34,34 +36,18 @@ const initialState = {
 	}
 };
 
-const refinMenuData = (data) => {
-	return _mapO(data, (key, value) => {
-		const items = value.sub.map((item) => { return {
-			displayName: item.name,
-			url: item.url
-		}});
-		return {
-			displayName: value.name,
-			items: items
-		}
-	})
-};
-
-const refineSearchResult = (doc, fData) => {
-	return (
-		update(_mapOO(doc._source,
-			(fId, value) => (fData.fSlug[fId] != 'date' ? value : value.replace('-', '/')),
-			(fId, value) => (fData.fSlug[fId])
-		), {id: {$set: doc._id}})
-	);
-};
-
 const dlDb = (state = initialState, action) => {
 	switch(action.type){
 		case RECEIVE_ROOT_DATA:
 			return update(state, {
 				role: {$set: (action.rootData.role ? action.rootData.role.map((r) => (action.rootData.roles[r])) : null)},
-				menuData: {$set: refinMenuData(action.rootData.menu)},
+				menuData: {$set: _mapO(action.rootData.menu, (key, value) => ({
+					displayName: value.name,
+					items: value.sub.map((item) => ({
+						displayName: item.name,
+						url: item.url
+					}))
+				}))},
 				login: {$merge: {
 					type: action.rootData.sessiontype,
 					didLogIn: (action.rootData.role ? true : false),
@@ -132,8 +118,32 @@ const dlDb = (state = initialState, action) => {
 				action.oriDocs.map((doc) => refineDoc(doc, state.docFieldData))
 			}});
 		case RECEIVE_SEARCH_RESULT:
-			//return update(state, {searchResult: {$set: action.documents.map((doc) => refineSearchResult(, state.docFieldData))}});
-			return update(state, {searchResult: {$set: action.documents.map((doc) => refineSearchResult(doc, state.docFieldData))}});
+			return update(state, {searchResult: {$set: action.documents.map((doc) => (
+				update(_mapOO(doc._source,
+					(fId, value) => (state.docFieldData.fSlug[fId] != 'date' ? value : value.replace('-', '/')),
+					(fId, value) => (state.docFieldData.fSlug[fId])
+				), {id: {$set: doc._id}})
+			))}});
+		case RECEIVE_BOOKMARKS:
+			return update(state, {bookmarks: {$set: action.bookmarks.map((bmk) => ({
+				id: bmk[state.docFieldData.fID.id],
+				bid: bmk.bid,
+				regDate: _displayDateOfMilliseconds(bmk.regdate*1000),
+				title: bmk[state.docFieldData.fID.title]
+			}))}});
+		case RECEIVE_HISTORY:
+			return update(state, {history: {$set: action.history.map((item) => {
+				const period = item.options[state.docFieldData.fID.date];
+				return {
+					hid: item.hid,
+					searchDate: _displayDateOfMilliseconds(item.search_date*1000),
+					keyword: item.query,
+					doctypes: item.options[state.docFieldData.fID.doctype],
+					from: (period && period.from ? period.from : ''),
+					to: (period && period.to ? period.to : ''),
+					params: item.query_string
+				};
+			})}});
 		default:
 			return state;
 	}

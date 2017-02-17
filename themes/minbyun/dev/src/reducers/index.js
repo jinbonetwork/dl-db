@@ -5,6 +5,8 @@ import document from './document';
 import fileText from './fileText';
 import userDocuments from './userDocuments';
 import searchResult from './searchResult';
+import bookmarks from './bookmarks';
+import history from './history';
 
 const rootReducer = combineReducers({
 	dlDb,
@@ -12,7 +14,9 @@ const rootReducer = combineReducers({
 	document,
 	fileText,
 	userDocuments,
-	searchResult
+	searchResult,
+	bookmarks,
+	history
 });
 
 export default rootReducer;

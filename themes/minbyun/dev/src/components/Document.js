@@ -33,15 +33,12 @@ class Document extends Component {
 		const docId = this.props.params.id;
 		switch(which){
 			case 'bookmark':
-				if(document.bookmark === 0)this.props.bookmark({docId});
-				else if(document.bookmark > 0) this.props.bookmark({docId, bmId: document.bookmark});
-				break;
+				if(document.bookmark >= 0) this.props.bookmark({docId, bmId: document.bookmark}); break;
 			case 'delete':
 			case 'delete-no':
-				this.props.toggleDelDocButton();
-				break;
+				this.props.toggleDelDocButton(); break;
 			case 'delete-yes':
-				this.props.delelteDoc({docId, afterDelete: this.props.router.goBack});
+				this.props.delelteDoc({docId, afterDelete: this.props.router.goBack}); break;
 			default:
 		}
 	}
