@@ -149,6 +149,10 @@ service dldb_parser
 	disable                 = no
 }
 ```
+* xinetd restart
+```bash
+service xinetd restart
+```
 * config/settings.php 설정
 ```bash
 vim config/settings.php
