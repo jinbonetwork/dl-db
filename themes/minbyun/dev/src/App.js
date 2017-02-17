@@ -14,6 +14,7 @@ import UserDocuments from './components/UserDocuments';
 import SearchResult from './components/SearchResult';
 import Bookmarks from './components/Bookmarks';
 import History from './components/History';
+import UserProfile from './components/UserProfile';
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -160,6 +161,15 @@ const HistoryContainer = connect(
 	})
 )(History);
 
+const UserProfileContainer = connect(
+	(state) => ({
+
+	}),
+	(dispatch) => ({
+		fetchUserProfile: () => dispatch(dlDbActions.fetchUserProfile())
+	})
+)(UserProfile);
+
 render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
@@ -169,6 +179,7 @@ render(
 				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:docId/text/:fileId" component={FileTextContainer} />
 				<Route path="user" component={User}>
+					<Route path="profile" component={UserProfileContainer} />
 					<Route path="bookmarks(/page/:page)" component={BookmarksContainer} />
 					<Route path="history(/page/:page)" component={HistoryContainer} />
 					<Route path="documents(/page/:page)" component={UserDocsContainer} />

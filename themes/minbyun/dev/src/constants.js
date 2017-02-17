@@ -84,3 +84,4 @@ export const RECEIVE_USER_DOCS = 'receive user docs';
 export const RECEIVE_SEARCH_RESULT = 'receive search result';
 export const RECEIVE_BOOKMARKS = 'receive bookmarks';
 export const RECEIVE_HISTORY = 'receive history';
+export const RECEIVE_USER_PROFILE = 'receive user profile';

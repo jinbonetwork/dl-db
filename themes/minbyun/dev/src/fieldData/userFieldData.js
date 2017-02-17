@@ -3,7 +3,7 @@ import update from 'react-addons-update';
 import {_forIn, _mapOO} from '../accessories/functions';
 
 export const initUsrFData = {
-	empty: {id: 0, uid: 0, license: false, name: '', class: '', email: '', phone: '', role: [], password: '', confirmPw: ''},
+	empty: {name: '', class: '', email: '', phone: '', password: '', confirmPw: ''},
 	fProps: {
 		id: {type: 'meta', form: 'number'},
 		uid: {type: 'meta', form: 'number', dispName: '등록여부'},

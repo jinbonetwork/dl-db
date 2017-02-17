@@ -104,6 +104,9 @@ const api = {
 		fetch('get', '/api/user/history?page='+page,
 			({histories, result}) => succeed({history: histories, lastPage: result.total_page}), fail
 		);
+	},
+	fetchUserProfile(succeed, fail){
+		fetch('get', '/api/user/profile', (data) => {console.log(data)});
 	}
 }
 

@@ -3,7 +3,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
 	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, BOOKMARK, TOGGLE_DEL_DOC_BUTTON,
 	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
-	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, RECEIVE_USER
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -40,7 +40,6 @@ const actionCreators = {
 				dispatch({type: RECEIVE_ROOT_DATA, rootData});
 				if(rootData.role){
 					dispatchDocFieldData(dispatch);
-					//dispatchUserFieldData(dispatch);
 				}
 			}, (error) => dispatchError(dispatch, error));
 		}
@@ -313,6 +312,19 @@ const actionCreators = {
 			({history, lastPage}) => {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: RECEIVE_HISTORY, history, lastPage});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	fetchUserProfile(){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.fetchUserProfile(
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_USER_PROFILE});
 			},
 			(error) => {
 				dispatch({type: HIDE_PROCESS});
