@@ -112,7 +112,51 @@ $ cd contribute/pdfparser
 $ php ~/bin/composer.phar install --dev
 ```
 
-8) Mecab-ko 설치
+8) File Parse Daemom
+--------------------
+* pdf 등 첨부파일 파싱을 문서작성과 동시에 할 수도 있고, 두개의 과정을 분리할 수도 있습니다. 분리여부는 theme 에서 결정합니다.
+* 파싱을 분리하는 경우 파일을 별도의 api로 업로드하도록 theme가 작성되어야 합니다. 사용할 api는 /api/file/upload 입니다. 이 api를 사용하기 위해서는 parsing하기 위해 별도의 parser daemon(parser.php)을 설정해야 합니다.
+* parser daemon은 xinetd에 의해 구동하도록 설계되어 있습니다.
+
+**xinetd 설정방법**
+어떤 포트를 사용할지는 임의로 지정할 수 있습니다. 아래 예제는 20010 port를 사용한다는 것을 가정하여 작성되었습니다.
+* /etc/services 설정
+```bash
+vim /etc/services
+```
+```vim
+# Local services
+dldb_parser     20010/tcp               # dldb parser
+```
+* /etc/xinet.d/ 설정
+```bash
+vim /etc/xinetd.d/dldb_parser
+```
+```vim
+service dldb_parser
+{
+	socket_type             = stream
+	protocol                = tcp
+	wait                    = no
+	user                    = dldb
+	server                  = /usr/local/bin/php
+	server_args             = /home/dldb/public_html/parser.php /* 이 프로젝트가 /home/dldb/public_html에 설치되어 있는 경우 */
+	log_on_success          += DURATION
+	nice                    = 10
+	only_from               = 127.0.0.1
+	disable                 = no
+}
+```
+* config/settings.php 설정
+```bash
+vim config/settings.php
+```
+```vim
+$service['parsing_server'] = '127.0.0.1'; /* xinetd 설정에 only_from 값.
+$service['parsing_port'] = '20010' /* services 에 설정한 port 번호 */
+```
+
+9) Mecab-ko 설치
 ---------------
 * 공식 홈페이지: http://eunjeon.blogspot.kr/
 * mecab 설치
@@ -155,7 +199,7 @@ dicdir =  /usr/lib64/mecab/dic/mecab-ko-dic
 ; eos-format = EOS\n
 ```
 
-9) MySQL FullText로 검색할 경우
+10) MySQL FullText로 검색할 경우
 ------------------------------
 * 참고사이트: http://dev.mysql.com/doc/refman/5.7/en/fulltext-search-mecab.html
 ```bash
@@ -174,7 +218,7 @@ $ service mysqld restart
 mysql> INSTALL PLUGIN mecab SONAME 'libpluginmecab.so';
 ```
 
-10) ElasticSearch 을 사용할 경우
+11) ElasticSearch 을 사용할 경우
 ------------------------------
 * 현재는 Elastic 2.4.0 버젼을 사용합니다. 한국 형태소 분석기인 '은전한닢 프로젝트' mecab-ko가 지원하고, Elastic 5.0을 사용하기에는 아직 검증되지 않았기에 일단 2.4.0 버젼으로 시작합니다. 향후 ElasticSearch 프로젝트 진행상황에 따라 향후 업그레이드 할 예정입니다.
 * 참조: https://bitbucket.org/eunjeon/mecab-ko-lucene-analyzer/raw/master/elasticsearch-analysis-mecab-ko/
