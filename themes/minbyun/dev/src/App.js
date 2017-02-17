@@ -12,6 +12,8 @@ import FileText from './components/FileText';
 import User from './components/User';
 import UserDocuments from './components/UserDocuments';
 import SearchResult from './components/SearchResult';
+import Bookmarks from './components/Bookmarks';
+import History from './components/History';
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -134,6 +136,30 @@ const SearchResultContainer = connect(
 	})
 )(SearchResult);
 
+const BookmarksContainer = connect(
+	(state) => ({
+		fData: state.dlDb.docFieldData,
+		bookmarks: state.dlDb.bookmarks,
+		openDocs: state.dlDb.openDocs,
+		lastPage: state.bookmarks.lastPage
+	}),
+	(dispatch) => ({
+		fetchBookmarks: (page) => dispatch(dlDbActions.fetchBookmarks(page)),
+		removeBookmark: (args) => dispatch(dlDbActions.removeBookmark(args))
+	})
+)(Bookmarks);
+
+const HistoryContainer = connect(
+	(state) => ({
+		history: state.dlDb.history,
+		fData: state.dlDb.docFieldData,
+		lastPage: state.history.lastPage,
+	}),
+	(dispatch) => ({
+		fetchHistory: (page) => dispatch(dlDbActions.fetchHistory(page))
+	})
+)(History);
+
 render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
@@ -143,6 +169,8 @@ render(
 				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:docId/text/:fileId" component={FileTextContainer} />
 				<Route path="user" component={User}>
+					<Route path="bookmarks(/page/:page)" component={BookmarksContainer} />
+					<Route path="history(/page/:page)" component={HistoryContainer} />
 					<Route path="documents(/page/:page)" component={UserDocsContainer} />
 				</Route>
 				<Route path="/search**" component={SearchResultContainer} />

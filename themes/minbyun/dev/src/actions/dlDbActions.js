@@ -3,7 +3,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
 	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, BOOKMARK, TOGGLE_DEL_DOC_BUTTON,
 	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
-	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -187,7 +187,7 @@ const actionCreators = {
 		);
 	}},
 	bookmark({docId, bmId}){ return (dispatch) => {
-		let mode = (bmId ? 'delete' : 'add');
+		let mode = (bmId > 0 ? 'delete' : 'add');
 		dispatch({type: BOOKMARK, docId, bmId: -1})
 		api.bookmark({docId, bmId},
 			({bid}) => {
@@ -274,6 +274,45 @@ const actionCreators = {
 			({documents, distribution, lastPage}) => {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: RECEIVE_SEARCH_RESULT, documents, distribution, lastPage});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	fetchBookmarks(page){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.fetchBookmarks((page ? page : 1),
+			({bookmarks, lastPage}) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_BOOKMARKS, bookmarks, lastPage});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	removeBookmark({docId, bmId, afterRemove}){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.bookmark({bmId},
+			({bid}) => {
+				if(docId) dispatch({type: BOOKMARK, docId, bmId: 0});
+				if(afterRemove) afterRemove();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	fetchHistory(page){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.fetchHistory((page ? page : 1),
+			({history, lastPage}) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_HISTORY, history, lastPage});
 			},
 			(error) => {
 				dispatch({type: HIDE_PROCESS});

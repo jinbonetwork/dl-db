@@ -96,6 +96,14 @@ const api = {
 		fetch('get', '/api/search'+params,
 			({documents, result}) => succeed({documents, distribution: result.taxonomy_cnt, lastPage: result.total_page}), fail
 		);
+	},
+	fetchBookmarks(page, succeed, fail){
+		fetch('get', '/api/user/bookmark?page='+page, ({bookmarks, result}) => succeed({bookmarks, lastPage: result.total_page}), fail);
+	},
+	fetchHistory(page, succeed, fail){
+		fetch('get', '/api/user/history?page='+page,
+			({histories, result}) => succeed({history: histories, lastPage: result.total_page}), fail
+		);
 	}
 }
 
