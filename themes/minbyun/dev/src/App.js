@@ -111,7 +111,9 @@ const UserDocsContainer = connect(
 		lastPage: state.userDocuments.lastPage
 	}),
 	(dispatch) => ({
-		fetchUserDocs: (page) => dispatch(dlDbActions.fetchUserDocs(page))
+		fetchUserDocs: (page) => dispatch(dlDbActions.fetchUserDocs(page)),
+		addDocToOpenDocs: (doc) => dispatch(dlDbActions.addDocToOpenDocs(doc)),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
 	})
 )(UserDocuments);
 

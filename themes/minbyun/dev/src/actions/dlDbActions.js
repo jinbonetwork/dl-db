@@ -264,7 +264,10 @@ const actionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
-	}}
+	}},
+	addDocToOpenDocs(doc){
+		return {type: ADD_DOC_TO_OPEN_DOCS, doc, doRefine: false};
+	}
 }
 
 export default actionCreators;

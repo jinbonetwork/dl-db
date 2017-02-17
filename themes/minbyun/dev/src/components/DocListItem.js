@@ -1,8 +1,16 @@
 import React, {Component, PropTypes} from 'react';
 import LinkIf from '../accessories/LinkIf';
+import update from 'react-addons-update';
 import {_isCommon, _forIn, _isEmpty} from '../accessories/functions';
 
 class DocListItem extends Component {
+	handleClick(){
+		if(_isCommon(['administrator', 'view'], this.props.role)){
+			this.props.onClickTitle();
+		} else {
+			this.props.showMessage('권한이 없습니다.');
+		}
+	}
 	sideDispNames(){
 		const fProps = this.props.fData.fProps;
 		return {
@@ -48,16 +56,16 @@ class DocListItem extends Component {
 		const side = this.side();
 		const doctype = (fProps.doctype && document.doctype ? <span>{'['+document.doctype+']'}</span> : null);
 		const title = this.tagged(document.title);
-		const content = this.tagged(document.content);
+		const content = this.tagged( document.content.length > 200 ?
+			document.content.substring(0, 199)+' ...' : document.content
+		);
 		return (
 			<div className="doclist-item">
 				<div className="doclist-item__header">
 					{doctype}
-					<LinkIf className="doclist-item__title" to={'/document/'+document.id} onClick={() => console.log('click')}
-						if={_isCommon(['administrator', 'view'], this.props.role)} isVisible={true}
-					>
+					<span className={'doclist-item__title'} onClick={this.handleClick.bind(this)}>
 						{title}
-					</LinkIf>
+					</span>
 				</div>
 				<div className="doclist-item__content">
 					{side && <ul className="doclist-item__side">{side}</ul>}
@@ -72,7 +80,8 @@ DocListItem.propTypes = {
 	role: PropTypes.array.isRequired,
 	fData: PropTypes.object.isRequired,
 	keywords: PropTypes.string,
-	onClick: PropTypes.func,
+	onClickTitle: PropTypes.func.isRequired,
+	showMessage: PropTypes.func.isRequired
 };
 DocListItem.defaultProps = {
 	keywords: ''

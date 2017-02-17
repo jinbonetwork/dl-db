@@ -14,6 +14,13 @@ class UserDocuments extends Component {
 			this.props.fetchUserDocs(this.props.params.page);
 		}
 	}
+	handleClick(which, arg1st){
+		if(which == 'title'){
+			let {index} = arg1st;
+			this.props.addDocToOpenDocs(this.props.documents[index]);
+			this.props.router.push('/document/'+this.props.documents[index].id);
+		}
+	}
 	convertToUserDoc(doc){
 		const fData = this.props.fData;
 		const fProps = fData.fProps;
@@ -45,7 +52,9 @@ class UserDocuments extends Component {
 		const documents =  this.props.documents.map((doc) => this.convertToUserDoc(doc));
 		const page = parseInt(this.props.params.page ? this.props.params.page : 1);
 		const documentList = documents.map((doc, index) => (
-			<DocListItem key={doc.id} document={doc} fData={this.props.fData} role={this.props.role} />
+			<DocListItem key={doc.id} document={doc} fData={this.props.fData} role={this.props.role}
+				onClickTitle={this.handleClick.bind(this, 'title', {index})} showMessage={this.props.showMessage}
+			/>
 		));
 		return (
 			<div className="userdocs">
@@ -63,6 +72,8 @@ UserDocuments.propTypes = {
 	documents: PropTypes.arrayOf(PropTypes.object).isRequired,
 	lastPage: PropTypes.number.isRequired,
 	fetchUserDocs: PropTypes.func.isRequired,
+	addDocToOpenDocs: PropTypes.func.isRequired,
+	showMessage: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired
