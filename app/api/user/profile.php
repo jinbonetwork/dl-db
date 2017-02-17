@@ -7,7 +7,47 @@ class profile extends \DLDB\Controller {
 	public function process() {
 		$this->params['output'] = 'json';
 
-		$this->fields = \DLDB\Fields::getFields('members');
+		$fields = \DLDB\Fields::getFields('members');
+		$this->fields = array();
+		$cids = array();
+		foreach($fields as $fid => $field) {
+			if($field['type'] == 'taxonomy') {
+				$cids[] = $field['cid'];
+			}
+			$this->fields[] = array(
+				'fid' => $field['fid'],
+				'parent' => $field['parent'],
+				'idx' => $field['idx'],
+				'slug' => $field['slug'],
+				'subject' => $field['subject'],
+				'type' => $field['type'],
+				'multiple' => $field['multiple'],
+				'required' => $field['required'],
+				'cid' => $field['cid'],
+				'system' => $field['system'],
+				'form' => $field['form']
+			);
+		}
+		$taxonomies = \DLDB\Taxonomy::getTaxonomy($cids);
+		$cterms = \DLDB\Taxonomy::getTaxonomyTerms($cids);
+
+		foreach($cterms as $cid => $terms) {
+			if(!$this->taxonomy[$cid]) {
+				$this->taxonomy[$cid] = array();
+			}
+			foreach($terms as $tid => $term) {
+				$this->taxonomy[$cid][] = array(
+					'tid' => $term['tid'],
+					'cid' => $term['cid'],
+					'parent' => $term['parent'],
+					'idx' => $term['idx'],
+					'nsubs' => $term['nsubs'],
+					'name' => $term['name'],
+					'slug' => $term['slug']
+				);
+			}
+		}
+
 		$this->profile = \DLDB\Member::getUser($this->user['uid']);
 		$this->member = \DLDB\Members::getByUid($this->user['uid']);
 
@@ -44,6 +84,7 @@ class profile extends \DLDB\Controller {
 		$this->result = array(
 			'error' => 0,
 			'fields' => $this->fields,
+			'taxonomy' => $this->taxonomy,
 			'profile' => $this->profile
 		);
 	}
