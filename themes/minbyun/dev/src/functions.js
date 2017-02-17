@@ -27,45 +27,45 @@ const _period = (from, to) => {
 	period = period.map((date) => (!_isEmpty(date) ? date.year+'.'+date.month : ''));
 	return period;
 };
-const _query = (sQuery, sFname) => {
+const _query = (sQuery, fID) => {
 	let query = {};
 	for(let prop in sQuery){ if(sQuery[prop]){
 		switch(prop){
 			case 'keyword': query.q = sQuery[prop]; break;
-			case 'doctypes': query[sFname['doctype']] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
+			case 'doctypes': query[fID.doctype] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
 		}
 	}}
 	let period;
 	if(sQuery.from && sQuery.to) period = sQuery.from+'-'+sQuery.to;
 	else if(sQuery.from && !sQuery.to) period = sQuery.from;
 	else if(!sQuery.from && sQuery.to) period = '-'+sQuery.to;
-	if(period) query[sFname['date']] = period;
+	if(period) query[fID['date']] = period;
 
 	return query;
 }
 
-const _queryOf = (propOfSQuery, query, sFname) => {
+const _queryOf = (propOfSQuery, query, fID) => {
 	switch(propOfSQuery){
 		case 'keyword': return {q: query.q};
-		case 'doctypes': return {[sFname['doctype']]: query[sFname['doctype']]};
-		case 'period': return {[sFname['date']]: query[sFname['date']]};
+		case 'doctypes': return {[fID.doctype]: query[fID.doctype]};
+		case 'period': return {[fID.date]: query[fID.date]};
 	}
 }
-const _searchQuery = (query, fname, correct) => {
+const _searchQuery = (query, fSlug, correct) => {
 	let sQuery = {};
 	let value;
 	for(let prop in query){ let value = query[prop]; if(value){
 		if(prop == 'q'){
 			if(value) sQuery.keyword = value;
 		}
-		else if(fname[prop] == 'doctype'){
+		else if(fSlug[prop] == 'doctype'){
 			let doctypes = []
 			value.replace('[', '').replace(']', '').split(',').forEach((dt) => {
 				if(dt > 0) doctypes.push(dt);
 			});
 			if(doctypes.length) sQuery.doctypes = doctypes;
 		}
-		else if(fname[prop] == 'date'){
+		else if(fSlug[prop] == 'date'){
 			let period = value.split('-');
 			if(correct) period = _period(period[0], period[1]);
 			sQuery.from = (period[0] ? period[0] : '');
@@ -75,11 +75,11 @@ const _searchQuery = (query, fname, correct) => {
 	return sQuery;
 };
 
-const _params = (params, sFname, excepts) => {
+const _params = (params, fID, excepts) => {
 	let array = [];
 	for(let p in params){
 		if(params[p] && (!excepts || !excepts.length || excepts.indexOf(p) < 0)){
-			if(p == 'q' || p == sFname['date']){
+			if(p == 'q' || p == fID['date']){
 				array.push(p+'='+encodeURIComponent(params[p]));
 			} else {
 				array.push(p+'='+params[p]);

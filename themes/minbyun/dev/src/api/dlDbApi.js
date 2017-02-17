@@ -35,9 +35,6 @@ const api = {
 	fetchRootData(succeed, fail){
 		fetch('get', '/api', succeed, fail);
 	},
-	fetchUserFieldData(succeed, fail){
-		fetch('get', '/api/admin/member/fields', succeed, fail);
-	},
 	fetchDocFieldData(succeed, fail){
 		fetch('get', '/api/fields', succeed, fail);
 	},
@@ -94,6 +91,11 @@ const api = {
 	},
 	fetchUserDocs(page, succeed, fail){
 		fetch('get', '/api/user/documents?page='+page, ({result, documents}) => succeed({lastPage: result.total_page, documents}), fail);
+	},
+	searchDocs(params, succeed, fail){
+		fetch('get', '/api/search'+params,
+			({documents, result}) => succeed({documents, distribution: result.taxonomy_cnt, lastPage: result.total_page}), fail
+		);
 	}
 }
 

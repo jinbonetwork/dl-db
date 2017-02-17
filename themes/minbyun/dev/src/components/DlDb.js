@@ -51,8 +51,9 @@ class DlDb extends Component {
 			if(this.props.docFieldData && this.props.login.doAgree){
 				const child = this.props.children;
 				const searchBar = (
-					<SearchBar mode={(child ? null : 'content')} {...this.props.searchBar} docFData={this.props.docFieldData}
-						window={this.props.window} onChange={this.props.onChangeQeury} changeSearchBarState={this.props.changeSearchBarState}
+					<SearchBar mode={(child ? null : 'content')} {...this.props.searchBar} fData={this.props.docFieldData}
+						window={this.props.window} onChange={this.props.onChangeQuery} changeSearchBarState={this.props.changeSearchBarState}
+						showMessage={this.props.showMessage}
 					/>
 				);
 				return [
@@ -109,8 +110,9 @@ DlDb.propTypes = {
 	fetchAgreement: PropTypes.func.isRequired,
 	onAgree: PropTypes.func.isRequired,
 	onLogOut: PropTypes.func.isRequired,
-	onChangeQeury: PropTypes.func.isRequired,
-	changeSearchBarState: PropTypes.func.isRequired
+	onChangeQuery: PropTypes.func.isRequired,
+	changeSearchBarState: PropTypes.func.isRequired,
+	showMessage: PropTypes.func.isRequired
 };
 
 export default DlDb;

@@ -21,7 +21,7 @@ class UserDocuments extends Component {
 			this.props.router.push('/document/'+this.props.documents[index].id);
 		}
 	}
-	convertToUserDoc(doc){
+	refineUserDoc(doc){
 		const fData = this.props.fData;
 		const fProps = fData.fProps;
 		const slugs = ['doctype', 'date', 'committee'];
@@ -49,7 +49,7 @@ class UserDocuments extends Component {
 		return update(doc, {$merge: propsToMerge});
 	}
 	render(){
-		const documents =  this.props.documents.map((doc) => this.convertToUserDoc(doc));
+		const documents =  this.props.documents.map((doc) => this.refineUserDoc(doc));
 		const page = parseInt(this.props.params.page ? this.props.params.page : 1);
 		const documentList = documents.map((doc, index) => (
 			<DocListItem key={doc.id} document={doc} fData={this.props.fData} role={this.props.role}

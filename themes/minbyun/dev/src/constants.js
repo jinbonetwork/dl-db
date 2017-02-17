@@ -81,3 +81,4 @@ export const ADD_FILE_TO_OPEN_FILETEXTS = 'add filename to open filetexts';
 export const COMPLETE_FILETEXT = 'complete filetext';
 export const SUBMIT_FILETEXT = 'submit filetext';
 export const RECEIVE_USER_DOCS = 'receive user docs';
+export const RECEIVE_SEARCH_RESULT = 'receive search result';

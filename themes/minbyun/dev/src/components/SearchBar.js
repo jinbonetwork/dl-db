@@ -24,8 +24,8 @@ class SearchBar extends Component {
 		}
 	}
 	setCounter(){
-		if(this.countIntv === undefined && this.props.mode == 'content' && this.props.docFData.numOfDocs > 0){
-			const numOfDocs = this.props.docFData.numOfDocs;
+		if(this.countIntv === undefined && this.props.mode == 'content' && this.props.fData.numOfDocs > 0){
+			const numOfDocs = this.props.fData.numOfDocs;
 			const duration = 600;
 			const minInterval = 10;
 			let increment = 1;
@@ -46,10 +46,10 @@ class SearchBar extends Component {
 		}
 	}
 	query(sQuery){
-		return _query(sQuery, this.props.docFData.sFname);
+		return _query(sQuery, this.props.fData.fID);
 	}
 	params(params, excepts){
-		return _params(params, this.props.docFData.sFname, excepts)
+		return _params(params, this.props.fData.fID, excepts)
 	}
 	handleChange(which, arg){
 		switch(which){
@@ -74,7 +74,7 @@ class SearchBar extends Component {
 	}
 	handleClick(which, arg){
 		if(which == 'search'){
-			if(!this.props.keyword){ this.props.setMessage('검색어를 입력하세요.', () => {this.refs.keyword.focus();}); return; }
+			if(!this.props.keyword){ this.props.showMessage('검색어를 입력하세요.', () => {this.refs.keyword.focus();}); return; }
 			let period = _period(this.props.from, this.props.to);
 			let from = (period[0] ? period[0] : '');
 			let to = (period[1] ? period[1] : '');
@@ -139,7 +139,7 @@ class SearchBar extends Component {
 		}
 	}
 	propsForResponsivity(){
-		const fProps = this.props.docFData.fProps;
+		const fProps = this.props.fData.fProps;
 		const wWidth = this.props.window.width;
 		const buttonWidth = _interpolate(wWidth, 4, 8, SCREEN.mmLarge, SCREEN.large, 'em');
 		const secondPartWidth = _notNull([
@@ -193,13 +193,13 @@ class SearchBar extends Component {
 			};
 		} else {
 			doctypeHead = {
-				head: <span>{this.props.docFData.fProps.doctype.dispName}</span>,
+				head: <span>{this.props.fData.fProps.doctype.dispName}</span>,
 				arrow: <i className="pe-7s-angle-down pe-va"></i>
 			};
 		}
 
-		const doctypeItems = this.props.docFData.taxonomy.doctype.map((tid) =>
-			<Item key={tid} value={tid}><span>{this.props.docFData.terms[tid].name}</span></Item>
+		const doctypeItems = this.props.fData.taxonomy.doctype.map((tid) =>
+			<Item key={tid} value={tid}><span>{this.props.fData.terms[tid].name}</span></Item>
 		);
 
 		return (
@@ -212,7 +212,6 @@ class SearchBar extends Component {
 		);
 	}
 	displayCount(){
-		//let count = this.props.docFData.numOfDocs.split('');
 		return this.props.count.split('').map((digit, index) => (
 			<div key={index} className="counter__digit">
 				<img src={site_base_uri+'/themes/minbyun/images/count.png'} />
@@ -221,7 +220,7 @@ class SearchBar extends Component {
 		));
 	}
 	render(){
-		const fProps = this.props.docFData.fProps;
+		const fProps = this.props.fData.fProps;
 		const prsRsp = this.propsForResponsivity();
 		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
 		const docTypeSelect = (fProps.doctype ? this.docTypeSelect() : null);
@@ -304,9 +303,10 @@ SearchBar.propTypes = {
 	from: PropTypes.string.isRequired,
 	to: PropTypes.string.isRequired,
 	window: PropTypes.object.isRequired,
-	docFData: PropTypes.object.isRequired,
+	fData: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
 	changeSearchBarState: PropTypes.func.isRequired,
+	showMessage: PropTypes.func.isRequired,
 	router: PropTypes.shape({push: PropTypes.func.isRequired}).isRequired,
 }
 

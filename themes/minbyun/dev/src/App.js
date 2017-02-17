@@ -11,6 +11,7 @@ import Document from './components/Document';
 import FileText from './components/FileText';
 import User from './components/User';
 import UserDocuments from './components/UserDocuments';
+import SearchResult from './components/SearchResult';
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -26,6 +27,7 @@ const DlDbContainer = connect(
 	}),
 	(dispatch) => ({
 		fetchRootData: () => dispatch(dlDbActions.fetchRootData()),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
 		hideMessage: () => dispatch(dlDbActions.hideMessage()),
 		onResize: (size) => dispatch(dlDbActions.resize(size)),
 		onChangeLogin: (which, value) => dispatch(dlDbActions.changeLogin(which, value)),
@@ -33,7 +35,7 @@ const DlDbContainer = connect(
 		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
 		onAgree: () => dispatch(dlDbActions.agreeWithAgreement()),
 		onLogOut: (args) => dispatch(dlDbActions.logout(args)),
-		onChangeQeury: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
+		onChangeQuery: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
 		changeSearchBarState: (value) => dispatch(dlDbActions.changeSearchBarState(value))
 	})
 )(DlDb);
@@ -117,6 +119,21 @@ const UserDocsContainer = connect(
 	})
 )(UserDocuments);
 
+const SearchResultContainer = connect(
+	(state) => ({
+		role: state.dlDb.role,
+		fData: state.dlDb.docFieldData,
+		result: state.dlDb.searchResult,
+		distribution: state.searchResult.distribution,
+		lastPage: state.searchResult.lastPage
+	}),
+	(dispatch) => ({
+		changeQuery: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
+		searchDocs: (params) => dispatch(dlDbActions.searchDocs(params)),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
+	})
+)(SearchResult);
+
 render(
 	<Provider store={dlDbStore}>
 		<Router history={browserHistory}>
@@ -128,6 +145,7 @@ render(
 				<Route path="user" component={User}>
 					<Route path="documents(/page/:page)" component={UserDocsContainer} />
 				</Route>
+				<Route path="/search**" component={SearchResultContainer} />
 			</Route>
 		</Router>
 	</Provider>,

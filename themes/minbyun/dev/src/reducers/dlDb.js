@@ -2,11 +2,11 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
 	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
-	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT
 } from '../constants';
 import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
-import {_mapO, _mapOO} from '../accessories/functions';
+import {_mapO, _mapOO, _forIn} from '../accessories/functions';
 
 const initialState = {
 	docFieldData: undefined,
@@ -16,6 +16,7 @@ const initialState = {
 	openDocs: {},
 	openFileTexts: {},
 	documents: [],
+	searchResult: [],
 	message: {content: '', callback: undefined},
 	showProc: false,
 	window: {width: 0, height: 0},
@@ -44,6 +45,15 @@ const refinMenuData = (data) => {
 			items: items
 		}
 	})
+};
+
+const refineSearchResult = (doc, fData) => {
+	return (
+		update(_mapOO(doc._source,
+			(fId, value) => (fData.fSlug[fId] != 'date' ? value : value.replace('-', '/')),
+			(fId, value) => (fData.fSlug[fId])
+		), {id: {$set: doc._id}})
+	);
 };
 
 const dlDb = (state = initialState, action) => {
@@ -121,6 +131,9 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {documents: {$set:
 				action.oriDocs.map((doc) => refineDoc(doc, state.docFieldData))
 			}});
+		case RECEIVE_SEARCH_RESULT:
+			//return update(state, {searchResult: {$set: action.documents.map((doc) => refineSearchResult(, state.docFieldData))}});
+			return update(state, {searchResult: {$set: action.documents.map((doc) => refineSearchResult(doc, state.docFieldData))}});
 		default:
 			return state;
 	}
