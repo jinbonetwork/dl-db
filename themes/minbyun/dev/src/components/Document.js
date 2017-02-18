@@ -19,6 +19,8 @@ class Document extends Component {
 		this.props.initialize();
 		if(!this.props.openDocs[this.props.params.id]){
 			this.props.fetchDoc(this.props.params.id);
+		} else {
+			if(checkIfParsing(this.getDoc(), this.props.fData)) this.rqstParseState();
 		}
 	}
 	componentDidUpdate(prevProps){
@@ -48,7 +50,7 @@ class Document extends Component {
 			this.props.fetchParseState({
 				docId: this.props.params.id,
 				afterReceive: (state) => {
-					let {isInProgress, filesWithNewStatus} = doAfterReceiveParseState(state, this.props.parseState, this.props.doc, this.props.fData);
+					let {isInProgress, filesWithNewStatus} = doAfterReceiveParseState(state, this.props.parseState, this.getDoc(), this.props.fData);
 					this.props.setParseState(state);
 					if(!isInProgress){
 						clearInterval(this.intvOfRqstParseState);
@@ -65,6 +67,9 @@ class Document extends Component {
 			style: {
 				h1: {
 					fontSize: _interpolate(wWidth, 1.3, 2.5, SCREEN.smallest, SCREEN.medium, 'em')
+				},
+				wrap: {
+					padding: _interpolate(wWidth, 1, 3, SCREEN.smallest, SCREEN.medium, 'em')
 				}
 			}
 		}
@@ -78,24 +83,25 @@ class Document extends Component {
 		const document = this.getDoc();
 		const fProps = this.props.fData.fProps;
 		const prsRsp = this.propsForResponsivity();
-		const coverImage = (
-			<ViewElem key="cover-image" className="document__image" value={[document.image]} type={fProps.image.type} />
+		const coverImage = ( !_isEmpty(document.image) ?
+			<ViewElem key="cover-image" className="document__image"
+				style={{paddingRight: prsRsp.style.wrap.padding, paddingBottom: prsRsp.style.wrap.padding}}
+				value={[document.image]}
+				type={fProps.image.type}
+			/> : null
 		);
 		const title = (
-			<div key="title" className={(!_isEmpty(document.image) ? 'document__column' : null)}>
+			<div key="title" className="document__title">
 				<h1 style={prsRsp.style.h1}>{document.title}</h1>
 			</div>
 		);
-		const inContent = _mapOO(document,
-			(fs, value) => value, (fs, value) => !_isCommon([fs], ['title', 'date', 'image', 'file']) && fs
-		);
 		const dateOfCreation = (
 			<div className="document__date">
-				<span>{fProps.date.dispName}</span>
+				<span><i className="pe-7s-date pe-va"></i><span>{fProps.date.dispName}</span></span>
 				<ViewElem value={[document.date]} type={fProps.date.type} />
 			</div>
 		);
-		const listOfFiles = (
+		const listOfFiles = ( !_isEmpty(document.file) ?
 			<div className="document__files">
 				<div>
 					<i className="pe-7s-download pe-va"></i>
@@ -104,33 +110,33 @@ class Document extends Component {
 				<ViewElem value={document.file} type={fProps.file.type} owner={document.owner} role={this.props.role}
 					fileTextUri={'/document/'+document.id+'/text/'} parseState={this.props.parseState}
 				/>
-			</div>
+			</div> : null
 		);
 		const bookmarkButton = (document.bookmark === 0 ?
 			<div className="document__bookmark">
 				<button type="button" onClick={this.handleClick.bind(this, 'bookmark')}>
 					<i className="pe-7s-bookmarks pe-va"></i>
-					{this.props.window.width > SCREEN.medium && <span>북마크 등록</span>}
+					<span>북마크 등록</span>
 				</button>
 			</div> :
 			<div className="document__bookmark document__remove-bookmark">
 				<button type="button" onClick={this.handleClick.bind(this, 'bookmark')}>
 					<i className="pe-7f-bookmarks pe-va"></i>
-					{this.props.window.width > SCREEN.medium &&  <span>북마크 해제</span>}
+					<span>북마크 해제</span>
 				</button>
 			</div>
 		);
 		const editButton = (
-			<LinkIf to={'/document/'+document.id+'/edit'} if={document.owner}>
-				<i className="pe-7s-note pe-va"></i>
-				{this.props.window.width > SCREEN.medium && <span>수정하기</span>}
+			<LinkIf className="document__edit" to={'/document/'+document.id+'/edit'} if={document.owner}>
+				<i className="pe-7f-note pe-va"></i>
+				<span>수정하기</span>
 			</LinkIf>
 		);
 		const DelDocButton = ( document.owner && ( !this.props.dispBtnOfYesOrNo ?
 			<div className="document__delete">
 				<button type="button" onClick={this.handleClick.bind(this, 'delete')}>
-					<i className="pe-7s-close-circle pe-va"></i>
-					{this.props.window.width > SCREEN.medium && <span>삭제하기</span>}
+					<i className="pe-7f-close pe-va"></i>
+					<span>삭제하기</span>
 				</button>
 			</div> :
 			<div className="document__delete document__delete--yes-or-no">
@@ -138,25 +144,36 @@ class Document extends Component {
 				<button type="button" onClick={this.handleClick.bind(this, 'delete-no')}>아니오</button>
 			</div>
 		));
+		const buttons = (
+			<div key="button"
+				className={'document__buttons' + (this.props.window.width <= 500 ? ' document__buttons--only-icon' : '')}>
+				{bookmarkButton}
+				{editButton}
+				{DelDocButton}
+			</div>
+		);
+		const inContent = _mapOO(document,
+			(fs, value) => value, (fs, value) => !_isCommon([fs], ['title', 'date', 'image', 'file']) && fs
+		);
 		return (
 			<div className="document">
 				<div className="document__back" onClick={this.props.router.goBack}>
 					<i className="pe-7f-back pe-va"></i> <span>이전 페이지로</span>
 				</div>
-				<div className="document__wrap">
+				<div className="document__wrap" style={prsRsp.style.wrap}>
 					<div className="document__header">
-						{this.props.window.width > SCREEN.sMedium ? [coverImage, title] : [title, coverImage]}
-						<div className="document__buttons">
-							{bookmarkButton}
-							{editButton}
-							{DelDocButton}
-						</div>
-						<div>
-							{dateOfCreation}
-							{listOfFiles}
-						</div>
+						{this.props.window.width > SCREEN.sMedium ?
+							[coverImage, title, buttons] :
+							[title, buttons, coverImage]
+						}
+						{dateOfCreation}
+						{listOfFiles}
 					</div>
-					<View doc={inContent} fieldData={this.props.fData} />
+					<View doc={inContent}
+						fieldData={this.props.fData}
+						widthToChangeOneCol={SCREEN.sMedium}
+						window={this.props.window}
+					/>
 				</div>
 			</div>
 		);

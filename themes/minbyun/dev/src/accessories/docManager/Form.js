@@ -134,7 +134,7 @@ class Form extends Component {
 						<div className="field-body__content">{this.renderForm(fs, value, undefined, fProp)}</div>
 						<div className="field-body__buttons">
 							<button style={(this.getParseState(fProp, value) ? {visibility: 'hidden'} : null)}
-								onClick={this.handleClick.bind(this, 'delete', fs)}
+								onClick={this.handleClick.bind(this, 'delete', fs, undefined)}
 							>
 								{this.props.deleteButtonIcon}
 							</button>

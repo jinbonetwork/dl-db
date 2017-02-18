@@ -102,7 +102,7 @@ class DocumentForm extends Component {
 			})
 		},
 		renderFormByType: {
-			image: (fs, index, value, formElem) => cloneElement(formElem, {accept: '.jpg, .png'}),
+			image: (fs, index, value, formElem) => cloneElement(formElem, {accept: '.jpg, .jpeg, .png'}),
 			file: (fs, index, value, formElem) => cloneElement(formElem, {accept: '.pdf, .doc, .docx, .hwp'})
 		},
 		fieldFooterBySlug: {

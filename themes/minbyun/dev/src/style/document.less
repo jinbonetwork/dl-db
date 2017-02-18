@@ -1,4 +1,10 @@
-@label-width: 9.4em;
+/* -- index  --------------
+.document
+.document .document__buttons
+.document .document__buttons--only-icon
+.document .document__files
+.document .view
+-----------------------*/
 
 .document {
 	margin-top: 5%;
@@ -14,12 +20,6 @@
 	.document__wrap {
 		background-color: @minor-color-2;
 		padding: 3em;
-		@media screen and (max-width: @medium-screen){
-			padding: 2em;
-		}
-		@media screen and (max-width: @s-medium-screen){
-			padding: 1em;
-		}
 	}
 	.document__header {
 		overflow: hidden;
@@ -38,26 +38,11 @@
 		span {
 			padding-bottom: 150%;
 		}
-		@media screen and (max-width: @medium-screen){
-			padding: 0 2em 2em 0;
-		}
 		@media screen and (max-width: @s-medium-screen){
-			padding: 0 1em 1em 0;
+			float: none;
+			padding: 0 !important;
+			margin-left: auto; margin-right: auto;
 		}
-	}
-	.document__header > .document__column {
-		//margin-left: 18em;
-		/*
-		@media screen and (max-width: @medium-screen){
-			margin-left: 34vw;
-		}
-		@media screen and (max-width: @s-medium-screen){
-			margin-left: 11em;
-		}
-		@media screen and (max-width: @small-m-screen){
-			margin-left: 0;
-		}
-		*/
 	}
 	h1 {
 		margin: 0;
@@ -66,196 +51,213 @@
 		color: @main-color;
 		border-bottom: solid 2px @main-color;
 	}
-	.document__buttons {
-		display: inline-block;
-		margin: 2em 0;
-		@media screen and (max-width: @s-medium-screen){
-			margin: 1em 0;
-		}
-
-		& > div + a, & > a + div {
-			margin-left: 1em;
-		}
-		a, a:visited, a:link, a:hover, a:active {
-			color: @main-color;
-			text-decoration: none;
-		}
-		a {
-			display: inline-block;
-			line-height: 2em;
-			padding: 0 1em;
-			border: solid 1px @main-color;
-		}
-		button {
-			line-height: 2em;
-			padding: 0 1em;
-			cursor: pointer;
-		}
-		.document__bookmark {
-			display: inline-block;
-		}
-		.document__bookmark i {
-			font-size: 2em;
-			color: @main-color;
-		}
-		.document__bookmark i + button {
-			margin-left: 0.5em;
-		}
-		.document__bookmark button {
-			color: @minor-color-2;
-			background-color: @main-color;
-		}
-		.document__remove-bookmark button {
-			color: @main-color;
-			background-color: @minor-color-2;
-		}
-		.document__delete {
-			display: inline-block;;
-		}
-		.document__delete button {
-			background-color: @minor-color-2;
-			color: @main-color;
-		}
-		.document__delete--yes-or-no button:first-child {
-			background-color: @main-color;
-			color: @minor-color-2;
-		}
+	.document__title + .document__buttons,
+	.document__buttons + .document__date,
+	.document__buttons + .document__image,
+	.document__image + .document__date,
+	.document__header + .view {
+		margin-top: 5%;
 	}
-	.document__contents {
-		margin-top: 3em;
-		max-width: 37.5em;
-		@media screen and (max-width: @s-medium-screen){
-			margin-top: 1em;
-		}
-		.table__col span {
-			line-height: 1.5em;
-		}
-		& > .table__row {
-			padding: 0.5em 0;
-		}
-		& > .table__row + .table__row {
-			margin-top: 1em;
-			@media screen and (max-width: @s-medium-screen){
-				margin-top: 0;
-			}
-		}
-		& > .table__row > .table__col {
-			//line-height: 2em;
-			padding-top: 0.5em;
-			padding-bottom: 0.5em;
-		}
-		& > .table__row > .table__col:first-child {
-			width: @label-width;
-			padding-right: 2em;
-			text-align: right;
-			font-weight: @font-bold;
-			@media screen and (max-width: @small-m-screen) {
-				float: none;
-				text-align: left;
-				width: auto;
-				padding-right: 0;
-			}
-		}
-		& > .table__row > .table__col + .table__col {
-			margin-left: @label-width;
-			@media screen and (max-width: @small-m-screen) {
-				margin-left: 0;
-			}
-		}
-		.inner-table {
-			border-top: solid 1px @main-color;
-		}
-		.inner-table .table__row {
-			border-bottom: solid 1px @main-color;
-		}
-		.inner-table .table__col {
-			//line-height: 2.5em;
-			padding-top: 0.5em;
-			padding-bottom: 0.5em;
-		}
-		.inner-table .table__col:first-child {
-			width: 6em;
-			padding-right: 1em;
-			text-align: right;
-			font-weight: @font-bold;
-			@media screen and (max-width: @small-m-screen){
-				width: 5em;
-			}
-		}
-		.inner-table .table__col + .table__col{
-			margin-left: 6em;
-			padding-left: 1em;
-			border-left: solid 1px @main-color;
-			@media screen and (max-width: @small-m-screen){
-				margin-left: 5em;
-			}
-		}
+	.document__date + .document__files {
+		margin-top: 1em;
 	}
-}
-.file-text-editor {
-	position: fixed;
-	z-index: 2;
-	top: 50%; left: 50%;
-	width: 100%; height: 100%;
-	transform: translate(-50%, -50%);
-	padding: 1em;
-	background-color: @minor-color-2;
-	border: solid 1px @main-color;
-
-	&:not(.file-text-editor__full-screen){
-		max-width: 43.8em; max-height: 37.5em;
-	}
-	.file-text-editor__header {
-		margin-bottom: 2em;
-	}
-	.file-text-editor__filename span {
-		font-size: 1.2em;
-		font-weight: 700;
+	.document__date span:first-child i {
+		font-size: 1.5em;
 		color: @main-color;
 	}
-	.file-text-editor__filename + .file-text-editor__filemeta {
-		margin-top: 1em;
+	.document__date span:first-child span {
+		font-weight: @font-bold;
+		margin-left: 0.5em;
+		margin-right: 1em;
 	}
-	.file-text-editor__filemeta {
-		padding-left: 1em;
-	}
-	.file-text-editor__filemeta span {
-		font-size: 0.8em;
-	}
-	textarea {
-		width: 100%;
-		padding: 0;
-		border: 0;
-		resize: none;
-		line-height: 1.5em;
-	}
-	.file-text-editor__buttons {
-		position: relative;
-		margin-top: 1em;
-		text-align: right;
+}
+.document .document__buttons {
+	display: inline-block;
+	& > div + a, & > a + div {
+		margin-left: 1em;
 	}
 	button {
-		padding: 0.5em 1em;
-		background-color: @main-color;
+		line-height: 2em;
+		padding: 0 0.5em;
+		cursor: pointer;
+	}
+	i {
+		font-size: 1.5em;
+		width: 1em;
+	}
+	i + span {
+		margin-left: 0.5em;
+	}
+	.document__bookmark {
+		display: inline-block;
+	}
+	.document__bookmark button {
 		color: @minor-color-2;
+		background-color: @main-color;
+	}
+	.document__edit {
+		color: @main-color;
+		text-decoration: none;
+	}
+	.document__edit {
+		display: inline-block;
+		line-height: 2em;
+		padding: 0 0.5em;
 		border: solid 1px @main-color;
 	}
-	button.reverse-color {
+	.document__delete {
+		display: inline-block;;
+	}
+	.document__delete button {
 		background-color: @minor-color-2;
 		color: @main-color;
 	}
-	button:first-child {
-		position: absolute;
-		top: 0; left: 0;
-	}
-	button + button {
-		margin-left: 1em;
+	.document__delete--yes-or-no button:first-child {
+		background-color: @main-color;
+		color: @minor-color-2;
+		padding: 0 1em;
 	}
 }
-
-.imagewrap {
-	img {
-		width: 100%;
+.document .document__buttons--only-icon {
+	button {
+		border: 0;
+		background-color: transparent;
+		padding: 0;
+	}
+	i {
+		font-size: 2em;
+	}
+	i + span {
+		display: none;
+	}
+	.document__bookmark button {
+		color: @main-color;
+		background-color: transparent;
+	}
+	.document__edit {
+		position: relative;
+		top: -2px; left: 5px;
+		border: 0;
+		padding: 0;
+	}
+}
+.document .document__files {
+	& > div i {
+		font-size: 1.5em;
+		color: @main-color;
+	}
+	& > div {
+		float: left;
+		@media screen and (max-width: @content-max-width){
+			float: none;
+		}
+	}
+	& > div span {
+		font-weight: @font-bold;
+		margin-left: 0.5em;
+	}
+	ol {
+		margin: 0 0 0 5em;
+		@media screen and (max-width: @content-max-width){
+			margin: 0;
+		}
+	}
+	li {
+		list-style-type: decimal;
+		line-height: 1.5em;
+	}
+	li a {
+		color: @main-color;
+	}
+	.view__unparsed {
+		margin-left: 0.5em;
+	}
+	.view__unparsed i {
+		font-size: 1.5em;
+	}
+	.view__file-text {
+		display: inline-block;
+		width: 3.5em;
+		height: 1.5em;
+		text-align: center;
+		margin-left: 0.5em;
+		color: @minor-color-2;
+		background-color: @main-color;
+		border: solid 1px @main-color;
+	}
+	.view__file-text span {
+		font-size: 0.8em;
+	}
+	.view__progress-bar {
+		position: relative;
+		display: inline-block;
+		width: 3.5em;
+		height: 1.5em;
+		margin-left: 0.5em;
+		border: solid 1px @main-color;
+		vertical-align: top;
+	}
+	.view__progress {
+		position: absolute;
+		top: 0; left: 0;
 		display: block;
+		height: 100%;
+		background-color: @main-color;
+	}
+	.view__percentage {
+		position: absolute;
+		top: 0; left: 0;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		font-size: 0.8em;
+		color: @minor-color-2;
+		text-shadow: 1px 1px @main-color;
+	}
+}
+.document .view {
+	line-height: 1.5em;
+	& > tbody > tr + tr > td {
+		padding-top: 1.5em;
+	}
+	& > tbody > tr > td:first-child {
+		min-width: 9em;
+		font-weight: @font-bold;
+		text-align: right;
+		vertical-align: top;
+		padding-right: 2em;
+		@media screen and (max-width: @s-medium-screen) {
+			min-width: 0;
+			font-weight: @font-normal;
+			text-align: left;
+			vertical-align: middle;
+			padding-right: 0;
+		}
+	}
+	& > tbody > tr > td > .view__col0 {
+		@media screen and (max-width: @s-medium-screen) {
+			font-weight: @font-bold;
+			margin-bottom: 0.5em;
+		}
+	}
+	.view__inner-table td {
+		border-style: solid;
+		border-color: @main-color;
+		border-width: 0 0 1px 0;
+		padding: 0.5em 1em;
+		vertical-align: top;
+		@media screen and (max-width: @s-medium-screen) {
+			padding: 0.5em;
+		}
+	}
+	.view__inner-table tr:first-child td {
+		border-top-width: 1px;
+	}
+	.view__inner-table td:first-child {
+		text-align: right;
+		font-weight: @font-bold;
+	}
+	.view__inner-table td + td {
+		border-left-width: 1px;
 	}
 }

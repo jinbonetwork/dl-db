@@ -37,16 +37,24 @@ class View extends Component {
 		}
 	}
 	renderTable(doc, isChild){
+		const isOneCol = (this.props.window.width <= this.props.widthToChangeOneCol);
 		const {fSlug, fProps} = this.props.fieldData;
 		const rows = _mapO(doc, (fs, value) => {
 			if((!_isEmpty(value) || fProps[fs].type == 'group') && fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent)){
 				if(!this.props.checkHiddenBySlug[fs] || !this.props.checkHiddenBySlug[fs](fs, value)){
 					let renderedValue = this.renderValue(value, fProps[fs], fs);
 					return ( renderedValue &&
-						<tr key={fs} className={'view__field view__slug-'+fs+' view__type-'+fProps[fs].type}>
-							<td>{fProps[fs].dispName}</td>
-							<td>{renderedValue}</td>
-						</tr>
+						<tr key={fs} className={'view__field view__slug-'+fs+' view__type-'+fProps[fs].type}>{(
+							!isChild && isOneCol ?
+							<td>
+								<div className="view__col0">{fProps[fs].dispName}</div>
+								<div className="view__col1">{renderedValue}</div>
+							</td> :
+							[
+								<td key="0" className="view__col0">{fProps[fs].dispName}</td>,
+								<td key="1" className="view__col1">{renderedValue}</td>
+							]
+						)}</tr>
 					)
 				}
 			}
@@ -70,6 +78,8 @@ View.propTypes = {
 	role: PropTypes.arrayOf(PropTypes.string),
 	fileTextUri: PropTypes.string,
 	parseState: PropTypes.object,
+	widthToChangeOneCol: PropTypes.number,
+	window: PropTypes.object,
 	//customization ////
 	rowsBefore: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 	rowsAfter: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
@@ -78,6 +88,8 @@ View.propTypes = {
 	checkHiddenBySlug: PropTypes.object
 };
 View.defaultProps = {
+	widthToChangeOneCol: 500,
+	window: {width: 600, height: 0},
 	renderValueBySlug: {},
 	renderValueByType: {},
 	checkHiddenBySlug: {},
