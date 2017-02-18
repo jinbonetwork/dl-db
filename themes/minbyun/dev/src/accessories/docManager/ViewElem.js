@@ -38,7 +38,7 @@ class ViewElem extends Component {
 				}</span>;
 			case 'image':
 				return (
-					<div className={this.props.className} style={this.props.style}>{value.map((val, index) => (
+					<div className={this.props.className} style={this.props.style}>{ value.map((val, index) => (
 						val.status == 'uploading' ?
 							<span key={index}></span> :
 							<img key={index} src={val.fileuri} />

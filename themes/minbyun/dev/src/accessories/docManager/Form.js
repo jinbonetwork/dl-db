@@ -75,20 +75,20 @@ class Form extends Component {
 			if(arg1st.key == 'Enter') this.handleSubmit();
 		}
 	}
-	getParseState(fProp, value){
+	getPercent(fProp, value){
 		if(	(fProp.type == 'file' && ['uploading', 'uploaded', 'parsing'].indexOf(value.status) >= 0) ||
 			(fProp.type == 'image' && value.status == 'uploading')
 		){
 			let state = this.props.parseState[value.fid];
-			if(state) return <span>{state.progress + '%'}</span>;
-			else return <span>업로드중</span>;
+			if(state) return state.progress + '%';
+			else return '0%';
 		}
 		else {
 			return undefined;
 		}
 	}
 	renderForm(fs, value, index, fProp){
-		let parseState = this.getParseState(fProp, value);
+		let percent = this.getPercent(fProp, value);
 		let options = (fProp.type == 'taxonomy' ?  this.props.fieldData.taxonomy[fs].map((tid) =>
 			<Item key={tid} value={tid}><span>{this.props.fieldData.terms[tid].name}</span></Item>
 		) : undefined);
@@ -98,8 +98,8 @@ class Form extends Component {
 				focus={(this.props.focused.fSlug == fs && this.props.focused.index == index)}
 				fProp={this.props.fieldData.fProps[fs]}
 				options={options}
-				disabled={(parseState ? true : false)}
-				parseState={parseState}
+				disabled={(percent ? true : false)}
+				percent={percent}
 				onChange={this.handleChange.bind(this, fs, index)}
 				onBlur={this.props.onBlur}
 			/>
@@ -121,7 +121,7 @@ class Form extends Component {
 						<div className="field-body__content">{this.renderForm(fs, val, idx, fProp)}</div>
 						<div className="field-body__buttons">
 							<button onClick={this.handleClick.bind(this, 'add', fs)}>{this.props.addButtonIcon}</button>
-							<button style={(this.getParseState(fProp, val) ? {visibility: 'hidden'} : null)}
+							<button style={(this.getPercent(fProp, val) ? {visibility: 'hidden'} : null)}
 								onClick={this.handleClick.bind(this, 'delete', fs, idx)}
 							>
 								{this.props.deleteButtonIcon}
@@ -133,7 +133,7 @@ class Form extends Component {
 					<div className="field-body">
 						<div className="field-body__content">{this.renderForm(fs, value, undefined, fProp)}</div>
 						<div className="field-body__buttons">
-							<button style={(this.getParseState(fProp, value) ? {visibility: 'hidden'} : null)}
+							<button style={(this.getPercent(fProp, value) ? {visibility: 'hidden'} : null)}
 								onClick={this.handleClick.bind(this, 'delete', fs, undefined)}
 							>
 								{this.props.deleteButtonIcon}
