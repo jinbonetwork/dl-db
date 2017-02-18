@@ -105,6 +105,9 @@ const api = {
 			({histories, result}) => succeed({history: histories, lastPage: result.total_page}), fail
 		);
 	},
+	removeHistory(hid, succeed, fail){
+		fetch('post', '/api/user/history?mode=delete&hid='+hid, null, succeed, fail);
+	},
 	fetchUserProfile(succeed, fail){
 		fetch('get', '/api/user/profile', ({fields, taxonomy, profile}) => succeed({fields, taxonomy, profile}), fail);
 	},

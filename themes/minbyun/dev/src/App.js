@@ -158,7 +158,8 @@ const HistoryContainer = connect(
 		lastPage: state.history.lastPage,
 	}),
 	(dispatch) => ({
-		fetchHistory: (page) => dispatch(dlDbActions.fetchHistory(page))
+		fetchHistory: (page) => dispatch(dlDbActions.fetchHistory(page)),
+		removeHistory: (args) => dispatch(dlDbActions.removeHistory(args))
 	})
 )(History);
 

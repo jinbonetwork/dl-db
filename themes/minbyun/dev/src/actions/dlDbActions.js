@@ -324,6 +324,19 @@ const actionCreators = {
 			}
 		);
 	}},
+	removeHistory({hid, afterRemove}){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.removeHistory( hid,
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				if(afterRemove) afterRemove();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 	fetchUserProfile(){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		api.fetchUserProfile(

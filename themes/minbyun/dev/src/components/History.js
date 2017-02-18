@@ -43,10 +43,10 @@ class History extends Component {
 	}
 	handleClick(which, arg){
 		if(which == 'remove'){
-			const hid = arg;
-			this.props.fetchData('post', '/api/user/history?mode=delete&hid='+hid, null, (data) => { if(data){
-				this.fetchData(this.props.params.page ? this.props.params.page : 1);
-			}});
+			this.props.removeHistory({
+				hid: arg,
+				afterRemove: () => this.props.fetchHistory(this.props.params.page)
+			});
 		}
 	}
 	render(){
@@ -99,6 +99,7 @@ History.propTypes = {
 	history: PropTypes.arrayOf(PropTypes.object).isRequired,
 	lastPage: PropTypes.number.isRequired,
 	fetchHistory: PropTypes.func.isRequired,
+	removeHistory: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired
