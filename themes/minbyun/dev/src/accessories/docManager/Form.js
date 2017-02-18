@@ -184,6 +184,7 @@ class Form extends Component {
 		const submitButton = (!isChild) && (
 			<tr className="form__submit-wrap">
 				<td colSpan={(!isOneCol ? 2 : null)}>
+					{(this.props.beforeSubmitBtn ? this.props.beforeSubmitBtn : null)}
 					{!this.props.isSaving && (
 						<a tabIndex="0" className="form__submit" onClick={this.handleSubmit.bind(this)}
 							onKeyDown={this.handKeyDown.bind(this, 'submit')}
@@ -193,10 +194,11 @@ class Form extends Component {
 					)}
 					{this.props.isSaving && (
 						<span className="form__saving">
-							<span className="form__saving-label">{this.props.submitLabel}</span>
+							<span className="form__saving-label">{this.props.submitSavingLabel}</span>
 							<span className="form__saving-icon">{this.props.savingStateIcon}</span>
 						</span>
 					)}
+					{(this.props.afterSubmitBtn ? this.props.afterSubmitBtn : null)}
 				</td>
 			</tr>
 		);
@@ -244,7 +246,9 @@ Form.propTypes = {
 	checkHiddenBySlug: PropTypes.objectOf(PropTypes.func),
 	renderFormBySlug: PropTypes.objectOf(PropTypes.func),
 	renderFormByType: PropTypes.objectOf(PropTypes.func),
-	errorMessageBySlug: PropTypes.objectOf(PropTypes.string)
+	errorMessageBySlug: PropTypes.objectOf(PropTypes.string),
+	beforeSubmitBtn: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	afterSubmitBtn: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)])
 };
 Form.defaultProps = {
 	widthToChangeOneCol: 500,
@@ -253,6 +257,7 @@ Form.defaultProps = {
 	deleteButtonIcon: <i className="pe-7s-close-circle pe-va"></i>,
 	savingStateIcon: <i className="pe-7s-config pe-va pe-spin"></i>,
 	submitLabel: '저장',
+	submitSavingLabel: '저장',
 	parseState: {},
 	rowsBeforeSlug: {},
 	checkValidBySlug: {},

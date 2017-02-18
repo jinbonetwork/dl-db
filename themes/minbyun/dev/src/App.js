@@ -163,6 +163,7 @@ const HistoryContainer = connect(
 
 const UserProfileContainer = connect(
 	(state) => ({
+		window: state.dlDb.window,
 		fData: state.userProfile.fData,
 		openProfile: state.userProfile.openProfile,
 		profile: state.userProfile.profile,
@@ -201,28 +202,3 @@ render(
 	</Provider>,
 	document.getElementById('root')
 );
-
-/*
-render((
-	<Router history={browserHistory}>
-		<Route component={DigitalLibraryContainer}>
-			<Route path="/" component={DigitalLibrary}>
-				<Route path="/login" component={Login} />
-				<Route path="/user" component={User}>
-					<IndexRedirect to="/user/profile" />
-					<Route path="profile" component={UserProfile} />
-					<Route path="bookmarks(/page/:page)" component={Bookmarks} />
-					<Route path="history(/page/:page)" component={History} />
-					<Route path="documents(/page/:page)" component={UserDocuments} />
-				</Route>
-				<Route path="/document/new" component={NewDocument} />
-				<Route path="/document/:did" component={Document}>
-					<Route path="text/:fid" component={FileTextEditor} />
-				</Route>
-				<Route path="/document/:did/edit" component={EditDocument} />
-				<Route path="/search**" component={SearchResult} />
-			</Route>
-		</Route>
-	</Router>
-), document.getElementById('root'));
-*/

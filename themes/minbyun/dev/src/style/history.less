@@ -1,0 +1,108 @@
+.history {
+	.history__content {
+		background-color: @minor-color-2;
+		padding: 1em;
+		margin-bottom: 3%;
+		@media screen and (max-width: @small-m-screen){
+			padding: 0;
+		}
+	}
+	.table {
+		margin: 3%;
+		@media screen and (max-width: @small-m-screen){
+			margin: 0;
+		}
+	}
+	.table__row:first-child {
+		text-align: center;
+		font-weight: bold;
+		line-height: 3.3em;
+		border-bottom: solid 2px @main-color;
+		@media screen and (max-width: @small-m-screen){
+			display: none;
+		}
+	}
+	.table__row + .table__row {
+		padding: 0.9em 0;
+		border-bottom: solid 1px @main-color;
+		@media screen and (max-width: @small-m-screen){
+			position: relative;
+			padding: 0.5em;
+			border: solid @main-color;
+			border-width: 1px 1px 0 1px;
+		}
+	}
+	.table__row:last-child {
+		@media screen and (max-width: @small-m-screen){
+			border-bottom: solid 1px @main-color;
+		}
+	}
+	.table__col:first-child {
+		float: left;
+		width: @history-col-width;
+		text-align: center;
+		@media screen and (max-width: @small-m-screen){
+			float: none;
+			width: auto;
+			text-align: left;
+			font-size: 0.8em;
+		}
+	}
+	.table__row + .table__row .table__col {
+		line-height: 1.2em;
+	}
+	.table__col + .table__col {
+		margin-left: @history-col-width;
+		@media screen and (max-width: @small-m-screen){
+			margin-left: 0;
+		}
+	}
+	.table__row + .table__row .table__col + .table__col {
+		position: relative;
+		padding-right: 2em;
+		@media screen and (max-width: @small-m-screen){
+			position: static;
+			margin-top: 0.5em;
+		}
+	}
+	.history__keyword {
+		color: @main-color;
+	}
+	.history__keyword + div {
+		margin-top: 0.5em;
+		@media screen and (max-width: @small-m-screen){
+			margin-top: 0;
+		}
+	}
+	.history__doctypes i, .history__period i {
+		font-size: 1.5em;
+	}
+	.history__doctypes {
+		margin-right: 2em;
+	}
+	.history__doctypes span {
+		margin-left: 0.5em;
+	}
+	.history__period {
+		display: inline-block;
+	}
+	.history__period span + span {
+		margin-left: 0.2em;
+	}
+	.history__btnwrap {
+		position: absolute;
+		top: -0.25em; right: 0;
+		line-height: inherit;
+		@media screen and (max-width: @small-m-screen){
+			top: 0.5em;
+		}
+	}
+	.history__remove {
+		padding: 0;
+		border: 0;
+		background-color: transparent;
+	}
+	.history__remove i {
+		font-size: 2em;
+	}
+}

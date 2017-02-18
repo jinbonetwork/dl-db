@@ -4,6 +4,7 @@ import Item from '../accessories/Item';
 import CheckBox from '../accessories/CheckBox';
 import Check from '../accessories/Check';
 import {makeUserFormData} from '../fieldData/userFieldData';
+import {SCREEN} from '../constants';
 import {_isEmpty} from '../accessories/functions';
 
 class UserProfile extends Component {
@@ -23,7 +24,14 @@ class UserProfile extends Component {
 		checkHiddenBySlug: {
 			password: (slug) => !this.props.isPwShown,
 			confirmPw: (slug) => !this.props.isPwShown
-		}
+		},
+		beforeSubmitBtn: (
+			<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
+				checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
+			>
+				<Item value="checked">비밀번호 변경</Item>
+			</Check>
+		)
 	}}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'show password'){
@@ -41,15 +49,6 @@ class UserProfile extends Component {
 		}
 	}
 	render(){
-		let rowsBefore = (
-			<tr className="form__show-password"><td colSpan="2">
-				<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
-					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
-				>
-					<Item value="checked">비밀번호 변경</Item>
-				</Check>
-			</td></tr>
-		);
 		return (
 			<div className="user-profile">
 				<table className="user-profile__form-wrap"><tbody>
@@ -62,10 +61,12 @@ class UserProfile extends Component {
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
 								submitLabel="회원정보 변경"
+								submitSavingLabel="변경 중"
+								window={this.props.window}
+								widthToChangeOneCol={SCREEN.small}
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
-								rowsBefore={rowsBefore}
 								{...this.customize()}
 							/>
 						</td>
@@ -83,6 +84,7 @@ UserProfile.propTypes = {
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
 	isPwShown: PropTypes.bool,
+	window: PropTypes.object.isRequired,
 	fetchUserProfile: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
