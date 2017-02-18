@@ -16,6 +16,7 @@ class Document extends Component {
 		if(!_isCommon(this.props.role, ['administrator', 'view'])){
 			this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return null;
 		}
+		this.props.initialize();
 		if(!this.props.openDocs[this.props.params.id]){
 			this.props.fetchDoc(this.props.params.id);
 		}
@@ -168,6 +169,7 @@ Document.propTypes = {
 	parseState: PropTypes.object.isRequired,
 	dispBtnOfYesOrNo: PropTypes.bool,
 	window: PropTypes.object.isRequired,
+	initialize: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
 	setParseState: PropTypes.func.isRequired,
 	renewFileStatus: PropTypes.func.isRequired,

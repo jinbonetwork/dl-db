@@ -46,6 +46,28 @@
 	.searchinput .item:focus {
 		background-color: @focus-color-2;
 	}
+	.form__submit + .docform__view-doc {
+		margin-left: 1em;
+	}
+	.docform__view-doc {
+		display: inline-block;
+		width: 40%;
+		border-style: solid;
+		border-width: 1px;
+		border-color: @main-color;
+		background-color: @minor-color-2;
+		color: @main-color;
+		line-height: 1.5em;
+		padding: 0.75em 0;
+		text-align: center;
+		cursor: pointer;
+		&:focus {
+			background-color: @focus-color-1;
+		}
+	}
+	&.docform--new .form .form__submit {
+		width: 70%;
+	}
 }
 .docform .form {
 	width: 100%;
@@ -116,7 +138,7 @@
 	}
 	.form__submit, .form__saving {
 		display: inline-block;
-		width: 70%;
+		width: 40%;
 		border-style: solid;
 		border-width: 1px;
 		border-color: @main-color;

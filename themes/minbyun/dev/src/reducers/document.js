@@ -1,4 +1,4 @@
-import { RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, TOGGLE_DEL_DOC_BUTTON} from '../constants';
+import { RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, TOGGLE_DEL_DOC_BUTTON, INITIALIZE_DOC} from '../constants';
 import update from 'react-addons-update';
 
 const initialState = {
@@ -8,6 +8,8 @@ const initialState = {
 
 const document = (state = initialState, action) => {
 	switch(action.type){
+		case INITIALIZE_DOC:
+			return update(state, {$set: initialState});
 		case RECEIVE_PARSE_STATE:
 			return update(state, {parseState: {$set: action.parseState}});
 		case TOGGLE_DEL_DOC_BUTTON:

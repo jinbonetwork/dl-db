@@ -78,6 +78,7 @@ const DocContainer = connect(
 		parseState: state.document.parseState
 	}),
 	(dispatch) => ({
+		initialize: () => dispatch(dlDbActions.initializeDoc()),
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
 		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
 		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
@@ -172,6 +173,7 @@ const UserProfileContainer = connect(
 		isPwShown: state.userProfile.isPwShown
 	}),
 	(dispatch) => ({
+		initialize: () => dispatch(dlDbActions.initializeUserProfile()),
 		fetchUserProfile: () => dispatch(dlDbActions.fetchUserProfile()),
 		onChange: (args) => dispatch(dlDbActions.changeUserProfile(args)),
 		onBlur: () => dispatch(dlDbActions.focusOutUserProfile()),

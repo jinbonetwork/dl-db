@@ -9,6 +9,7 @@ import {_isEmpty} from '../accessories/functions';
 
 class UserProfile extends Component {
 	componentDidMount(){
+		this.props.initialize();
 		if(_isEmpty(this.props.openProfile)) this.props.fetchUserProfile();
 		else this.props.onChange({mode: 'merge', value: this.props.openProfile});
 	}
@@ -85,6 +86,7 @@ UserProfile.propTypes = {
 	isSaving: PropTypes.bool,
 	isPwShown: PropTypes.bool,
 	window: PropTypes.object.isRequired,
+	initialize: PropTypes.func.isRequired,
 	fetchUserProfile: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,

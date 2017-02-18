@@ -1,5 +1,5 @@
 import React, {Component, PropTypes, cloneElement} from 'react';
-import {withRouter} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import Form from '../accessories/docManager/Form';
 import {SCREEN} from '../constants';
 import update from 'react-addons-update';
@@ -114,7 +114,10 @@ class DocumentForm extends Component {
 					<div><span>민변 디지털도서관은 첨부파일의 내용을 자동으로 추출하여 검색할 수 있습니다. 다만, 한글(hwp) 파일의 경우 자체 암호화로 내용 검색이 불가능하므로 가능한 'PDF' 파일로 변환하여 주시기를 권장합니다(방법: 파일 &rarr; PDF로 저장하기).</span></div>
 				</div>
 			)
-		}
+		},
+		afterSubmitBtn: ( this.props.doc.id > 0 ?
+			<Link tabIndex="0" className="docform__view-doc" to={'/document/'+this.props.doc.id}>보기</Link> : null
+		)
 	}}
 	handleSubmit(error){
 		if(error){
@@ -133,13 +136,14 @@ class DocumentForm extends Component {
 		}
 	}
 	render(){
+		let className = (this.props.doc.id > 0 ? 'docform--edit' : 'docform--new');
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		let fieldData = update(this.props.fData, {fProps: {
 			name: {form: {$set: 'search'}}, sentence: {type: {$set: 'date'}}
 		}});
 		return (
-			<div className="docform">
+			<div className={'docform '+className}>
 				<h1>{title}</h1>
 				<table className="docform__form-wrap"><tbody>
 					<tr>

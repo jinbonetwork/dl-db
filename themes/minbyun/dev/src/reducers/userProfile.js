@@ -1,5 +1,5 @@
 import {RECEIVE_USER_PROFILE, CHANGE_USER_PROFILE, FOCUSOUT_USER_PROFILE, FOCUSIN_USER_PROFILE, COMPLETE_USER_PROFILE,
-	SUBMIT_USER_PROFILE, TOGGLE_PASSWORD_FORM
+	SUBMIT_USER_PROFILE, TOGGLE_PASSWORD_FORM, INITIALIZE_USER_PROFILE
 } from '../constants';
 import {refineUserFData, refineUser} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
@@ -16,6 +16,12 @@ const initialState = {
 
 const userProfile = (state = initialState, action) => {
 	switch(action.type){
+		case INITIALIZE_USER_PROFILE:
+			return update(state, {$merge: {
+				focused: initialState.focused,
+				isSaving: initialState.isSaving,
+				isPwShown: initialState.isPwShown
+			}});
 		case RECEIVE_USER_PROFILE:
 			return update(state, {$merge: _wrap(() => {
 				const fData = refineUserFData({fields: action.fields, taxonomy: action.taxonomy});
