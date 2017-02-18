@@ -13,7 +13,7 @@ class DocumentForm extends Component {
 		this.intvOfRqstParseState = undefined;
 	}
 	componentDidMount(){
-		if(!_isCommon([this.props.role], ['administrator', 'write'])){
+		if(!_isCommon(this.props.role, ['administrator', 'write'])){
 			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
 		}
 		this.initailize();
@@ -136,8 +136,8 @@ class DocumentForm extends Component {
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		let fieldData = update(this.props.fData, {fProps: {
-			name: {form: {$set: 'search'}, sentence: {type: {$set: 'date'}}
-		}}});
+			name: {form: {$set: 'search'}}, sentence: {type: {$set: 'date'}}
+		}});
 		return (
 			<div className="docform">
 				<h1>{title}</h1>

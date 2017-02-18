@@ -11,7 +11,7 @@ import {SCREEN, MAIN_MENU, USER_MENU} from '../constants';
 class MainMenu extends Component {
 	handleClick(which, arg){
 		if(which == 'logout'){
-			this.props.onLogOut({afterLogout: () => {this.props.router.push('/')}});
+			this.props.onLogOut({afterLogout: () => {window.location = '/'}});
 		}
 	}
 	menuItems(name, data, tag){

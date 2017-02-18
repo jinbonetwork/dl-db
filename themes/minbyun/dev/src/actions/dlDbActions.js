@@ -3,7 +3,9 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
 	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, BOOKMARK, TOGGLE_DEL_DOC_BUTTON,
 	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
-	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, RECEIVE_USER
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, RECEIVE_USER_PROFILE,
+	CHANGE_USER_PROFILE, FOCUSOUT_USER_PROFILE, FOCUSIN_USER_PROFILE, COMPLETE_USER_PROFILE, SUBMIT_USER_PROFILE,
+	TOGGLE_PASSWORD_FORM
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -322,16 +324,40 @@ const actionCreators = {
 	fetchUserProfile(){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		api.fetchUserProfile(
-			() => {
+			({fields, taxonomy, profile}) => {
 				dispatch({type: HIDE_PROCESS});
-				dispatch({type: RECEIVE_USER_PROFILE});
+				dispatch({type: RECEIVE_USER_PROFILE, fields, taxonomy, profile});
 			},
 			(error) => {
 				dispatch({type: HIDE_PROCESS});
 				dispatchError(dispatch, error);
 			}
 		);
-	}}
+	}},
+	changeUserProfile(args){
+		return {type: CHANGE_USER_PROFILE, args};
+	},
+	focusOutUserProfile(){
+		return {type: FOCUSOUT_USER_PROFILE};
+	},
+	focusInUserProfile({fSlug, index}){
+		return {type: FOCUSIN_USER_PROFILE, fSlug, index};
+	},
+	submitUserProfile(args){ return (dispatch) => {
+		const {oldProfile, pfFormData} = args;
+		dispatch({type: COMPLETE_USER_PROFILE});
+		api.submitUserProfile( pfFormData,
+			() => dispatch({type: SUBMIT_USER_PROFILE}),
+			(error) => {
+				dispatch({type: COMPLETE_USER_PROFILE, oldProfile});
+				dispatch({type: CHANGE_USER_PROFILE, args: {mode: 'merge', value: oldProfile}});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	togglePassWordForm(){
+		return {type: TOGGLE_PASSWORD_FORM};
+	}
 }
 
 export default actionCreators;

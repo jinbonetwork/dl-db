@@ -106,7 +106,10 @@ const api = {
 		);
 	},
 	fetchUserProfile(succeed, fail){
-		fetch('get', '/api/user/profile', (data) => {console.log(data)});
+		fetch('get', '/api/user/profile', ({fields, taxonomy, profile}) => succeed({fields, taxonomy, profile}), fail);
+	},
+	submitUserProfile(formData, succeed, fail){
+		fetch('post', '/api/user/profile?mode=modify', formData, succeed, fail);
 	}
 }
 

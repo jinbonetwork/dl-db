@@ -13,7 +13,7 @@ class Document extends Component {
 		this.intvOfRqstParseState = undefined;
 	}
 	componentDidMount(){
-		if(!_isCommon([this.props.role], ['administrator', 'view'])){
+		if(!_isCommon(this.props.role, ['administrator', 'view'])){
 			this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return null;
 		}
 		if(!this.props.openDocs[this.props.params.id]){

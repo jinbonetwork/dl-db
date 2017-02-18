@@ -22,7 +22,7 @@ const _isPhoneValid = (phone) => {
 };
 const _isDateValid = (value, form) => {
 	if(form == 'Ym'){
-		if(value.year > 0 && 1 <= value.month && value.month <= 12 ){
+		if(1 <= value.year && value.year <= 9999 && 1 <= value.month && value.month <= 12 ){
 			return true;
 		} else {
 			return false;
@@ -31,9 +31,9 @@ const _isDateValid = (value, form) => {
 	else if(form == 'text'){ // 형식: 2016-12-07
 		let dateArray = value.split('-');
 		if(dateArray.length != 3) return false;
-		if(dateArray[0] > 0); else return false;
-		if(1 <= dateArray[1] && dateArray[1] <= 12 && dateArray[1].length == 2); else return false;
-		if(1 <= dateArray[2] && dateArray[2] <= 31 && dateArray[2].length == 2); else return false;
+		if(1 <= dateArray[0] && dateArray[0] <= 9999); else return false;
+		if(1 <= dateArray[1] && dateArray[1] <= 12); else return false;
+		if(1 <= dateArray[2] && dateArray[2] <= 31); else return false;
 		return true;
 	}
 };

@@ -163,10 +163,21 @@ const HistoryContainer = connect(
 
 const UserProfileContainer = connect(
 	(state) => ({
-
+		fData: state.userProfile.fData,
+		openProfile: state.userProfile.openProfile,
+		profile: state.userProfile.profile,
+		focused: state.userProfile.focused,
+		isSaving: state.userProfile.isSaving,
+		isPwShown: state.userProfile.isPwShown
 	}),
 	(dispatch) => ({
-		fetchUserProfile: () => dispatch(dlDbActions.fetchUserProfile())
+		fetchUserProfile: () => dispatch(dlDbActions.fetchUserProfile()),
+		onChange: (args) => dispatch(dlDbActions.changeUserProfile(args)),
+		onBlur: () => dispatch(dlDbActions.focusOutUserProfile()),
+		focusIn: (args) => dispatch(dlDbActions.focusInUserProfile(args)),
+		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		onSubmit: (args) => dispatch(dlDbActions.submitUserProfile(args)),
+		togglePassWordForm: () => dispatch(dlDbActions.togglePassWordForm())
 	})
 )(UserProfile);
 

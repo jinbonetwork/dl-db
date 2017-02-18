@@ -1,0 +1,178 @@
+/*--- index --------------------------------------------
+.user-profile
+.user-profile .form
+.user-profile .form__show-password .check
+.user-profile .select
+--------------------------------------------------------*/
+
+.user-profile {
+	margin: 5% 0;
+	h1 {
+		color: @main-color;
+		font-weight: @font-normal;
+		text-align: center;
+		margin: 0;
+	}
+	h1 + .user-profile__form-wrap {
+		margin-top: 5%;
+	}
+	.user-profile__form-wrap {
+		margin-left: auto; margin-right: auto;
+		width: 100%;
+		max-width: 500px;
+	}
+	.user-profile__table-margin {
+		width: 1em;
+	}
+}
+.user-profile .form {
+	width: 100%;
+	.form__show-password td {
+		padding-bottom: 1em;
+	}
+	.form__col0, .form__col1 {
+		border-bottom: solid 1px @main-color;
+	}
+	.form__col0 {
+		border-right: solid 1px @main-color;
+		text-align: center;
+	}
+	tr + tr td {
+		border-top: solid 1px @main-color;
+	}
+	.form__slug-committee .field-content {
+		min-height: 3em;
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+	}
+	.field-content input {
+		width: 100%;
+		height: 3em;
+		border: 0;
+	}
+	.field-content .check {
+		line-height: 3em;
+	}
+	.check .item {
+		line-height: 2em;
+		&:focus {
+			border-bottom: dotted 1px @main-color;
+		}
+	}
+	.check .item__checkicon, .check .item__uncheckicon {
+		width: 1.5em;
+		text-align: center;
+		color: @main-color;
+		i {
+			font-size: 1.5em;
+		}
+	}
+	.field-body {
+		position: relative;
+		height: 100%;
+	}
+	.field-body .field-body__buttons {
+		position: absolute;
+		top: 0; right: 0;
+		line-height: 2em;
+	}
+	.field-body .field-body__buttons button {
+		border: 0;
+		color: @main-color;
+		background-color: transparent;
+		i {font-size: 2em;}
+		&:focus {border-bottom: dotted 1px @main-color}
+	}
+	.form__submit-wrap td {
+		padding-top: 7%;
+		text-align: left;
+	}
+	.form__submit, .form__saving {
+		display: inline-block;
+		border-style: solid;
+		border-width: 1px;
+		border-color: @main-color;
+		background-color: @minor-color-2;
+		color: @main-color;
+		line-height: 1.5em;
+		padding: 0.7em 2.5em;
+		text-align: center;
+	}
+	.form__submit {
+		cursor: pointer;
+		&:focus {
+			background-color: @focus-color-2;
+		}
+	}
+	.form__saving {
+		position: relative;
+	}
+	.form__saving-icon {
+		position: absolute;
+		top: 0.75em; right: 0.5em;
+	}
+	.form__saving-icon i {
+		font-size: 1.5em;
+	}
+	.form__required .form__col0 span {
+		color: @main-color;
+	}
+	.form__required .form__col0:after {
+		content: '(필수)';
+		display: block;
+		font-size: 0.7em;
+	}
+}
+.user-profile .form__show-password .check {
+	.item {
+		line-height: 2.5em;
+		color: @minor-color-2;
+		background-color: @main-color;
+		padding: 0 1em 0 0.3em;
+	}
+	.item:focus {
+		border: 0;
+	}
+	.item__checkicon {
+		color: @minor-color-2;
+	}
+	.item__uncheckicon {
+		color: lighten(@main-color, 8%);
+	}
+}
+.user-profile .select {
+	line-height: 2em;
+	.dropdown__headwrap, .dropdown__items {
+		border: 0;
+		background-color: transparent;
+	}
+	.dropdown__items {
+		border: 0;
+		background-color: @focus-color-1;
+	}
+	.dropdown__headwrap {
+		border-color: transparent;
+	}
+	&.dropdown--unfolded .dropdown__items {
+		top: -1px;
+	}
+	.dropdown__head:focus {
+		background-color: lighten(@main-color, 18%);
+	}
+	.ddarrow i {
+		font-size: 2em;
+		color: @main-color;
+	}
+	.ddhead, .item {
+		text-align: left;
+		padding-right: 2em;
+	}
+	.item {
+		line-height: 2em;
+		cursor: pointer;
+		&:focus, &:hover {
+			color: @minor-color-2;
+			background-color: @main-color;
+		}
+	}
+}
