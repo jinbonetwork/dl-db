@@ -231,13 +231,13 @@
 	}
 }
 .textarea {
-	textarea {
-		display: block;
+	.textarea__text-input {
 		width: 100%;
 		padding: 0.5em;
 		line-height: 1.5em;
+		min-height: 3em;
 	}
-	textarea + .textarea__footer {
+	.textarea__text-input + .textarea__footer {
 		position: relative;
 		margin-top: 0.5em;
 	}
@@ -246,7 +246,6 @@
 		top: 0; right: 0;
 	}
 }
-
 .toggle {
 	display: inline-block;
 	border: 0;

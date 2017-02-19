@@ -69,6 +69,14 @@
 	&.docform--new .form .form__submit {
 		width: 70%;
 	}
+	.textarea__text-input {
+		background-color: @minor-color-2;
+		border: solid 1px @main-color;
+		padding: 0.9em 0.5em;
+	}
+	.form__slug-content .textarea__text-input {
+		min-height: 6em;
+	}
 }
 .docform .form {
 	width: 100%;
@@ -179,12 +187,12 @@
 	td.form__col0 {
 		text-align: center;
 		background-color: @minor-color-2;
-		min-width: 4em;
+		width: 6em;
 	}
 	td.form__col1 {
 		border-left-width: 0;
 	}
-	input, textarea {
+	input, .textarea__text-input {
 		border: 0;
 	}
 }

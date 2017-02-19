@@ -1,11 +1,13 @@
 import React, {Component, PropTypes} from 'react';
+import {TextArea} from 'react-text-input';
+import jQ from 'jquery';
 
 class Textarea extends Component {
 	componentDidMount(){
-		if(this.props.focus) this.refs.textarea.focus();
+		if(this.props.focus) jQ(this.refs.textarea).find('.text-input__control').focus();
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.props.focus) this.refs.textarea.focus();
+		if(this.props.focus) jQ(this.refs.textarea).find('.text-input__control').focus();
 	}
 	handleChange(event){
 		if(this.props.limit > 0 && event.target.value.length > this.props.limit) ;
@@ -25,10 +27,12 @@ class Textarea extends Component {
 				{message}
 				{count}
 			</div>
-		) ;
-		return(
-			<div className="textarea">
-				<textarea ref="textarea" value={this.props.value} rows={this.props.rows} onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)} />
+		);
+		return (
+			<div className="textarea" ref="textarea">
+				<TextArea className="textarea__text-input" value={this.props.value} rows={this.props.rows}
+					onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+				/>
 				{footer}
 			</div>
 		);

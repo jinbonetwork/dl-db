@@ -88,7 +88,6 @@ class DocumentForm extends Component {
 		renderFormBySlug: {
 			content: (fs, index, value, formElem) => cloneElement(formElem, {displayCount: true, message: <span>&nbsp;</span>}),
 			sentence: (fs, index, value, formElem) => cloneElement(formElem, {placeholder: '2015-12-07'}),
-			tag: (fs, index, value, formElem) => cloneElement(formElem, {rows: 2}),
 			name: (fs, index, value ,formElem) => cloneElement(formElem, {
 				onSearch: (keyword, callback) => {
 					this.props.onSearchMember({keyword, afterSearch: (members) => {
