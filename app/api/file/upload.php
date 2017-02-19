@@ -8,6 +8,7 @@ class upload extends \DLDB\Controller {
 		$this->params['output'] = 'json';
 
 		$context = \DLDB\Model\Context::instance();
+		$acl = \DLDB\Acl::instance();
 
 		if( !$this->params['did'] ) {
 			\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 입력하세요') );
@@ -50,6 +51,10 @@ class upload extends \DLDB\Controller {
 //							if(!isset($this->document['f'.$fid])) $this->document['f'.$fid] = array();
 //							$this->document['f'.$fid][] = $fd;
 							$fileinfo = \DLDB\Files::getFile($fd);
+							if(!preg_match("/^image/i",$fileinfo['mimetype']) && $acl->imMaster()) {
+								\DLDB\Files::anonymity($fd,1);
+								$fileinfo['anonymity'] = 1;
+							}
 							$custom[$fid][$fd] = array(
 								'fileuri' => \DLDB\Files::getFileUrl($fileinfo),
 								'filepath' => $fileinfo['filepath'],
