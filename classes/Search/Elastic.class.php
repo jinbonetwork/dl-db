@@ -141,34 +141,47 @@ class Elastic extends \DLDB\Objects {
 		$q_params['should'] = [];
 		$q_params['must_not'] = [];
 
+		$multi_field = array("subject","content","memo");
+		foreach($this->fields as $fid => $field) {
+			if($field['sefield'] && $field['type'] != 'date') {
+				$multi_field[] = "f".$fid;
+			}
+		}
+
 		foreach($q as $type => $que) {
 			if($que) {
 				switch($type) {
 					case 'string':
 						$q_params['must'][] = array(
-							"match_phrase" => array( "combined" => $que )
+							"multi_match" => array(
+								"query" => $que,
+								"fields" => $multi_field,
+								'type' => 'phrase'
+							)
 						);
 						break;
 					case 'or':
 						$q_params['should'][] = array(
-							"match" => array( "combined" => implode(" ", $que) )
+							"multi_match" => array(
+								"query" => implode(" ", $que),
+								"fields" => $multi_field
+							)
 						);
 						break;
 					case 'and':
 						$q_params['must'][] = array(
-							"match" => array(
-								"combined" => array(
-									"query" => implode(" ",$que),
-									"operator" => "and"
-								)
+							"multi_match" => array(
+								"query" => implode(" ",$que),
+								"operator" => "and",
+								"fields" => $multi_field
 							)
 						);
 						break;
 					case 'not':
 						$q_params['must_not'][] = array(
-							"query_string" => array(
-								"default_field" => "combined",
-								"query" => implode(" ", $que)
+							"multi_match" => array(
+								"query" => implode(" ", $que),
+								"fields" => $multi_field
 							)
 						);
 						break;
@@ -213,20 +226,17 @@ class Elastic extends \DLDB\Objects {
 			'subject' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
-				'term_vector' => 'yes',
-				'copy_to' => 'combined'
+				'term_vector' => 'yes'
 			),
 			'content' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
-				'term_vector' => 'yes',
-				'copy_to' => 'combined'
+				'term_vector' => 'yes'
 			),
 			'memo' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
-				'term_vector' => 'yes',
-				'copy_to' => 'combined'
+				'term_vector' => 'yes'
 			)
 		);
 		foreach( $this->fields as $fid => $field ) {
@@ -243,8 +253,7 @@ class Elastic extends \DLDB\Objects {
 					$default_properties['f'.$fid] = array(
 						'type' => $property_type,
 						'analyzer' => 'korean',
-						'term_vector' => 'yes',
-						'copy_to' => 'combined'
+						'term_vector' => 'yes'
 					);
 				} else {
 					$default_properties['f'.$fid] = array(
@@ -254,11 +263,6 @@ class Elastic extends \DLDB\Objects {
 				}
 			}
 		}
-		$default_properties['combined'] = array(
-			'type' => 'string',
-			'analyzer' => 'korean',
-			'term_vector' => 'yes'
-		);
 	
 		$params = array(
 		    'index' => $index,
