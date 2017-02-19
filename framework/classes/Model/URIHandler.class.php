@@ -119,7 +119,9 @@ final class URIHandler extends \DLDB\Objects {
 		}
 		$this->params = array_merge($_GET, $_POST);
 		foreach($this->params as $k => $v) {
-			if(!is_array($v) && $this->isJson($v)) {
+			if(preg_match("/^\"(.+)\"$/i",$v)) {
+				$this->params[$k] = $v;
+			} else if(!is_array($v) && $this->isJson($v)) {
 				$this->params[$k] = json_decode($v,true);
 			}
 		}
