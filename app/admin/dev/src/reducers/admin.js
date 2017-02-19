@@ -66,7 +66,7 @@ const admin = (state = initialState, action) => {
 				return opUsr;
 			}}});
 		case COMPLETE_USERFORM:
-			return update(state, {openUsers: {[action.user.id]: {$set: action.user}}});
+			return update(state, {openUsers: {[action.user.id]: {$set: update(action.user, {$merge: {password: '', confirmPw: ''}})}}});
 		case RECEIVE_USERLIST:
 			return update(state, {userList: {$set: refineUserList(action.originalUsers, state.userFieldData)}});
 		case RECEIVE_ATTACHMENTS:

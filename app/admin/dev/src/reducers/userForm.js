@@ -38,7 +38,11 @@ const userForm = (state = initialState, action) => {
 		case COMPLETE_USERFORM:
 			return update(state, {isSaving: {$set: true}});
 		case SUBMIT_USERFORM:
-			return update(state, {isSaving: {$set: false}});
+			return update(state, {
+				isSaving: {$set: false},
+				isPwShown: {$set: false},
+				user: {$merge: {password: '', confirmPw: ''}}
+			});
 		case SHOW_PASSWORD:
 			return update(state, {isPwShown: {$set: action.state}});
 		default:

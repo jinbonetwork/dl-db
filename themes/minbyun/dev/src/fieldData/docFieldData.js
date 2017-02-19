@@ -111,8 +111,27 @@ const doAfterReceiveParseState = (state, oldState, doc, fData) => {
 	}
 	return {isInProgress, filesWithNewStatus};
 };
+const getFilesAfterUpload = (files, doc, fData) => {
+	let docToMerge = {};
+	_forIn(refineFile(files, fData), (slug, filesToAdd) => {
+		if(fData.fProps[slug].multiple){
+			let newFile = []; let index = 0;
+			doc[slug].forEach((val) => {
+				if(!val.fid){
+					newFile.push(filesToAdd[index]); index++;
+				} else {
+					newFile.push(val);
+				}
+			});
+			docToMerge[slug] = newFile;
+		} else {
+			docToMerge[slug] = filesToAdd;
+		}
+	});
+	return docToMerge;
+}
 
 export {
 	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData, checkIfParsing,
-	doAfterReceiveParseState
+	doAfterReceiveParseState, getFilesAfterUpload
 };

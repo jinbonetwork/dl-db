@@ -97,7 +97,7 @@ class Attachments extends Component {
 						]}
 						{(this.props.fieldSearching == 'status') && (
 							<Check type="radio" selected={this.props.keywordSearching} onChange={this.handleChange.bind(this, 'keywordSearching')}>
-								<Item value="uploaded">미완료</Item>
+								<Item value="unparsed">미완료</Item>
 								<Item value="parsed">완료</Item>
 							</Check>
 						)}
@@ -129,10 +129,12 @@ class Attachments extends Component {
 				<td className="table-padding"></td>
 				<td className="attachments__filename"><a href={file.fileUri} target="_blank">{file.fileName}</a></td>
 				<td className="attachments__edit-text">
-					<a onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a>
+					{(file.status == 'unparsed' || file.status == 'parsed') &&
+						<a onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a>
+					}
 				</td>
 				<td className="attachments__toggle">
-					{file.status === 'uploaded' && [
+					{file.status === 'unparsed' && [
 						<span key="button" className="attachments__toggle--off"
 							onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfFiles, fileId: file.fileId, status: 'parsed'})}
 						>
@@ -142,7 +144,7 @@ class Attachments extends Component {
 					]}
 					{file.status === 'parsed' && [
 						<span key="button" className="attachments__toggle--on"
-							onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfFiles, fileId: file.fileId, status: 'uploaded'})}
+							onClick={this.handleClick.bind(this, 'toggle parsed', {idxOfFiles, fileId: file.fileId, status: 'unparsed'})}
 						>
 							<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
 						</span>,
@@ -153,11 +155,11 @@ class Attachments extends Component {
 							<i className="pe-7s-switch pe-va"></i>
 						</span>)
 					}
-					{file.status === 'uploading' && (
+					{/*(file.status === 'uploading' || file.status === 'uploaded') && (
 						<span className="attachments__toggle--ing">
 							<i className="pe-7s-config pe-va pe-spin"></i>
 						</span>)
-					}
+					*/}
 				</td>
 				<td className="attachments__toggle">
 					{file.anonymity === false && [
@@ -176,7 +178,7 @@ class Attachments extends Component {
 						</span>,
 						<span key="label">완료</span>
 					]}
-					{file.anonymity === undefined && (
+					{(file.anonymity !== true && file.anonymity !== false) && (
 						<span className="attachments__toggle--off">
 							<i className="pe-7s-switch pe-va"></i>
 						</span>

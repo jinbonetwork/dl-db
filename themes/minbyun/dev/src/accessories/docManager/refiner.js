@@ -167,7 +167,6 @@ const extracFileData = (doc, fData) => {
 			const extract = (val) => {
 				return (val.fid || !val.name ? val : {filename: val.name, status: 'uploading'});
 			}
-
 			return (fData.fProps[fs].multiple ? value.map((val) => extract(val)) : extract(value));
 		},
 		(fs, value) => {
@@ -205,17 +204,21 @@ const makeDocFormData = (propName, doc, fData, refineDocToSubmitBySlug = {}, ref
 	return formData;
 };
 
-const makeFileFormData = (doc, fData) => {
+const makeFileFormData = (doc, fData, isAdmin) => {
 	let formData = new FormData();
 	for(let fs in doc){
 		const fProp = fData.fProps[fs];
 		if(fProp && fProp.form == 'file'){
 			if(fProp.multiple){
 				doc[fs].forEach((file) => {
-					if(file.name) formData.append(fData.fID[fs]+'[]', file);
+					if(file.name){
+						formData.append(fData.fID[fs]+'[]', file);
+					}
 				});
 			} else {
-				if(doc[fs].name) formData.append(fData.fID[fs], doc[fs]);
+				if(doc[fs].name){
+					formData.append(fData.fID[fs], doc[fs]);
+				}
 			}
 		}
 	}

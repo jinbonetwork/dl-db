@@ -4,7 +4,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
 	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY
 } from '../constants';
-import {refineDocFData, refineDoc, refineFile} from '../fieldData/docFieldData';
+import {refineDocFData, refineDoc, refineFile, getFilesAfterUpload} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
 import {_mapO, _mapOO, _forIn, _displayDateOfMilliseconds} from '../accessories/functions';
 
@@ -98,24 +98,9 @@ const dlDb = (state = initialState, action) => {
 		case COMPLETE_DOCFORM:
 			return update(state, {openDocs: {[action.doc.id]: {$set: action.doc}}});
 		case UPLOAD:
-			return update(state, {openDocs: {[action.docId]: {$apply: (doc) => {
-				_forIn(refineFile(action.files, state.docFieldData), (slug, filesToAdd) => {
-					if(Array.isArray(filesToAdd)){
-						let newFile = []; let index = 0;
-						doc[slug].forEach((val) => {
-							if(!val.fid){
-								newFile.push(filesToAdd[index]); index++;
-							} else {
-								newFile.push(val);
-							}
-						});
-						doc[slug] = newFile;
-					} else {
-						doc[slug] = filesToAdd;
-					}
-				});
-				return doc;
-			}}}});
+			return update(state, {openDocs: {[action.docId]: {$merge:
+				getFilesAfterUpload(action.files, state.openDocs[action.docId], state.docFieldData)
+			}}});
 		case RENEW_FILE_STATUS:
 			return update(state, {openDocs: {[action.docId]: {$merge: action.filesWithNewStatus}}});
 		case BOOKMARK:

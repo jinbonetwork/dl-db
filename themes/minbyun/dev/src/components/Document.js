@@ -174,8 +174,8 @@ class Document extends Component {
 				</button>
 			</div> :
 			<div className="document__delete document__delete--yes-or-no">
-				<button type="button" onClick={this.handleClick.bind(this, 'delete-yes')}>예</button>
-				<button type="button" onClick={this.handleClick.bind(this, 'delete-no')}>아니오</button>
+				<button type="button" onClick={this.handleClick.bind(this, 'delete-yes')}></button>
+				<button type="button" onClick={this.handleClick.bind(this, 'delete-no')}></button>
 			</div>
 		));
 		const buttons = (

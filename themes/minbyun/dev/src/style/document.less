@@ -117,11 +117,17 @@
 		background-color: @main-color;
 		color: @minor-color-2;
 		padding: 0 1em;
+		&:before {
+			content: '예';
+		}
+	}
+	.document__delete--yes-or-no button:last-child:before {
+		content: '아니오';
 	}
 }
 .document .document__buttons--only-icon {
 	button {
-		border: 0;
+		border-color: transparent;
 		background-color: transparent;
 		padding: 0;
 	}
@@ -140,6 +146,13 @@
 		top: -2px; left: 5px;
 		border: 0;
 		padding: 0;
+	}
+	.document__delete--yes-or-no button {
+		padding: 0 1em;
+		border-color: @main-color;
+		font-weight: @font-bold;
+		&:first-child:before {content: 'O';}
+		&:last-child:before {content: 'X';}
 	}
 }
 .document .document__files td {

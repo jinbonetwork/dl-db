@@ -4,7 +4,8 @@ import Form from '../accessories/docManager/Form';
 import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 import api from '../api/dlDbApi';
-import {extracFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState} from '../fieldData/docFieldData';
+import {extracFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState, getFilesAfterUpload
+} from '../fieldData/docFieldData';
 import {_forIn, _isEmpty, _mapOO, _isCommon} from '../accessories/functions';
 
 class DocumentForm extends Component {
@@ -124,15 +125,18 @@ class DocumentForm extends Component {
 		if(error){
 			this.props.showMessage(error.message, () => this.props.focusIn(error.fSlug, error.index));
 		} else {
-			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
 			const [paramId, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
 			let oldDoc = (paramId ? this.props.openDocs[paramId] : fData.empty);
 			let files = extracFileData(doc, fData);
 			let oldFiles = extracFileData(oldDoc, fData);
 			let docFormData = makeDocFormData(doc, fData);
 			let fileFormData = makeFileFormData(doc, fData);
-			this.props.onSubmit({doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
-				afterUpload: (docId) => this.props.onChange({mode: 'merge', value: this.props.openDocs[docId]})
+			this.props.onSubmit({
+				doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
+				isAdmin: _isCommon(this.props.role, ['administrator']),
+				afterUpload: (docId, files) => {
+					this.props.onChange({mode: 'merge', value: getFilesAfterUpload(files, this.props.doc, this.props.fData)});
+				}
 			});
 		}
 	}

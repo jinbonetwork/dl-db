@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
-import {_mapO, _wrap} from '../functions';
+import {_mapO, _wrap, _isEmpty} from '../functions';
 
 class ViewElem extends Component {
 	render(){
@@ -46,7 +46,7 @@ class ViewElem extends Component {
 				);
 			case 'file':
 				return (
-					<ol className={this.props.className} style={this.props.style}>{ value.map((val, index) =>
+					<ol className={this.props.className} style={this.props.style}>{ value.map((val, index) => (!_isEmpty(val)) &&
 						<li key={index}>
 							{(owner || (this.props.role.indexOf('download') >= 0 && val.anonymity) ?
 								<a className="view__filename" href={val.fileuri} target="_blank">{val.filename}</a> :
