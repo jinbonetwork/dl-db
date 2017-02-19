@@ -34,7 +34,7 @@ class Admin extends Component {
 		const content = _wrap(() => {
 			if(this.props.userFieldData && this.props.docFieldData){
 				return [
-					<MainMenu key="main-menu" />,
+					<MainMenu key="main-menu" onLogOut={this.props.onLogOut} />,
 					<div key="children">{this.props.children}</div>
 				];
 			}
@@ -72,6 +72,7 @@ Admin.propTypes = {
 	fetchAdminInfo: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
+	onLogOut: PropTypes.func.isRequired,
 	hideMessage: PropTypes.func.isRequired
 };
 

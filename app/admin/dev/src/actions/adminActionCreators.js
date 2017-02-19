@@ -243,6 +243,19 @@ const adminActionCreators = {
 				dispatchError(dispatch, error);
 			}
 		);
+	}},
+	logout({afterLogout}){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.logout(
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				if(afterLogout) afterLogout();
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
 	}}
 }
 

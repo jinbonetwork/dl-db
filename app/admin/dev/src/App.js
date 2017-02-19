@@ -30,7 +30,8 @@ const AdminContainer = connect(
 		fetchAdminInfo: () => dispatch(adminActionCreators.fetchAdminInfo()),
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAdmin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(adminActionCreators.login(loginUrl, formData, failLogin)),
-		hideMessage: () => dispatch(adminActionCreators.hideMessage())
+		hideMessage: () => dispatch(adminActionCreators.hideMessage()),
+		onLogOut: (args) => dispatch(adminActionCreators.logout(args))
 	})
 )(Admin);
 
