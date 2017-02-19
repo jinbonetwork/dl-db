@@ -120,7 +120,9 @@ class Form extends Component {
 					<div key={idx} className="field-body">
 						<div className="field-body__content">{this.renderForm(fs, val, idx, fProp)}</div>
 						<div className="field-body__buttons">
-							<button onClick={this.handleClick.bind(this, 'add', fs)}>{this.props.addButtonIcon}</button>
+							{(idx == value.length - 1) &&
+								<button onClick={this.handleClick.bind(this, 'add', fs)}>{this.props.addButtonIcon}</button>
+							}
 							<button style={(this.getPercent(fProp, val) ? {visibility: 'hidden'} : null)}
 								onClick={this.handleClick.bind(this, 'delete', fs, idx)}
 							>
