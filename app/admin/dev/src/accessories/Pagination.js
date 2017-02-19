@@ -15,7 +15,8 @@ class Pagination extends Component {
 		if(this.props.lastPage <= this.props.numOfPages){
 			from = 1; to = this.props.lastPage;
 		} else {
-			let tempFrom = (this.props.page - 4 >= 1 ? this.props.page - 4 : 1);
+			let center = Math.ceil(this.props.numOfPages / 2) - 1;
+			let tempFrom = (this.props.page - center >= 1 ? this.props.page - center : 1);
 			to = (tempFrom + this.props.numOfPages - 1 <= this.props.lastPage ? tempFrom + this.props.numOfPages - 1 : this.props.lastPage);
 			from = to - this.props.numOfPages + 1;
 		}

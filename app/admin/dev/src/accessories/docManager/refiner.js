@@ -167,7 +167,6 @@ const extracFileData = (doc, fData) => {
 			const extract = (val) => {
 				return (val.fid || !val.name ? val : {filename: val.name, status: 'uploading'});
 			}
-
 			return (fData.fProps[fs].multiple ? value.map((val) => extract(val)) : extract(value));
 		},
 		(fs, value) => {

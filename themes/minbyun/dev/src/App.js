@@ -116,6 +116,7 @@ const UserDocsContainer = connect(
 		role: state.dlDb.role,
 		fData: state.dlDb.docFieldData,
 		documents: state.dlDb.documents,
+		window: state.dlDb.window,
 		lastPage: state.userDocuments.lastPage
 	}),
 	(dispatch) => ({
@@ -130,6 +131,7 @@ const SearchResultContainer = connect(
 		role: state.dlDb.role,
 		fData: state.dlDb.docFieldData,
 		result: state.dlDb.searchResult,
+		window: state.dlDb.window,
 		distribution: state.searchResult.distribution,
 		lastPage: state.searchResult.lastPage
 	}),
@@ -145,6 +147,7 @@ const BookmarksContainer = connect(
 		fData: state.dlDb.docFieldData,
 		bookmarks: state.dlDb.bookmarks,
 		openDocs: state.dlDb.openDocs,
+		window: state.dlDb.window,
 		lastPage: state.bookmarks.lastPage
 	}),
 	(dispatch) => ({
@@ -157,7 +160,8 @@ const HistoryContainer = connect(
 	(state) => ({
 		history: state.dlDb.history,
 		fData: state.dlDb.docFieldData,
-		lastPage: state.history.lastPage,
+		window: state.dlDb.window,
+		lastPage: state.history.lastPage
 	}),
 	(dispatch) => ({
 		fetchHistory: (page) => dispatch(dlDbActions.fetchHistory(page)),

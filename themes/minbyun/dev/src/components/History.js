@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter, Link} from 'react-router';
 import Pagination from '../accessories/Pagination';
+import {SCREEN} from '../constants';
 import {_displayDateOfMilliseconds} from '../accessories/functions';
 
 class History extends Component {
@@ -89,7 +90,9 @@ class History extends Component {
 						{rows}
 					</div>
 				</div>
-				<Pagination url="/user/history/page/" page={page} lastPage={this.props.lastPage} />
+				<Pagination url="/user/history/page/" page={page} lastPage={this.props.lastPage}
+					numOfPages={(this.props.window.width <= SCREEN.sMedium ? 5 : 10 )}
+				/>
 			</div>
 		);
 	}
@@ -98,6 +101,7 @@ History.propTypes = {
 	fData: PropTypes.object.isRequired,
 	history: PropTypes.arrayOf(PropTypes.object).isRequired,
 	lastPage: PropTypes.number.isRequired,
+	window: PropTypes.object.isRequired,
 	fetchHistory: PropTypes.func.isRequired,
 	removeHistory: PropTypes.func.isRequired,
 	router: PropTypes.shape({

@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Link, withRouter} from 'react-router';
 import Pagination from '../accessories/Pagination';
+import {SCREEN} from '../constants';
 import {_displayDateOfMilliseconds} from '../accessories/functions';
 
 class Bookmarks extends Component {
@@ -46,7 +47,9 @@ class Bookmarks extends Component {
 						{rows}
 					</div>
 				</div>
-				<Pagination url="/user/bookmarks/page/" page={page} lastPage={this.props.lastPage} />
+				<Pagination url="/user/bookmarks/page/" page={page} lastPage={this.props.lastPage}
+					numOfPages={(this.props.window.width <= SCREEN.sMedium ? 5 : 10 )}
+				/>
 			</div>
 		);
 	}
@@ -56,6 +59,7 @@ Bookmarks.propTypes = {
 	bookmarks: PropTypes.arrayOf(PropTypes.object).isRequired,
 	lastPage: PropTypes.number.isRequired,
 	fData: PropTypes.object.isRequired,
+	window: PropTypes.object.isRequired,
 	fetchBookmarks: PropTypes.func.isRequired,
 	removeBookmark: PropTypes.func.isRequired,
 	router: PropTypes.shape({

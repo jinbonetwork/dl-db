@@ -3,6 +3,7 @@ import {withRouter} from 'react-router';
 import DocListItem from './DocListItem';
 import Pagination from '../accessories/Pagination';
 import {_displayDate} from '../accessories/functions';
+import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 
 class UserDocuments extends Component {
@@ -60,7 +61,9 @@ class UserDocuments extends Component {
 				<div className="userdocs__doclist">
 					{documentList}
 				</div>
-				<Pagination url="/user/documents/page/" page={page} lastPage={this.props.lastPage} />
+				<Pagination url="/user/documents/page/" page={page} lastPage={this.props.lastPage}
+					numOfPages={(this.props.window.width <= SCREEN.sMedium ? 5 : 10 )}
+				/>
 			</div>
 		);
 	}
@@ -70,6 +73,7 @@ UserDocuments.propTypes = {
 	fData: PropTypes.object.isRequired,
 	documents: PropTypes.arrayOf(PropTypes.object).isRequired,
 	lastPage: PropTypes.number.isRequired,
+	window: PropTypes.object.isRequired,
 	fetchUserDocs: PropTypes.func.isRequired,
 	addDocToOpenDocs: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,

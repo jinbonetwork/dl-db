@@ -5,6 +5,7 @@ import DocListHead from './DocListHead';
 import Pagination from '../accessories/Pagination';
 import {_searchQuery, _query, _queryOf, _params} from '../functions';
 import {_isEmpty, _displayDate} from '../accessories/functions';
+import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 
 class SearchResult extends Component {
@@ -87,7 +88,9 @@ class SearchResult extends Component {
 				<div className="search-result__doclist">
 					{documents}
 				</div>
-				<Pagination url={paginationUrl} page={page} lastPage={this.props.lastPage} />
+				<Pagination url={paginationUrl} page={page} lastPage={this.props.lastPage}
+					numOfPages={(this.props.window.width <= SCREEN.sMedium ? 5 : 10 )}
+				/>
 			</div>
 		);
 	}
@@ -98,6 +101,7 @@ SearchResult.propTypes = {
 	result: PropTypes.arrayOf(PropTypes.object).isRequired,
 	distribution: PropTypes.object.isRequired,
 	lastPage: PropTypes.number.isRequired,
+	window: PropTypes.object.isRequired,
 	searchDocs: PropTypes.func.isRequired,
 	changeQuery: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,
