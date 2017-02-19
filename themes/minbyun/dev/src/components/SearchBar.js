@@ -253,7 +253,7 @@ class SearchBar extends Component {
 					<div className="searchbar__header"><span style={prsRsp.style.header}>민변 디지털 도서관</span></div>
 					{searchBar}
 					<div className={counterClassName}>
-						<div className="counter__head"><span>총 자료 건수</span></div>
+						<div className="counter__head">{/*<span>총 자료 건수</span>*/}</div>
 						<div className="counter__body">
 							<div><img src={site_base_uri+'/themes/minbyun/images/db.png'} /></div>
 							<div>{this.displayCount()}</div>

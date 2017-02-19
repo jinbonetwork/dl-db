@@ -65,7 +65,7 @@ class SearchInput extends Component {
 			if(this.props.onChange) this.props.onChange(item);
 		}
 		else if(which == 'search'){
-			this.search(this.state.value);
+			this.search(this.props.value);
 		}
 	}
 	handleBlur(which, arg1st){
