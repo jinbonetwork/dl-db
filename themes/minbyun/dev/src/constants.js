@@ -92,4 +92,5 @@ export const COMPLETE_USER_PROFILE = 'complete user profile';
 export const SUBMIT_USER_PROFILE = 'submit usr profile';
 export const TOGGLE_PASSWORD_FORM = 'toggle password form';
 export const INITIALIZE_DOC = 'initialize doc';
+export const INITIALIZE_DOCFORM = 'initialize doc form';
 export const INITIALIZE_USER_PROFILE = 'initialize user profile';

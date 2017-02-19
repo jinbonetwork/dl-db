@@ -22,7 +22,7 @@ class FormElem extends Component {
 				return (
 					<FileInput
 						value={this.props.value.name || this.props.value.filename} focus={this.props.focus} accept={this.props.accept}
-						disabled={this.props.disabled} parseState={this.props.parseState} onChange={this.props.onChange}
+						disabled={this.props.disabled} percent={this.props.percent} onChange={this.props.onChange}
 						onBlur={this.props.onBlur}
 					/>
 				);
@@ -90,7 +90,7 @@ FormElem.propTypes = {
 	displayCount: PropTypes.bool,
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	disabled: PropTypes.bool,
-	parseState: PropTypes.element,
+	percent: PropTypes.string,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	onSearch: PropTypes.func

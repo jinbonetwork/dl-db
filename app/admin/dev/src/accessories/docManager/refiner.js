@@ -97,7 +97,7 @@ const refineDoc = (origin, fData, refineDocBySlug = {}, refineDocByType = {}) =>
 					if(fProp.form == 'number') return parseInt(originVal);
 					if(fProp.form == 'bool') return (originVal == 1 ? true : false);
 					return originVal;
-				case 'char': case 'tag': case 'email': case 'phone': case 'date':
+				case 'char': case 'tag': case 'email': case 'phone': case 'date': case 'password':
 					return originVal;
 				case 'taxonomy':
 					value = _mapO(originVal, (tid) => parseInt(tid));
@@ -140,7 +140,7 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 				case 'meta':
 					if(fProp.form == 'bool') return (value ? '1' : '0');
 					return value;
-				case 'char': case 'tag': case 'email': case 'phone': case 'taxonomy': case 'date':
+				case 'char': case 'tag': case 'email': case 'phone': case 'taxonomy': case 'date': case 'password':
 					return value;
 				case 'image': case 'file':
 					if(fProp.multiple){

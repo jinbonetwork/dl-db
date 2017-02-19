@@ -163,7 +163,11 @@ const extracFileData = (doc, fData) => {
 	return _mapOO(
 		doc,
 		(fs, value) => {
-			const extract = (val) => (val.fid || !val.name ? val : {filename: val.name, status: 'uploading'});
+			let files = [];
+			const extract = (val) => {
+				return (val.fid || !val.name ? val : {filename: val.name, status: 'uploading'});
+			}
+
 			return (fData.fProps[fs].multiple ? value.map((val) => extract(val)) : extract(value));
 		},
 		(fs, value) => {
@@ -172,39 +176,6 @@ const extracFileData = (doc, fData) => {
 		}
 	)
 };
-
-/*
-const extractFileStatusFromOrigin = (oDoc, fData) => {
-	let fileStatus = {};
-	_forIn(fData.empty, (fs, emptyVal) => {
-		if(fData.fProps[fs].form == 'file'){
-			_forIn(oDoc[fData.fID[fs]], (fid, val) => {
-				fileStatus[fs] = {fid: fid, status: val.status};
-			});
-		}
-	})
-	return fileStatus;
-};
-
-const makeInitParseState = (doc, fData) => {
-	let parseState = {};
-	_forIn(doc, (fs, value) => {
-		const fProp = fData.fProps[fs];
-		if(fProp.form == 'file'){
-			let values = (fProp.multiple ? value : [value]);
-			for(let i in values){
-				if(fProp.type == 'file' && ['uploaded', 'parsing'].indexOf(values[i].status) >= 0){
-					parseState[values[i].fid] = {
-						percentage: 0,
-						position: {fSlug: fs, index: (fProp.multiple ? i : undefined)}
-					};
-				}
-			}
-		}
-	});
-	return parseState;
-}
-*/
 
 const makeFormData = (docFormPropName, doc, fData, refineDocToSubmitBySlug = {}, refineDocToSubmitByType = {}) => {
 	let formData = new FormData();

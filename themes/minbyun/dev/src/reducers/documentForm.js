@@ -1,4 +1,4 @@
-import { CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM, UPLOAD, RECEIVE_PARSE_STATE,
+import { CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM, RECEIVE_PARSE_STATE, INITIALIZE_DOCFORM,
 	RENEW_FILE_STATUS
 } from '../constants';
 import update from 'react-addons-update';
@@ -12,6 +12,12 @@ const initialState = {
 
 const documentForm = (state = initialState, action) => {
 	switch(action.type){
+		case INITIALIZE_DOCFORM:
+			return update(state, {$merge: {
+				focused: {fSlug: 'title', index: undefined},
+				isSaving: initialState.isSaving,
+				parseState: initialState.parseState
+			}});
 		case CHANGE_DOCFORM:
 			let {mode, fSlug, index, value} = action.args;
 			switch(mode){
@@ -39,7 +45,7 @@ const documentForm = (state = initialState, action) => {
 		case SUBMIT_DOCFORM:
 			return update(state, {isSaving: {$set: false}});
 		case RECEIVE_PARSE_STATE:
-			return update(state, {parseState: {$set: action.parseState}});
+			return update(state, {parseState: {$set: (action.parseState ? action.parseState : initialState.parseState)}});
 		case RENEW_FILE_STATUS:
 			return update(state, {doc: {$merge: action.filesWithNewStatus}});
 		default:

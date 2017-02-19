@@ -55,6 +55,7 @@ const DocFormContainer = connect(
 		parseState: state.documentForm.parseState
 	}),
 	(dispatch) => ({
+		initialize: () => dispatch(dlDbActions.initializeDocForm()),
 		onChange: (args) => dispatch(dlDbActions.changeDocForm(args)),
 		onBlur: () => dispatch(dlDbActions.focusOutDocForm()),
 		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
@@ -62,6 +63,7 @@ const DocFormContainer = connect(
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
 		onSubmit: (args, callback) => dispatch(dlDbActions.submitDocForm(args, callback)),
 		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
+		initParseState: () => dispatch(dlDbActions.setParseState()),
 		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
 		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
 		onSearchMember: (args) => dispatch(dlDbActions.searchMember(args))

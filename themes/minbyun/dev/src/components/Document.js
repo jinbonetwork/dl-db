@@ -63,6 +63,7 @@ class Document extends Component {
 	}
 	propsForResponsivity(){ //prsRsp
 		const wWidth = this.props.window.width;
+		let imagePad = _interpolate(wWidth, 1, 2, SCREEN.smallest, SCREEN.medium, 'em');
 		return {
 			style: {
 				h1: {
@@ -70,6 +71,10 @@ class Document extends Component {
 				},
 				wrap: {
 					padding: _interpolate(wWidth, 1, 3, SCREEN.smallest, SCREEN.medium, 'em')
+				},
+				image: {
+					paddingRight: imagePad,
+					paddingBottom: imagePad
 				}
 			}
 		}
@@ -85,7 +90,7 @@ class Document extends Component {
 		const prsRsp = this.propsForResponsivity();
 		const coverImage = ( !_isEmpty(document.image) ?
 			<ViewElem key="cover-image" className="document__image"
-				style={{paddingRight: prsRsp.style.wrap.padding, paddingBottom: prsRsp.style.wrap.padding}}
+				style={prsRsp.style.image}
 				value={[document.image]}
 				type={fProps.image.type}
 			/> : null
@@ -102,7 +107,7 @@ class Document extends Component {
 			</div>
 		);
 		const listOfFiles = ( !_isEmpty(document.file) ?
-			<div className="document__files">
+			<table className="document__files"><tbody><tr><td>
 				<div>
 					<i className="pe-7s-download pe-va"></i>
 					<span>{fProps.file.dispName}</span>
@@ -110,8 +115,37 @@ class Document extends Component {
 				<ViewElem value={document.file} type={fProps.file.type} owner={document.owner} role={this.props.role}
 					fileTextUri={'/document/'+document.id+'/text/'} parseState={this.props.parseState}
 				/>
-			</div> : null
+			</td></tr></tbody></table> : null
 		);
+		/*
+		const dateAndFiles = (
+			<table className="document__date-and-files"><tbody>
+				{!_isEmpty(document.date) && (
+					<tr className="document__date">
+						<td>
+							<span>
+								<i className="pe-7s-date pe-va"></i><span>{fProps.date.dispName}</span>
+							</span>
+							<ViewElem value={[document.date]} type={fProps.date.type} />
+						</td>
+					</tr>
+				)}
+				{!_isEmpty(document.file) && (
+					<tr className="document__files">
+						<td>
+							<div>
+								<i className="pe-7s-download pe-va"></i>
+								<span>{fProps.file.dispName}</span>
+							</div>
+							<ViewElem value={document.file} type={fProps.file.type} owner={document.owner} role={this.props.role}
+								fileTextUri={'/document/'+document.id+'/text/'} parseState={this.props.parseState}
+							/>
+						</td>
+					</tr>
+				)}
+			</tbody></table>
+		);
+		*/
 		const bookmarkButton = (document.bookmark === 0 ?
 			<div className="document__bookmark">
 				<button type="button" onClick={this.handleClick.bind(this, 'bookmark')}>
@@ -168,6 +202,7 @@ class Document extends Component {
 						}
 						{dateOfCreation}
 						{listOfFiles}
+						{/*dateAndFiles*/}
 					</div>
 					<View doc={inContent}
 						fieldData={this.props.fData}

@@ -42,9 +42,9 @@ class DocumentForm extends Component {
 		} else {
 			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
 		}
-		this.props.focusIn('title');
 		if(!this.intvOfRqstParseState) clearInterval(this.intvOfRqstParseState);
 		this.intvOfRqstParseState = undefined;
+		this.props.initialize();
 	}
 	rqstParseState(){
 		this.intvOfRqstParseState = setInterval(() => {
@@ -53,11 +53,12 @@ class DocumentForm extends Component {
 				afterReceive: (state) => {
 					let {isInProgress, filesWithNewStatus} = doAfterReceiveParseState(state, this.props.parseState, this.props.doc, this.props.fData);
 					this.props.setParseState(state);
+					if(filesWithNewStatus) this.props.renewFileStatus({docId: this.props.doc.id, filesWithNewStatus});
 					if(!isInProgress){
 						clearInterval(this.intvOfRqstParseState);
 						this.intvOfRqstParseState = undefined;
+						this.props.initParseState();
 					}
-					if(filesWithNewStatus) this.props.renewFileStatus({docId: this.props.doc.id, filesWithNewStatus});
 				}
 			});
 		}, 3000);
@@ -178,8 +179,9 @@ DocumentForm.propTypes = {
 	openDocs: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
-	window: PropTypes.object.isRequired,
 	parseState: PropTypes.object.isRequired,
+	window: PropTypes.object.isRequired,
+	initialize: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,
@@ -188,6 +190,7 @@ DocumentForm.propTypes = {
 	onSubmit: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
 	setParseState: PropTypes.func.isRequired,
+	initParseState: PropTypes.func.isRequired,
 	renewFileStatus: PropTypes.func.isRequired,
 	onSearchMember: PropTypes.func.isRequired,
 	router: PropTypes.shape({

@@ -98,7 +98,24 @@ const dlDb = (state = initialState, action) => {
 		case COMPLETE_DOCFORM:
 			return update(state, {openDocs: {[action.doc.id]: {$set: action.doc}}});
 		case UPLOAD:
-			return update(state, {openDocs: {[action.docId]: {$merge: refineFile(action.files, state.docFieldData)}}});
+			return update(state, {openDocs: {[action.docId]: {$apply: (doc) => {
+				_forIn(refineFile(action.files, state.docFieldData), (slug, filesToAdd) => {
+					if(Array.isArray(filesToAdd)){
+						let newFile = []; let index = 0;
+						doc[slug].forEach((val) => {
+							if(!val.fid){
+								newFile.push(filesToAdd[index]); index++;
+							} else {
+								newFile.push(val);
+							}
+						});
+						doc[slug] = newFile;
+					} else {
+						doc[slug] = filesToAdd;
+					}
+				});
+				return doc;
+			}}}});
 		case RENEW_FILE_STATUS:
 			return update(state, {openDocs: {[action.docId]: {$merge: action.filesWithNewStatus}}});
 		case BOOKMARK:

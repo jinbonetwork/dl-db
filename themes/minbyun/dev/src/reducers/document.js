@@ -11,7 +11,7 @@ const document = (state = initialState, action) => {
 		case INITIALIZE_DOC:
 			return update(state, {$set: initialState});
 		case RECEIVE_PARSE_STATE:
-			return update(state, {parseState: {$set: action.parseState}});
+			return update(state, {parseState: {$set: (action.parseState ? action.parseState : initialState.parseState)}});
 		case TOGGLE_DEL_DOC_BUTTON:
 			return update(state, {dispBtnOfYesOrNo: {$apply: (val) => (!val)}});
 		default:
