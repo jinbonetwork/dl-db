@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import Item from './Item';
+import jQ from 'jquery';
 import browser from 'detect-browser';
 import {_mapO} from './functions';
 

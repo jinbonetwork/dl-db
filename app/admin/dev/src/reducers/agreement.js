@@ -1,5 +1,6 @@
 import {RECEIVE_AGREEMENT, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT} from '../constants';
 import RichTextEditor from 'react-rte';
+import 'es6-shim';
 import update from 'react-addons-update';
 
 const initialState = {

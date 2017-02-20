@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {polyfill} from 'es6-promise';
 import {_findProp, _isEmpty} from '../accessories/functions';
 
 const fetchData = (method, url, arg2, arg3, arg4) => {
