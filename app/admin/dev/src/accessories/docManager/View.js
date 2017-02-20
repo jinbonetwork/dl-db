@@ -32,7 +32,12 @@ class View extends Component {
 					/>
 				);
 			} else {
-				return this.renderTable(_mapAO(fProp.children, (cfs) => this.props.doc[cfs]), true);
+				let childDoc = _mapAO(fProp.children, (cfs) => this.props.doc[cfs]);
+				if(!_isEmpty(childDoc)){
+					return this.renderTable(childDoc, true);
+				} else {
+					return null;
+				}
 			}
 		}
 	}
