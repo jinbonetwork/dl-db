@@ -77,7 +77,8 @@ const DocContainer = connect(
 		openDocs: state.dlDb.openDocs,
 		window: state.dlDb.window,
 		dispBtnOfYesOrNo: state.document.dispBtnOfYesOrNo,
-		parseState: state.document.parseState
+		parseState: state.document.parseState,
+		selectedImage: state.document.selectedImage
 	}),
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeDoc()),
@@ -88,7 +89,8 @@ const DocContainer = connect(
 		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
 		bookmark: (args) => dispatch(dlDbActions.bookmark(args)),
 		toggleDelDocButton: (args) => dispatch(dlDbActions.toggleDelDocButton(args)),
-		delelteDoc: (args) => dispatch(dlDbActions.delelteDoc(args))
+		delelteDoc: (args) => dispatch(dlDbActions.delelteDoc(args)),
+		selectImage: (args) => dispatch(dlDbActions.selectImage(args))
 	})
 )(Document);
 

@@ -94,3 +94,4 @@ export const TOGGLE_PASSWORD_FORM = 'toggle password form';
 export const INITIALIZE_DOC = 'initialize doc';
 export const INITIALIZE_DOCFORM = 'initialize doc form';
 export const INITIALIZE_USER_PROFILE = 'initialize user profile';
+export const SELECT_IMAGE = 'select image';

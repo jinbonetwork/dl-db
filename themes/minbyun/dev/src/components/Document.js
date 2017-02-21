@@ -31,7 +31,7 @@ class Document extends Component {
 	componentWillUnmount(){
 		clearInterval(this.intvOfRqstParseState);
 	}
-	handleClick(which){
+	handleClick(which, arg1st){
 		const document = this.getDoc();
 		const docId = this.props.params.id;
 		switch(which){
@@ -42,6 +42,8 @@ class Document extends Component {
 				this.props.toggleDelDocButton(); break;
 			case 'delete-yes':
 				this.props.delelteDoc({docId, afterDelete: this.props.router.goBack}); break;
+			case 'image':
+				this.props.selectImage({index: (arg1st.command == 'select' ? arg1st.index : undefined)});
 			default:
 		}
 	}
@@ -93,6 +95,8 @@ class Document extends Component {
 				style={prsRsp.style.image}
 				value={[document.image]}
 				type={fProps.image.type}
+				selected={this.props.selectedImage}
+				onClick={this.handleClick.bind(this)}
 			/> : null
 		);
 		const title = (
@@ -117,35 +121,6 @@ class Document extends Component {
 				/>
 			</td></tr></tbody></table> : null
 		);
-		/*
-		const dateAndFiles = (
-			<table className="document__date-and-files"><tbody>
-				{!_isEmpty(document.date) && (
-					<tr className="document__date">
-						<td>
-							<span>
-								<i className="pe-7s-date pe-va"></i><span>{fProps.date.dispName}</span>
-							</span>
-							<ViewElem value={[document.date]} type={fProps.date.type} />
-						</td>
-					</tr>
-				)}
-				{!_isEmpty(document.file) && (
-					<tr className="document__files">
-						<td>
-							<div>
-								<i className="pe-7s-download pe-va"></i>
-								<span>{fProps.file.dispName}</span>
-							</div>
-							<ViewElem value={document.file} type={fProps.file.type} owner={document.owner} role={this.props.role}
-								fileTextUri={'/document/'+document.id+'/text/'} parseState={this.props.parseState}
-							/>
-						</td>
-					</tr>
-				)}
-			</tbody></table>
-		);
-		*/
 		const bookmarkButton = (document.bookmark === 0 ?
 			<div className="document__bookmark">
 				<button type="button" onClick={this.handleClick.bind(this, 'bookmark')}>
@@ -202,7 +177,6 @@ class Document extends Component {
 						}
 						{dateOfCreation}
 						{listOfFiles}
-						{/*dateAndFiles*/}
 					</div>
 					<View doc={inContent}
 						fieldData={this.props.fData}
@@ -220,12 +194,14 @@ Document.propTypes = {
 	openDocs: PropTypes.object.isRequired,
 	parseState: PropTypes.object.isRequired,
 	dispBtnOfYesOrNo: PropTypes.bool,
+	selectedImage: PropTypes.number,
 	window: PropTypes.object.isRequired,
 	initialize: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
 	setParseState: PropTypes.func.isRequired,
 	renewFileStatus: PropTypes.func.isRequired,
 	bookmark: PropTypes.func.isRequired,
+	selectImage: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired
