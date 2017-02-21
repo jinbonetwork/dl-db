@@ -65,6 +65,20 @@ class User extends \DLDB\Objects {
 		$member_srl = ($row['new'] ? ( $row['new'] + 1 ) : 1);
 
 		$user_id = preg_split("/@/i",$args['email']);
+
+		$que = "SELECT * FROM `".$prefix."member` WHERE user_id LIKE '".$user_id[0]."%'";
+		while($row = $dbm->getFetchArray($que)) {
+			$pre_user_id[$row['user_id']] = $row;
+		}
+		if($pre_user_id && is_array($pre_user_id) && @count($pre_user_id) > 0) {
+			$new_idx=1;
+			$_user_id = $user_id[0];
+			while($pre_user_id[$_user_id]) {
+				$_user_id = $user_id[0].($new_idx++);
+			}
+			$user_id[0] = $_user_id;
+		}
+
 		$password = self::makePassword($args['password']);
 		$regdate = date("YmdHis",time());
 
@@ -92,14 +106,14 @@ class User extends \DLDB\Objects {
 			$user_id[0],
 			$user_id[1],
 			$args['name'],
-			$args['name'],
+			$user_id[0],
 			'N',
 			'N',
 			$regdate,
 			($args['admin'] ? 'Y' : 'N'),
 			(0 - $member_srl)
 		)) < 1 ) {
-			self::$errmsg = $que." 가 DB에 반영되지 않았습니다.";
+			self::$errmsg = "(".$user_id[0].") ".$que." 가 DB에 반영되지 않았습니다.";
 			return -1;
 		}
 

@@ -58,7 +58,7 @@ class save extends \DLDB\Controller {
 			case 'modify':
 				$ret = \DLDB\Members\DBM::modify($member,$this->params['member']);
 				if($ret < 0) {
-					\DLDB\RespondJson::ResultPage( array( -7, \DLDB\Members::getErrorMsg() ) );
+					\DLDB\RespondJson::ResultPage( array( -7, \DLDB\Members\DBM::getErrorMsg() ) );
 				}
 				break;
 			case 'delete':
