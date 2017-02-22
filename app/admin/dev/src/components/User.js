@@ -26,10 +26,7 @@ class User extends Component {
 			default:
 		}
 	}
-	customize(){ return {/*
-		renderValueByType: {
-			something: (slug, value) => {}
-		},*/
+	customize(){ return {
 		renderValueBySlug: {
 			role: (slug, value) => {
 				if(value.length > 0){
@@ -67,6 +64,9 @@ class User extends Component {
 					<tr>
 						<td className="user__table-margin"></td>
 						<td className="user__menu" colSpan="3">
+							<a className="goback" onClick={this.props.router.goBack}>
+								<i className="pe-7f-back pe-va"></i><span>이전 페이지로</span>
+							</a>
 							<Link className="user__edit-user" to={'/admin/user/'+this.props.params.id+'/edit'}>
 								<i className="pe-7s-note pe-va"></i><span>수정</span>
 							</Link>
@@ -97,7 +97,8 @@ User.propTypes = {
 	fetchUser: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	router: PropTypes.shape({
-		push: PropTypes.func.isRequired
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
 	}).isRequired
 };
 

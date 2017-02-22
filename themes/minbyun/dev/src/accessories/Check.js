@@ -16,6 +16,7 @@ class Check extends Component {
 	render(){
 		const selected = this.props.selected;
 		const className = (this.props.className ? 'check '+this.props.className : 'check');
+		let isFirstChild = true;
 		const children = Children.map(this.props.children, (child) => { if(child){
 			const className = _wrap(() => {
 				if(	(this.props.type == 'radio' && selected == child.props.value) ||
@@ -27,8 +28,13 @@ class Check extends Component {
 				<span key="uncheckicon" className="item__uncheckicon">{this.props.uncheckIcon}</span>
 			];
 			children.push(child.props.children);
+			const focus = _wrap(() => {
+				if(isFirstChild){isFirstChild = false; return this.props.focus;}
+				else return undefined;
+			});
 			return cloneElement(child, {
-				className: className, children: children, onClick: this.handleClick.bind(this, child.props.value)
+				className, children, onClick: this.handleClick.bind(this, child.props.value),
+				focus: focus
 			});
 		}});
 		return (
@@ -44,7 +50,8 @@ Check.propTypes = {
 	checkIcon: PropTypes.element,
 	uncheckIcon: PropTypes.element,
 	type: PropTypes.oneOf(['radio', 'check']),
-	onChange: PropTypes.func.isRequired
+	focus: PropTypes.bool,
+	onChange: PropTypes.func.isRequired,
 };
 Check.defaultProps = {
 	type: 'check',

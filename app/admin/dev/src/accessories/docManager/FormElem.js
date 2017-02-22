@@ -35,7 +35,7 @@ class FormElem extends Component {
 			case 'radio':
 				return (
 					<Check
-						type="radio" selected={this.props.value} onChange={this.props.onChange}
+						type="radio" selected={this.props.value} onChange={this.props.onChange} focus={this.props.focus}
 						checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-less pe-va"></i>}
 					>
 						{this.props.options}
@@ -44,7 +44,7 @@ class FormElem extends Component {
 			case 'check':
 				return (
 					<Check
-						type="check" selected={this.props.value} onChange={this.props.onChange}
+						type="check" selected={this.props.value} onChange={this.props.onChange} focus={this.props.focus}
 						checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
 					>
 						{this.props.options}

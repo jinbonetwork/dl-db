@@ -55,8 +55,8 @@ class UserForm extends Component {
 		},
 		checkHiddenBySlug: {
 			role: (slug) => !this.props.isPwShown && this.props.user.uid <= 0,
-			password: (slug) => !this.props.isPwShown,
-			confirmPw: (slug) => !this.props.isPwShown
+			password: (slug) => !this.props.isPwShown || this.props.user.uid <= 0,
+			confirmPw: (slug) => !this.props.isPwShown || this.props.user.uid <= 0
 		},
 		renderFormBySlug: {
 			role: (slug, index, value, formElem) => {
@@ -65,13 +65,33 @@ class UserForm extends Component {
 				);
 				return cloneElement(formElem, {options});
 			}
-		}
+		},
+		rowsBefore: (
+			<tr className="form__show-password"><td colSpan="2">
+				<a className="goback" onClick={this.props.router.goBack}>
+					<i className="pe-7f-back pe-va"></i><span>이전 페이지로</span>
+				</a>
+				<Check selected={(this.props.isPwShown ? ['checked'] : [])}
+					onChange={this.handleChange.bind(this, 'show password')}
+					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
+				>
+					<Item value="checked">{this.props.user.uid > 0 ? '비밀번호 변경' : '이용자 등록'}</Item>
+				</Check>
+			</td></tr>
+		)
 	}}
+	handleClick(which, arg1st){
+		if(which == 'register'){
+			this.props.register(this.props.user.id);
+		}
+	}
 	handleChange(which, arg1st, arg2nd){
 		if(which == 'show password'){
 			let isPwShown = (arg1st.length > 0);
 			this.props.showPassword(isPwShown);
-			if(!isPwShown) this.props.onChange({mode: 'merge', value: {password: '', confirmPw: ''}});
+			if(!isPwShown){
+				this.props.onChange({mode: 'merge', value: {password: '', confirmPw: ''}});
+			}
 		}
 	}
 	handleSubmit(error){
@@ -100,15 +120,6 @@ class UserForm extends Component {
 			update(this.props.userFieldData, {fProps: {email: {required: {$set: true}}}}) :
 			this.props.userFieldData
 		);
-		let rowsBefore = (
-			<tr className="form__show-password"><td colSpan="2">
-				<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
-					checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
-				>
-					<Item value="checked">{(this.props.user.uid > 0 ? '비밀번호 변경' : '이용자로 등록')}</Item>
-				</Check>
-			</td></tr>
-		);
 		return (
 			<div className="user-form">
 				<h1>{title}</h1>
@@ -122,7 +133,6 @@ class UserForm extends Component {
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
 								submitLabel={submitLabel}
-								rowsBefore={rowsBefore}
 								onChange={this.props.onChange}
 								onBlur={this.props.onBlur}
 								onSubmit={this.handleSubmit.bind(this)}
@@ -152,7 +162,8 @@ UserForm.propTypes = {
 	submit: PropTypes.func.isRequired,
 	showPassword: PropTypes.func.isRequired,
 	router: PropTypes.shape({
-		push: PropTypes.func.isRequired
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
 	}).isRequired
 };
 
