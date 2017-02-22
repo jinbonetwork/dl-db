@@ -20,6 +20,10 @@ class DlDb extends Component {
 	componentDidUpdate(prevProps, prevState){
 		if(this.refs.message) this.refs.message.focus();
 	}
+	shouldComponentUpdate(nextProps){
+		if(!this.props.login.doAgree && nextProps.login.doAgree) return false;
+		else return true;
+	}
 	componentWillUnmount(){
 		jQ(window).off('resize');
 	}

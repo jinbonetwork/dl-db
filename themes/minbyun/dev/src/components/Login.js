@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {withRouter} from 'react-router';
 import Item from '../accessories/Item';
 import {SCREEN} from '../constants';
 import {_interpolate} from '../accessories/functions';
@@ -24,7 +25,7 @@ class Login extends Component {
 			this.submit()
 		}
 		else if(which == 'agree'){
-			this.props.onAgree();
+			this.props.onAgree(() => {this.props.router.push('/user/profile')});
 		}
 	}
 	handleKeyDown(which, event){
@@ -156,20 +157,11 @@ Login.propTypes = {
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
 	fetchAgreement: PropTypes.func.isRequired,
-	onAgree: PropTypes.func.isRequired
-	/*
-	userData: PropTypes.object,
-
-	fetchData:  PropTypes.func.isRequired,
-	fetchContData: PropTypes.func.isRequired,
-	setMessage:  PropTypes.func.isRequired,
-	unsetUserData: PropTypes.func.isRequired,
-	setAgreement: PropTypes.func.isRequired,
+	onAgree: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired
 	}).isRequired
-	*/
 };
 
-export default Login;
+export default withRouter(Login);

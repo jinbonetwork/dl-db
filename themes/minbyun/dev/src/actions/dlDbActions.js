@@ -89,10 +89,11 @@ const actionCreators = {
 			}
 		);
 	}},
-	agreeWithAgreement(){ return (dispatch) => {
+	agreeWithAgreement(afterAgree){ return (dispatch) => {
 		dispatch({type: AGREE_WITH_AGREEMENT});
 		api.agreeWithAgreement(
-			() => {}, (error) => dispatchError(dispatch, error)
+			() => afterAgree(),
+			(error) => dispatchError(dispatch, error)
 		);
 	}},
 	logout({afterLogout}){ return (dispatch) => {
