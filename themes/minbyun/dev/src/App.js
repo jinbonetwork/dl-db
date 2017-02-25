@@ -36,7 +36,7 @@ const DlDbContainer = connect(
 		onChangeLogin: (which, value) => dispatch(dlDbActions.changeLogin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin)),
 		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
-		onAgree: () => dispatch(dlDbActions.agreeWithAgreement()),
+		onAgree: (afterAgree) => dispatch(dlDbActions.agreeWithAgreement(afterAgree)),
 		onLogOut: (args) => dispatch(dlDbActions.logout(args)),
 		onChangeQuery: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
 		changeSearchBarState: (value) => dispatch(dlDbActions.changeSearchBarState(value))
@@ -77,7 +77,8 @@ const DocContainer = connect(
 		openDocs: state.dlDb.openDocs,
 		window: state.dlDb.window,
 		dispBtnOfYesOrNo: state.document.dispBtnOfYesOrNo,
-		parseState: state.document.parseState
+		parseState: state.document.parseState,
+		selectedImage: state.document.selectedImage
 	}),
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeDoc()),
@@ -88,7 +89,8 @@ const DocContainer = connect(
 		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
 		bookmark: (args) => dispatch(dlDbActions.bookmark(args)),
 		toggleDelDocButton: (args) => dispatch(dlDbActions.toggleDelDocButton(args)),
-		delelteDoc: (args) => dispatch(dlDbActions.delelteDoc(args))
+		delelteDoc: (args) => dispatch(dlDbActions.delelteDoc(args)),
+		selectImage: (args) => dispatch(dlDbActions.selectImage(args))
 	})
 )(Document);
 

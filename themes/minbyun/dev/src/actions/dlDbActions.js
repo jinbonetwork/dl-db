@@ -5,7 +5,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
 	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, RECEIVE_USER_PROFILE,
 	CHANGE_USER_PROFILE, FOCUSOUT_USER_PROFILE, FOCUSIN_USER_PROFILE, COMPLETE_USER_PROFILE, SUBMIT_USER_PROFILE,
-	TOGGLE_PASSWORD_FORM, INITIALIZE_DOC, INITIALIZE_USER_PROFILE, INITIALIZE_DOCFORM
+	TOGGLE_PASSWORD_FORM, INITIALIZE_DOC, INITIALIZE_USER_PROFILE, INITIALIZE_DOCFORM, SELECT_IMAGE
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -89,10 +89,11 @@ const actionCreators = {
 			}
 		);
 	}},
-	agreeWithAgreement(){ return (dispatch) => {
+	agreeWithAgreement(afterAgree){ return (dispatch) => {
 		dispatch({type: AGREE_WITH_AGREEMENT});
 		api.agreeWithAgreement(
-			() => {}, (error) => dispatchError(dispatch, error)
+			() => afterAgree(),
+			(error) => dispatchError(dispatch, error)
 		);
 	}},
 	logout({afterLogout}){ return (dispatch) => {
@@ -379,6 +380,9 @@ const actionCreators = {
 	},
 	initializeUserProfile(){
 		return {type: INITIALIZE_USER_PROFILE};
+	},
+	selectImage({index}){
+		return {type: SELECT_IMAGE, index}
 	}
 }
 

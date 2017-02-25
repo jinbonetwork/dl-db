@@ -56,14 +56,14 @@ class FileText extends Component {
 						</a>
 						<div className="filetext__parsed">
 							<span className="filetext__parsed-label">텍스트화</span>
-							{(this.props.fileText.status == 'uploaded') && [
+							{(this.props.fileText.status == 'unparsed') && [
 								<a key="switch" tabIndex="0" onClick={this.handleClick.bind(this, 'status', 'parsed')}>
 									<i className="pe-7s-switch pe-va"></i>
 								</a>,
 								<span className="filetext__parsed-state" key="state">미완료</span>
 							]}
 							{(this.props.fileText.status == 'parsed') && [
-								<a key="switch" tabIndex="0" onClick={this.handleClick.bind(this, 'status', 'uploaded')}>
+								<a key="switch" tabIndex="0" onClick={this.handleClick.bind(this, 'status', 'unparsed')}>
 									<i className="pe-7f-switch pe-flip-horizontal pe-va"></i>
 								</a>,
 								<span className="filetext__parsed-state" key="state">완료</span>
