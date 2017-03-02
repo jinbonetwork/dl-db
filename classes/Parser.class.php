@@ -97,13 +97,43 @@ class Parser extends \DLDB\Objects {
 					$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 				}
 			} else {
-				$header['error'] = $errmsg;
+				$out = self::parsePDF2TEXT($file_info);
+				if($out['error']) {
+					$header['error'] = $errmsg."\n".$out['error'];
+				}
+				$text = $out['text'];
 			}
 		} catch(Exception $e) {
 			$header['error'] = $e;
 		} finally {
 			return array('text'=>trim($text),'header'=>$header);
 		}
+	}
+
+	public static function parsePDF2TEXT($file_info) {
+		$dbm = \DLDB\DBM::instance();
+
+		$context = \DLDB\Model\Context::instance();
+
+		$filename = \DLDB\Files::getFilePath($file_info);
+		$to_filename = preg_replace("/\.pdf$/i",".txt",$filename);
+
+		$fp = popen($context->getProperty('service.pdftotext')." ".$filename." ".$to_filename,"r");
+		while (!feof($fp)) { 
+			$out .= fgets($fp, 4096);
+		}
+		pclose($fp);
+		if(file_exists($to_filename)) {
+			$fp = fopen($to_filename,"r");
+			$text = fread($fp,filesize($to_filename));
+			fclose($fp);
+			unlink($to_filename);
+		}
+		if(!$out) {
+			$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
+			$dbm->execute($que, array("dd",100,$file_info['fid']) );
+		}
+		return array('error'=>$out,'text'=>$text);
 	}
 
 	public static function parseDoc($file_info) {

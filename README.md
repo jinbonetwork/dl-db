@@ -112,7 +112,14 @@ $ cd contribute/pdfparser
 $ php ~/bin/composer.phar install --dev
 ```
 
-8) File Parse Daemom
+8) XPdf 설치
+-----------
+* pdf 첨푸파일에서 text를 추출하기 위한 xpdf 설치
+```bash
+$ yum install xpdf
+```
+
+9) File Parse Daemom
 --------------------
 * pdf 등 첨부파일 파싱을 문서작성과 동시에 할 수도 있고, 두개의 과정을 분리할 수도 있습니다. 분리여부는 theme 에서 결정합니다.
 * 파싱을 분리하는 경우 파일을 별도의 api로 업로드하도록 theme가 작성되어야 합니다. 사용할 api는 /api/file/upload 입니다. 이 api를 사용하기 위해서는 parsing하기 위해 별도의 parser daemon(parser.php)을 설정해야 합니다.
@@ -162,7 +169,7 @@ $service['parsing_server'] = '127.0.0.1'; /* xinetd 설정에 only_from 값.
 $service['parsing_port'] = '20010' /* services 에 설정한 port 번호 */
 ```
 
-9) Mecab-ko 설치
+10) Mecab-ko 설치
 ---------------
 * 공식 홈페이지: http://eunjeon.blogspot.kr/
 * mecab 설치
@@ -205,7 +212,7 @@ dicdir =  /usr/lib64/mecab/dic/mecab-ko-dic
 ; eos-format = EOS\n
 ```
 
-10) MySQL FullText로 검색할 경우
+11) MySQL FullText로 검색할 경우
 ------------------------------
 * 참고사이트: http://dev.mysql.com/doc/refman/5.7/en/fulltext-search-mecab.html
 ```bash
@@ -224,7 +231,7 @@ $ service mysqld restart
 mysql> INSTALL PLUGIN mecab SONAME 'libpluginmecab.so';
 ```
 
-11) ElasticSearch 을 사용할 경우
+12) ElasticSearch 을 사용할 경우
 ------------------------------
 * 현재는 Elastic 2.4.0 버젼을 사용합니다. 한국 형태소 분석기인 '은전한닢 프로젝트' mecab-ko가 지원하고, Elastic 5.0을 사용하기에는 아직 검증되지 않았기에 일단 2.4.0 버젼으로 시작합니다. 향후 ElasticSearch 프로젝트 진행상황에 따라 향후 업그레이드 할 예정입니다.
 * 참조: https://bitbucket.org/eunjeon/mecab-ko-lucene-analyzer/raw/master/elasticsearch-analysis-mecab-ko/

@@ -10,7 +10,7 @@ class Mail extends \DLDB\Objects {
 		require_once DLDB_CONTRIBUTE_PATH."/PHPMailer/PHPMailerAutoload.php";
 	}
 
-	public static function send($receivers, $subject, $content) {
+	public static function send($receivers, $subject, $content, $SMTPDebug=0) {
 		$context = \DLDB\Model\Context::instance();
 		$service = $context->getProperty('service.*');
 
@@ -25,7 +25,7 @@ class Mail extends \DLDB\Objects {
 		$mail->CharSet = "UTF-8";
 		$mail->Encoding = "base64";
 
-//		$mail->SMTPDebug = 3;
+		$mail->SMTPDebug = $SMTPDebug;
 
 		if( $service['useSMTP'] ) {
 			$mail->isSMTP();
@@ -69,32 +69,6 @@ class Mail extends \DLDB\Objects {
 			}
 		}
 		return array(true);
-	}
-
-	public static function templateMail($receivers, $args) {
-		$context = \DLDB\Model\Context::instance();
-		$themes = $context->getProperty('service.themes');
-
-		@extract($args);
-
-		$mail_theme = DLDB_PATH."/themes/".$themes."/mail.html.php";
-		if(file_exists($mail_theme)) {
-			ob_start();
-			include_once $mail_theme;
-			$html = ob_get_contents();
-			ob_end_clean();
-		} else if(file_exists(DLDB_RESOURCE_PATH."/html/mail.html.php")) {
-			ob_start();
-			include_once DLDB_RESOURCE_PATH."/html/mail.html.php";
-			$html = ob_get_contents();
-			ob_end_clean();
-		} else {
-			$html = $content;
-		}
-
-		$ret = self::send($receivers,$subject,$html);
-
-		return $ret;
 	}
 }
 ?>
