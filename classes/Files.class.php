@@ -193,6 +193,13 @@ class Files extends \DLDB\Objects {
 			else if(is_string($v)) $v = stripslashes($v);
 			$file[$k] = $v;
 		}
+		if(!$file['progress']) {
+			if($file['status'] == 'parsed') {
+				$file['progress'] = 100;
+			} else if($file['status'] == 'uploaded') {
+				$file['progress'] = 0;
+			}
+		}
 		return $file;
 	}
 }
