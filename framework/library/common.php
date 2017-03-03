@@ -9,15 +9,35 @@ function Error($msg,$errorcode=505) {
 	}
 }
 
+function site_domain($ssl=false) {
+	$context = \DLDB\Model\Context::instance();
+	$cli = php_sapi_name();
+	if($cli == 'cli') {
+		return "http".($context->getProperty('service.ssl') ? "s" : "")."://".$context->getProperty('service.domain');
+	} else {
+		return "http".( ($_SERVER['HTTPS'] == 'on' || $ssl) ? "s" : "")."://".$context->getProperty('service.domain');
+	}
+}
+
+function site_url($ssl=false) {
+	return \DLDB\Lib\site_domain().\DLDB\Lib\base_uri();
+}
+
 function base_uri() {
 	$context = \DLDB\Model\Context::instance();
-	return $context->getProperty('service.base_uri');
+	$cli = php_sapi_name();
+	if($cli == 'cli') {
+		return DLDB_URI;
+	} else {
+		return $context->getProperty('service.base_uri');
+	}
 }
 
 function url($path,$opt=null) {
+	$context = \DLDB\Model\Context::instance();
+	$cli = php_sapi_name();
 	$url="";
-	if($opt['ssl'] && $_SERVER['HTTPS'] != 'on') {
-		$context = \DLDB\Model\Context::instance();
+	if($opt['ssl'] && $cli != "cli" && $_SERVER['HTTPS'] != 'on') {
 		$service = $context->getProperty('service.*');
 		if($service['ssl']) $url = "https://".(!preg_match("/:\/\//i",$path) ? $_SERVER['HTTP_HOST'] : "");
 	} else if($opt['ssl'] == false && $_SERVER['HTTPS'] == 'on') {
@@ -36,6 +56,20 @@ function url($path,$opt=null) {
 		$url .= "?".(is_array($opt['query']) ? http_build_query($opt['query']) : $opt['query']);
 	if(substr($url,0,2) == "//") $url = substr($url,1);
 	$url = preg_replace("/\/\/$/i","/",$url);
+	return $url;
+}
+
+function full_url($path,$opt=null) {
+	$url = "";
+	if(!preg_match("/^http(s):/i",$path)) {
+		$url .= \DLDB\Lib\site_domain();
+	}
+	$uri = \DLDB\Lib\url($path,$opt);
+	if(preg_match("/^http(s):\/\//i",$uri))
+		$url = $uri;
+	else
+		$url .= $uri;
+
 	return $url;
 }
 
@@ -64,6 +98,9 @@ function user_logged_in() {
 	$context = \DLDB\Model\Context::instance();
 	if($_SESSION['user']['uid']) return true;
 	switch($context->getProperty('session.type')) {
+		case "xe":
+			if($_SESSION['user']['uid']) return true;
+			break;
 		case "gnu5":
 		default:
 			if($_SESSION['mb_id']) return true;
@@ -73,13 +110,8 @@ function user_logged_in() {
 }
 
 function isMaster() {
-	if($_SESSION['user']['glevel'] == BITWISE_ADMINISTRATOR) return 1;
-	else return 0;
-}
-
-function isOwner() {
-	global $user, $entry;
-	if($user['uid'] && $entry['owner'] && $user['uid'] == $entry['owner']) return 1;
+	$acl = \DLDB\Acl::instance();
+	if($acl->imMaster()) return 1;
 	else return 0;
 }
 

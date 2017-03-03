@@ -29,6 +29,20 @@ class User extends \DLDB\Objects {
 		return $member;
 	}
 
+	public static function getAdminID() {
+		$dbm = \DLDB\DBM::instance();
+
+		$prefix = self::getPrefix();
+
+		$que = "SELECT dm.* FROM `".$prefix."member` AS xm LEFT JOIN {members} AS dm ON xm.member_srl = dm.uid WHERE xm.`is_admin` = 'Y' ORDER BY xm.`member_srl` ASC";
+		$members = array();
+		while($row = $dbm->getFetchArray($que)) {
+			$members[] = self::fetchMember($row);
+		}
+
+		return $members;
+	}
+
 	private static function fetchMember($row) {
 		if(!$row) return null;
 		$member = array();

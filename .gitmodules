@@ -7,3 +7,6 @@
 [submodule "contribute/pdfparser"]
 	path = contribute/pdfparser
 	url = https://github.com/smalot/pdfparser.git
+[submodule "contribute/PHPMailer"]
+	path = contribute/PHPMailer
+	url = https://github.com/PHPMailer/PHPMailer.git

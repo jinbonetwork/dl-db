@@ -6,6 +6,8 @@ define('__DLDB__',true);
 if(!defined('ROOT'))
 	define('ROOT',dirname(__FILE__));
 
+define('DLDB_URI','/');
+
 /**
  * @brief 필요한 설정 파일들 include
  **/
@@ -94,6 +96,36 @@ try {
 		\DLDB\Parser::insert($did,$document,$memo);
 		syslog(LOG_INFO, "success indexing of did [".$did."]");
 	}
+
+	$send_mail = (int)$data['mail'];
+	if( $send_mail && $document['id'] ) {
+		if($document['uid']) {
+			$member = \DLDB\Members::getByUid($document['uid']);
+		}
+		$admins = \DLDB\Members\DBM::getAdminID();
+		if( @count($admins) > 0 ) {
+			syslog(LOG_INFO, "start sendmail to administrator emails");
+			$args['name'] = ($member['name'] ? $member['name'] : '익명의 회원');
+			$args['subject'] = $context->getProperty('service.title')."에 새 자료가 업로드 되었습니다.";
+			$args['title'] = $document['subject'];
+			$args['content'] = nl2br($document['content']);
+			$args['files'] = $files;
+			$args['link'] = \DLDB\Lib\full_url('document/'.$document['id'],array('ssl'=>$context->getProperty('service.ssl')));
+			$args['link_title'] = '문서보기';
+			$recievers = array();
+			foreach($admins as $adminID) {
+				$recievers[] = array('email' => $adminID['email'], 'name' => $adminID['name'] );
+			}
+
+			$result = \DLDB\Mailer::sendMail("upload",$recievers,$args,0);
+			if(!$result[0]) {
+				syslog(LOG_INFO, "failure to sendmail because of '".$result[1]."'");
+			} else {
+				syslog(LOG_INFO, "success to sendmail");
+			}
+		}
+	}
+	closelog();
 
 	$dbm->release();
 } catch(Exception $e) {

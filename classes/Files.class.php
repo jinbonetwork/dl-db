@@ -138,6 +138,25 @@ class Files extends \DLDB\Objects {
 		return $fid;
 	}
 
+	public static function modifyFile($fid,$file) {
+		$filepath = substr($file,strlen(DLDB_DATA_PATH));
+		$_filename = explode( "/", $file );
+		$filename = $_filename[(@count($_filename)-1)];
+		$file_size = @filesize($file);
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$mime = finfo_file($finfo, $file);
+		finfo_close($finfo);
+
+		if($file_size > 0) {
+			$dbm = \DLDB\DBM::instance();
+
+			$que = "UPDATE {files} SET `filepath` = ?, `filename` = ?, `mimetype` = ?, `filesize` = ?, `regdate` = ?, `status`, `textsize` = ? WHERE `fid` = ?";
+			$dbm->execute($que,array("sssddsdd",$filepath,$filename,$mime,$file_size,time(),'uploaded',0,$fid));
+		}
+
+		return $fid;
+	}
+
 	public static function deleteFile($fid) {
 		$dbm = \DLDB\DBM::instance();
 

@@ -28,6 +28,20 @@ class User extends \CADB\Objects  {
 		return $member;
 	}
 
+	public static function getAdminID() {
+		$dbm = \DLDB\DBM::instance();
+
+		$prefix = self::getPrefix();
+
+		$que = "SELECT dm.* FROM `".$prefix."member` AS gm LEFT JOIN {members} AS dm ON gm.mb_no = dm.uid WHERE dm.`mb_level` = 10 ORDER BY dm.`mb_no` ASC";
+		$members = array();
+		while($row = $dbm->getFetchArray($que)) {
+			$members[] = self::fetchMember($row);
+		}
+
+		return $members;
+	}
+
 	private static function fetchMember($row) {
 		if(!$row) return null;
 		$member = array();

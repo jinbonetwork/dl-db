@@ -228,6 +228,19 @@ class DBM extends \DLDB\Objects {
 				break;
 		}
 
+		if($uid > 0 && !$context->getProperty('service.allow_join')) {
+			$args['subject'] = $rows['name']."님 '".$context->getProperty('service.title')."' 사이트에 아이디가 개설되었습니다";
+			$args['name'] = $rows['name'];
+			$args['user_id'] = $rows['email'];
+			$args['password'] = $rows['password'];
+			$args['link'] = \DLDB\Lib\site_url($context->getProperty('service.ssl'));
+			$args['link_title'] = '바로가기';
+			$recievers = array();
+			$recievers[] = array('email' => $rows['email'], 'name' => $rows['name'] );
+
+			$result = \DLDB\Mailer::sendMail("regist",$recievers,$args,0);
+		}
+
 		return $uid;
 	}
 
@@ -299,6 +312,21 @@ class DBM extends \DLDB\Objects {
 			$dbm->execute($que,array("ds",$uid,serialize($roles)));
 		}
 		return 0;
+	}
+
+	public static function getAdminID() {
+		$context = \DLDB\Model\Context::instance();
+		$session_type = $context->getProperty('session.type');
+		switch($session_type) {
+			case 'gnu5':
+				$admins = \DLDB\Members\Gnu5\User::getAdminID();
+				break;
+			case 'xe':
+			default:
+				$admins = \DLDB\Members\XE\User::getAdminID();
+				break;
+		}
+		return $admins;
 	}
 
 	public static function getErrorMsg() {
