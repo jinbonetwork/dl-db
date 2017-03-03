@@ -26,14 +26,27 @@ class parsing_state extends \DLDB\Controller {
 				);
 			}
 		} else if($this->params['fid']) {
-			$file = \DLDB\Files::getFileParseStatus($this->params['fid']);
-			if( !$file ) {
-				\DLDB\RespondJson::ResultPage( array( -2, '첨부파일정보를 검색할 수 없습니다.') );
-			} else {
+			if( is_array($this->params['fid']) ) {
+				foreach( $this->params['fid'] as $fid ) {
+					$file = \DLDB\Files::getFileParseStatus($fid);
+					if( $file ) {
+						$files[$file['fid']] = $file;
+					}
+				}
 				$this->result = array(
 					'error' => 0,
-					'file' => $file
+					'files' => $files
 				);
+			} else {
+				$file = \DLDB\Files::getFileParseStatus($this->params['fid']);
+				if( !$file ) {
+					\DLDB\RespondJson::ResultPage( array( -2, '첨부파일정보를 검색할 수 없습니다.') );
+				} else {
+					$this->result = array(
+						'error' => 0,
+						'file' => $file
+					);
+				}
 			}
 		}
 	}
