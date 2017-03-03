@@ -324,7 +324,7 @@ $redirectUri = 'http://domain.net/contribute/PHPMailer/get_oauth_token.php';
 $clientId = 'google oauth2 clientid';
 $clientSecret = 'google oauth2 clientsecret';
 ```
-http://domain.net/contribute/PHPMailer/get_oauth_token.php 에 접속하면 Refresh Token 값을 알려준다.
+웹브라우져에서 domain.net/contribute/PHPMailer/get_oauth_token.php 로 접속하면 Refresh Token 값을 알려준다.
 
   * config/settings.php
 ```vim
