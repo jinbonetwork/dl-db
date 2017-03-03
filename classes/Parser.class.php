@@ -165,11 +165,11 @@ class Parser extends \DLDB\Objects {
 		return '';
 	}
 
-	public static function forkParser($did) {
+	public static function forkParser($did,$mail=0) {
 		$context = \DLDB\Model\Context::instance();
 
 		$fp = fsockopen($context->getProperty('service.parsing_server'),$context->getProperty('service.parsing_port'),$errno, $errstr, 30);
-		$input = array('did'=>$did);
+		$input = array('did'=>$did,'mail'=>$mail);
 		fwrite($fp, json_encode($input)."\n");
 		fclose($fp);
 	}

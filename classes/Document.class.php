@@ -261,7 +261,7 @@ class Document extends \DLDB\Objects {
 					$update_parse = true;
 				}
 				\DLDB\Files::deleteFile($d_fd);
-				\DLDB\Files::unlinkFile(DLDB_DA_PATH.$d_file['filepath']);
+				\DLDB\Files::unlinkFile(DLDB_DATA_PATH.$d_file['filepath']);
 			}
 		}
 
