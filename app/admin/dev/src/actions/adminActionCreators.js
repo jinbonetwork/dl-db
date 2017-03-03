@@ -5,7 +5,7 @@ import {
 	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
 	SHOW_PASSWORD, DELETE_USERS, RECEIVE_FILETEXT, CHANGE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT,
-	SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE, TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER
+	SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE, TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER, REQUEST_UPLOAD
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -240,6 +240,16 @@ const adminActionCreators = {
 			() => dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status}),
 			(error) => {
 				dispatch({type: TOGGLE_PARSED_OF_FILE, fileId, status});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
+	upload({fileId, idxOfFiles, newFile, formData}){ return (dispatch) => {
+		dispatch({type: REQUEST_UPLOAD, idxOfFiles, newFile});
+		adminApi.upload(
+			fileId, formData,
+			(data) => {console.log(data)},
+			(error) => {
 				dispatchError(dispatch, error);
 			}
 		);

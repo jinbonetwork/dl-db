@@ -5,7 +5,7 @@ import {
 	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
 	DELETE_USERS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
-	TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER
+	TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER, REQUEST_UPLOAD
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
@@ -100,6 +100,11 @@ const admin = (state = initialState, action) => {
 			return update(state, {openAgreement: {$set: agreement}});
 		case COMPLETE_AGREEMENT:
 			return update(state, {openAgreement: {$set: action.agreement}});
+		case REQUEST_UPLOAD:
+			return update(state, {attachments: {[action.idxOfFiles]: {$merge: {
+				fileName: action.newFile.name,
+				status: 'uploading'
+			}}}});
 		default:
 			return state;
 	}

@@ -45,6 +45,12 @@ class Attachments extends Component {
 				if(field != 'default') this.props.onChange('keywordSearching', value);
 			}
 		}
+		else if(which == 'upload'){
+			const newFile = arg2nd.target.files[0];
+			let formData = new FormData();
+			formData.append(this.props.fData.fID.file, newFile);
+			this.props.onUpload({fileId: arg1st.fileId, idxOfFiles: arg1st.idxOfFiles, newFile: arg2nd.target.files[0], formData});
+		}
 	}
 	handleClick(which, arg1st){
 		switch(which){
@@ -116,9 +122,10 @@ class Attachments extends Component {
 			<tr className="attachments__head">
 				<td className="table-margin"></td>
 				<td className="table-padding"></td>
-				<td colSpan="2">파일이름</td>
+				<td>파일이름</td>
 				<td>텍스트화</td>
 				<td>익명화</td>
+				<td></td>
 				<td className="table-padding"></td>
 				<td className="table-margin"></td>
 			</tr>
@@ -130,15 +137,10 @@ class Attachments extends Component {
 					<td className="table-margin"></td>
 					<td className="table-padding"></td>
 					<td className="attachments__filename">
-						{ isComplete ?
-							<a href={file.fileUri} target="_blank">{file.fileName}</a> :
-							<span>{file.fileName}</span>
-						}
-					</td>
-					<td className="attachments__edit-text">
-						{ isComplete ?
-							<a onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a> :
-							<span>업로드중</span>
+						<span>{file.fileName}</span>
+						{ isComplete && [
+							<a key="name" href={file.fileUri} target="_blank"><i className="pe-7s-download pe-va"></i></a>,
+							<a key="edit" onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a>]
 						}
 					</td>
 					<td className="attachments__toggle">
@@ -192,6 +194,16 @@ class Attachments extends Component {
 							</span>
 						)}
 					</td>
+					<td className="attachments__upload">
+						{ isComplete &&
+							<label>
+								<i className="pe-7s-upload"></i>
+								<input type="file" ref="inputFile" style={{display: 'none'}} value="" accept=".pdf, .hwp, .doc, .docx"
+									onChange={this.handleChange.bind(this, 'upload', {idxOfFiles, fileId: file.fileId})}
+								/>
+							</label>
+						}
+					</td>
 					<td className="table-padding"></td>
 					<td className="table-margin"></td>
 				</tr>
@@ -220,6 +232,7 @@ class Attachments extends Component {
 }
 
 Attachments.propTypes = {
+	fData: PropTypes.object.isRequired,
 	attachments: PropTypes.array.isRequired,
 	openFileTexts: PropTypes.object.isRequired,
 	lastPage: PropTypes.number.isRequired,
@@ -228,6 +241,7 @@ Attachments.propTypes = {
 	fetchAttachments: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	addFileToOpenFileTexts: PropTypes.func.isRequired,
+	onUpload: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired
 	}).isRequired

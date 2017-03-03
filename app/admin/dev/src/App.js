@@ -90,6 +90,7 @@ const UserFormContainer = connect(
 
 const AttachmentsContainer = connect(
 	(state) => ({
+		fData: state.admin.docFieldData,
 		attachments: state.admin.attachments,
 		openFileTexts: state.admin.openFileTexts,
 		lastPage: state.attachments.lastPage,
@@ -101,7 +102,8 @@ const AttachmentsContainer = connect(
 		onChange: (which, value) => dispatch(adminActionCreators.changePropsInAttachments(which, value)),
 		toggleParsed: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleParsed(idxOfFiles, fileId, status)),
 		toggleAnonymity: ({idxOfFiles, fileId, status}) => dispatch(adminActionCreators.toggleAnonymity(idxOfFiles, fileId, status)),
-		addFileToOpenFileTexts: (fileId, file) => dispatch(adminActionCreators.addFileToOpenFileTexts(fileId, file))
+		addFileToOpenFileTexts: (fileId, file) => dispatch(adminActionCreators.addFileToOpenFileTexts(fileId, file)),
+		onUpload: (args) => dispatch(adminActionCreators.upload(args))
 	})
 )(Attachments);
 

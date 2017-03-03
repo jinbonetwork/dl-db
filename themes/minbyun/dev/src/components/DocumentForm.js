@@ -62,7 +62,7 @@ class DocumentForm extends Component {
 					}
 				}
 			});
-		}, 3000);
+		}, 1000);
 	}
 	customize(){ return {
 		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?

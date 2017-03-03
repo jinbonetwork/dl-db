@@ -125,6 +125,9 @@ const adminApi = {
 	submitFileText(docId, fileId, formData, succeed, fail){
 		fetchData('post', '/api/document/text?mode=modify&id='+docId+'&fid='+fileId, formData, succeed, fail);
 	},
+	upload(fileId, formData, succeed, fail){
+		fetchData('post', '/api/file/upload?fid='+fileId, formData, succeed, fail);
+	},
 	logout(succeed, fail){
 		fetchData('post', '/api/logout', null, succeed, fail);
 	}

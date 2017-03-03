@@ -61,7 +61,7 @@ class Document extends Component {
 					if(filesWithNewStatus) this.props.renewFileStatus({docId: this.props.params.id, filesWithNewStatus});
 				}
 			});
-		}, 3000);
+		}, 1000);
 	}
 	propsForResponsivity(){ //prsRsp
 		const wWidth = this.props.window.width;
