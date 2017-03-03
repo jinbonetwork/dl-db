@@ -49,7 +49,7 @@ class Attachments extends Component {
 			const newFile = arg2nd.target.files[0];
 			let formData = new FormData();
 			formData.append(this.props.fData.fID.file, newFile);
-			this.props.onUpload({fileId: arg1st.fileId, idxOfFiles: arg1st.idxOfFiles, newFile: arg2nd.target.files[0], formData});
+			this.props.onUpload({idxOfFiles: arg1st.idxOfFiles, file: arg1st.file, newFile: arg2nd.target.files[0], formData});
 		}
 	}
 	handleClick(which, arg1st){
@@ -199,7 +199,7 @@ class Attachments extends Component {
 							<label>
 								<i className="pe-7s-upload"></i>
 								<input type="file" ref="inputFile" style={{display: 'none'}} value="" accept=".pdf, .hwp, .doc, .docx"
-									onChange={this.handleChange.bind(this, 'upload', {idxOfFiles, fileId: file.fileId})}
+									onChange={this.handleChange.bind(this, 'upload', {idxOfFiles, file})}
 								/>
 							</label>
 						}

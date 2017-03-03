@@ -244,10 +244,10 @@ const adminActionCreators = {
 			}
 		);
 	}},
-	upload({fileId, idxOfFiles, newFile, formData}){ return (dispatch) => {
+	upload({idxOfFiles, file, newFile, formData}){ return (dispatch) => {
 		dispatch({type: REQUEST_UPLOAD, idxOfFiles, newFile});
 		adminApi.upload(
-			fileId, formData,
+			{fileId: file.fileId, docId: file.docId, formData},
 			(data) => {console.log(data)},
 			(error) => {
 				dispatchError(dispatch, error);
