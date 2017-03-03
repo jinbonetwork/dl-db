@@ -104,19 +104,25 @@ $ curl -sS https://getcomposer.org/installer | php
 ```
 * bin 폴더에 composer.phar가 설치됩니다.
 
-7) pdfparser 설치
+7) XPdf 설치
+-----------
+* pdf 첨부파일에서 text를 추출하여 검색 Indexing 하기위해 PDF에서 text를 추출하는 대표적인 오픈소스인 xpdf 설치
+* PHP에서 popen 으로 shell 명령을 허용한 경우에만 사용됩니다.
+```bash
+$ yum install xpdf
+```
+xpdf 사용예
+```bash
+$ pdftotext [options] [PDF-file [text-file]]
+```
+
+8) pdfparser 설치
 -----------------
-* pdf 철부파일 검색을 위한 pdfparser 설치
+* PHP에서 popen등 shell 명령을 제한하는 경우. 대체제로 PDFParser 라이브러리를 사용합니다.
+* 그럴 경우를 대비하여 pdfparser 설치
 ```bash
 $ cd contribute/pdfparser
 $ php ~/bin/composer.phar install --dev
-```
-
-8) XPdf 설치
------------
-* pdf 첨푸파일에서 text를 추출하기 위한 xpdf 설치
-```bash
-$ yum install xpdf
 ```
 
 9) File Parse Daemom
@@ -262,3 +268,75 @@ $ bin/plugin install org.bitbucket.eunjeon/elasticsearch-analysis-seunjeon/2.4.0
 $ ./bin/elasticsearch -Des.security.manager.enabled=false
 ```
 
+13) PHPMailer 설치
+------------------
+* 회원 아이디 발급이나, 자료업로드시 공지 메일을 주고받기 위해 PHPMailer 설치
+
+* PHPMailer install
+```bash
+$ cd contribute/
+$ git clone https://github.com/PHPMailer/PHPMailer.git
+```
+
+**config/settings.php 설정**
+
+* 서비MTA 이용할 경우
+  * 참고: https://github.com/PHPMailer/PHPMailer/blob/master/examples/mail.phps
+  * config/settings.php
+```bash
+vim config/settings.php
+```
+```vim
+$service['useSMTP'] = false;
+$service['smtpAddress'] = 'test@test.com';
+$service['smtpUsername'] = '이름';
+```
+* 외부MTA의 SMTP 이용할 경우 
+  * 참고: https://github.com/PHPMailer/PHPMailer/blob/master/examples/smtp.phps
+  * config/settings.php
+```vim
+$service['useSMTP'] = true;
+$service['smtpHost'] = 'smtp.test.com';
+$service['smtpPort'] = '25'; /* smtp port */
+$service['smtpAddress'] = 'test@test.com';
+$service['smtpUsername'] = '이름';
+```
+* Gmail OAuth2를 이용할 경우
+  * 참고: https://github.com/PHPMailer/PHPMailer/wiki/Using-Gmail-with-XOAUTH2
+  * google oauth2 App 만들기 
+    * 참고: https://github.com/PHPMailer/PHPMailer/wiki/Using-Gmail-with-XOAUTH2
+	* 구글 App 생성: https://console.developers.google.com/project 에서 새프로젝트 생성
+	* project app을 생성하면 clientID와 clientSecret 값을 얻는다.
+  * phpmailer oauth 설치
+```bash
+$ cd contribute/PHPMailer/
+$ php ~/bin/composer.phar install --dev
+$ php ~/bin/composer.phar require-dev league/oauth2-client
+$ php ~/bin/composer.phar require-dev league/oauth2-google
+```
+  * clientID와 clientSecret 값을 이용하여 phpmailer와 google oauth2 연동
+```bash
+$ cd contribute/PHPMailer/
+$ vim get_auth_token.php
+```
+```vim
+$redirectUri = 'http://domain.net/contribute/PHPMailer/get_oauth_token.php';
+$clientId = 'google oauth2 clientid';
+$clientSecret = 'google oauth2 clientsecret';
+```
+http://domain.net/contribute/PHPMailer/get_oauth_token.php 에 접속하면 Refresh Token 값을 알려준다.
+
+  * config/settings.php
+```vim
+$service['useSMTP'] = true;
+$service['smtpHost'] = 'smtp.gmail.com';
+$service['smtpPort'] = '587';
+$service['smtpSecure'] = 'tls';
+$service['useoauth'] = true;
+$service['smtpAddress'] = 'test@gmail.com';
+$service['smtpUsername'] = '이름';
+$service['smtpPassword'] = 'password';
+$service['oauthClientId'] = 'google oauth clientId';
+$service['oauthClientSecret'] = 'google oauth clientsecret';
+$service['oauthRefreshToken'] = 'google oauth and phpmailer refresh token';
+```
