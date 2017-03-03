@@ -150,7 +150,7 @@ class Files extends \DLDB\Objects {
 		if($file_size > 0) {
 			$dbm = \DLDB\DBM::instance();
 
-			$que = "UPDATE {files} SET `filepath` = ?, `filename` = ?, `mimetype` = ?, `filesize` = ?, `regdate` = ?, `status`, `textsize` = ? WHERE `fid` = ?";
+			$que = "UPDATE {files} SET `filepath` = ?, `filename` = ?, `mimetype` = ?, `filesize` = ?, `regdate` = ?, `status` = ?, `textsize` = ? WHERE `fid` = ?";
 			$dbm->execute($que,array("sssddsdd",$filepath,$filename,$mime,$file_size,time(),'uploaded',0,$fid));
 		}
 
