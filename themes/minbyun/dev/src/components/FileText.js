@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {withRouter} from 'react-router';
 import {TextArea, Input} from 'react-text-input';
-import {extracFileData} from '../fieldData/docFieldData';
+import {extractFileData} from '../fieldData/docFieldData';
 import {_mapO, _wrap, _isCommon} from '../accessories/functions';
 
 class FileText extends Component {
@@ -20,7 +20,7 @@ class FileText extends Component {
 		const {docId, fileId} = this.props.params;
 		if(!this.props.openDocs[docId].owner){this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return;}
 		//extract file infomation ////
-		let files = extracFileData(this.props.openDocs[docId], this.props.fData).file;
+		let files = extractFileData(this.props.openDocs[docId], this.props.fData).file;
 		let theFile = files.find((f) => (f.fid == fileId));
 		if(!theFile || (theFile.status != 'parsed' && theFile.status != 'unparsed')){
 			this.props.showMessage('파일 텍스트가 존재하지 않습니다.', this.props.router.goBack); return;

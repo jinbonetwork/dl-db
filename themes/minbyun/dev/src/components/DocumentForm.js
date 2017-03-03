@@ -4,7 +4,7 @@ import Form from '../accessories/docManager/Form';
 import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 import api from '../api/dlDbApi';
-import {extracFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState, getFilesAfterUpload
+import {extractFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState, getFilesAfterUpload
 } from '../fieldData/docFieldData';
 import {_forIn, _isEmpty, _mapOO, _isCommon} from '../accessories/functions';
 
@@ -126,8 +126,8 @@ class DocumentForm extends Component {
 		} else {
 			const [paramId, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
 			let oldDoc = (paramId ? this.props.openDocs[paramId] : fData.empty);
-			let files = extracFileData(doc, fData);
-			let oldFiles = extracFileData(oldDoc, fData);
+			let files = extractFileData(doc, fData);
+			let oldFiles = extractFileData(oldDoc, fData);
 			let docFormData = makeDocFormData(doc, fData);
 			let fileFormData = makeFileFormData(doc, fData);
 			this.props.onSubmit({
