@@ -5,11 +5,11 @@ import {
 	RECEIVE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
 	DELETE_USERS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
-	TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER, REQUEST_UPLOAD
+	TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER, REQUEST_UPLOAD, UPLOAD, RENEW_ATTACH_STATE
 } from '../constants';
 import {refineUserFData, refineUser, refineUserList} from '../fieldData/userFieldData';
 import {refineDocFData, refineDocList} from '../fieldData/docFieldData';
-import {refineFileList, refineFile} from '../fieldData/fileFieldData.js';
+import {refineFileList, refineFile, refineFileAfterUpload} from '../fieldData/fileFieldData.js';
 import RichTextEditor from 'react-rte';
 import update from 'react-addons-update';
 import {_findProp} from '../accessories/functions';
@@ -105,6 +105,17 @@ const admin = (state = initialState, action) => {
 				fileName: action.newFile.name,
 				status: 'uploading'
 			}}}});
+		case UPLOAD:
+			return update(state, {attachments: {[action.idxOfFiles]: {$merge: refineFileAfterUpload(action.files)}}});
+		case RENEW_ATTACH_STATE:
+			return update(state, {attachments: {$apply: (attach) =>
+				attach.map((value) =>
+					(action.completions[value.fileId] ? update(value, {
+						status: {$set: action.completions[value.fileId].status},
+						anonymity: {$set: action.completions[value.fileId].anonymity == 1}
+					}) : value)
+				)
+			}});
 		default:
 			return state;
 	}

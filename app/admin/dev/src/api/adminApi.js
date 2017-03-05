@@ -126,7 +126,10 @@ const adminApi = {
 		fetchData('post', '/api/document/text?mode=modify&id='+docId+'&fid='+fileId, formData, succeed, fail);
 	},
 	upload({fileId, docId, formData}, succeed, fail){
-		fetchData('post', '/api/file/upload?did='+docId+'&fid='+fileId, formData, succeed, fail);
+		fetchData('post', '/api/file/upload?did='+docId+'&fid='+fileId, formData, ({files}) => succeed(files), fail);
+	},
+	fetchParseState(strFids, succeed, fail){
+		fetchData('get', '/api/file/parsing_state?fid='+strFids, ({files}) => succeed(files), fail);
 	},
 	logout(succeed, fail){
 		fetchData('post', '/api/logout', null, succeed, fail);
