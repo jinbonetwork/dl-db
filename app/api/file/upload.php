@@ -53,6 +53,8 @@ class upload extends \DLDB\Controller {
 							$fd = \DLDB\Files::modifyFile( $this->params['fid'], $filename);
 							$fileinfo = \DLDB\Files::getFile($fd);
 							if(!preg_match("/^image/i",$fileinfo['mimetype']) && $acl->imMaster()) {
+								\DLDB\Files::anonymity($fd,1);
+								$fileinfo['anonymity'] = 1;
 							}
 							$custom[$fid][$fd] = array(
 								'fileuri' => \DLDB\Files::getFileUrl($fileinfo),
@@ -132,7 +134,7 @@ class upload extends \DLDB\Controller {
 			} else {
 				$_sendmail = 0;
 			}
-			\DLDB\Parser::forkParser( $this->params['did'], $_sendmail );
+			\DLDB\Parser::forkParser( ($this->params['fid'] ? $this->params['fid'] : $this->params['did']), $_sendmail );
 		}
 		$this->result = array(
 			'error' => 0,

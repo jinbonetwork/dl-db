@@ -32,13 +32,14 @@ try {
 	$handle = fopen('php://stdin','r');
 	$input = trim(fgets($handle));
 	$data = json_decode($input,true);
-	if($data['did']) {
-		$did = (int)$data['did'];
-	} else if($data['fid']) {
+	if($data['fid']) {
 		$fid = (int)$data['fid'];
+	} else if($data['did']) {
+		$did = (int)$data['did'];
 	} else {
 		\DLDB\RespondJson::ResultPage( array( -1, 'invalid input') );
 	}
+	$refresh = (isset($data['refresh']) ? (int)$data['refresh'] : 0);
 
 	openlog("dldb_parser", LOG_PID,LOG_LOCAL0);
 
@@ -54,7 +55,7 @@ try {
 		$files = \DLDB\Files\DBM::getAttached($did);
 		if(is_array($files)) {
 			foreach($files as $file) {
-				if($file['status'] == 'parsed') {
+				if(!$refresh && $file['status'] == 'parsed') {
 					$memo .= $file['text'];
 				} else {
 					syslog(LOG_INFO, "parsing file [".$file['filename']."]");
@@ -78,7 +79,7 @@ try {
 				$files = \DLDB\Files\DBM::getAttached($fid);
 				if(is_array($files)) {
 					foreach($files as $file) {
-						if($file['status'] == 'parsed') {
+						if(!$refresh && $file['status'] == 'parsed') {
 							$memo .= $file['text'];
 						}
 					}

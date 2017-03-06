@@ -115,6 +115,11 @@ xpdf 사용예
 ```bash
 $ pdftotext [options] [PDF-file [text-file]]
 ```
+config/settings.php 에 pdftotext 경로 설정 및 기본 parser 지정
+```vim
+$service['pdfparser'] = 'xpdf';
+$service['pdftotext'] = '/usr/bin/pdftotext';
+```
 
 8) pdfparser 설치
 -----------------
@@ -123,6 +128,10 @@ $ pdftotext [options] [PDF-file [text-file]]
 ```bash
 $ cd contribute/pdfparser
 $ php ~/bin/composer.phar install --dev
+```
+pdfparser를 사용할 경우 아래와 같이 config/settings.php 설정
+```vim
+$service['pdfparser'] = 'pdfparser';
 ```
 
 9) File Parse Daemom

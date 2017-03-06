@@ -63,6 +63,22 @@ class Parser extends \DLDB\Objects {
 	}
 
 	public static function parsePDF($file_info) {
+		$context = \DLDB\Model\Context::instance();
+
+		switch($context->getProperty('service.pdfparser')) {
+			case 'xpdf':
+				$out = self::parseXPDF($file_info);
+				break;
+			case 'pdfparser':
+			default:
+				$out = self::parsePDFParser($file_info);
+				break;
+		}
+
+		return $out;
+	}
+
+	public static function parsePDFParser($file_info) {
 		include_once DLDB_CONTRIBUTE_PATH."/pdfparser/vendor/autoload.php";
 
 		$dbm = \DLDB\DBM::instance();
@@ -97,11 +113,7 @@ class Parser extends \DLDB\Objects {
 					$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 				}
 			} else {
-				$out = self::parsePDF2TEXT($file_info);
-				if($out['error']) {
-					$header['error'] = $errmsg."\n".$out['error'];
-				}
-				$text = $out['text'];
+				$header['error'] = $errmsg;
 			}
 		} catch(Exception $e) {
 			$header['error'] = $e;
@@ -110,30 +122,42 @@ class Parser extends \DLDB\Objects {
 		}
 	}
 
-	public static function parsePDF2TEXT($file_info) {
+	public static function parseXPDF($file_info) {
 		$dbm = \DLDB\DBM::instance();
 
 		$context = \DLDB\Model\Context::instance();
 
 		$filename = \DLDB\Files::getFilePath($file_info);
-		$to_filename = preg_replace("/\.pdf$/i",".txt",$filename);
-
-		$fp = popen($context->getProperty('service.pdftotext')." ".$filename." ".$to_filename,"r");
-		while (!feof($fp)) { 
-			$out .= fgets($fp, 4096);
+		$pdfinfo = preg_replace("/pdftotext$/i","pdfinfo",$context->getProperty('service.pdftotext'));
+		$fp = popen($pdfinfo." ".$filename, "r");
+		while (!feof($fp)) {
+			$info .= fgets($fp, 4096);
 		}
 		pclose($fp);
-		if(file_exists($to_filename)) {
-			$fp = fopen($to_filename,"r");
-			$text = fread($fp,filesize($to_filename));
-			fclose($fp);
-			unlink($to_filename);
+
+		$_info = preg_split("/\n/i",$info);
+		for($i=0; $i<@count($_info); $i++) {
+			$_header = explode(":",$_info[$i],2);
+			if(trim($_header[0]) && trim($_header[1])) {
+				$header[trim($_header[0])] = trim($_header[1]);
+			}
 		}
-		if(!$out) {
+
+		$total_page = (int)$header['Pages'];
+
+		$text = '';
+		for($cnt=1; $cnt<= $total_page; $cnt++) {
+			$fp = popen($context->getProperty('service.pdftotext')." -nopgbrk -f ".$cnt." -l ".$cnt." ".$filename." -","r");
+			while (!feof($fp)) { 
+				$text .= fgets($fp, 4096);
+			}
+			pclose($fp);
+
+			$progress = (int)( ( $cnt / $total_page ) * 100 );
 			$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
-			$dbm->execute($que, array("dd",100,$file_info['fid']) );
+			$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 		}
-		return array('error'=>$out,'text'=>$text);
+		return array('text'=>trim($text),'header'=>$header);
 	}
 
 	public static function parseDoc($file_info) {
