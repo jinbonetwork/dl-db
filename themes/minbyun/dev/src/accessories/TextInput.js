@@ -29,20 +29,6 @@ class TextInput extends Component {
 				for(let index in date){
 					if(0 <= date[index] && date[index] <= 9999); else return false;
 				}
-				/*
-				if(date.length == 1){
-					if(0 <= date[0] && date[0] <= 9999); else return false;
-				}
-				else if(date.length == 2){
-					if(0 <= date[0] && date[0] <= 9999); else return false;
-					if(0 <= date[1] && date[1] <= 31); else return false;
-				}
-				else if(date.length == 3){
-					if(0 <= date[0] && date[0] <= 9999); else return false;
-					if(0 <= date[1] && date[1] <= 12); else return false;
-					if(0 <= date[2] && date[2] <= 31); else return false;
-				}
-				*/
 				return true;
 			});
 			if(isValid) this.props.onChange(event.target.value);

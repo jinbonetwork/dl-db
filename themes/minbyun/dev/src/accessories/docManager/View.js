@@ -4,6 +4,7 @@ import ViewElem from './ViewElem';
 import {_mapO, _mapAO, _isEmpty} from '../functions';
 
 class View extends Component {
+	/*
 	getParseState(fProp, value){
 		if(	(fProp.type == 'file' && ['uploading', 'uploaded', 'parsing'].indexOf(value.status) >= 0) ||
 			(fProp.type == 'image' && value.status == 'uploading')
@@ -16,6 +17,7 @@ class View extends Component {
 			return undefined;
 		}
 	}
+	*/
 	renderValue(value, fProp, fs){
 		const fData = this.props.fieldData;
 		if(this.props.renderValueBySlug[fs]){

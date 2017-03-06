@@ -5,7 +5,8 @@ import {
 	COMPLETE_USERFORM, SUBMIT_USERFORM, CHANGE_AGREEMENT, COMPLETE_AGREEMENT, SUBMIT_AGREEMENT, RECEIVE_ATTACHMENTS,
 	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
 	SHOW_PASSWORD, DELETE_USERS, RECEIVE_FILETEXT, CHANGE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT,
-	SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE, TOGGLE_PARSED_OF_FILE
+	SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE, TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER, REQUEST_UPLOAD,
+	UPLOAD, RECEIVE_PARSE_STATE, RENEW_ATTACH_STATE
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -244,6 +245,26 @@ const adminActionCreators = {
 			}
 		);
 	}},
+	upload({idxOfFiles, file, newFile, formData}){ return (dispatch) => {
+		dispatch({type: REQUEST_UPLOAD, idxOfFiles, newFile});
+		adminApi.upload(
+			{fileId: file.fileId, docId: file.docId, formData},
+			(files) => dispatch({type: UPLOAD, idxOfFiles, files}),
+			(error) => dispatchError(dispatch, error)
+		);
+	}},
+	fetchParseState({strFids, afterReceive}){ return (dispatch) => {
+		adminApi.fetchParseState(strFids,
+			(parseState) => {
+				dispatch({type: RECEIVE_PARSE_STATE, parseState});
+				afterReceive(parseState);
+			},
+			(error) => dispatchError(dispatch, error)
+		);
+	}},
+	renewAttachState({completions}){
+		return {type: RENEW_ATTACH_STATE, completions};
+	},
 	logout({afterLogout}){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		adminApi.logout(

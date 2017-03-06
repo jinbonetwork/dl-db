@@ -39,7 +39,7 @@
 		border-bottom: solid 1px lighten(@font-color, 30%);
 	}
 	tr.attachments__head td {
-		padding: 1em 0;
+		padding: 1em 0.5em;
 		border-bottom: solid 1px  @font-color;
 		text-align: center;
 	}
@@ -52,26 +52,33 @@
 	.attachments__filename a {
 		color: @main-color
 	}
-	.attachments__filename i + a {
+	.attachments__filename span + a {
 		margin-left: 0.5em;
 	}
-	.attachments__edit-text {
-		text-align: center;
+	.attachments__filename a:first-of-type i {
+		font-size: 1.5em;
 	}
-	.attachments__edit-text a {
+	.attachments__filename a:last-of-type {
 		display: inline-block;
 		font-size: 0.8em;
-		padding: 0.3em;
+		padding: 0.2em;
+		margin-left: 0.5em;
 		background-color: transparent;
 		color: @main-color;
 		border: solid 1px @main-color;
 		cursor: pointer;
 	}
-	.attachments__edit-text span {
+	.attachments__upload {
+		text-align: center;
+	}
+	.attachments__upload label {
 		display: inline-block;
-		font-size: 0.8em;
-		padding: 0.3em;
-		background-color: transparent;
+		width: 2em;
+		color: @main-color;
+		cursor: pointer;
+	}
+	.attachments__upload label i {
+		font-size: 1.5em;
 	}
 	.attachments__toggle {
 		position: relative;
@@ -98,6 +105,33 @@
 	}
 	.attachments__toggle--on {
 		color: @main-color;
+	}
+	.progress-bar {
+		position: relative;
+		display: inline-block;
+		width: 3.5em;
+		height: 1.5em;
+		line-height: 1.5em;
+		margin-left: 0.5em;
+		border: solid 1px @main-color;
+		vertical-align: top;
+	}
+	.progress {
+		position: absolute;
+		top: 0; left: 0;
+		display: block;
+		height: 100%;
+		background-color: @main-color;
+	}
+	.percentage {
+		position: absolute;
+		top: 0; left: 0;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		font-size: 0.8em;
+		color: @minor-color-2;
+		text-shadow: 1px 1px @main-color;
 	}
 }
 

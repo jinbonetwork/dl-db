@@ -159,7 +159,7 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 	}, (fs, value) => (fData.fID[fs]));
 };
 
-const extracFileData = (doc, fData) => {
+const extractFileData = (doc, fData) => {
 	return _mapOO(
 		doc,
 		(fs, value) => {
@@ -225,4 +225,4 @@ const makeFileFormData = (doc, fData, isAdmin) => {
 	return formData;
 }
 
-export {refineFieldData, refineDoc, refineFile, refineDocToSubmit, extracFileData, makeDocFormData, makeFileFormData, makeFormData};
+export {refineFieldData, refineDoc, refineFile, refineDocToSubmit, extractFileData, makeDocFormData, makeFileFormData, makeFormData};

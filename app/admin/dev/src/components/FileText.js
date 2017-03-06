@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import {withRouter} from 'react-router';
 import {TextArea, Input} from 'react-text-input';
 import {_mapO, _wrap} from '../accessories/functions';
 
@@ -40,6 +41,9 @@ class FileText extends Component {
 		return (
 			<div className="filetext">
 				<div className="filetext__title"><span>{this.props.fileText.fileName}</span></div>
+				<a className="goback" onClick={this.props.router.goBack}>
+					<i className="pe-7f-back pe-va"></i><span>이전 페이지로</span>
+				</a>
 				<ul className="filetext__header">{
 					_mapO(this.props.fileText.header, (pn, pv) => (
 						<li key={pn}>
@@ -89,6 +93,10 @@ FileText.propTypes = {
 	fetchFileText: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
-	toggleParsed: PropTypes.func.isRequired
+	toggleParsed: PropTypes.func.isRequired,
+	router: PropTypes.shape({
+		push: PropTypes.func.isRequired,
+		goBack: PropTypes.func.isRequired
+	}).isRequired
 };
-export default FileText;
+export default withRouter(FileText);

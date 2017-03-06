@@ -36,3 +36,7 @@ export const COMPLETE_FILETEXT = 'complete filetext';
 export const SUBMIT_FILETEXT = 'submit filetext';
 export const REQUEST_TOGGLING_PARSED_OF_FILE = 'request toggling parsed of file';
 export const TOGGLE_PARSED_OF_FILE = 'toggle parsed of file';
+export const REQUEST_UPLOAD = 'request upload';
+export const UPLOAD = 'upload';
+export const RECEIVE_PARSE_STATE = 'receive parse state';
+export const RENEW_ATTACH_STATE = 'renew attach state';

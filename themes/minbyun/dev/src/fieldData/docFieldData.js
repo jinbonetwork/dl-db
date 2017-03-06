@@ -1,5 +1,5 @@
 import {
-	refineFieldData, refineDoc as refine, refineFile, extracFileData, makeDocFormData as makeDFD, makeFileFormData
+	refineFieldData, refineDoc as refine, refineFile, extractFileData, makeDocFormData as makeDFD, makeFileFormData
 } from '../accessories/docManager/refiner';
 import update from 'react-addons-update';
 import {_mapO, _forIn, _isEmpty, _mapOO} from '../accessories/functions';
@@ -132,6 +132,6 @@ const getFilesAfterUpload = (files, doc, fData) => {
 }
 
 export {
-	initDocFData, refineDocFData, refineDoc, refineFile, extracFileData, makeDocFormData, makeFileFormData, checkIfParsing,
+	initDocFData, refineDocFData, refineDoc, refineFile, extractFileData, makeDocFormData, makeFileFormData, checkIfParsing,
 	doAfterReceiveParseState, getFilesAfterUpload
 };

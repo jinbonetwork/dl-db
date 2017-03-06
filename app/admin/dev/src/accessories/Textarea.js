@@ -1,13 +1,14 @@
 import React, {Component, PropTypes} from 'react';
 import {TextArea} from 'react-text-input';
 import jQ from 'jquery';
+import browser from 'detect-browser';
 
 class Textarea extends Component {
 	componentDidMount(){
-		if(this.props.focus) jQ(this.refs.textarea).find('.text-input__control').focus();
+		if(this.props.focus) jQ(this.refs.textarea).find('textarea').focus();
 	}
 	componentDidUpdate(prevProps, prevState){
-		if(this.props.focus) jQ(this.refs.textarea).find('.text-input__control').focus();
+		if(this.props.focus) jQ(this.refs.textarea).find('textarea').focus();
 	}
 	handleChange(event){
 		if(this.props.limit > 0 && event.target.value.length > this.props.limit) ;
@@ -30,9 +31,16 @@ class Textarea extends Component {
 		);
 		return (
 			<div className="textarea" ref="textarea">
-				<TextArea className="textarea__text-input" value={this.props.value} rows={this.props.rows}
+				<TextArea className="textarea__text-input" value={this.props.value}
 					onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
 				/>
+
+				{/*(browser.name == 'ie' ?
+					 :
+					<textarea className="textarea__text-input" value={this.props.value}
+						onChange={this.handleChange.bind(this)} onBlur={this.handleBlur.bind(this)}
+					/>
+				)*/}
 				{footer}
 			</div>
 		);
@@ -40,7 +48,6 @@ class Textarea extends Component {
 }
 Textarea.propTypes = {
 	value: PropTypes.string,
-	rows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	focus: PropTypes.bool,
 	message: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 	limit: PropTypes.number,
@@ -49,8 +56,7 @@ Textarea.propTypes = {
 	onBlur: PropTypes.func
 };
 Textarea.defaultProps = {
-	value: '',
-	rows: 5
+	value: ''
 }
 
 export default Textarea;

@@ -4,16 +4,51 @@ import Check from '../accessories/Check';
 import Item from '../accessories/Item';
 import Select from '../accessories/Select';
 import Pagination from '../accessories/Pagination';
-import {_mapO, _pushpull, _wrap} from '../accessories/functions';
+import {checkIfParsing, doAfterReceiveParseState} from '../fieldData/fileFieldData';
+import {_mapO, _mapOO, _pushpull, _wrap, _isEmpty} from '../accessories/functions';
 
 class Attachments extends Component {
+	constructor(){
+		super();
+		this.intvOfRqstParseState = undefined;
+	}
 	componentDidMount(){
 		this.props.fetchAttachments(this.props.params);
 	}
-	componentDidUpdate(prevProps, prevState){
+	componentDidUpdate(prevProps){
 		if(JSON.stringify(prevProps.params) != JSON.stringify(this.props.params)){
+			if(this.intvOfRqstParseState){
+				clearInterval(this.intvOfRqstParseState);
+				this.intvOfRqstParseState = undefined;
+			}
 			this.props.fetchAttachments(this.props.params);
 		}
+		else if(!this.intvOfRqstParseState){
+			if(checkIfParsing(this.props.attachments)) this.rqstParseState();
+		}
+	}
+	componentWillUnmount(){
+		clearInterval(this.intvOfRqstParseState);
+			this.intvOfRqstParseState = undefined;
+	}
+	rqstParseState(){
+		let strFids = '[' + this.props.attachments.reduce((prev, curr, idx) => prev + (idx > 0 ? ',' : '') + curr.fileId, '') + ']';
+		let initParseState = _mapOO(this.props.attachments, (pn, pv) => ({status: pv.status}), (pn, pv) => pv.fileId);
+		this.intvOfRqstParseState = setInterval(() => {
+			let oldParseState = (initParseState ? initParseState : this.props.parseState);
+			if(initParseState) initParseState = null;
+			this.props.fetchParseState({
+				strFids,
+				afterReceive: (state) => {
+					let {isInProgress, completions} = doAfterReceiveParseState(state, oldParseState);
+					if(!_isEmpty(completions)) this.props.renewAttachState({completions});
+					if(!isInProgress){
+						clearInterval(this.intvOfRqstParseState);
+						this.intvOfRqstParseState = undefined;
+					}
+				}
+			});
+		}, 1000);
 	}
 	handleChange(which, arg1st, arg2nd){
 		const keyword = this.props.keywordSearching;
@@ -44,6 +79,12 @@ class Attachments extends Component {
 				let value = arg1st.target.value;
 				if(field != 'default') this.props.onChange('keywordSearching', value);
 			}
+		}
+		else if(which == 'upload'){
+			const newFile = arg2nd.target.files[0];
+			let formData = new FormData();
+			formData.append(this.props.fData.fID.file, newFile);
+			this.props.onUpload({idxOfFiles: arg1st.idxOfFiles, file: arg1st.file, newFile: arg2nd.target.files[0], formData});
 		}
 	}
 	handleClick(which, arg1st){
@@ -116,29 +157,34 @@ class Attachments extends Component {
 			<tr className="attachments__head">
 				<td className="table-margin"></td>
 				<td className="table-padding"></td>
-				<td colSpan="2">파일이름</td>
+				<td>파일이름</td>
 				<td>텍스트화</td>
 				<td>익명화</td>
+				<td></td>
 				<td className="table-padding"></td>
 				<td className="table-margin"></td>
 			</tr>
 		);
 		const list = this.props.attachments.map((file, idxOfFiles) => {
-			const isComplete = (file.status == 'unparsed' || file.status == 'parsed' || file.status == 'ing')
+			const isComplete = (file.status == 'unparsed' || file.status == 'parsed' || file.status == 'ing');
 			return (
 				<tr key={'file'+file.fileId}>
 					<td className="table-margin"></td>
 					<td className="table-padding"></td>
 					<td className="attachments__filename">
-						{ isComplete ?
-							<a href={file.fileUri} target="_blank">{file.fileName}</a> :
-							<span>{file.fileName}</span>
-						}
-					</td>
-					<td className="attachments__edit-text">
-						{ isComplete ?
-							<a onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a> :
-							<span>업로드중</span>
+						<span>{file.fileName}</span>
+						{ isComplete ? [
+							<a key="name" href={file.fileUri} target="_blank"><i className="pe-7s-download pe-va"></i></a>,
+							<a key="edit" onClick={this.handleClick.bind(this, 'edit text', file)}>TEXT</a>]:
+							_wrap(() => {
+								let percent = (this.props.parseState[file.fileId] ? this.props.parseState[file.fileId].progress : 0) + '%';
+								return (
+									<span className="progress-bar">
+										<span className="progress" style={{width: percent}}></span>
+										<span className="percentage">{percent}</span>
+									</span>
+								);
+							})
 						}
 					</td>
 					<td className="attachments__toggle">
@@ -192,6 +238,16 @@ class Attachments extends Component {
 							</span>
 						)}
 					</td>
+					<td className="attachments__upload">
+						{ isComplete &&
+							<label>
+								<i className="pe-7s-upload"></i>
+								<input type="file" ref="inputFile" style={{display: 'none'}} value="" accept=".pdf, .hwp, .doc, .docx"
+									onChange={this.handleChange.bind(this, 'upload', {idxOfFiles, file})}
+								/>
+							</label>
+						}
+					</td>
 					<td className="table-padding"></td>
 					<td className="table-margin"></td>
 				</tr>
@@ -220,14 +276,19 @@ class Attachments extends Component {
 }
 
 Attachments.propTypes = {
+	fData: PropTypes.object.isRequired,
 	attachments: PropTypes.array.isRequired,
 	openFileTexts: PropTypes.object.isRequired,
 	lastPage: PropTypes.number.isRequired,
 	fieldSearching: PropTypes.string.isRequired,
 	keywordSearching: PropTypes.string.isRequired,
+	parseState: PropTypes.object.isRequired,
 	fetchAttachments: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	addFileToOpenFileTexts: PropTypes.func.isRequired,
+	onUpload: PropTypes.func.isRequired,
+	fetchParseState: PropTypes.func.isRequired,
+	renewAttachState: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired
 	}).isRequired
