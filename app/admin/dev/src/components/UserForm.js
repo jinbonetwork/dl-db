@@ -55,8 +55,8 @@ class UserForm extends Component {
 		},
 		checkHiddenBySlug: {
 			role: (slug) => !this.props.isPwShown && this.props.user.uid <= 0,
-			password: (slug) => !this.props.isPwShown || this.props.user.uid <= 0,
-			confirmPw: (slug) => !this.props.isPwShown || this.props.user.uid <= 0
+			password: (slug) => !this.props.isPwShown,
+			confirmPw: (slug) => !this.props.isPwShown
 		},
 		renderFormBySlug: {
 			role: (slug, index, value, formElem) => {
@@ -64,7 +64,14 @@ class UserForm extends Component {
 					<Item key={roleCode} value={roleCode}><span>{dispName}</span></Item>
 				);
 				return cloneElement(formElem, {options});
-			}
+			},
+			password: (slug, index, value, formElem) => ([
+				<div key="input" className="user-form__input-wrap">{formElem}</div>,
+				<a key="button" tabIndex="0" onClick={this.handleClick.bind(this, 'create-pw')}>생성</a>
+			]),
+			confirmPw: (slug, index, value, formElem) => (
+				<div className="user-form__input-wrap">{formElem}</div>
+			)
 		},
 		rowsBefore: (
 			<tr className="form__show-password"><td colSpan="2">
@@ -80,9 +87,26 @@ class UserForm extends Component {
 			</td></tr>
 		)
 	}}
+	createPw(){
+		let chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+			'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+			'T', 'U', 'V', 'W', 'X', 'Y', 'X', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '!', '@', '#', '$', '^', '*',
+			'(', ')'];
+		let password = '';
+		for(let i = 0; i < 15; i++){
+			let idx = parseInt(Math.random() * (chars.length - 1));
+			password += chars[idx];
+			chars.splice(idx, 1)
+		};
+		return password;
+	}
 	handleClick(which, arg1st){
 		if(which == 'register'){
 			this.props.register(this.props.user.id);
+		}
+		else if(which == 'create-pw'){
+			let password = this.createPw(); console.log(password);
+			this.props.onChange({mode: 'merge', value: {password: password, confirmPw: password}});
 		}
 	}
 	handleChange(which, arg1st, arg2nd){

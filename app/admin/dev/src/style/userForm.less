@@ -24,22 +24,31 @@
 	.user-form__table-margin {
 		width: 1em;
 	}
-	.form__required td:first-child {
-		position: relative;
-		color: @main-color;
-	}
-	.form__required td:first-child:after {
-		content: '(필수)';
-		position: absolute;
-		top: 3.3em; left: 0;
-		font-size: 0.7em;
-		color: @font-color;
-	}
 	.form__show-password td {
 		padding-bottom: 1em;
 	}
 	.form__show-password .goback + .check {
 		margin-top: 1em;
+	}
+	.user-form__input-wrap {
+		margin-right: 3em;
+	}
+	.form__slug-password .field-content {
+		position: relative;
+	}
+	.form__slug-password a {
+		position: absolute;
+		top: 0; right: 0;
+		margin: 0.25em 0;
+		width: 3em;
+		height: 3em;
+		line-height: 3em;
+		border: solid 1px @main-color;
+		border-left: 0;
+		color: @minor-color-2;
+		background-color: @main-color;
+		text-align: center;
+		&:focus {background-color: @focus-color-2;}
 	}
 }
 .user-form .form {
@@ -110,10 +119,20 @@
 	.form__saving-icon {
 		position: absolute;
 		top: 0.75em; right: 1.5em;
-
 	}
 	.form__saving-icon i {
 		font-size: 1.5em;
+	}
+	.form__required td:first-child {
+		position: relative;
+		color: @main-color;
+	}
+	.form__required td:first-child:after {
+		content: '(필수)';
+		position: absolute;
+		top: 3.3em; left: 0;
+		font-size: 0.7em;
+		color: @font-color;
 	}
 }
 .user-form .form__show-password .check {

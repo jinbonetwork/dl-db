@@ -23,7 +23,7 @@ class MainMenu extends Component {
 				<Link to="/admin/attachments"><span>첨부파일 관리</span></Link>
 				<Link to="/admin/agreement"><span>이용약관 수정</span></Link>
 				<a href={boardAdminUrl}><span>게시판 관리</span></a>
-				<a onClick={this.handleClick.bind(this, 'logout')}><span>로그아웃</span></a>
+				<a tabIndex="0" onClick={this.handleClick.bind(this, 'logout')}><span>로그아웃</span></a>
 			</div>
 		);
 	}
