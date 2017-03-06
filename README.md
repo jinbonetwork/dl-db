@@ -320,8 +320,8 @@ $service['smtpUsername'] = '이름';
 ```bash
 $ cd contribute/PHPMailer/
 $ php ~/bin/composer.phar install --dev
-$ php ~/bin/composer.phar require-dev league/oauth2-client
-$ php ~/bin/composer.phar require-dev league/oauth2-google
+$ php ~/bin/composer.phar require league/oauth2-client
+$ php ~/bin/composer.phar require league/oauth2-google
 ```
   * clientID와 clientSecret 값을 이용하여 phpmailer와 google oauth2 연동
 ```bash
