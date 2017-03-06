@@ -58,7 +58,6 @@ const admin = (state = initialState, action) => {
 			return update(state, {showProc: {$set: false}});
 		case ADD_USER_TO_OPEN_USERS:
 		case SUBMIT_USERFORM:
-			console.log(action);
 			return update(state, {openUsers: {[action.user.id]: {$set: refineUser(action.user, state.userFieldData)}}});
 		case DELETE_USERS:
 			let userIds = (Array.isArray(action.userIds) ? action.userIds : [action.userIds]);

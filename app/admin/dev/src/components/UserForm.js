@@ -96,7 +96,7 @@ class UserForm extends Component {
 		for(let i = 0; i < 15; i++){
 			let idx = parseInt(Math.random() * (chars.length - 1));
 			password += chars[idx];
-			chars.splice(idx, 1)
+			chars.splice(idx, 1);
 		};
 		return password;
 	}
@@ -105,7 +105,7 @@ class UserForm extends Component {
 			this.props.register(this.props.user.id);
 		}
 		else if(which == 'create-pw'){
-			let password = this.createPw(); console.log(password);
+			let password = this.createPw();
 			this.props.onChange({mode: 'merge', value: {password: password, confirmPw: password}});
 		}
 	}

@@ -15,21 +15,22 @@ const userForm = (state = initialState, action) => {
 	switch(action.type){
 		case CHANGE_USER_PROPS:
 			let {mode, fSlug, index, value} = action.args;
+			let newState = update(state, {focused: {$set: initialState.focused}});
 			switch(mode){
 				case 'set':
 					if(index === undefined){
-						return update(state, {user: {[fSlug]: {$set: value}}});
+						return update(newState, {user: {[fSlug]: {$set: value}}});
 					} else{
-						return update(state, {user: {[fSlug]: {[index]: {$set: value}}}});
+						return update(newState, {user: {[fSlug]: {[index]: {$set: value}}}});
 					}
 				case 'merge':
-					return update(state, {user: {$merge: value}});
+					return update(newState, {user: {$merge: value}});
 				case 'push':
-					return update(state, {user: {[fSlug]: {$push: [value]}}});
+					return update(newState, {user: {[fSlug]: {$push: [value]}}});
 				case 'delete':
-					return update(state, {user: {[fSlug]: {$splice: [[index, 1]]}}});
+					return update(newState, {user: {[fSlug]: {$splice: [[index, 1]]}}});
 				default:
-					return state;
+					return newState;
 			}
 		case SET_FOCUS_IN_USERFORM:
 			return update(state, {focused: {$set: {fSlug: action.fSlug, index: action.index}}});
