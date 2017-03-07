@@ -41,7 +41,7 @@ const documentForm = (state = initialState, action) => {
 		case FOCUSOUT_DOCFORM:
 			return update(state, {focused: {$set: initialState.focused}});
 		case COMPLETE_DOCFORM:
-			return update(state, {isSaving: {$set: true}});
+			return update(state, {isSaving: {$set: action.isSaving}});
 		case SUBMIT_DOCFORM:
 			return update(state, {isSaving: {$set: false}});
 		case RECEIVE_PARSE_STATE:

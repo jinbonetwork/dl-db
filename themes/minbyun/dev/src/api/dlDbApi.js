@@ -22,7 +22,8 @@ const fetch = (method, url, arg2, arg3, arg4) => {
 		}
 	})
 	.catch((error) => {
-		console.error('Error', error.message);
+		console.error(error.message);
+		fail({code: null, message: error.message});
 	});
 };
 
