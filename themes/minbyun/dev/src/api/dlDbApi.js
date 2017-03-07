@@ -20,13 +20,10 @@ const fetch = (method, url, arg2, arg3, arg4) => {
 			console.error(message);
 			fail({code: null, message: message});
 		}
-	});
-	/*
+	})
 	.catch((error) => {
 		console.error('Error', error.message);
-		this.setMessage(error.message, 'goBack');
 	});
-	*/
 };
 
 const api = {
