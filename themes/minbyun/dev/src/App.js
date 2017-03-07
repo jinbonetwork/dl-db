@@ -15,6 +15,9 @@ import SearchResult from './components/SearchResult';
 import Bookmarks from './components/Bookmarks';
 import History from './components/History';
 import UserProfile from './components/UserProfile';
+
+import Error from './components/Error';
+
 import './style/index.less';
 
 const DlDbContainer = connect(
@@ -207,8 +210,8 @@ render(
 					<Route path="history(/page/:page)" component={HistoryContainer} />
 					<Route path="documents(/page/:page)" component={UserDocsContainer} />
 				</Route>
-				<Route path="/search**" component={SearchResultContainer} />
 			</Route>
+			<Route path="error" component={Error} />
 		</Router>
 	</Provider>,
 	document.getElementById('root')
