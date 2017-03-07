@@ -134,7 +134,7 @@ class upload extends \DLDB\Controller {
 			} else {
 				$_sendmail = 0;
 			}
-			\DLDB\Parser::forkParser( ($this->params['fid'] ? $this->params['fid'] : $this->params['did']), $_sendmail );
+			\DLDB\Parser::forkParser( $this->params['did'], ($this->params['fid'] ? $this->params['fid'] : 0), $_sendmail );
 		}
 		$this->result = array(
 			'error' => 0,
