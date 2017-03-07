@@ -173,6 +173,7 @@ abstract class Controller {
 					include DLDB_APP_PATH."/admin/layout.html.php";
 					$content = ob_get_contents();
 					ob_end_clean();
+					define("DLDB_LAYOUT_LOADED","true");
 				}
 
 				/**

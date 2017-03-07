@@ -38,6 +38,8 @@ class Logger extends \DLDB\Objects {
 	}
 
 	public function redirectPrintLog($message){
+		$context = \DLDB\Model\Context::instance();
+		$theme = $context->getProperty('service.themes');
 		header("Content-Type: text/html; charset=utf-8");
 
 		ob_start();
