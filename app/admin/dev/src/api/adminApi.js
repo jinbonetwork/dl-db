@@ -20,13 +20,11 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 			console.error(message);
 			fail({code: null, message: message});
 		}
-	});
-	/*
+	})
 	.catch((error) => {
-		console.error('Error', error.message);
-		this.setMessage(error.message, 'goBack');
+		console.error(error.message);
+		fail({code: null, message: error.message});
 	});
-	*/
 };
 
 const isAdmin = ({role, roles}) => {
