@@ -77,25 +77,32 @@ class Respond extends \DLDB\Objects {
 				$this->site_title = $context->getProperty('service.title');
 				switch($type) {
 					case 401:
-						$this->title = 'UNAUTHORIZED';
+						$breadcrumbs_class = 'error unauthorized';
+						$this->title = '로그인이 필요합니다';
 						break;
 					case 403:
-						$this->title = 'ACCESS_DENIED';
+						$breadcrumbs_class = 'error access_denied';
+						$this->title = '접근권한이 없습니다';
 						break;
 					case 404:
-						$this->title = 'PAGE_NOT_FOUND';
+						$breadcrumbs_class = 'error page_not_found';
+						$this->title = '존재하지 않는 페이지입니다';
 						break;
 					case 423:
-						$this->title = 'PAGE_LOCKED';
+						$breadcrumbs_class = 'error page_locked';
+						$this->title = '페이지가 잠겨있습니다';
 						break;
 					case 503:
-						$this->title = 'SERVICE_UNAVAIL';
+						$breadcrumbs_class = 'error service_unavail';
+						$this->title = '이용가능하지 않는 서비스입니다';
 						break;
 					case 505:
 					default:
-						$this->title = 'SYSTEM_ERROR';
+						$breadcrumbs_class = 'error system_error';
+						$this->title = '서비스장애';
 						break;
 				}
+				$title = $this->title;
 				include_once DLDB_PATH."/themes/".$themes."/error.html.php";
 				$content = ob_get_contents();
 				ob_end_clean();

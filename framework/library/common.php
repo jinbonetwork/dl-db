@@ -6,7 +6,7 @@ function Error($msg,$errorcode=505) {
 		\DLDB\Respond::ResultPageJson(array(1,$msg));
 	} else {
 		$respond = \DLDB\Respond::instance();
-		$respond->ErrorPage($errcode,$msg);
+		$respond->ErrorPage($errorcode,$msg);
 	}
 }
 

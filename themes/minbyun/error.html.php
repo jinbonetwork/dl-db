@@ -1,5 +1,5 @@
 <div class="error">
-	<h3>서비스 장애</h3>
+	<h3><?php print $title; ?></h3>
 	<p>
 		<?php print $message; ?>
 	</p>

@@ -16,7 +16,7 @@ class index extends \DLDB\Controller {
 		}
 		if(!preg_match("/image/i",$fileinfo['mimetype'])) {
 			if(!$fileinfo['anonymity'] && !$acl->imMaster() && $this->user['uid'] != $fileinfo['uid']) {
-				\DLDB\Lib\Error("아직 다운로드 할 수 없는 파일입니다. 운영자가 확인한 파일만 다운로드 가능합니다.");
+				\DLDB\Lib\Error("아직 다운로드 할 수 없는 파일입니다. 운영자가 확인한 파일만 다운로드 가능합니다.",403);
 			}
 		}
 		if(file_exists($file)) {
