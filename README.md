@@ -17,7 +17,7 @@
 ElasticSearch를 사용할 경우 ElasticSearch 2.4.0 을 설치하셔야 합니다.
 
 첨부파일 검색을 위해 XPdf library를 사용합니다. XPdf를 사용하려면 PHP에서 popen과 같이 시스템 명령을 사용할 수 있어야 합니다. 설정에 따라 시스템 명령어를 사용할 수 없는 환경일 경우 대체 PHP Library로 PDFParser 를 사용합니다.
-PHPParsr를 사용하는 경우 아래한글 2010 버젼 이하버젼이나 Scanned PDF Format(이미지형태의 PDF) 파일들은 자동으로 Parsing할 수 없습니다.
+PHP PDFParser를 사용하는 경우 아래한글 2010 버젼 이하버젼이나 Scanned PDF Format(이미지형태의 PDF) 파일들은 자동으로 Parsing할 수 없습니다.
 그리고 암호화된 파일들도 역시 Parsing할수 없습니다.
 
 하지만 두가지 모두 완벽하게 Parsing하진 못합니다. 노이즈가 껴있다거나 문서가 뒤틀려있는 경우 문자열이 깨질 수 있습니다. 이런 경우 수동으로 자료를 수정할 수 있는 UI를 추가로 제공합니다.
