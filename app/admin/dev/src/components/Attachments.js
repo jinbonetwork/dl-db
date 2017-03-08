@@ -209,11 +209,6 @@ class Attachments extends Component {
 								<i className="pe-7s-switch pe-va"></i>
 							</span>)
 						}
-						{/*(file.status === 'uploading' || file.status === 'uploaded') && (
-							<span className="attachments__toggle--ing">
-								<i className="pe-7s-config pe-va pe-spin"></i>
-							</span>)
-						*/}
 					</td>
 					<td className="attachments__toggle">
 						{(isComplete && file.anonymity === false) && [

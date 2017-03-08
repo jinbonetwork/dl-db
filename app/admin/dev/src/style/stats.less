@@ -1,0 +1,43 @@
+.statstics {
+	margin: 5% 0;
+	h1 {
+		color: @main-color;
+		font-weight: @font-normal;
+		text-align: center;
+		margin: 0;
+	}
+	h1 + .numdoclist {
+		margin-top: 5%;
+	}
+	.numdoclist {
+		margin-left: auto; margin-right: auto;
+	}
+	.numdoclist td:not(.table-margin) {
+		background-color: @minor-color-2;
+		padding: 0.7em 0.5em;
+	}
+	.numdoclist .table-margin,
+	.numdoclist .table-padding {
+		width: 1em !important;
+		min-width: 1em !important;
+		border: 0 !important;
+	}
+	.numdoclist tr:first-child td {
+		text-align: center;
+		border-bottom: solid 1px @font-color;
+	}
+	.numdoclist tr:nth-child(n+2) td {
+		text-align: center;
+		border-bottom: solid 1px lighten(@font-color, 20%);
+		min-width: 9em;
+	}
+	.numdoclist tr:last-child td {
+		border-bottom: 0;
+	}
+	.numdoclist__count {
+		color: @main-color;
+	}
+	.numdoclist + .pagination {
+		margin-top: 5%;
+	}
+}
