@@ -6,7 +6,7 @@ import {
 	CHANGE_PROPS_IN_ATTACHMENTS, REQUEST_TOGGLING_PARSED, TOGGLE_PARSED, REQUEST_TOGGLING_ANONYMITY, TOGGLE_ANONYMITY,
 	SHOW_PASSWORD, DELETE_USERS, RECEIVE_FILETEXT, CHANGE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT,
 	SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE, TOGGLE_PARSED_OF_FILE, REQUEST_REGISTER, REGISTER, REQUEST_UPLOAD,
-	UPLOAD, RECEIVE_PARSE_STATE, RENEW_ATTACH_STATE
+	UPLOAD, RECEIVE_PARSE_STATE, RENEW_ATTACH_STATE, RECEIVE_STATS
 } from '../constants';
 import adminApi from '../api/adminApi';
 
@@ -265,6 +265,20 @@ const adminActionCreators = {
 	renewAttachState({completions}){
 		return {type: RENEW_ATTACH_STATE, completions};
 	},
+	fetchStats({page}){ return (dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		adminApi.fetchStats(
+			{page},
+			({numDocList, lastPage}) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatch({type: RECEIVE_STATS, numDocList, lastPage});
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 	logout({afterLogout}){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		adminApi.logout(

@@ -22,7 +22,7 @@ const fetchData = (method, url, arg2, arg3, arg4) => {
 		}
 	})
 	.catch((error) => {
-		console.error(error.message);
+		console.error(error);
 		fail({code: null, message: error.message});
 	});
 };
@@ -128,6 +128,12 @@ const adminApi = {
 	},
 	fetchParseState(strFids, succeed, fail){
 		fetchData('get', '/api/file/parsing_state?fid='+strFids, ({files}) => succeed(files), fail);
+	},
+	fetchStats({page}, succeed, fail){
+		fetchData('get', '/api/admin/stats?page='+(page ? page : 1),
+			(data) => succeed({numDocList: data.members, lastPage: parseInt(data.result.total_page)}),
+			fail
+		);
 	},
 	logout(succeed, fail){
 		fetchData('post', '/api/logout', null, succeed, fail);

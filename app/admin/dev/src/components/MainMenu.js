@@ -20,6 +20,7 @@ class MainMenu extends Component {
 			<div className="main-menu">
 				<a href="/"><span>돌아가기</span></a>
 				<Link to="/admin/userlist"><span>회원 관리</span></Link>
+				<Link to="/admin/stats"><span>통계</span></Link>
 				<Link to="/admin/attachments"><span>첨부파일 관리</span></Link>
 				<Link to="/admin/agreement"><span>이용약관 수정</span></Link>
 				<a href={boardAdminUrl}><span>게시판 관리</span></a>

@@ -12,6 +12,7 @@ import UserForm from './components/UserForm';
 import Attachments from './components/Attachments';
 import Agreement from './components/Agreement';
 import FileText from './components/FileText';
+import Stats from './components/Stats';
 import NotFound from './components/NotFound';
 import './style/index.less';
 
@@ -138,6 +139,16 @@ const AgreementContainer = connect(
 	})
 )(Agreement);
 
+const StatsContainer = connect(
+	(state) => ({
+		numDocList: state.stats.numDocList,
+		lastPage: state.stats.lastPage
+	}),
+	(dispatch) => ({
+		fetchStats: (args) => dispatch(adminActionCreators.fetchStats(args))
+	})
+)(Stats);
+
 render(
 	<Provider store={adminStore}>
 		<Router history={browserHistory}>
@@ -150,6 +161,7 @@ render(
 				<Route path="attachments(/:param1/:param2)(/:param3/:param4)" component={AttachmentsContainer} />
 				<Route path="filetext/:docId/:fileId" component={FileTextContainer} />
 				<Route path="agreement" component={AgreementContainer} />
+				<Route path="stats(/page/:page)" component={StatsContainer} />
 				<Route path="*" component={NotFound} />
 			</Route>
 		</Router>

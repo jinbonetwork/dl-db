@@ -6,6 +6,7 @@ import userForm from './userForm';
 import agreement from './agreement';
 import attachments from './attachments';
 import fileText from './fileText';
+import stats from './stats';
 
 const rootReducer = combineReducers({
 	admin,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
 	userForm,
 	agreement,
 	attachments,
-	fileText
+	fileText,
+	stats
 });
 
 export default rootReducer;

@@ -40,3 +40,4 @@ export const REQUEST_UPLOAD = 'request upload';
 export const UPLOAD = 'upload';
 export const RECEIVE_PARSE_STATE = 'receive parse state';
 export const RENEW_ATTACH_STATE = 'renew attach state';
+export const RECEIVE_STATS = 'receive stats';
