@@ -5,7 +5,8 @@ function Error($msg,$errorcode=505) {
 	if($errorcode == DLDB_ERROR_ACTION_AJAX || $_GET['output'] == "json" || $_POST['output'] == "json") {
 		\DLDB\Respond::ResultPageJson(array(1,$msg));
 	} else {
-		\DLDB\Respond::MessagePage($errcode,$msg);
+		$respond = \DLDB\Respond::instance();
+		$respond->ErrorPage($errcode,$msg);
 	}
 }
 

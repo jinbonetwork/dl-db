@@ -4,7 +4,11 @@ namespace DLDB;
 /// Copyright (c) 2004-2010, Needlworks  / Tatter Network Foundation
 /// All rights reserved. Licensed under the GPL.
 /// See the GNU General Public License for more details. (/documents/LICENSE, /documents/COPYRIGHT)
-class Respond {
+class Respond extends \DLDB\Objects {
+	public static function instance() {
+		return self::_instance(__CLASS__);
+	}
+
 	public static function ResultPage($errorResult) {
 		if (is_array($errorResult) && count($errorResult) < 2) {
 			$errorResult = array_shift($errorResult);
@@ -52,13 +56,46 @@ class Respond {
 	}
 	
 	public static function MessagePage($type,$message) {
+		header("Content-Type: text/html; charset=utf-8");
+		include_once DLDB_RESOURCE_PATH."/html/error.html.php";
+		exit;
+	}
+
+	public static function AlertPage($message) {
+		include_once DLDB_RESOURCE_PATH."/html/alert.html.php";
+		exit;
+	}
+	
+	public function ErrorPage($type, $message, $isAjaxCall = false) {
+		if($isAjaxCall) {self::ResultPage(-1);exit;}
+
 		$context = \DLDB\Model\Context::instance();
 		$themes = $context->getProperty('service.themes');
-		header("Content-Type: text/html; charset=utf-8");
-
 		if($themes && file_exists(DLDB_PATH."/themes/".$themes."/error.html.php")) {
-			if(!defined('DLDB_LAYOUT_LOADED') || DLDB_LAYOUT_LOADED == false) {
+			if((!defined('DLDB_LAYOUT_LOADED') || DLDB_LAYOUT_LOADED == false) && file_exists(DLDB_PATH."/themes/".$themes."/layout.html.php")) {
 				ob_start();
+				$this->site_title = $context->getProperty('service.title');
+				switch($type) {
+					case 401:
+						$this->title = 'UNAUTHORIZED';
+						break;
+					case 403:
+						$this->title = 'ACCESS_DENIED';
+						break;
+					case 404:
+						$this->title = 'PAGE_NOT_FOUND';
+						break;
+					case 423:
+						$this->title = 'PAGE_LOCKED';
+						break;
+					case 503:
+						$this->title = 'SERVICE_UNAVAIL';
+						break;
+					case 505:
+					default:
+						$this->title = 'SYSTEM_ERROR';
+						break;
+				}
 				include_once DLDB_PATH."/themes/".$themes."/error.html.php";
 				$content = ob_get_contents();
 				ob_end_clean();
@@ -71,16 +108,20 @@ class Respond {
 		}
 		exit;
 	}
-	
-	public static function AlertPage($message) {
-		include_once DLDB_RESOURCE_PATH."/html/alert.html.php";
-		exit;
+
+	public function header() {
+		$context = \DLDB\Model\Context::instance();
+		$themes = $context->getProperty('service.themes');
+
+		if( file_exists(DLDB_PATH."/themes/".$themes."/style.css") ) {
+			echo '	<link rel="stylesheet" href="'.DLDB_URI.'themes/'.$themes.'/style.css" />';
+		}
+		if( file_exists(DLDB_PATH."/themes/".$themes."/css/style.css") ) {
+			echo '	<link rel="stylesheet" href="'.DLDB_URI.'themes/'.$themes.'/css/style.css" />';
+		}
 	}
-	
-	public static function ErrorPage($message=NULL, $buttonValue=NULL, $buttonLink=NULL, $isAjaxCall = false) {
-		if($isAjaxCall) {self::ResultPage(-1);exit;}
-		include_once DLDB_RESOURCE_PATH."/html/error.html.php";
-		exit;
+
+	public function footer() {
 	}
 	
 	public static function NoticePage($message, $redirection) {
