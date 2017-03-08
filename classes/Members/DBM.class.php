@@ -337,7 +337,7 @@ class DBM extends \DLDB\Objects {
 		self::$errmsg = $msg;
 	}
 
-	private static function fetchMember($row) {
+	public static function fetchMember($row) {
 		if(!$row) return null;
 		$member = array();
 		foreach($row as $k => $v) {
