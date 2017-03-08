@@ -79,7 +79,7 @@ $service['elastic_tokenizer'] = 'seunjeon_tokenizer';
 
 5) React 코드 설정
 -----------------
-* 관리페잊는 react로 제작되었습니다. admin app 폴더에서 react를 build해주세요.
+* 관리페이지는 react로 제작되었습니다. admin app 폴더에서 react를 build해주세요.
 ```bash
 $ cd app/admin/dev
 $ npm install
