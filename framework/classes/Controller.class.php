@@ -184,6 +184,7 @@ abstract class Controller {
 					include $layout_file;
 					$html = ob_get_contents();
 					ob_end_clean();
+					define("DLDB_LAYOUT_LOADED","true");
 					print $html;
 				}
 			}

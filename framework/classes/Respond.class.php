@@ -52,8 +52,23 @@ class Respond {
 	}
 	
 	public static function MessagePage($type,$message) {
+		$context = \DLDB\Model\Context::instance();
+		$themes = $context->getProperty('service.themes');
 		header("Content-Type: text/html; charset=utf-8");
-		include_once DLDB_RESOURCE_PATH."/html/error.html.php";
+
+		if($themes && file_exists(DLDB_PATH."/themes/".$themes."/error.html.php")) {
+			if(!defined('DLDB_LAYOUT_LOADED') || DLDB_LAYOUT_LOADED == false) {
+				ob_start();
+				include_once DLDB_PATH."/themes/".$themes."/error.html.php";
+				$content = ob_get_contents();
+				ob_end_clean();
+				include_once DLDB_PATH."/themes/".$themes."/layout.html.php";
+			} else {
+				include_once DLDB_PATH."/themes/".$themes."/error.html.php";
+			}
+		} else {
+			include_once DLDB_RESOURCE_PATH."/html/error.html.php";
+		}
 		exit;
 	}
 	
