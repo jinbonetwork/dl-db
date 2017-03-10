@@ -44,10 +44,12 @@ const custom = {
 };
 const rearrangeDoc = (doc, fProps) => {
 	let required = {}, elective = {};
-	let content = doc.content;
+	required.doctype = doc.doctype;
 	for(let fs in doc){
-		if(fProps[fs].required) required[fs] = doc[fs];
-		else elective[fs] = doc[fs];
+		if(fs != 'doctype'){
+			if(fProps[fs].required) required[fs] = doc[fs];
+			else elective[fs] = doc[fs];
+		}
 	}
 	return update(required, {$merge: elective});
 };

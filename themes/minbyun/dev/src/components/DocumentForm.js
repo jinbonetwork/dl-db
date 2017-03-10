@@ -67,11 +67,11 @@ class DocumentForm extends Component {
 	customize(){ return {
 		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?
 			{
-				title: <tr><td></td><td><h2>필수입력사항</h2></td></tr>,
+				doctype: <tr><td></td><td><h2>필수입력사항</h2></td></tr>,
 				tag: <tr><td></td><td><h2>선택입력사항</h2></td></tr>
 			} :
 			{
-				title: <tr><td><h2>필수입력사항</h2></td></tr>,
+				doctype: <tr><td><h2>필수입력사항</h2></td></tr>,
 				tag: <tr><td><h2>선택입력사항</h2></td></tr>
 			}
 		),
