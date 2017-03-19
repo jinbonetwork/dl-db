@@ -1,30 +1,20 @@
 # dl-db
 민변디지털도서관 검색서비스
 
-
 1. 소개
 =======
 
-이 프로젝트는 민변디지털도서관 시스템을 구축하기위해 추진되었습니다. 하지만 다양한 용도로 재활용될 수 있도록 범용적으로 구축하였습니다.
+이 프로젝트는 민변디지털도서관 시스템을 구축하기위해 추진되었습니다. 하지만 다양한 용도로 재활용될 수 있도록 범용적으로 구축하였습니다.  이 프로젝트는 기본적으로 자료(PDF,HWP,DOC,DOCX) 검색시스템입니다. 자료들을 유연한 필드관리시스템과 분류시스템을 통해 체계적으로 자료정리를 할 수 있도록 지원하며, 첨부파일 검색을 지원합니다.
 
-이 프로젝트는 기본적으로 자료(PDF,HWP,DOC,DOCX) 검색시스템입니다. 자료들을 유연한 필드관리시스템과 분류시스템을 통해 체계적으로 자료정리를 할 수 있도록 지원하며, 첨부파일 검색을 지원합니다.
+이 프로젝트는 React + PHP 기반으로 제작된 검색플랫폼입니다.  그리고 검색플랫폼은 매우 개방적인 시스템입니다. 이 플랫폼은 자체 회원시스템(회원가입 / 로그인) 을 가지지 않습니다. 대신 Xpress Engine(Xe) 또는 GNU Board 5(gnu5) 회원시스템과 연동하도록 설계되었습니다. 따라서 게시판 등 다른 서비스와 충돌없이 쉽게 연동하여 사용할 수 있습니다.
 
-이 프로젝트는 React + PHP 기반으로 제작된 검색플랫폼입니다.
+검색은 MySQL fulltext(mecab plugin 설치) 검색 또는 ElasticSearch 검색 두가지를 지원합니다. 두가지 모두 한글형태소분석기 프로젝트인 '은전한닢 프로젝트'를 사용하여 검색인덱싱을 제공합니다. ElasticSearch를 사용할 경우 ElasticSearch 2.4.0 을 설치하셔야 합니다.
 
-이 검색플랫폼은 매우 개방적인 시스템입니다. 이 플랫폼은 자체 회원시스템(회원가입 / 로그인) 을 가지지 않습니다. 대신 Xpress Engine(Xe) 또는 GNU Board 5(gnu5) 회원시스템과 연동하도록 설계되었습니다. 따라서 게시판 등 다른 서비스와 충돌없이 쉽게 연동하여 사용할 수 있습니다.
-
-검색은 MySQL fulltext(mecab plugin 설치) 검색 또는 ElasticSearch 검색 두가지를 지원합니다. 두가지 모두 한글형태소분석기 프로젝트인 '은전한닢 프로젝트'를 사용하여 검색인덱싱을 제공합니다.
-
-ElasticSearch를 사용할 경우 ElasticSearch 2.4.0 을 설치하셔야 합니다.
-
-첨부파일 검색을 위해 XPdf library를 사용합니다. XPdf를 사용하려면 PHP에서 popen과 같이 시스템 명령을 사용할 수 있어야 합니다. 설정에 따라 시스템 명령어를 사용할 수 없는 환경일 경우 대체 PHP Library로 PDFParser 를 사용합니다.
-PHP PDFParser를 사용하는 경우 아래한글 2010 버젼 이하버젼이나 Scanned PDF Format(이미지형태의 PDF) 파일들은 자동으로 Parsing할 수 없습니다.
-그리고 암호화된 파일들도 역시 Parsing할수 없습니다.
-
-하지만 두가지 모두 완벽하게 Parsing하진 못합니다. 노이즈가 껴있다거나 문서가 뒤틀려있는 경우 문자열이 깨질 수 있습니다. 이런 경우 수동으로 자료를 수정할 수 있는 UI를 추가로 제공합니다.
+첨부파일 검색을 위해 XPdf library를 사용합니다. XPdf를 사용하려면 PHP에서 popen과 같이 시스템 명령을 사용할 수 있어야 합니다. 설정에 따라 시스템 명령어를 사용할 수 없는 환경일 경우 대체 PHP Library로 PDFParser 를 사용합니다. PHP PDFParser를 사용하는 경우 아래한글 2010 버젼 이하버젼이나 Scanned PDF Format(이미지형태의 PDF) 파일들은 자동으로 Parsing할 수 없습니다. 그리고 암호화된 파일들도 역시 Parsing할수 없습니다. 하지만 두가지 모두 완벽하게 Parsing하진 못합니다. 노이즈가 껴있다거나 문서가 뒤틀려있는 경우 문자열이 깨질 수 있습니다. 이런 경우 수동으로 자료를 수정할 수 있는 UI를 추가로 제공합니다.
 
 2. Requirement
 ==============
+
 * NodeJs-5.5 이상
 * PHP 5.6 이상 & composer(PHP 패키지관리 툴)
 * mecab-ko-dic-2.0.1
@@ -33,6 +23,7 @@ PHP PDFParser를 사용하는 경우 아래한글 2010 버젼 이하버젼이나
 
 3. 브라우저 호환성
 =================
+
 |       | Firefox | Chrome | IE | Edge | Safari | Opera | Android | Chrome for Android |
 |:-----:|:------:|:-----:|:------:|:------:|:-----:|:-----:|:------:|:-----:|
 | axios | 45 | 48 | 9, 10, 11 |14 | 9 |
@@ -40,9 +31,9 @@ PHP PDFParser를 사용하는 경우 아래한글 2010 버젼 이하버젼이나
 
 
 4. 설치
-======
+=======
 
-이 이스슽은 다른 오픈소스 프로젝트들을 서브모듀로 가지고 있습니다. 따라서 gil clone으로 소스를 다운받을 시, --recursive 옵션으로 설치하셔야 합니다.
+이 프로젝트는 다른 오픈소스 프로젝트들을 서브모듀로 가지고 있습니다. 따라서 gil clone으로 소스를 다운받을 시, --recursive 옵션으로 설치하셔야 합니다.
 
 현재는 설치 페이지를 별도로 제공하지 않습니다. 몇몇 단계로 나누어 수동으로 설치하셔야 합니다.
 
@@ -89,7 +80,6 @@ $ cd app/admin/dev
 $ npm install
 $ npm run build
 ```
-
 * 각 테마는 react 로 구성되어야 합니다. 사용할 테마로 가셔서 react를 build해주세요.
 ```bash
 $ cd themes/minbyun/dev
@@ -99,19 +89,17 @@ $ npm run build
 
 6) Composer 설치
 ---------------
-* 추가 라이브러리를 설치하려면 Composer가 필요합니다.
+추가 라이브러리를 설치하려면 Composer가 필요합니다. 사용자 계정의 bin 폴더에 composer.phar를 설치합니다.
 ```bash
 $ cd
 $ mkdir bin (계정 홈 밑에 bin 폴더 생성)
 $ cd bin
 $ curl -sS https://getcomposer.org/installer | php
 ```
-* bin 폴더에 composer.phar가 설치됩니다.
 
 7) XPdf 설치
 -----------
-* pdf 첨부파일에서 text를 추출하여 검색 Indexing 하기위해 PDF에서 text를 추출하는 대표적인 오픈소스인 xpdf 설치
-* PHP에서 popen 으로 shell 명령을 허용한 경우에만 사용됩니다.
+pdf 첨부파일에서 text를 추출하여 검색 Indexing 하기위해 PDF에서 text를 추출하는 대표적인 오픈소스인 xpdf 설치 PHP에서 popen 으로 shell 명령을 허용한 경우에만 사용됩니다.
 ```bash
 $ yum install xpdf
 ```
@@ -127,8 +115,7 @@ $service['pdftotext'] = '/usr/bin/pdftotext';
 
 8) pdfparser 설치
 -----------------
-* PHP에서 popen등 shell 명령을 제한하는 경우. 대체제로 PDFParser 라이브러리를 사용합니다.
-* 그럴 경우를 대비하여 pdfparser 설치
+PHP에서 popen등 shell 명령을 제한하는 경우. 대체제로 PDFParser 라이브러리를 사용합니다.  그럴 경우를 대비하여 pdfparser 설치
 ```bash
 $ cd contribute/pdfparser
 $ php ~/bin/composer.phar install --dev
