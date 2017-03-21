@@ -139,7 +139,11 @@ class Parser extends \DLDB\Objects {
 		for($i=0; $i<@count($_info); $i++) {
 			$_header = explode(":",$_info[$i],2);
 			if(trim($_header[0]) && trim($_header[1])) {
-				$header[trim($_header[0])] = trim($_header[1]);
+				if(trim($_header[0]) == 'Title') {
+					$header[trim($_header[0])] = self::fetchBinaryTitle(trim($_header[1]));
+				} else {
+					$header[trim($_header[0])] = trim($_header[1]);
+				}
 			}
 		}
 
@@ -187,6 +191,21 @@ class Parser extends \DLDB\Objects {
 			}
 		}
 		return '';
+	}
+
+	public static function fetchBinaryTitle($string) {
+		ob_start();
+		$out = hex2bin($string);
+		$message = ob_get_contents();
+		ob_end_clean();
+		if($message) {
+			if(!mb_check_encoding($out,'utf-8')) {
+				$out = mb_convert_encoding($out,'utf-8','euckr');
+			}
+			return $out;
+		} else {
+			return $string;
+		}
 	}
 
 	public static function forkParser($did,$fid,$mail=0) {
