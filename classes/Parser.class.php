@@ -142,7 +142,7 @@ class Parser extends \DLDB\Objects {
 				if(trim($_header[0]) == 'Title') {
 					$header[trim($_header[0])] = self::fetchBinaryTitle(trim($_header[1]));
 				} else {
-					$header[trim($_header[0])] = trim($_header[1]);
+					$header[trim($_header[0])] = mb_convert_encoding(trim($_header[1]),"UTF-8","UTF-8");
 				}
 			}
 		}
@@ -161,7 +161,7 @@ class Parser extends \DLDB\Objects {
 			$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
 			$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 		}
-		return array('text'=>trim($text),'header'=>$header);
+		return array('text'=>mb_convert_encoding(trim($text),"UTF-8","UTF-8"),'header'=>$header);
 	}
 
 	public static function parseDoc($file_info) {
@@ -212,6 +212,9 @@ class Parser extends \DLDB\Objects {
 			}
 			return $out;
 		} else {
+			if(!mb_check_encoding($string,'utf-8')) {
+				$string = mb_convert_encoding($string,'utf-8','euckr');
+			}
 			return $string;
 		}
 	}
