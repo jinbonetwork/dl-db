@@ -195,10 +195,18 @@ class Parser extends \DLDB\Objects {
 
 	public static function fetchBinaryTitle($string) {
 		ob_start();
-		$out = hex2bin($string);
+		if(substr($string,0,1) == '<') {
+			$pre_string = "<";
+			$string = substr($string,1);
+		}
+		if(preg_match("/>$/i",$string)) {
+			$end_string = ">";
+			$string = preg_replace("/>$/i","",$string);
+		}
+		$out = $pre_string.hex2bin($string).$end_string;
 		$message = ob_get_contents();
 		ob_end_clean();
-		if($message) {
+		if(!$message) {
 			if(!mb_check_encoding($out,'utf-8')) {
 				$out = mb_convert_encoding($out,'utf-8','euckr');
 			}
