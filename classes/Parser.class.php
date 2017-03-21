@@ -129,7 +129,7 @@ class Parser extends \DLDB\Objects {
 
 		$filename = \DLDB\Files::getFilePath($file_info);
 		$pdfinfo = preg_replace("/pdftotext$/i","pdfinfo",$context->getProperty('service.pdftotext'));
-		$fp = popen($pdfinfo." ".$filename, "r");
+		$fp = popen($pdfinfo." ".'"'.$filename.'"', "r");
 		while (!feof($fp)) {
 			$info .= fgets($fp, 4096);
 		}
@@ -151,7 +151,7 @@ class Parser extends \DLDB\Objects {
 
 		$text = '';
 		for($cnt=1; $cnt<= $total_page; $cnt++) {
-			$fp = popen($context->getProperty('service.pdftotext')." -nopgbrk -f ".$cnt." -l ".$cnt." ".$filename." -","r");
+			$fp = popen($context->getProperty('service.pdftotext')." -nopgbrk -f ".$cnt." -l ".$cnt." ".'"'.$filename.'"'." -","r");
 			while (!feof($fp)) { 
 				$text .= fgets($fp, 4096);
 			}
