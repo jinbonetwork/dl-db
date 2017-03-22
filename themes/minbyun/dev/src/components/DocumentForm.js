@@ -88,7 +88,7 @@ class DocumentForm extends Component {
 		renderFormBySlug: {
 			content: (fs, index, value, formElem) => cloneElement(formElem, {displayCount: true, message: <span>&nbsp;</span>}),
 			sentence: (fs, index, value, formElem) => cloneElement(formElem, {placeholder: '2015-12-07'}),
-			name: (fs, index, value ,formElem) => cloneElement(formElem, {
+			name: (fs, index, value, formElem) => cloneElement(formElem, {
 				onSearch: (keyword, callback) => {
 					this.props.onSearchMember({keyword, afterSearch: (members) => {
 						callback(members.map((member) => (
@@ -144,7 +144,7 @@ class DocumentForm extends Component {
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		let fieldData = update(this.props.fData, {fProps: {
-			name: {form: {$set: 'search'}}, sentence: {type: {$set: 'date'}}
+			name: {form: {$set: 'searchInput'}}, sentence: {type: {$set: 'date'}}
 		}});
 		return (
 			<div className={'docform '+className}>

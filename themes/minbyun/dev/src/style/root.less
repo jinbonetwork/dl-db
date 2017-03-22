@@ -9,7 +9,7 @@ body, html {
 	background-color: @minor-color-1;
 	margin: 0;
 }
-input[type=text], input[type=email], input[type=password], textarea, button {
+input[type=text], input[type=email], input[type=password], button {
 	font-family:'Nanum Barun Gothic';
 	font-size: @font-size;
 	color: @font-color;
@@ -28,7 +28,7 @@ input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
 input::placeholder {
 	color: @font-color*1.7;
 }
-input[type=text], input[type=email], input[type=password], button, textarea {
+input[type=text], input[type=email], input[type=password], button {
 	appearance: none;
 	border-radius: 0;
 	box-shadow: none;
@@ -41,9 +41,8 @@ button::-moz-focus-inner {
 	padding: 0;
 	border: 0;
 }
-textarea {
-	margin: 0;
-	resize: vertical;
+.textarea textarea:focus {
+	background-color: @focus-color-1;
 }
 ul {
 	margin: 0;

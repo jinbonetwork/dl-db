@@ -3,6 +3,7 @@ import TextInput from '../TextInput';
 import Textarea from '../Textarea';
 import FileInput from '../FileInput';
 import Select from '../Select';
+import SrchSelect from '../SrchSelect';
 import Check from '../Check';
 import DateForm from '../DateForm';
 import SearchInput from '../SearchInput';
@@ -31,6 +32,10 @@ class FormElem extends Component {
 					<Select selected={this.props.value} onChange={this.props.onChange}>
 						{this.props.options}
 					</Select>
+				);
+			case 'search':
+				return (
+					<SrchSelect selected={this.props.value} onChange={this.props.onChange} options={this.props.options} />
 				);
 			case 'radio':
 				return (
@@ -65,7 +70,7 @@ class FormElem extends Component {
 						onChange={this.props.onChange} onBlur={this.props.onBlur}
 					/>
 				);
-			case 'search':
+			case 'searchInput':
 				return (
 					<SearchInput value={this.props.value} focus={this.props.focus} resultSlugs={this.props.resultSlugs}
 						onChange={this.props.onChange} onBlur={this.props.onBlur} onSearch={this.props.onSearch}
@@ -85,7 +90,7 @@ FormElem.propTypes = {
 	focus: PropTypes.bool,
 	placeholder: PropTypes.string,
 	accept: PropTypes.string,
-	options: PropTypes.arrayOf(PropTypes.element),
+	options: PropTypes.array,
 	message: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 	displayCount: PropTypes.bool,
 	rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

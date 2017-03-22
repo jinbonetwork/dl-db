@@ -12,9 +12,6 @@ class Dropdown extends Component {
 			focused: -1
 		};
 	}
-	componentWillMount(){
-		if(this.props.autoUnfold) this.setState({isUnfolded: true});
-	}
 	componentDidMount(){
 		this.refs.head.setAttribute('groupname', this.state.groupName);
 		this.setSize();
@@ -140,7 +137,6 @@ Dropdown.propTypes = {
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	window: PropTypes.shape({width: PropTypes.number, height: PropTypes.number}),
-	autoUnfold: PropTypes.bool,
 	multiple: PropTypes.bool,
 	onResize: PropTypes.func,
 	onClick: PropTypes.func,
