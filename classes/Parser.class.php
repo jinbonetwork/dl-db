@@ -129,7 +129,7 @@ class Parser extends \DLDB\Objects {
 
 		$filename = \DLDB\Files::getFilePath($file_info);
 		$pdfinfo = preg_replace("/pdftotext$/i","pdfinfo",$context->getProperty('service.pdftotext'));
-		$fp = popen($pdfinfo." ".$filename, "r");
+		$fp = popen($pdfinfo." ".'"'.$filename.'"', "r");
 		while (!feof($fp)) {
 			$info .= fgets($fp, 4096);
 		}
@@ -139,7 +139,11 @@ class Parser extends \DLDB\Objects {
 		for($i=0; $i<@count($_info); $i++) {
 			$_header = explode(":",$_info[$i],2);
 			if(trim($_header[0]) && trim($_header[1])) {
-				$header[trim($_header[0])] = trim($_header[1]);
+				if(trim($_header[0]) == 'Title') {
+					$header[trim($_header[0])] = self::fetchBinaryTitle(trim($_header[1]));
+				} else {
+					$header[trim($_header[0])] = mb_convert_encoding(trim($_header[1]),"UTF-8","UTF-8");
+				}
 			}
 		}
 
@@ -147,7 +151,7 @@ class Parser extends \DLDB\Objects {
 
 		$text = '';
 		for($cnt=1; $cnt<= $total_page; $cnt++) {
-			$fp = popen($context->getProperty('service.pdftotext')." -nopgbrk -f ".$cnt." -l ".$cnt." ".$filename." -","r");
+			$fp = popen($context->getProperty('service.pdftotext')." -nopgbrk -f ".$cnt." -l ".$cnt." ".'"'.$filename.'"'." -","r");
 			while (!feof($fp)) { 
 				$text .= fgets($fp, 4096);
 			}
@@ -157,7 +161,7 @@ class Parser extends \DLDB\Objects {
 			$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
 			$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 		}
-		return array('text'=>trim($text),'header'=>$header);
+		return array('text'=>mb_convert_encoding(trim($text),"UTF-8","UTF-8"),'header'=>$header);
 	}
 
 	public static function parseDoc($file_info) {
@@ -187,6 +191,32 @@ class Parser extends \DLDB\Objects {
 			}
 		}
 		return '';
+	}
+
+	public static function fetchBinaryTitle($string) {
+		ob_start();
+		if(substr($string,0,1) == '<') {
+			$pre_string = "<";
+			$string = substr($string,1);
+		}
+		if(preg_match("/>$/i",$string)) {
+			$end_string = ">";
+			$string = preg_replace("/>$/i","",$string);
+		}
+		$out = $pre_string.hex2bin($string).$end_string;
+		$message = ob_get_contents();
+		ob_end_clean();
+		if(!$message) {
+			if(!mb_check_encoding($out,'utf-8')) {
+				$out = mb_convert_encoding($out,'utf-8','euckr');
+			}
+			return $out;
+		} else {
+			if(!mb_check_encoding($string,'utf-8')) {
+				$string = mb_convert_encoding($string,'utf-8','euckr');
+			}
+			return $string;
+		}
 	}
 
 	public static function forkParser($did,$fid,$mail=0) {

@@ -8,6 +8,12 @@ if($shell_uid != $posix_uid) {
 	exit;
 }
 
+$reindex_mode = 'refresh';
+if($argc > 1) {
+	$argv[1] == '--init';
+	$reindex_mode = 'init';
+}
+
 define('__DLDB__',true);
 if(!defined('ROOT'))
 	define('ROOT',dirname(__FILE__));
@@ -50,7 +56,7 @@ try {
 	$else = \DLDB\Search\Elastic::instance();
 	$else->setFields( $fields, $taxonomy, $taxonomy_terms );
 
-	if($else->check()) {
+	if($reindex_mode == 'refresh' && $else->check()) {
 		print "drop elastic index [".$index."]\n";
 		syslog(LOG_INFO, "drop elastic index [".$index."]");
 		$else->drop();

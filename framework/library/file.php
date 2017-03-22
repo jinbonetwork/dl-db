@@ -139,7 +139,7 @@ function headerEtag($etag,$length,$lastmodified) {
 }
 
 function dumpWithEtag($path) {
-	$path = urldecode($path);
+	$path = rawurldecode($path);
 	$qIndex = strpos($path,'?');
 	if( $qIndex !== false ) {
 		$path = substr($path,0,$qIndex);
