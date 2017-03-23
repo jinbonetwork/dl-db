@@ -2,6 +2,7 @@
 .docform
 .docform .form
 .docform .form .form__inner-table
+.docform .srchselect
 --------------------------------------------------------*/
 
 .docform {
@@ -204,5 +205,25 @@
 	}
 	input, .textarea__text-input {
 		border: 0;
+	}
+}
+.docform .srchselect {
+	width: 100%;
+	.srchselect__head {
+		display: block;
+		width: auto !important;
+		margin-right: 2em;
+	}
+	.srchselect__arrow {
+		position: absolute;
+		top: 0; right: 0;
+		line-height: 3em;
+	}
+	.item {
+		color: @minor-color-2;
+		background-color: @main-color;
+		&:focus, &:hover {
+			background-color: @focus-color-2;
+		}
 	}
 }

@@ -41,8 +41,13 @@ button::-moz-focus-inner {
 	padding: 0;
 	border: 0;
 }
-.textarea textarea:focus {
-	background-color: @focus-color-1;
+.textarea {
+	textarea {
+		color: @font-color;
+	}
+	textarea:focus {
+		background-color: @focus-color-1;
+	}
 }
 ul {
 	margin: 0;
@@ -129,6 +134,41 @@ div {
 		i {
 			font-size: 1.5em;
 		}
+	}
+}
+.srchselect {
+	position: relative;
+	z-index: 2;
+	.srchselect__headwrap {
+		border-color: transparent;
+		background-color: @minor-color-2;
+	}
+	.srchselect__headwrap--focused {
+		background-color: @focus-color-1;
+	}
+	.srchselect__headwrap, .srchselect__resultwrap .item {
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+	}
+	.srchselect__head > input[type=text] {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.srchselect__arrow i {
+		font-size: 2em;
+		color: @main-color;
+	}
+	.srchselect__resultwrap {
+		border-color: @main-color;
+		background-color: @minor-color-2;
+	}
+	.item {
+		line-height: 2em;
+		cursor: pointer;
+		&:hover {
+			background-color: #eeeeee;
+		}
+		&:focus {background-color: @focus-color-1;}
 	}
 }
 .fileinput {

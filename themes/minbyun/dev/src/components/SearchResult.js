@@ -23,7 +23,7 @@ class SearchResult extends Component {
 		const query = this.props.location.query;
 		const sQuery = this.searchQuery(query, true);
 		const params = this.params(update(this.query(sQuery), {$merge: {
-			orderby: query.orderby, page: query.page
+			order: query.order, page: query.page
 		}}));
 		this.props.changeQuery(sQuery);
 		this.props.searchDocs(params);
@@ -35,7 +35,7 @@ class SearchResult extends Component {
 		return _queryOf(propOfSQuery, query, this.props.fData.fID);
 	}
 	params(params, excepts){
-		return _params(params, this.props.fData.fID, excepts)
+		return _params(params, this.props.fData.fID, excepts);
 	}
 	searchQuery(query, correct){
 		return _searchQuery(query, this.props.fData.fSlug, correct);

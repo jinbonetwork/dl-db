@@ -14,7 +14,7 @@ const documentForm = (state = initialState, action) => {
 	switch(action.type){
 		case INITIALIZE_DOCFORM:
 			return update(state, {$merge: {
-				focused: {fSlug: 'title', index: undefined},
+				focused: {fSlug: 'doctype', index: undefined},
 				isSaving: initialState.isSaving,
 				parseState: initialState.parseState
 			}});

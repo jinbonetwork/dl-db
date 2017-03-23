@@ -29,7 +29,7 @@ class FormElem extends Component {
 				);
 			case 'select':
 				return (
-					<Select selected={this.props.value} onChange={this.props.onChange}>
+					<Select selected={this.props.value} focus={this.props.focus} onChange={this.props.onChange}>
 						{this.props.options}
 					</Select>
 				);

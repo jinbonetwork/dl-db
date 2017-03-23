@@ -12,6 +12,10 @@ class Dropdown extends Component {
 			focused: -1
 		};
 	}
+	componentWillMount(){
+		console.log(this.props);
+		if(this.props.focus) this.setState({focused: 0});
+	}
 	componentDidMount(){
 		this.refs.head.setAttribute('groupname', this.state.groupName);
 		this.setSize();
@@ -21,6 +25,7 @@ class Dropdown extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		this.setSize();
+		if(nextProps.focus) this.setState({focused: 0});
 	}
 	componentDidUpdate(prevProps, prevState){
 		if(this.state.focused === 0){
@@ -133,6 +138,7 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
 	className: PropTypes.string,
 	head: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	focus: PropTypes.bool,
 	arrow: PropTypes.element,
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
