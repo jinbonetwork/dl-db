@@ -13,7 +13,6 @@ class Dropdown extends Component {
 		};
 	}
 	componentWillMount(){
-		console.log(this.props);
 		if(this.props.focus) this.setState({focused: 0});
 	}
 	componentDidMount(){
@@ -62,11 +61,15 @@ class Dropdown extends Component {
 			const event = arg1st;
 			if(!event.relatedTarget || this.state.groupName != event.relatedTarget.getAttribute('groupname')){
 				this.setState({isUnfolded: false, focused: -1});
+				if(this.props.onBlur) this.props.onBlur();
 			}
 		}
 		else if(which == 'item'){
 			const isUnfolded = arg1st;
-			if(!isUnfolded) this.setState({isUnfolded: false, focused: -1});
+			if(!isUnfolded){
+				this.setState({isUnfolded: false, focused: -1});
+				if(this.props.onBlur) this.props.onBlur();
+			}
 		}
 	}
 	handleKeyDown(which, arg1st, arg2nd, arg3nd){
@@ -146,7 +149,8 @@ Dropdown.propTypes = {
 	multiple: PropTypes.bool,
 	onResize: PropTypes.func,
 	onClick: PropTypes.func,
-	onFocus: PropTypes.func
+	onFocus: PropTypes.func,
+	onBlur: PropTypes.func
 };
 
 export default Dropdown;

@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import Item from './Item';
 import jQ from 'jquery';
 import browser from 'detect-browser';
-import {_mapO} from './functions';
+import {_mapO, _wrap} from './functions';
 import 'babel-polyfill';
 
 class SrchSelect extends Component {
@@ -50,9 +50,6 @@ class SrchSelect extends Component {
 			if(keyword) this.props.options.forEach((op) => {if(op.dispValue.match(keyword)) result.push(op);});
 			this.setState({keyword: event.target.value, result: result});
 		}
-		else if(which == 'head'){
-			event.preventDefault();
-		}
 	}
 	handleKeyDown(which, arg1st, arg2nd, arg3rd){
 		if(which == 'input'){
@@ -72,7 +69,7 @@ class SrchSelect extends Component {
 	}
 	handleClick(which, arg1st){
 		if(which == 'head'){
-			let keyword = this.props.options.find((op) => (op.value == this.props.selected)).dispValue;
+			let keyword = this.getSelectedDispValue();
 			this.setState({focused: 0, displayInput: true, keyword});
 			this.handleChange('input', {target: {value: keyword}});
 		}
@@ -126,7 +123,13 @@ class SrchSelect extends Component {
 			default: return null;
 		}
 	}
+	getSelectedDispValue(){
+		let selected = this.props.options.find((op) => (op.value == this.props.selected));
+		if(selected) return selected.dispValue;
+		else return '';
+	}
 	render(){
+		const selectedDispValue = this.getSelectedDispValue();
 		const result = this.state.result.map((item, index) => {
 			const indexOfItem = index + 1;
 			return (
@@ -154,7 +157,7 @@ class SrchSelect extends Component {
 							onFocus={this.handleFocus.bind(this, 'input')}
 						/>
 						<input type="text" readOnly={true} ref="head"
-							value={this.props.options.find((op) => (op.value == this.props.selected)).dispValue}
+							value={selectedDispValue}
 							style={(this.state.displayInput ? {display: 'none'} : null)}
 							onClick={this.handleClick.bind(this, 'head')}
 							onKeyDown={this.handleKeyDown.bind(this, 'head')}
@@ -181,7 +184,7 @@ class SrchSelect extends Component {
 	}
 }
 SrchSelect.propTypes = {
-	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	options: PropTypes.arrayOf(PropTypes.object).isRequired,
 	arrow: PropTypes.element,
 	onChange: PropTypes.func.isRequired,
@@ -189,6 +192,6 @@ SrchSelect.propTypes = {
 };
 SrchSelect.defaultProps = {
 	arrow: <i className="pe-7s-angle-down pe-va"></i>
-}
+};
 
 export default SrchSelect;

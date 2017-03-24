@@ -65,7 +65,6 @@ const actionCreators = {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: SUCCEED_LOGIN, role, roles, agreement});
 				dispatchDocFieldData(dispatch);
-				//dispatchUserFieldData(dispatch);
 			} else {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({

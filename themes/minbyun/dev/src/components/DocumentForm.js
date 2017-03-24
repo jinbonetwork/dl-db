@@ -100,6 +100,19 @@ class DocumentForm extends Component {
 					this.props.onChange({mode: 'merge', value}) :
 					this.props.onChange({mode: 'set', fSlug: fs, value})
 				)
+			}),
+			court: (fs, index, value, formElem) => cloneElement(formElem, {
+				onSearch: (keyword, callback) => {
+					this.props.onSearchMember({keyword, afterSearch: (members) => {
+						callback(members.map((member) => (
+							{court: member.name}
+						)));}
+					});
+				},
+				onChange: (value) => (typeof value === 'object' ?
+					this.props.onChange({mode: 'merge', value}) :
+					this.props.onChange({mode: 'set', fSlug: fs, value})
+				)
 			})
 		},
 		renderFormByType: {
@@ -143,9 +156,7 @@ class DocumentForm extends Component {
 		let className = (this.props.doc.id > 0 ? 'docform--edit' : 'docform--new');
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
-		let fieldData = update(this.props.fData, {fProps: {
-			name: {form: {$set: 'searchInput'}}, sentence: {type: {$set: 'date'}}
-		}});
+		let fieldData = this.props.fData;
 		return (
 			<div className={'docform '+className}>
 				<h1>{title}</h1>

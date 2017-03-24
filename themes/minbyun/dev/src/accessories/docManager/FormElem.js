@@ -29,13 +29,17 @@ class FormElem extends Component {
 				);
 			case 'select':
 				return (
-					<Select selected={this.props.value} focus={this.props.focus} onChange={this.props.onChange}>
+					<Select selected={this.props.value} focus={this.props.focus} onChange={this.props.onChange}
+						onBlur={this.props.onBlur}
+					>
 						{this.props.options}
 					</Select>
 				);
 			case 'search':
 				return (
-					<SrchSelect selected={this.props.value} onChange={this.props.onChange} options={this.props.options} />
+					<SrchSelect selected={this.props.value} options={this.props.options}
+						onChange={this.props.onChange} onBlur={this.props.onBlur}
+					/>
 				);
 			case 'radio':
 				return (

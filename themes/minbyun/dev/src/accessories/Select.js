@@ -24,7 +24,7 @@ class Select extends Component {
 		}
 		return (
 			<Dropdown className="select" head={head} arrow={<i className="pe-7s-angle-down pe-va"></i>} focus={this.props.focus}
-				onClick={this.handleClick.bind(this)} onResize={this.props.onResize}
+				onClick={this.handleClick.bind(this)} onResize={this.props.onResize} onBlur={this.props.onBlur}
 			>
 				{items}
 			</Dropdown>
@@ -35,6 +35,7 @@ Select.propTypes = {
 	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	focus: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
+	onBlur: PropTypes.func,
 	onResize: PropTypes.func
 };
 

@@ -55,7 +55,14 @@ const rearrangeDoc = (doc, fProps) => {
 };
 const refineDocFData = (fData) => {
 	let newFData = refineFieldData(fData, initDocFData, custom.refineFData);
-	return update(newFData, {empty: {$apply: (value) => rearrangeDoc(value, newFData.fProps)}});
+	return update(newFData, {
+		empty: {$apply: (value) => rearrangeDoc(value, newFData.fProps)},
+		fProps: {
+			court: {form: {$set: 'searchInput'}},
+			sentence: {type: {$set: 'date'}},
+			name: {form: {$set: 'searchInput'}}
+		}
+	});
 };
 const refineDoc = (doc, fData) => {
 	return rearrangeDoc(refine(doc, fData), fData.fProps);
