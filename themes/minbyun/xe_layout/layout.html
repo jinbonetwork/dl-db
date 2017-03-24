@@ -145,7 +145,7 @@
 									</div>
 									<div class="acditem__children">
 										<ul>
-											<li class="item" loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
+											<li class="item" loop="$val1['list']=>$key2,$val2"><a href="{$val2['href']}" target="_blank"><span>{$val2['link']}</span></a></li>
 										</ul>
 									</div>
 								</div>
@@ -188,7 +188,7 @@
 								</div>
 								<div class="acditem__children">
 									<ul>
-										<li class="item" loop="$val1['list']=>$key2,$val2"><a href="/xe/qna" target="_blank"><span>{$val2['link']}</span></a></li>
+										<li class="item" loop="$val1['list']=>$key2,$val2"><a href="{$val2['href']}" target="_blank"><span>{$val2['link']}</span></a></li>
 									</ul>
 								</div>
 							</div>
@@ -199,7 +199,7 @@
 		</div>
 		<div class="digital-library__content">
 			<div class="xe-menus">
-				<h1>{$module_info->browser_title}</h1>
+				<h1><a href="{getUrl()}{$module_info->mid}">{$module_info->browser_title}</a></h1>
 				<div class="body">
 					<!-- LNB -->
 					<nav cond="$_selected_menu['list']" class="lnb">

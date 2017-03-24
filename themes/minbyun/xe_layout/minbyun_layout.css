@@ -26,15 +26,17 @@ form, fieldset{border:0;margin:0;padding:0}
 .header .search{float:right}
 .gnb{float:left}
 .digital-library__content .xe-menus h1 {
-	margin: 1em 0;
-	text-align: center;
-	color: #555;
+	margin: 1em 0 0.7em 0;
+	text-align: left;
+	color: #fff;
+	text-shadow: 3px 3px 3px #424242;
+	padding: 0 20px;
 }
 .digital-library__content .body {
-	margin: 20px 0;
-	padding: 20px;
+	margin: 0;
+	padding: 0 20px;
 	zoom: 1;
-	background: #fff; }
+}
 .digital-library__content .body:after {
 	content: "";
 	display: block;
@@ -43,7 +45,16 @@ form, fieldset{border:0;margin:0;padding:0}
 .digital-library__content .body .board {
 	text-align: left;
 }
+.digital-library__content .body .menu_desc {
+	font-size: 1.2em;
+	color: #7f7f7f;
+	margin-bottom: 0.7em;
+}
 .account{}
+.x input[type="color"], .x input[type="date"], .x input[type="datetime-local"], .x input[type="datetime"], .x input[type="email"], .x input[type="month"], .x input[type="number"], .x input[type="password"], .x input[type="search"], .x input[type="tel"], .x input[type="text"], .x input[type="time"], .x input[type="url"], .x input[type="week"] {
+	height: 2em !important;
+	line-height: 2em !important;
+}
 
 @media screen and (min-width: 960px) {
 	.digital-library__header .main-menu .dropdown {
