@@ -217,7 +217,7 @@ class Document extends \DLDB\Objects {
 //			\DLDB\Parser::insert($insert_id,$args,$memo);
 //		}
 		if( is_array($taxonomy_map) ) {
-			if( $fieldquery->reBuildTaxonomy('documents', $insert_id, $taxonomy_map) < 0 ) {
+			if( $fieldquery->reBuildTaxonomy('documents', $insert_id, $taxonomy_map, (!$attated_exists ? $args : null)) < 0 ) {
 				self::setErrorMsg( $fieldquery->getErrorMsg() );
 				return -1;
 			}
@@ -225,6 +225,8 @@ class Document extends \DLDB\Objects {
 
 		if( $attated_exists ) {
 			\DLDB\Parser::forkParser($insert_id);
+		} else {
+			\DLDB\Parser::insert($insert_id,$args,'');
 		}
 		return $insert_id;
 	}
@@ -276,13 +278,16 @@ class Document extends \DLDB\Objects {
 				}
 			}
 		}
-		if($update_parse && !$new_parse) {
+		if( $update_parse && !$new_parse ) {
 			\DLDB\Parser::insert($args['id'],$args,$memo);
 		}
 
 		if( is_array($taxonomy_map) ) {
-			if( $fieldquery->reBuildTaxonomy('documents', $args['id'], $taxonomy_map) < 0 ) {
+			if( $fieldquery->reBuildTaxonomy('documents', $args['id'], $taxonomy_map, (!$new_parse ? $args : ''), (!$new_parse ? $memo : '')) < 0 ) {
 				return -1;
+			}
+			if( ( !$update_parse && !$new_parse ) && $fieldquery->requireIndex() ) {
+				\DLDB\Parser::insert($args['id'],$args,$memo);
 			}
 		}
 

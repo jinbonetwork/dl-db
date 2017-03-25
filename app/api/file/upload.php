@@ -10,7 +10,7 @@ class upload extends \DLDB\Controller {
 		$context = \DLDB\Model\Context::instance();
 		$acl = \DLDB\Acl::instance();
 
-		if( !$this->params['did'] ) {
+		if( !$this->params['did'] || !is_numeric($this->params['did']) ) {
 			\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 입력하세요') );
 		}
 		$this->document = \DLDB\Document::get( $this->params['did'] );
