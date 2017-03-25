@@ -273,7 +273,8 @@ class Document extends \DLDB\Objects {
 			foreach($files as $file) {
 				if($old_files[$file['fid']] ) {
 					$memo .= $file['text'];
-				} else if(!$old_files[$file['fid']] && !preg_match("/^image/i",$file['mimetype'])) {
+				}
+				if(!$old_files[$file['fid']] && !preg_match("/^image/i",$file['mimetype'])) {
 					$new_parse = true;
 				}
 			}
