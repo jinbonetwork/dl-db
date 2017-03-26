@@ -1,5 +1,5 @@
 import { CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM, RECEIVE_PARSE_STATE, INITIALIZE_DOCFORM,
-	RENEW_FILE_STATUS
+	RENEW_FILE_STATUS, RECEIVE_COURTS
 } from '../constants';
 import update from 'react-addons-update';
 
@@ -7,7 +7,8 @@ const initialState = {
 	doc: {},
 	focused: {fSlug: undefined, index: undefined},
 	isSaving: false,
-	parseState: {}
+	parseState: {},
+	courts: []
 };
 
 const documentForm = (state = initialState, action) => {
@@ -48,6 +49,8 @@ const documentForm = (state = initialState, action) => {
 			return update(state, {parseState: {$set: (action.parseState ? action.parseState : initialState.parseState)}});
 		case RENEW_FILE_STATUS:
 			return update(state, {doc: {$merge: action.filesWithNewStatus}});
+		case RECEIVE_COURTS:
+			return update(state, {courts: {$set: action.courts}});
 		default:
 			return state;
 	}

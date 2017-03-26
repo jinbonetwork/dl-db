@@ -53,7 +53,8 @@ const DocFormContainer = connect(
 		doc: state.documentForm.doc,
 		focused: state.documentForm.focused,
 		isSaving: state.documentForm.isSaving,
-		parseState: state.documentForm.parseState
+		parseState: state.documentForm.parseState,
+		courts: state.documentForm.courts
 	}),
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeDocForm()),
@@ -67,7 +68,8 @@ const DocFormContainer = connect(
 		initParseState: () => dispatch(dlDbActions.setParseState()),
 		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
 		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
-		onSearchMember: (args) => dispatch(dlDbActions.searchMember(args))
+		onSearchMember: (args) => dispatch(dlDbActions.searchMember(args)),
+		fetchCourts: () => dispatch(dlDbActions.fetchCourts())
 	})
 )(DocumentForm);
 

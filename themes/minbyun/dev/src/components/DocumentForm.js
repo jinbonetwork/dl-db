@@ -17,6 +17,7 @@ class DocumentForm extends Component {
 		if(!_isCommon(this.props.role, ['administrator', 'write'])){
 			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
 		}
+		this.props.fetchCourts();
 		this.initailize();
 	}
 	componentDidUpdate(prevProps){
@@ -103,11 +104,12 @@ class DocumentForm extends Component {
 			}),
 			court: (fs, index, value, formElem) => cloneElement(formElem, {
 				onSearch: (keyword, callback) => {
-					this.props.onSearchMember({keyword, afterSearch: (members) => {
-						callback(members.map((member) => (
-							{court: member.name}
-						)));}
-					});
+					let results = [];
+					if(this.props.courts.length > 0){
+						let keyRegEx = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+						this.props.courts.forEach((court) => {if(court.match(keyRegEx)) results.push({court});});
+					}
+					callback(results);
 				},
 				onChange: (value) => (typeof value === 'object' ?
 					this.props.onChange({mode: 'merge', value}) :
@@ -190,6 +192,7 @@ DocumentForm.propTypes = {
 	role: PropTypes.arrayOf(PropTypes.string).isRequired,
 	fData: PropTypes.object.isRequired,
 	doc: PropTypes.object.isRequired,
+	courts: PropTypes.array.isRequired,
 	openDocs: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
@@ -207,6 +210,7 @@ DocumentForm.propTypes = {
 	initParseState: PropTypes.func.isRequired,
 	renewFileStatus: PropTypes.func.isRequired,
 	onSearchMember: PropTypes.func.isRequired,
+	fetchCourts: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

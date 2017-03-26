@@ -20,11 +20,11 @@ const fetch = (method, url, arg2, arg3, arg4) => {
 			console.error(message);
 			fail({code: null, message: message});
 		}
-	})/*
+	})
 	.catch((error) => {
 		console.error(error.message);
 		fail({code: null, message: error.message});
-	})*/;
+	});
 };
 
 const api = {
@@ -112,6 +112,9 @@ const api = {
 	},
 	submitUserProfile(formData, succeed, fail){
 		fetch('post', '/api/user/profile?mode=modify', formData, succeed, fail);
+	},
+	fetchCourts(succeed, fail){
+		fetch('get', '/api/taxonomy?cid=4', ({taxonomy}) => succeed(taxonomy[4]), fail);
 	}
 }
 

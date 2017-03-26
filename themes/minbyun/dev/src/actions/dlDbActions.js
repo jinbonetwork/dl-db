@@ -5,7 +5,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
 	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, RECEIVE_USER_PROFILE,
 	CHANGE_USER_PROFILE, FOCUSOUT_USER_PROFILE, FOCUSIN_USER_PROFILE, COMPLETE_USER_PROFILE, SUBMIT_USER_PROFILE,
-	TOGGLE_PASSWORD_FORM, INITIALIZE_DOC, INITIALIZE_USER_PROFILE, INITIALIZE_DOCFORM, SELECT_IMAGE
+	TOGGLE_PASSWORD_FORM, INITIALIZE_DOC, INITIALIZE_USER_PROFILE, INITIALIZE_DOCFORM, SELECT_IMAGE, RECEIVE_COURTS
 } from '../constants';
 import api from '../api/dlDbApi';
 import update from 'react-addons-update';
@@ -382,7 +382,15 @@ const actionCreators = {
 	},
 	selectImage({index}){
 		return {type: SELECT_IMAGE, index}
-	}
+	},
+	fetchCourts(){ return (dispatch) => {
+		api.fetchCourts(
+			(courts) => {
+				dispatch({type: RECEIVE_COURTS, courts: courts.map((c) => (c.name))});
+			},
+			(error) => dispatchError(dispatch, error)
+		)
+	}}
 }
 
 export default actionCreators;
