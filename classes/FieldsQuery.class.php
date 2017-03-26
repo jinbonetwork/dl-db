@@ -6,6 +6,7 @@ class FieldsQuery extends \DLDB\Objects {
 	private $taxonomy;
 	private $taxonomy_terms;
 	private $errmsg;
+	private $reindex;
 
 	public static function instance() {
 		return self::_instance(__CLASS__);
@@ -244,6 +245,7 @@ class FieldsQuery extends \DLDB\Objects {
 	public function reBuildTaxonomy($table, $id,$taxonomy_map) {
 		$dbm = \DLDB\DBM::instance();
 
+		$this->reindex = false;
 		if( is_array($taxonomy_map) ) {
 			foreach($taxonomy_map as $cid => $option_taxonomies) {
 				if( is_array($option_taxonomies) ) {
@@ -257,6 +259,9 @@ class FieldsQuery extends \DLDB\Objects {
 											$this->setErrorMsg( $que." 가 DB에 반영되지 않았습니다." );
 											return -1;
 										}
+										if( $this->taxonomy[$cid]['skey'] ) {
+											$this->reindex = true;
+										}
 									}
 								}
 								break;
@@ -266,11 +271,7 @@ class FieldsQuery extends \DLDB\Objects {
 										$que = "DELETE FROM {taxonomy_term_relative} WHERE `tid` = ? AND `tables` = ? AND `did` = ?";
 										$dbm->execute( $que, array("dsd",$tid,$table,$id) );
 										if( $this->taxonomy[$cid]['skey'] ) {
-											if(!$else) {
-												$else = \DLDB\Search\Elastic::instance();
-												$else->setFields($this->fields, $this->taxonomy, $this->taxonomy_terms);
-											}
-											$else->remove($id, 't'.$tid);
+											\DLDB\Parser::remove($id, $tid);
 										}
 									}
 								}
@@ -284,6 +285,10 @@ class FieldsQuery extends \DLDB\Objects {
 		}
 
 		return 0;
+	}
+
+	public function requireIndex() {
+		return ($this->reindex == true ? 1 : 0);
 	}
 
 	public function getErrorMsg() {

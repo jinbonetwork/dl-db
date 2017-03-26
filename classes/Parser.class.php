@@ -21,6 +21,19 @@ class Parser extends \DLDB\Objects {
 		}
 	}
 
+	public static function remove($did,$type) {
+		$context = \DLDB\Model\Context::instance();
+		switch($context->getProperty('service.search_type')) {
+			case 'elastic':
+				$else = \DLDB\Search\Elastic::instance();
+				$else->setFields();
+				$else->remove($did, 't'.$type);
+				break;
+			default:
+				break;
+		}
+	}
+
 	public static function getFilter() {
 		if(!self::$filter) {
 			$dbm = \DLDB\DBM::instance();
