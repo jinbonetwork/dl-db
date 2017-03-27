@@ -107,7 +107,7 @@ class Document extends Component {
 		const dateOfCreation = (
 			<div className="document__date">
 				<span><i className="pe-7s-date pe-va"></i><span>{fProps.date.dispName}</span></span>
-				<ViewElem value={[document.date]} type={fProps.date.type} />
+				<ViewElem value={[document.date]} type={fProps.date.type} form={fProps.date.form} />
 			</div>
 		);
 		const listOfFiles = ( !_isEmpty(document.file) ?
