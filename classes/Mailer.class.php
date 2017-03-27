@@ -34,12 +34,12 @@ class Mailer extends \DLDB\Objects {
 			$template_theme =  DLDB_PATH."/themes/".$themes."/mail/".$template.".html.php";
 			if(file_exists($template_theme)) {
 				ob_start();
-				include_once $template_theme;
+				include $template_theme;
 				$content = ob_get_contents();
 				ob_end_clean();
 			} else if(file_exists(DLDB_RESOURCE_PATH."/html/mail/".$template.".html.php")) {
 				ob_start();
-				include_once DLDB_RESOURCE_PATH."/html/mail/".$template.".html.php";
+				include DLDB_RESOURCE_PATH."/html/mail/".$template.".html.php";
 				$content = ob_get_contents();
 				ob_end_clean();
 			}
@@ -48,12 +48,12 @@ class Mailer extends \DLDB\Objects {
 		$mail_theme = DLDB_PATH."/themes/".$themes."/mail/layout.html.php";
 		if(file_exists($mail_theme)) {
 			ob_start();
-			include_once $mail_theme;
+			include $mail_theme;
 			$html = ob_get_contents();
 			ob_end_clean();
 		} else if(file_exists(DLDB_RESOURCE_PATH."/html/mail/layout.html.php")) {
 			ob_start();
-			include_once DLDB_RESOURCE_PATH."/html/mail/layout.html.php";
+			include DLDB_RESOURCE_PATH."/html/mail/layout.html.php";
 			$html = ob_get_contents();
 			ob_end_clean();
 		} else {
