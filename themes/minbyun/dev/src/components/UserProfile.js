@@ -4,7 +4,7 @@ import Item from '../accessories/Item';
 import CheckBox from '../accessories/CheckBox';
 import Check from '../accessories/Check';
 import {makeUserFormData} from '../fieldData/userFieldData';
-import {SCREEN} from '../constants';
+import {SCREEN, ROLE_MAP} from '../constants';
 import {_isEmpty} from '../accessories/functions';
 
 class UserProfile extends Component {
@@ -32,6 +32,16 @@ class UserProfile extends Component {
 			>
 				<Item value="checked">비밀번호 변경</Item>
 			</Check>
+		),
+		rowsAfter: (this.props.window.width > SCREEN.small ?
+			<tr className="form__field form__role">
+				<td className="form__col0">권한</td>
+				<td className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</td>
+			</tr> :
+			<tr className="form__field form__role"><td>
+				<div className="form__col0">권한</div>
+				<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
+			</td></tr>
 		)
 	}}
 	handleChange(which, arg1st, arg2nd){

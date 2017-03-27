@@ -177,6 +177,7 @@ const HistoryContainer = connect(
 const UserProfileContainer = connect(
 	(state) => ({
 		window: state.dlDb.window,
+		role: state.dlDb.role,
 		fData: state.userProfile.fData,
 		openProfile: state.userProfile.openProfile,
 		profile: state.userProfile.profile,

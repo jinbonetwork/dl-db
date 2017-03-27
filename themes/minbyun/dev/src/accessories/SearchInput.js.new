@@ -54,7 +54,7 @@ class SearchInput extends Component {
 					}
 				});
 			} else {
-				this.setState({result: [], isSearching: false});
+				//this.setState({result: [], isSearching: false});
 			}
 		}
 	}
@@ -95,7 +95,8 @@ class SearchInput extends Component {
 		if(which == 'input'){
 			const event = arg1st;
 
-			console.log('blur input', event.relatedTarget.getAttribute('groupname'));
+			console.log('blur input', event.relatedTarget, event.relatedTarget.getAttribute('groupname'));
+			//console.log('blur input', this.state.result);
 
 			if(!event.relatedTarget || this.groupName != event.relatedTarget.getAttribute('groupname')){
 				this.setState({result: [], focused: -1, displayInput: false, focusHead: false});

@@ -1,3 +1,9 @@
+export const ROLE_MAP = {
+	administrator: '관리자',
+	write: '쓰기',
+	view: '읽기',
+	download: '다운로드'
+}
 export const SCREEN = {
 	smallest: 320,
 	small: 400,
