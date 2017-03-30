@@ -103,7 +103,11 @@ class Login extends Component {
 				</div>
 				<div className="table__row">
 					<div className="table__col"></div>
-					<div className="table__col"><span>※ 아이디 개설 문의: 민변 사무처</span></div>
+					<div className="table__col login__contact">
+						<p>아이디 개설 문의: 민변 사무처</p>
+						<p><i className="pe-7f-call pe-va"></i><span>02-522-7283</span></p>
+						<p><i className="pe-7f-mail pe-va"></i><span>lib_admin@minbyun.or.kr</span></p>
+					</div>
 				</div>
 			</div>
 		);

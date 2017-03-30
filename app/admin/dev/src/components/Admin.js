@@ -11,18 +11,22 @@ class Admin extends Component {
 		if(this.refs.message) this.refs.message.focus();
 	}
 	handleClick(which){
-		if(which == 'message'){
+		if(which == 'message' && !this.props.message.isOverlay){
 			this.props.hideMessage();
 			if(this.props.message.callback) this.props.message.callback();
 		}
 	}
 	render(){
-		const message = this.props.message.content && (
+		const message = (this.props.message.content || this.props.message.isOverlay) && (
 			<div className="message" onClick={this.handleClick.bind(this, 'message')}>
 				<div></div>
-				<div className="message__content" tabIndex="0" ref="message" onKeyDown={this.handleClick.bind(this, 'message')}>
-					{this.props.message.content}
-				</div>
+				{ !this.props.message.isOverlay &&
+					<div className={'message__content' + (this.props.message.className ? ' '+this.props.message.className : '')}
+						tabIndex="0" ref="message" onKeyDown={this.handleClick.bind(this, 'message')}
+					>
+						{this.props.message.content}
+					</div>
+				}
 			</div>
 		);
 		const process = this.props.showProc && (
@@ -65,7 +69,7 @@ Admin.propTypes = {
 	id: PropTypes.string.isRequired,
 	password: PropTypes.string.isRequired,
 	message: PropTypes.shape({
-		content: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+		content: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
 		callback: PropTypes.func
 	}).isRequired,
 	showProc: PropTypes.bool,

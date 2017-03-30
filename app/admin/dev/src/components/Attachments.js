@@ -29,7 +29,7 @@ class Attachments extends Component {
 	}
 	componentWillUnmount(){
 		clearInterval(this.intvOfRqstParseState);
-			this.intvOfRqstParseState = undefined;
+		this.intvOfRqstParseState = undefined;
 	}
 	rqstParseState(){
 		let strFids = '[' + this.props.attachments.reduce((prev, curr, idx) => prev + (idx > 0 ? ',' : '') + curr.fileId, '') + ']';
@@ -107,6 +107,14 @@ class Attachments extends Component {
 					this.props.addFileToOpenFileTexts(fileId, file);
 				}
 				this.props.router.push('/admin/filetext/'+docId+'/'+fileId); break;
+			case 'edit document':
+				this.props.showMessage({isOverlay: true});
+				this.showDocEditor(arg1st, () => {
+					clearInterval(this.intvOfRqstParseState);
+					this.intvOfRqstParseState = undefined;
+					this.props.fetchAttachments(this.props.params);
+					this.props.hideMessage();
+				});
 			default:
 		}
 	}
@@ -115,6 +123,16 @@ class Attachments extends Component {
 			let key = arg1st.key;
 			if(key == 'Enter') this.handleClick('search');
 		}
+	}
+	showDocEditor(docId, onUnload){
+		let width = window.innerWidth * 0.9; width = (width <= 800 ? width : 800);
+		let height = window.innerHeight * 0.9;
+		let left = (window.innerWidth - width) / 2;
+		let top = (window.innerHeight - height) / 2;
+		const docEditor = window.open(
+			'/document/'+docId+'/edit', '_blank', 'width='+width+',height='+height+',left='+left+',top='+top
+		);
+		docEditor.onunload = onUnload;
 	}
 	render(){
 		const listMenu = (
@@ -234,14 +252,15 @@ class Attachments extends Component {
 						)}
 					</td>
 					<td className="attachments__upload">
-						{ isComplete &&
-							<label>
+						{ isComplete && [
+							<label key="upload">
 								<i className="pe-7s-upload"></i>
 								<input type="file" ref="inputFile" style={{display: 'none'}} value="" accept=".pdf, .hwp, .doc, .docx"
 									onChange={this.handleChange.bind(this, 'upload', {idxOfFiles, file})}
 								/>
-							</label>
-						}
+							</label>,
+							<a key="edit-document" onClick={this.handleClick.bind(this, 'edit document', file.docId)}><i className="pe-7s-note pe-va"></i></a>
+						]}
 					</td>
 					<td className="table-padding"></td>
 					<td className="table-margin"></td>
@@ -284,6 +303,8 @@ Attachments.propTypes = {
 	onUpload: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
 	renewAttachState: PropTypes.func.isRequired,
+	showMessage: PropTypes.func.isRequired,
+	hideMessage: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired
 	}).isRequired

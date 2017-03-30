@@ -139,6 +139,7 @@ class DocumentForm extends Component {
 		if(error){
 			this.props.showMessage(error.message, () => this.props.focusIn(error.fSlug, error.index));
 		} else {
+			window.onbeforeunload = () => ('파일업로드가 완료되지 않았습니다.');
 			const [paramId, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
 			let oldDoc = (paramId ? this.props.openDocs[paramId] : fData.empty);
 			let files = extractFileData(doc, fData);
@@ -149,6 +150,7 @@ class DocumentForm extends Component {
 				doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
 				isAdmin: _isCommon(this.props.role, ['administrator']),
 				afterUpload: (docId, files) => {
+					window.onbeforeunload = null;
 					this.props.onChange({mode: 'merge', value: getFilesAfterUpload(files, this.props.doc, this.props.fData)});
 				}
 			});

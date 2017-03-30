@@ -83,7 +83,7 @@ const UserFormContainer = connect(
 		onChange: (args) => dispatch(adminActionCreators.changeUserProps(args)),
 		setFocus: (fSlug, index) => dispatch(adminActionCreators.setFocus(fSlug, index)),
 		onBlur: () => dispatch(adminActionCreators.blurUserForm()),
-		showMessage: (message, callback) => dispatch(adminActionCreators.showMessage(message, callback)),
+		showMessage: (args) => dispatch(adminActionCreators.showMessage(args)),
 		submit: (user, formData, oldUser, callback) => dispatch(adminActionCreators.submitUserForm(user, formData, oldUser, callback)),
 		showPassword: (state) => dispatch(adminActionCreators.showPassword(state))
 	})
@@ -108,7 +108,9 @@ const AttachmentsContainer = connect(
 		onUpload: (args) => dispatch(adminActionCreators.upload(args)),
 		fetchParseState: (args) => dispatch(adminActionCreators.fetchParseState(args)),
 		renewAttachState: (args) => dispatch(adminActionCreators.renewAttachState(args)),
-		setParseState: (args) => dispatch(adminActionCreators.setParseState(args))
+		setParseState: (args) => dispatch(adminActionCreators.setParseState(args)),
+		showMessage: (args) => dispatch(adminActionCreators.showMessage(args)),
+		hideMessage: () => dispatch(adminActionCreators.hideMessage())
 	})
 )(Attachments);
 

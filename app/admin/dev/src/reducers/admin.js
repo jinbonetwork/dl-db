@@ -24,7 +24,7 @@ const initialState = {
 	attachments: [],
 	openFileTexts: {},
 	openAgreement: null,
-	message: {content: '', callback: null},
+	message: {content: '', callback: undefined, className: undefined, isOverlay: false},
 	showProc: false,
 	loginType: '',
 	id: '',
@@ -49,7 +49,7 @@ const admin = (state = initialState, action) => {
 		case SHOW_LOGIN:
 			return update(state, {isAdmin: {$set: false}});
 		case SHOW_MESSAGE:
-			return update(state, {message: {$set: {content: action.message, callback: action.callback}}});
+			return update(state, {message: {$set: update(initialState.message, {$merge: action.message})}});
 		case HIDE_MESSAGE:
 			return update(state, {message: {$set: {content: '', callback: null}}});
 		case SHOW_PROCESS:

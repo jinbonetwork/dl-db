@@ -120,7 +120,10 @@ class UserForm extends Component {
 	}
 	handleSubmit(error){
 		if(error){
-			this.props.showMessage(error.message, () => this.props.setFocus(error.fSlug, error.index));
+			this.props.showMessage({
+				content: error.message,
+				callback: () => this.props.setFocus(error.fSlug, error.index)
+			});
 		} else {
 			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
 			const id = this.props.params.id;

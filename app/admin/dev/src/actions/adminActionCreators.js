@@ -70,8 +70,8 @@ const adminActionCreators = {
 			}
 		}, (error) => dispatchError(dispatch, error));
 	}},
-	showMessage(message, callback){
-		return {type: SHOW_MESSAGE, message, callback};
+	showMessage(args){
+		return {type: SHOW_MESSAGE, message: args};
 	},
 	hideMessage(){
 		return {type: HIDE_MESSAGE}
