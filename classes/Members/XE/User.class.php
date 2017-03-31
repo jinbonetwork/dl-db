@@ -79,6 +79,7 @@ class User extends \DLDB\Objects {
 		$member_srl = ($row['new'] ? ( $row['new'] + 1 ) : 1);
 
 		$user_id = preg_split("/@/i",$args['email']);
+		$email_id = $user_id[0];
 
 		$que = "SELECT * FROM `".$prefix."member` WHERE user_id LIKE '".$user_id[0]."%'";
 		while($row = $dbm->getFetchArray($que)) {
@@ -117,7 +118,7 @@ class User extends \DLDB\Objects {
 			$user_id[0],
 			$args['email'],
 			$password,
-			$user_id[0],
+			$email_id,
 			$user_id[1],
 			$args['name'],
 			$user_id[0],
@@ -167,7 +168,32 @@ class User extends \DLDB\Objects {
 			return -2;
 		}
 
-		$user_id = preg_split("/@/i",$args['email']);
+		if($member['email'] != $args['email']) {
+			$update_email = 1;
+			$user_id = preg_split("/@/i",$args['email']);
+			$email_id = $user_id[0];
+
+			$que = "SELECT * FROM `".$prefix."member` WHERE user_id LIKE '".$user_id[0]."%'";
+			while($row = $dbm->getFetchArray($que)) {
+				if( $row['member_srl'] == $member['uid'] ) continue;
+				$pre_user_id[$row['user_id']] = $row;
+			}
+			if($pre_user_id && is_array($pre_user_id) && @count($pre_user_id) > 0) {
+				$new_idx=1;
+				$_user_id = $user_id[0];
+				while($pre_user_id[$_user_id]) {
+					$_user_id = $user_id[0].($new_idx++);
+				}
+				$user_id[0] = $_user_id;
+			}
+		} else {
+			$que = "SELECT * FROM `".$prefix."member` WHERE member_srl = ".$member['uid'];
+			$row = $dbm->getFetchArray($que);
+			$user_id[0] = $row['user_id'];
+			$user_id[1] = $row['email_host'];
+			$email_id = $row['email_id'];
+			$update_email = 0;
+		}
 		if($args['password']) {
 			$password = self::makePassword($args['password']);
 		}
@@ -182,7 +208,7 @@ class User extends \DLDB\Objects {
 		}
 		$que .= ", `email_id` = ?, `email_host` = ?, `user_name` = ?, `nick_name` = ? WHERE member_srl = ? ";
 		$array1 .= 'ssssd",';
-		$array2 .= ", ".'$'."user_id[0], ".'$'."user_id[1], ".'$'."args['name'], ".'$'."args['name'], ".'$'."member_srl)";
+		$array2 .= ", ".'$'."email_id, ".'$'."user_id[1], ".'$'."args['name'], ".'$'."args['name'], ".'$'."member_srl)";
 
 		$eval_str = '$'."q_args = ".$array1.$array2.";";
 		eval($eval_str);
