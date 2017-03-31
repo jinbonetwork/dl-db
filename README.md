@@ -95,7 +95,7 @@ $ curl -sS https://getcomposer.org/installer | php
 
 7) XPdf 설치
 -----------
-pdf 첨부파일에서 text를 추출하여 검색 Indexing 하기위해 PDF에서 text를 추출하는 대표적인 오픈소스인 xpdf 설치 PHP에서 popen 으로 shell 명령을 허용한 경우에만 사용됩니다.
+pdf 첨부파일에서 text를 추출하여 검색 Indexing 하기위해 PDF에서 text를 추출하는 대표적인 오픈소스인 [XPDF](http://www.foolabs.com/xpdf/download.html) 설치. PHP에서 XPDF를 이용하여 text를 추출하는 [PHP-XPDF 라이브러리](https://github.com/alchemy-fr/PHP-XPDF)가 있지만, 테스트 결과 아직 안정버젼이라 보기 힘들다고 판단하여, 현재는 popen을 톹해 pdftotext 명령어를 직접 사용합니다. 이를 위해서는 PHP에서 popen 으로 shell 명령을 허용한 경우에만 사용가능합니다.
 ```bash
 $ yum install xpdf
 ```
