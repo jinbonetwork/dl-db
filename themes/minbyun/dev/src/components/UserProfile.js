@@ -33,6 +33,9 @@ class UserProfile extends Component {
 				<Item value="checked">비밀번호 변경</Item>
 			</Check>
 		),
+		afterSubmitBtn: (
+			<p>※ '회원정보 변경'을 클릭해야 변경한 정보가 저장됩니다.</p>
+		),
 		rowsAfter: (this.props.window.width > SCREEN.small ?
 			<tr className="form__field form__role">
 				<td className="form__col0">권한</td>

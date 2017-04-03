@@ -40,6 +40,9 @@ class SearchInput extends Component {
 			if(this.state.displayInput) this.refs.input.focus();
 			else this.refs.head.focus();
 		}
+		if(prevState.keyword != this.state.keyword){
+			console.log(this.state.keyword);
+		}
 	}
 	handleChange(which, event){
 		if(which == 'input'){
@@ -81,8 +84,7 @@ class SearchInput extends Component {
 			this.handleChange('input', {target: {value: keyword}});
 		}
 		else if(which == 'item'){
-			console.log('click item');
-			this.setState({result: [], focused: 0, displayInput: false});
+			this.setState({result: [], focused: 0, displayInput: false, keyword: value});
 			if(this.props.onChange) this.props.onChange(item);
 		}
 	}
@@ -95,7 +97,7 @@ class SearchInput extends Component {
 		if(which == 'input'){
 			const event = arg1st;
 
-			console.log('blur input', event.relatedTarget, event.relatedTarget.getAttribute('groupname'));
+			//console.log('blur input', event.relatedTarget, event.relatedTarget.getAttribute('groupname'));
 			//console.log('blur input', this.state.result);
 
 			if(!event.relatedTarget || this.groupName != event.relatedTarget.getAttribute('groupname')){
