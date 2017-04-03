@@ -164,7 +164,7 @@ class Parser extends \DLDB\Objects {
 
 		$text = '';
 		for($cnt=1; $cnt<= $total_page; $cnt++) {
-			$fp = popen($context->getProperty('service.pdftotext')." -nopgbrk -f ".$cnt." -l ".$cnt." ".'"'.$filename.'"'." -","r");
+			$fp = popen($context->getProperty('service.pdftotext')." -raw -nopgbrk -f ".$cnt." -l ".$cnt." ".'"'.$filename.'"'." -","r");
 			while (!feof($fp)) { 
 				$text .= fgets($fp, 4096);
 			}

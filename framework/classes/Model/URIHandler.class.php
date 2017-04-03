@@ -63,14 +63,15 @@ final class URIHandler extends \DLDB\Objects {
 		$uri['fragment'] = array_values(array_filter(explode('/',strtok($uri['input'],'?'))));
 		unset($part);
 
+		$themes = $context->getProperty('service.themes');
+		if($themes && file_exists(DLDB_PATH."/themes/".$themes."/config.php")) {
+			require_once(DLDB_PATH."/themes/".$themes."/config.php");
+		}
 
 		if(!count($uri['fragment'])) {
 			$uri['appType'] = 'react';
 			$pathPart = DLDB_APP_PATH."react";
-		} else if($uri['fragment'][0] == 'search') {
-			$uri['appType'] = 'react';
-			$pathPart = DLDB_APP_PATH."react";
-		} else if( in_array($uri['fragment'][0], array( 'user', 'document', 'error', 'login', 'logout' ) ) ) {
+		} else if( $theme_use_uri && in_array("/".$uri['fragment'][0], $theme_use_uri ) ) {
 			$uri['appType'] = 'react';
 			$pathPart = DLDB_APP_PATH."react";
 		} else if( in_array($uri['fragment'][0], array( 'admin' ) ) ) {
