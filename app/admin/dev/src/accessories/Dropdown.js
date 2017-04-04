@@ -13,7 +13,7 @@ class Dropdown extends Component {
 		};
 	}
 	componentWillMount(){
-		if(this.props.autoUnfold) this.setState({isUnfolded: true});
+		if(this.props.focus) this.setState({focused: 0});
 	}
 	componentDidMount(){
 		this.refs.head.setAttribute('groupname', this.state.groupName);
@@ -24,6 +24,7 @@ class Dropdown extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		this.setSize();
+		if(nextProps.focus) this.setState({focused: 0});
 	}
 	componentDidUpdate(prevProps, prevState){
 		if(this.state.focused === 0){
@@ -60,11 +61,15 @@ class Dropdown extends Component {
 			const event = arg1st;
 			if(!event.relatedTarget || this.state.groupName != event.relatedTarget.getAttribute('groupname')){
 				this.setState({isUnfolded: false, focused: -1});
+				if(this.props.onBlur) this.props.onBlur();
 			}
 		}
 		else if(which == 'item'){
 			const isUnfolded = arg1st;
-			if(!isUnfolded) this.setState({isUnfolded: false, focused: -1});
+			if(!isUnfolded){
+				this.setState({isUnfolded: false, focused: -1});
+				if(this.props.onBlur) this.props.onBlur();
+			}
 		}
 	}
 	handleKeyDown(which, arg1st, arg2nd, arg3nd){
@@ -136,15 +141,16 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
 	className: PropTypes.string,
 	head: PropTypes.oneOfType([PropTypes.string, PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+	focus: PropTypes.bool,
 	arrow: PropTypes.element,
 	headWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	itemWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	window: PropTypes.shape({width: PropTypes.number, height: PropTypes.number}),
-	autoUnfold: PropTypes.bool,
 	multiple: PropTypes.bool,
 	onResize: PropTypes.func,
 	onClick: PropTypes.func,
-	onFocus: PropTypes.func
+	onFocus: PropTypes.func,
+	onBlur: PropTypes.func
 };
 
 export default Dropdown;

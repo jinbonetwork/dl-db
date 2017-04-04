@@ -35,6 +35,8 @@ class ViewElem extends Component {
 			case 'date':
 				return (
 					<span className={className} style={style}>{
+						form == 'text' ?
+						value.map((val) => val).join(', ') :
 						value.map((val) => _mapO(val, (pn, pv) => (pv)).join('/')).join(', ')
 					}</span>
 				);

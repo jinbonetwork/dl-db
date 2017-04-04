@@ -89,9 +89,21 @@ class Form extends Component {
 	}
 	renderForm(fs, value, index, fProp){
 		let percent = this.getPercent(fProp, value);
-		let options = (fProp.type == 'taxonomy' ?  this.props.fieldData.taxonomy[fs].map((tid) =>
-			<Item key={tid} value={tid}><span>{this.props.fieldData.terms[tid].name}</span></Item>
-		) : undefined);
+		let options = _wrap(() => {
+			if(fProp.type == 'taxonomy'){
+				if(fProp.form != 'search'){
+					return this.props.fieldData.taxonomy[fs].map((tid) =>
+						<Item key={tid} value={tid}><span>{this.props.fieldData.terms[tid].name}</span></Item>
+					);
+				} else {
+					return this.props.fieldData.taxonomy[fs].map((tid) =>
+						({value: tid, dispValue: this.props.fieldData.terms[tid].name})
+					);
+				}
+			} else {
+				return undefined;
+			}
+		});
 		const formElem = (
 			<FormElem
 				value={value} type={fProp.type} form={fProp.form} index={index}

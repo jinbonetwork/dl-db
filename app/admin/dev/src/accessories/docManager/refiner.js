@@ -159,7 +159,7 @@ const refineDocToSubmit = (doc, fData, refineDocToSubmitBySlug = {}, refineDocTo
 	}, (fs, value) => (fData.fID[fs]));
 };
 
-const extractFileData  = (doc, fData) => {
+const extractFileData = (doc, fData) => {
 	return _mapOO(
 		doc,
 		(fs, value) => {

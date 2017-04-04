@@ -31,9 +31,9 @@ const _isDateValid = (value, form) => {
 	else if(form == 'text'){ // 형식: 2016-12-07
 		let dateArray = value.split('-');
 		if(dateArray.length != 3) return false;
-		if(1 <= dateArray[0] && dateArray[0] <= 9999); else return false;
-		if(1 <= dateArray[1] && dateArray[1] <= 12); else return false;
-		if(1 <= dateArray[2] && dateArray[2] <= 31); else return false;
+		if(1 <= dateArray[0] && dateArray[0] <= 9999 && dateArray[0].length == 4); else return false;
+		if(1 <= dateArray[1] && dateArray[1] <= 12 && dateArray[1].length == 2); else return false;
+		if(1 <= dateArray[2] && dateArray[2] <= 31 && dateArray[2].length == 2); else return false;
 		return true;
 	}
 };
