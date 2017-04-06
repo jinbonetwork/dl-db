@@ -153,10 +153,10 @@ const actionCreators = {
 				}
 				dispatch({type: SUBMIT_DOCFORM});
 				api.upload(docId, fileFormData,
-					(files) => { if(files){
-						dispatch({type: UPLOAD, docId, files});
+					(files) => {
+						if(files) dispatch({type: UPLOAD, docId, files});
 						afterUpload(docId, files);
-					}},
+					},
 					(error) => {
 						let oldDoc = update(doc, {$merge: oldFiles});
 						dispatch({type: COMPLETE_DOCFORM, doc: oldDoc, isSaving: false});
