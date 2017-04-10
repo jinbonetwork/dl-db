@@ -174,12 +174,12 @@ class Form extends Component {
 		const isOneCol = (this.props.window.width <= this.props.widthToChangeOneCol);
 		const rows = [];
 		_forIn(doc, (fs, value) => {
+			if(this.props.rowsBeforeSlug[fs]) rows.push(cloneElement(this.props.rowsBeforeSlug[fs], {key: 'before '+fs}));
 			let isRendered = (
 				fProps[fs].type != 'meta' && (isChild ? true : !fProps[fs].parent) &&
 				!this.isHidden(fs) && !this.isHidden(fProps[fs].parent)
 			);
 			if(isRendered){
-				if(this.props.rowsBeforeSlug[fs]) rows.push(cloneElement(this.props.rowsBeforeSlug[fs], {key: 'before '+fs}));
 				let className = [
 					'form__field form__slug-'+fs,
 					'form__type-'+fProps[fs].type,

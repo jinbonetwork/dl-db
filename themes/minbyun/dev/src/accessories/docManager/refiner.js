@@ -97,8 +97,10 @@ const refineDoc = (origin, fData, refineDocBySlug = {}, refineDocByType = {}) =>
 					if(fProp.form == 'number') return parseInt(originVal);
 					if(fProp.form == 'bool') return (originVal == 1 ? true : false);
 					return originVal;
-				case 'char': case 'tag': case 'email': case 'phone': case 'date': case 'password':
+				case 'char': case 'tag': case 'email': case 'phone': case 'password':
 					return originVal;
+				case 'date':
+					return {year: ''+parseInt(originVal.year), month: ''+parseInt(originVal.month)}
 				case 'taxonomy':
 					value = _mapO(originVal, (tid) => parseInt(tid));
 					return (fProp.multiple ? value : value[0]);

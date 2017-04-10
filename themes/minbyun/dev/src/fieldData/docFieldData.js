@@ -56,7 +56,12 @@ const rearrangeDoc = (doc, fProps) => {
 const refineDocFData = (fData) => {
 	let newFData = refineFieldData(fData, initDocFData, custom.refineFData);
 	return update(newFData, {
-		empty: {$apply: (value) => rearrangeDoc(value, newFData.fProps)},
+		empty: {$apply: (value) => {
+			let newEmpty = rearrangeDoc(value, newFData.fProps);
+			let date = new Date();
+			let today = {year: date.getFullYear(), month: date.getMonth()+1};
+			return update(newEmpty, {date: {$set: today}});
+		}},
 		fProps: {
 			court: {form: {$set: 'searchInput'}},
 			sentence: {type: {$set: 'date'}},
