@@ -151,7 +151,7 @@ class DocumentForm extends Component {
 				isAdmin: _isCommon(this.props.role, ['administrator']),
 				afterUpload: (docId, files) => {
 					window.onbeforeunload = null;
-					this.props.onChange({mode: 'merge', value: getFilesAfterUpload(files, this.props.doc, this.props.fData)});
+					if(files) this.props.onChange({mode: 'merge', value: getFilesAfterUpload(files, this.props.doc, this.props.fData)});
 				}
 			});
 		}

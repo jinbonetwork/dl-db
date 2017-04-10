@@ -30,16 +30,20 @@ class SearchInput extends Component {
 	componentDidUpdate(prevProps, prevState){
 		if(this.state.focused === 0) this.refs.input.focus();
 	}
-	search(keyword){ if(keyword){
-		this.setState({isSearching: true});
-		this.props.onSearch(keyword, (result) => {
-			if(result){
-				this.setState({result: result, isSearching: false});
-			} else {
-				this.setState({result: [], isSearching: false});
-			}
-		});
-	}}
+	search(keyword){
+		if(keyword){
+			this.setState({isSearching: true});
+			this.props.onSearch(keyword, (result) => {
+				if(result){
+					this.setState({result: result, isSearching: false});
+				} else {
+					this.setState({result: [], isSearching: false});
+				}
+			});
+		} else {
+			this.setState({result: []});
+		}
+	}
 	handleChange(event){
 		this.props.onChange(event.target.value);
 	}
@@ -83,6 +87,10 @@ class SearchInput extends Component {
 			if(this.props.onBlur) this.props.onBlur();
 		}
 	}
+	handleCompsitionUpdate(event){
+		let keyword = this.props.value;
+		this.search(keyword.substr(0, keyword.length-1)+event.data);
+	}
 	render(){
 		const result = this.state.result.map((item, index) => {
 			let slugs = _mapO(item, (pn, pv) => (pn));
@@ -108,22 +116,25 @@ class SearchInput extends Component {
 				<i className="pe-7s-config pe-spin pe-va"></i>
 			</span>
 		);
+		/*
 		const searchButton = (!this.state.isSearching) && (
 			<button className="searchinput__button" tabIndex="-1" onClick={this.handleClick.bind(this, 'search')}>
 				<i className="pe-7s-search pe-va"></i>
 			</button>
 		);
+		*/
 		const handleInputBlur = (browser.name != 'ie' ? this.handleBlur.bind(this, 'input') : null);
 		return(
 			<div className="searchinput">
-				<input type="text" ref="input" value={(this.props.value ? this.props.value : '')}
+				<input type="text" ref="input" value={this.props.value}
 					onChange={this.handleChange.bind(this)}
 					onKeyUp={this.handleKeyUp.bind(this, 'input')}
 					onKeyDown={this.handleKeyDown.bind(this, 'input')}
 					onBlur={handleInputBlur}
+					onCompositionUpdate={(browser.name == 'firefox' ? this.handleCompsitionUpdate.bind(this) : null)}
 				/>
 				{spinner}
-				{searchButton}
+				{/*searchButton*/}
 				{displayResults}
 			</div>
 		);
@@ -136,5 +147,8 @@ SearchInput.propTypes = {
 	onBlur: PropTypes.func,
 	onSearch: PropTypes.func.isRequired,
 };
+SearchInput.defaultProps = {
+	value: ''
+}
 
 export default SearchInput;

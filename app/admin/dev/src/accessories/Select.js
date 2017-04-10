@@ -23,8 +23,8 @@ class Select extends Component {
 			head = <span>선택하세요</span>
 		}
 		return (
-			<Dropdown className="select" head={head} arrow={<i className="pe-7s-angle-down pe-va"></i>}
-				onClick={this.handleClick.bind(this)} onResize={this.props.onResize}
+			<Dropdown className="select" head={head} arrow={<i className="pe-7s-angle-down pe-va"></i>} focus={this.props.focus}
+				onClick={this.handleClick.bind(this)} onResize={this.props.onResize} onBlur={this.props.onBlur}
 			>
 				{items}
 			</Dropdown>
@@ -33,7 +33,9 @@ class Select extends Component {
 }
 Select.propTypes = {
 	selected: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	focus: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
+	onBlur: PropTypes.func,
 	onResize: PropTypes.func
 };
 

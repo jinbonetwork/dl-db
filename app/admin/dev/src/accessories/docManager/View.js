@@ -4,18 +4,6 @@ import ViewElem from './ViewElem';
 import {_mapO, _mapAO, _isEmpty} from '../functions';
 
 class View extends Component {
-	getParseState(fProp, value){
-		if(	(fProp.type == 'file' && ['uploading', 'uploaded', 'parsing'].indexOf(value.status) >= 0) ||
-			(fProp.type == 'image' && value.status == 'uploading')
-		){
-			let state = this.props.parseState[value.fid];
-			if(state) return state.progress + '%';
-			else return '업로드중';
-		}
-		else {
-			return undefined;
-		}
-	}
 	renderValue(value, fProp, fs){
 		const fData = this.props.fieldData;
 		if(this.props.renderValueBySlug[fs]){
