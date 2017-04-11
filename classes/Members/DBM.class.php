@@ -245,6 +245,9 @@ class DBM extends \DLDB\Objects {
 	}
 
 	public static function modifyID($member,$rows) {
+		$fp = fopen("/tmp/dldb.log","a+");
+		fputs($fp,"modifyID: ".serialize($rows)."\n");
+		fclose($fp);
 		$context = \DLDB\Model\Context::instance();
 		$session_type = $context->getProperty('session.type');
 		switch($session_type) {
@@ -256,6 +259,10 @@ class DBM extends \DLDB\Objects {
 				$uid = \DLDB\Members\XE\User::modify($member,$rows);
 				break;
 		}
+		$fp = fopen("/tmp/dldb.log","a+");
+		fputs($fp,"UID: ".$uid."\n");
+		fputs($fp,"Context: ".$context->getProperty('service.allow_join')."\n");
+		fclose($fp);
 		if($uid > 0 && !$context->getProperty('service.allow_join')) {
 			$args['subject'] = $rows['name']."님 '".$context->getProperty('service.title')."' 사이트의 아이디 정보가 수정되었습니다.";
 			$args['name'] = $rows['name'];
