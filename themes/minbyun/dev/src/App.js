@@ -31,7 +31,7 @@ const DlDbContainer = connect(
 	}),
 	(dispatch) => ({
 		fetchRootData: () => dispatch(dlDbActions.fetchRootData()),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args)),
 		hideMessage: () => dispatch(dlDbActions.hideMessage()),
 		onResize: (size) => dispatch(dlDbActions.resize(size)),
 		onChangeLogin: (which, value) => dispatch(dlDbActions.changeLogin(which, value)),
@@ -61,7 +61,7 @@ const DocFormContainer = connect(
 		initialize: () => dispatch(dlDbActions.initializeDocForm()),
 		onChange: (args) => dispatch(dlDbActions.changeDocForm(args)),
 		onBlur: () => dispatch(dlDbActions.focusOutDocForm()),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args)),
 		focusIn: (slug, index) => dispatch(dlDbActions.focusInDocForm(slug, index)),
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
 		onSubmit: (args, callback) => dispatch(dlDbActions.submitDocForm(args, callback)),
@@ -88,7 +88,7 @@ const DocContainer = connect(
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeDoc()),
 		fetchDoc: (id, callback) => dispatch(dlDbActions.fetchDoc(id, callback)),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args)),
 		setParseState: (args) => dispatch(dlDbActions.setParseState(args)),
 		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
 		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
@@ -114,7 +114,7 @@ const FileTextContainer = connect(
 		onChange: (fileText) => dispatch(dlDbActions.changeFileText(fileText)),
 		onSubmit: (args) => dispatch(dlDbActions.submitFileText(args)),
 		toggleParsed: (args) => dispatch(dlDbActions.toggleParsedOfFile(args)),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args))
 	})
 )(FileText);
 
@@ -129,7 +129,7 @@ const UserDocsContainer = connect(
 	(dispatch) => ({
 		fetchUserDocs: (page) => dispatch(dlDbActions.fetchUserDocs(page)),
 		addDocToOpenDocs: (doc) => dispatch(dlDbActions.addDocToOpenDocs(doc)),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args))
 	})
 )(UserDocuments);
 
@@ -145,7 +145,7 @@ const SearchResultContainer = connect(
 	(dispatch) => ({
 		changeQuery: (value) => dispatch(dlDbActions.changeSearchBarState(value)),
 		searchDocs: (params) => dispatch(dlDbActions.searchDocs(params)),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback))
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args))
 	})
 )(SearchResult);
 
@@ -193,7 +193,7 @@ const UserProfileContainer = connect(
 		onChange: (args) => dispatch(dlDbActions.changeUserProfile(args)),
 		onBlur: () => dispatch(dlDbActions.focusOutUserProfile()),
 		focusIn: (args) => dispatch(dlDbActions.focusInUserProfile(args)),
-		showMessage: (message, callback) => dispatch(dlDbActions.showMessage(message, callback)),
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args)),
 		onSubmit: (args) => dispatch(dlDbActions.submitUserProfile(args)),
 		togglePassWordForm: () => dispatch(dlDbActions.togglePassWordForm())
 	})

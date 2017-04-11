@@ -15,7 +15,11 @@ class DocumentForm extends Component {
 	}
 	componentDidMount(){
 		if(!_isCommon(this.props.role, ['administrator', 'write'])){
-			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
+			this.props.showMessage({
+				content: '권한이 없습니다.',
+				callback: () => this.props.router.goBack()
+			});
+			return null;
 		}
 		this.initailize();
 	}
@@ -32,6 +36,7 @@ class DocumentForm extends Component {
 	}
 	componentWillUnmount(){
 		clearInterval(this.intvOfRqstParseState);
+		this.intvOfRqstParseState = undefined;
 	}
 	initailize(){
 		const id = this.props.params.id;
@@ -164,7 +169,10 @@ class DocumentForm extends Component {
 	}}
 	handleSubmit(error){
 		if(error){
-			this.props.showMessage(error.message, () => this.props.focusIn(error.fSlug, error.index));
+			this.props.showMessage({
+				content: error.message,
+				callback: () => this.props.focusIn(error.fSlug, error.index)
+			});
 		} else {
 			window.onbeforeunload = () => ('파일업로드가 완료되지 않았습니다.');
 			const [paramId, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
@@ -176,6 +184,12 @@ class DocumentForm extends Component {
 			this.props.onSubmit({
 				doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
 				isAdmin: _isCommon(this.props.role, ['administrator']),
+				afterSave: () => {
+					this.props.showMessage({
+						content: (this.props.doc.id > 0 ? '수정되었습니다' : '등록되었습니다'),
+						className: 'message--save'
+					});
+				},
 				afterUpload: (docId, files) => {
 					window.onbeforeunload = null;
 					if(files) this.props.onChange({mode: 'merge', value: getFilesAfterUpload(files, this.props.doc, this.props.fData)});

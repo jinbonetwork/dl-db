@@ -22,6 +22,7 @@ class UserProfile extends Component {
 		errorMessageBySlug: {
 			confirmPw: '비밀번호를 다시 확인하세요'
 		},
+		/*
 		checkHiddenBySlug: {
 			password: (slug) => !this.props.isPwShown,
 			confirmPw: (slug) => !this.props.isPwShown
@@ -36,7 +37,6 @@ class UserProfile extends Component {
 		afterSubmitBtn: (
 			<p>※ '회원정보 변경'을 클릭해야 변경한 정보가 저장됩니다.</p>
 		),
-		/*
 		rowsAfter: (this.props.window.width > SCREEN.small ?
 			[
 				<tr key="pw" className="form__field form__role">
@@ -55,6 +55,11 @@ class UserProfile extends Component {
 				</td></tr>
 			]
 		)*/
+		rowsBefore: (
+			<tr className="form__switch"><td colSpan="2">
+				<a>회원정보</a><a>비밀번호</a>
+			</td></tr>
+		),
 		rowsAfter: (this.props.window.width > SCREEN.small ?
 			<tr key="role" className="form__field form__role">
 				<td className="form__col0">권한</td>
@@ -73,7 +78,7 @@ class UserProfile extends Component {
 	}
 	handleSubmit(error){
 		if(error){
-			this.props.showMessage(error.message, () => this.props.focusIn(error));
+			this.props.showMessage({content: error.message, callback: () => this.props.focusIn(error)});
 		} else {
 			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
 			let oldProfile = this.props.oldProfile;
@@ -93,8 +98,8 @@ class UserProfile extends Component {
 								fieldData={this.props.fData}
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
-								submitLabel="회원정보 변경"
-								submitSavingLabel="변경 중"
+								submitLabel="회원정보 수정"
+								submitSavingLabel="수정 중"
 								window={this.props.window}
 								widthToChangeOneCol={SCREEN.small}
 								onChange={this.props.onChange}

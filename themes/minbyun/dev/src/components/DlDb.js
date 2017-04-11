@@ -7,10 +7,6 @@ import {SCREEN} from '../constants';
 import jQ from 'jquery';
 import {_wrap} from '../accessories/functions';
 
-import {Provider, connect} from 'react-redux';
-import dlDbStore from '../store/dlDbStore';
-import dlDbActions from '../actions/dlDbActions';
-
 class DlDb extends Component {
 	componentDidMount(){
 		this.handleResize();
@@ -38,9 +34,13 @@ class DlDb extends Component {
 	}
 	render(){
 		const message = this.props.message.content && (
-			<div className="message" onClick={this.handleClick.bind(this, 'message')}>
+			<div className={'message' + (this.props.message.className ? ' '+this.props.message.className : '')}
+				onClick={this.handleClick.bind(this, 'message')}
+			>
 				<div></div>
-				<div className="message__content" tabIndex="0" ref="message" onKeyDown={this.handleClick.bind(this, 'message')}>
+				<div className="message__content" tabIndex="0" ref="message"
+					onKeyDown={this.handleClick.bind(this, 'message')}
+				>
 					{this.props.message.content}
 				</div>
 			</div>

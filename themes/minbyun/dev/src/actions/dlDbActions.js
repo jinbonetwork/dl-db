@@ -44,8 +44,8 @@ const actionCreators = {
 			}
 		}, (error) => dispatchError(dispatch, error));
 	}},
-	showMessage(message, callback){
-		return {type: SHOW_MESSAGE, message, callback};
+	showMessage(args){
+		return {type: SHOW_MESSAGE, args};
 	},
 	hideMessage(){
 		return {type: HIDE_MESSAGE};
@@ -137,7 +137,7 @@ const actionCreators = {
 		);
 	}},
 	submitDocForm(args){ return (dispatch) => {
-		const {doc, oldDoc, files, oldFiles, docFormData, fileFormData, afterUpload, isAdmin} = args;
+		const {doc, oldDoc, files, oldFiles, docFormData, fileFormData, afterUpload, isAdmin, afterSave} = args;
 		let submitMode = (doc.id > 0 ? 'modify' : 'add');
 		let mergedDoc = update(doc, {$merge: files});
 		dispatch({type: COMPLETE_DOCFORM, doc: mergedDoc, isSaving: true});
@@ -150,6 +150,7 @@ const actionCreators = {
 					dispatch({type: CHANGE_DOCFORM, args: {mode: 'merge', value: {id: docId}}});
 				}
 				dispatch({type: SUBMIT_DOCFORM});
+				afterSave();
 				api.upload(docId, fileFormData,
 					(files) => {
 						if(files) dispatch({type: UPLOAD, docId, files});

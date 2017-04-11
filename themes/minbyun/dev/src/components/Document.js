@@ -14,7 +14,7 @@ class Document extends Component {
 	}
 	componentDidMount(){
 		if(!_isCommon(this.props.role, ['administrator', 'view'])){
-			this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return null;
+			this.props.showMessage({content: '권한이 없습니다.', callback: this.props.router.goBack}); return null;
 		}
 		this.props.initialize();
 		if(!this.props.openDocs[this.props.params.id]){

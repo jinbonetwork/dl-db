@@ -19,7 +19,7 @@ const initialState = {
 	searchResult: [],
 	bookmarks: [],
 	history: [],
-	message: {content: '', callback: undefined},
+	message: {content: '', callback: undefined, className: ''},
 	showProc: false,
 	window: {width: 0, height: 0},
 	login: {
@@ -57,7 +57,7 @@ const dlDb = (state = initialState, action) => {
 		case RECEIVE_DOC_FIELD_DATA:
 			return update(state, {docFieldData: {$set: refineDocFData(action.originDocFData)}});
 		case SHOW_MESSAGE:
-			return update(state, {message: {$set: {content: action.message, callback: action.callback}}});
+			return update(state, {message: {$set: update(initialState.message, {$merge: action.args})}});
 		case HIDE_MESSAGE:
 			return update(state, {message: {$set: {content: '', callback: null}}});
 		case SHOW_PROCESS:
