@@ -6,8 +6,8 @@ import {_mapO, _wrap, _isCommon} from '../accessories/functions';
 
 class FileText extends Component {
 	componentDidMount(){
-		if(!_isCommon([this.props.role], ['administrator', 'view'])){
-			this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return;
+		if(!_isCommon(this.props.role, ['administrator', 'view'])){
+			this.props.showMessage({content: '권한이 없습니다.', callback: this.props.router.goBack}); return;
 		}
 		const {docId, fileId} = this.props.params;
 		if(this.props.openDocs[docId]){
@@ -18,12 +18,14 @@ class FileText extends Component {
 	}
 	getFile(){
 		const {docId, fileId} = this.props.params;
-		if(!this.props.openDocs[docId].owner){this.props.showMessage('권한이 없습니다.', this.props.router.goBack); return;}
+		if(!this.props.openDocs[docId].owner){
+			this.props.showMessage({content: '권한이 없습니다.', callback: this.props.router.goBack}); return;
+		}
 		//extract file infomation ////
 		let files = extractFileData(this.props.openDocs[docId], this.props.fData).file;
 		let theFile = files.find((f) => (f.fid == fileId));
 		if(!theFile || (theFile.status != 'parsed' && theFile.status != 'unparsed')){
-			this.props.showMessage('파일 텍스트가 존재하지 않습니다.', this.props.router.goBack); return;
+			this.props.showMessage({content: '파일 텍스트가 존재하지 않습니다.', callback: this.props.router.goBack}); return;
 		}
 		this.props.onChange(theFile);
 		// get the file text ////
