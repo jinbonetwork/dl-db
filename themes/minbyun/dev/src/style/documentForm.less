@@ -89,6 +89,13 @@
 	.scroll-box > .scroll-box__track > .scroll-box__handle {
 		background: transparent;
 	}
+	.form__slug-email .form__col0:after,
+	.form__slug-phone .form__col0:after {
+		content: '(필수아님)';
+		display: block;
+		font-size: 0.7em;
+		color: lighten(@font-color, 15%);
+	}
 }
 .docform .form {
 	width: 100%;
@@ -109,6 +116,10 @@
 	.field-content input {
 		width: 100%;
 		height: 3em;
+	}
+	.field-content .dateform__year,
+	.field-content .dateform__month {
+		text-align: center;
 	}
 	.field-content .dateform__year {
 		width: 5em;

@@ -54,7 +54,8 @@ const DocFormContainer = connect(
 		focused: state.documentForm.focused,
 		isSaving: state.documentForm.isSaving,
 		parseState: state.documentForm.parseState,
-		courts: state.documentForm.courts
+		courts: state.documentForm.courts,
+		userProfile: state.userProfile.openProfile,
 	}),
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeDocForm()),
@@ -69,7 +70,8 @@ const DocFormContainer = connect(
 		fetchParseState: (args) => dispatch(dlDbActions.fetchParseState(args)),
 		renewFileStatus: (args) => dispatch(dlDbActions.renewFileStatus(args)),
 		onSearchMember: (args) => dispatch(dlDbActions.searchMember(args)),
-		fetchCourts: () => dispatch(dlDbActions.fetchCourts())
+		fetchCourts: () => dispatch(dlDbActions.fetchCourts()),
+		fetchUserProfile: () => dispatch(dlDbActions.fetchUserProfile())
 	})
 )(DocumentForm);
 

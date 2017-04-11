@@ -36,16 +36,14 @@ const dispatchDocFieldData = (dispatch) => {
 	);
 };
 const actionCreators = {
-	fetchRootData(){
-		return (dispatch) => {
-			api.fetchRootData((rootData) => {
-				dispatch({type: RECEIVE_ROOT_DATA, rootData});
-				if(rootData.role){
-					dispatchDocFieldData(dispatch);
-				}
-			}, (error) => dispatchError(dispatch, error));
-		}
-	},
+	fetchRootData(){ return (dispatch) => {
+		api.fetchRootData((rootData) => {
+			dispatch({type: RECEIVE_ROOT_DATA, rootData});
+			if(rootData.role){
+				dispatchDocFieldData(dispatch);
+			}
+		}, (error) => dispatchError(dispatch, error));
+	}},
 	showMessage(message, callback){
 		return {type: SHOW_MESSAGE, message, callback};
 	},

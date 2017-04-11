@@ -14,7 +14,7 @@ class DocListItem extends Component {
 	sideDispNames(){
 		const fProps = this.props.fData.fProps;
 		return {
-			date: (fProps.date ? '작성일' : null),
+			date: (fProps.date ? '생성일' : null),
 			number: (fProps.number ? fProps.number.dispName : null),
 			committee: (fProps.committee ? fProps.committee.dispName : null),
 			name: (fProps.name ? fProps.name.dispName : null)

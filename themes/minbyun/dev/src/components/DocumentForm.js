@@ -6,7 +6,7 @@ import update from 'react-addons-update';
 import api from '../api/dlDbApi';
 import {extractFileData, makeDocFormData, makeFileFormData, checkIfParsing, doAfterReceiveParseState, getFilesAfterUpload
 } from '../fieldData/docFieldData';
-import {_forIn, _isEmpty, _mapOO, _isCommon} from '../accessories/functions';
+import {_forIn, _isEmpty, _mapOO, _isCommon, _wrap} from '../accessories/functions';
 
 class DocumentForm extends Component {
 	constructor(){
@@ -17,7 +17,6 @@ class DocumentForm extends Component {
 		if(!_isCommon(this.props.role, ['administrator', 'write'])){
 			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
 		}
-		this.props.fetchCourts();
 		this.initailize();
 	}
 	componentDidUpdate(prevProps){
@@ -27,12 +26,16 @@ class DocumentForm extends Component {
 		if(!this.intvOfRqstParseState){
 			if(checkIfParsing(this.props.doc, this.props.fData)) this.rqstParseState();
 		}
+		if(!prevProps.params.id && !prevProps.userProfile.name && this.props.userProfile.name){
+			this.insertDefault();
+		}
 	}
 	componentWillUnmount(){
 		clearInterval(this.intvOfRqstParseState);
 	}
 	initailize(){
 		const id = this.props.params.id;
+		if(_isEmpty(this.props.courts)) this.props.fetchCourts();
 		if(id){
 			if(this.props.openDocs[id]){
 				this.props.onChange({mode: 'merge', value: this.props.openDocs[id]});
@@ -42,11 +45,28 @@ class DocumentForm extends Component {
 				});
 			}
 		} else {
-			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
+			if(this.props.userProfile.name){
+				this.insertDefault();
+			} else {
+				this.props.fetchUserProfile();
+			}
 		}
 		if(!this.intvOfRqstParseState) clearInterval(this.intvOfRqstParseState);
 		this.intvOfRqstParseState = undefined;
 		this.props.initialize();
+	}
+	insertDefault(){
+		let date = new Date();
+		this.props.onChange({
+			mode: 'merge',
+			value: update(this.props.fData.empty, {$merge: {
+				date: {year: date.getFullYear(), month: date.getMonth()+1},
+				name: this.props.userProfile.name,
+				class: this.props.userProfile.class,
+				email: this.props.userProfile.email,
+				phone: this.props.userProfile.phone
+			}})
+		});
 	}
 	rqstParseState(){
 		this.intvOfRqstParseState = setInterval(() => {
@@ -66,16 +86,23 @@ class DocumentForm extends Component {
 		}, 1000);
 	}
 	customize(){ return {
-		rowsBeforeSlug: (this.props.window.width > SCREEN.sMedium ?
-			{
-				doctype: <tr><td></td><td><h2>필수입력사항</h2></td></tr>,
-				tag: <tr><td></td><td><h2>선택입력사항</h2></td></tr>
-			} :
-			{
-				doctype: <tr><td><h2>필수입력사항</h2></td></tr>,
-				tag: <tr><td><h2>선택입력사항</h2></td></tr>
+		rowsBeforeSlug: _wrap(() => {
+			let firstRequired, firstElective;
+			for(let slug in this.props.doc){
+				if(!firstRequired && this.props.fData.fProps[slug].required === true) firstRequired = slug;
+				if(!firstElective && this.props.fData.fProps[slug].required === false) firstElective = slug;
 			}
-		),
+			return (this.props.window.width > SCREEN.sMedium ?
+				{
+					[firstRequired]: <tr><td></td><td><h2>필수입력사항</h2></td></tr>,
+					[firstElective]: <tr><td></td><td><h2>선택입력사항</h2></td></tr>
+				} :
+				{
+					[firstRequired]: <tr><td><h2>필수입력사항</h2></td></tr>,
+					[firstElective]: <tr><td><h2>선택입력사항</h2></td></tr>
+				}
+			);
+		}),
 		checkHiddenBySlug: {
 			trial: (slug) => {
 				let doctype = this.props.fData.terms[this.props.doc.doctype].slug;
@@ -160,7 +187,6 @@ class DocumentForm extends Component {
 		let className = (this.props.doc.id > 0 ? 'docform--edit' : 'docform--new');
 		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
-		let fieldData = this.props.fData;
 		return (
 			<div className={'docform '+className}>
 				<h1>{title}</h1>
@@ -170,7 +196,7 @@ class DocumentForm extends Component {
 						<td>
 							<Form
 								doc={this.props.doc}
-								fieldData={fieldData}
+								fieldData={this.props.fData}
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
 								submitLabel={submitLabel}
@@ -195,6 +221,7 @@ DocumentForm.propTypes = {
 	fData: PropTypes.object.isRequired,
 	doc: PropTypes.object.isRequired,
 	courts: PropTypes.array.isRequired,
+	userProfile: PropTypes.object.isRequired,
 	openDocs: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
@@ -213,6 +240,7 @@ DocumentForm.propTypes = {
 	renewFileStatus: PropTypes.func.isRequired,
 	onSearchMember: PropTypes.func.isRequired,
 	fetchCourts: PropTypes.func.isRequired,
+	fetchUserProfile: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired
