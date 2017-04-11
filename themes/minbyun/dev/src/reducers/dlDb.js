@@ -19,7 +19,7 @@ const initialState = {
 	searchResult: [],
 	bookmarks: [],
 	history: [],
-	message: {content: '', callback: undefined, className: ''},
+	message: {content: '', callback: undefined, mode: undefined}, // mode: fadeout
 	showProc: false,
 	window: {width: 0, height: 0},
 	login: {

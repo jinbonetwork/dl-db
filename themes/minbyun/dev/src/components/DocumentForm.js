@@ -181,13 +181,14 @@ class DocumentForm extends Component {
 			let oldFiles = extractFileData(oldDoc, fData);
 			let docFormData = makeDocFormData(doc, fData);
 			let fileFormData = makeFileFormData(doc, fData);
+			let isModification = (this.props.params.id > 0 || this.props.doc.id > 0);
 			this.props.onSubmit({
 				doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
 				isAdmin: _isCommon(this.props.role, ['administrator']),
 				afterSave: () => {
 					this.props.showMessage({
-						content: (this.props.doc.id > 0 ? '수정되었습니다' : '등록되었습니다'),
-						className: 'message--save'
+						content: (isModification ? '수정되었습니다' : '등록되었습니다'),
+						mode: 'fadeout'
 					});
 				},
 				afterUpload: (docId, files) => {
@@ -199,7 +200,7 @@ class DocumentForm extends Component {
 	}
 	render(){
 		let className = (this.props.doc.id > 0 ? 'docform--edit' : 'docform--new');
-		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
+		let title = (this.props.params.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		return (
 			<div className={'docform '+className}>

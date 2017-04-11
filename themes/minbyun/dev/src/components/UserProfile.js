@@ -22,7 +22,6 @@ class UserProfile extends Component {
 		errorMessageBySlug: {
 			confirmPw: '비밀번호를 다시 확인하세요'
 		},
-		/*
 		checkHiddenBySlug: {
 			password: (slug) => !this.props.isPwShown,
 			confirmPw: (slug) => !this.props.isPwShown
@@ -37,29 +36,13 @@ class UserProfile extends Component {
 		afterSubmitBtn: (
 			<p>※ '회원정보 변경'을 클릭해야 변경한 정보가 저장됩니다.</p>
 		),
-		rowsAfter: (this.props.window.width > SCREEN.small ?
-			[
-				<tr key="pw" className="form__field form__role">
-					<td className="form__col0">비밀번호</td>
-					<td className="form__col1">비밀번호를 변경하시려면 <span style={{display: 'inline-block', backgroundColor: '#989cff', color: '#fff', padding: '0.5em 0.5em'}}>여기를 클릭하세요</span></td>
-				</tr>,
-				<tr key="role" className="form__field form__role">
-					<td className="form__col0">권한</td>
-					<td className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</td>
-				</tr>
-			] :
-			[
-				<tr className="form__field form__role"><td>
-					<div className="form__col0">권한</div>
-					<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
-				</td></tr>
-			]
-		)*/
+		/*
 		rowsBefore: (
 			<tr className="form__switch"><td colSpan="2">
 				<a>회원정보</a><a>비밀번호</a>
 			</td></tr>
 		),
+		*/
 		rowsAfter: (this.props.window.width > SCREEN.small ?
 			<tr key="role" className="form__field form__role">
 				<td className="form__col0">권한</td>
@@ -83,7 +66,10 @@ class UserProfile extends Component {
 			//저장하는 동안 갱신된 내용이 있을 수 있기 때문에, 메타 데이터를 제외한 저장 결과를 반영해서는 안된다.
 			let oldProfile = this.props.oldProfile;
 			let pfFormData = makeUserFormData(this.props.profile, this.props.fData);
-			this.props.onSubmit({oldProfile, pfFormData});
+			this.props.onSubmit({
+				oldProfile, pfFormData,
+				afterSave: () => this.props.showMessage({content: '수정되었습니다', mode: 'fadeout'})
+			});
 		}
 	}
 	render(){

@@ -3,6 +3,7 @@ import {Link} from 'react-router';
 import MainMenu from './MainMenu';
 import Login from './Login';
 import SearchBar from './SearchBar';
+import Message from './Message';
 import {SCREEN} from '../constants';
 import jQ from 'jquery';
 import {_wrap} from '../accessories/functions';
@@ -26,25 +27,8 @@ class DlDb extends Component {
 	handleResize(){
 		this.props.onResize({width: window.innerWidth, height: window.innerHeight});
 	}
-	handleClick(which){
-		if(which == 'message'){
-			this.props.hideMessage();
-			if(this.props.message.callback) this.props.message.callback();
-		}
-	}
 	render(){
-		const message = this.props.message.content && (
-			<div className={'message' + (this.props.message.className ? ' '+this.props.message.className : '')}
-				onClick={this.handleClick.bind(this, 'message')}
-			>
-				<div></div>
-				<div className="message__content" tabIndex="0" ref="message"
-					onKeyDown={this.handleClick.bind(this, 'message')}
-				>
-					{this.props.message.content}
-				</div>
-			</div>
-		);
+		const message = this.props.message.content && <Message {...this.props.message} hideMessage={this.props.hideMessage} />;
 		const process = this.props.showProc && (
 			<div className="process">
 				<div></div>
@@ -56,8 +40,8 @@ class DlDb extends Component {
 				const child = this.props.children;
 				const searchBar = (
 					<SearchBar mode={(child ? null : 'content')} {...this.props.searchBar} fData={this.props.docFieldData}
-						window={this.props.window} onChange={this.props.onChangeQuery} changeSearchBarState={this.props.changeSearchBarState}
-						showMessage={this.props.showMessage}
+						window={this.props.window} onChange={this.props.onChangeQuery}
+						changeSearchBarState={this.props.changeSearchBarState} showMessage={this.props.showMessage}
 					/>
 				);
 				return [

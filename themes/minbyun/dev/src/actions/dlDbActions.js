@@ -362,10 +362,13 @@ const actionCreators = {
 		return {type: FOCUSIN_USER_PROFILE, fSlug, index};
 	},
 	submitUserProfile(args){ return (dispatch) => {
-		const {oldProfile, pfFormData} = args;
+		const {oldProfile, pfFormData, afterSave} = args;
 		dispatch({type: COMPLETE_USER_PROFILE});
 		api.submitUserProfile( pfFormData,
-			() => dispatch({type: SUBMIT_USER_PROFILE}),
+			() => {
+				dispatch({type: SUBMIT_USER_PROFILE});
+				afterSave();
+			},
 			(error) => {
 				dispatch({type: COMPLETE_USER_PROFILE, oldProfile});
 				dispatch({type: CHANGE_USER_PROFILE, args: {mode: 'merge', value: oldProfile}});

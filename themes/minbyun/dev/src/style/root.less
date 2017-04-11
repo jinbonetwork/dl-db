@@ -206,11 +206,17 @@ div {
 		cursor: pointer;
 	}
 }
-.message--save {
+.message--fadeout {
+	animation: message--fadeout 2s;
+	animation-timing-function: ease-out;
 	.message__content {
 		color: @minor-color-2;
 		background-color: @main-color;
 	}
+}
+@keyframes message--fadeout {
+	from {opacity: 1;}
+	to {opacity: 0;}
 }
 .process {
 	& > div:first-child {
