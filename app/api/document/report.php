@@ -11,8 +11,8 @@ class report extends \DLDB\Controller {
 		if(!$this->params['id']) {
 			\DLDB\RespondJson::ResultPage( array( -1, '문서번호를 지정하세요') );
 		}
-		$this->document = \DLDB\Document::get($this->params['id'],'view');
-		if(!$this->document) {
+		$document = \DLDB\Document::get($this->params['id'],'view');
+		if(!$document) {
 			\DLDB\RespondJson::ResultPage( array( -1, '존재하지 않는 문서입니다') );
 		}
 
@@ -20,12 +20,12 @@ class report extends \DLDB\Controller {
 			\DLDB\RespondJson::ResultPage( array( -2, '신고 내용을 적어주세요') );
 		}
 		$member = \DLDB\Members::getByUid($this->user['uid']);
-		if($this->document['uid']) {
+		if($document['uid']) {
 			$document_member = \DLDB\Members::getByUid($document['uid']);
 		}
 		$admins = \DLDB\Members\DBM::getAdminID();
 		if( @count($admins) > 0 ) {
-			$args['name'] = ($document_member['name'] ? ? $document_member['name'] : '익명의 회원');
+			$args['name'] = ($document_member['name'] ? $document_member['name'] : '익명의 회원');
 			$args['reporter_name'] = $member['name'];
 			$args['reporter_email'] = $member['email'];
 			$args['subject'] = $member['name']."님이 ".$context->getProperty('service.title')." 에 신고내용을 접수하셨습니다.";
