@@ -214,6 +214,8 @@ class User extends \DLDB\Objects {
 		eval($eval_str);
 
 		$dbm->execute($que,$q_args);
+
+		return $member_srl;
 	}
 
 	public static function delete($member_srl) {
