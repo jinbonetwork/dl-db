@@ -17,9 +17,6 @@ class DocumentForm extends Component {
 		if(!_isCommon(this.props.role, ['administrator', 'write'])){
 			this.props.showMessage('권한이 없습니다.', () => this.props.router.goBack()); return null;
 		}
-		 this.props.fetchCourts();
-		//if(_isEmpty(this.props.courts))
-		//if(_isEmpty(this.props.openProfile)) this.props.fetchUserProfile();
 		this.initailize();
 	}
 	componentDidUpdate(prevProps){
@@ -29,12 +26,16 @@ class DocumentForm extends Component {
 		if(!this.intvOfRqstParseState){
 			if(checkIfParsing(this.props.doc, this.props.fData)) this.rqstParseState();
 		}
+		if(!prevProps.params.id && !prevProps.userProfile.name && this.props.userProfile.name){
+			this.insertDefault();
+		}
 	}
 	componentWillUnmount(){
 		clearInterval(this.intvOfRqstParseState);
 	}
 	initailize(){
 		const id = this.props.params.id;
+		if(_isEmpty(this.props.courts)) this.props.fetchCourts();
 		if(id){
 			if(this.props.openDocs[id]){
 				this.props.onChange({mode: 'merge', value: this.props.openDocs[id]});
@@ -44,11 +45,28 @@ class DocumentForm extends Component {
 				});
 			}
 		} else {
-			this.props.onChange({mode: 'merge', value: this.props.fData.empty});
+			if(this.props.userProfile.name){
+				this.insertDefault();
+			} else {
+				this.props.fetchUserProfile();
+			}
 		}
 		if(!this.intvOfRqstParseState) clearInterval(this.intvOfRqstParseState);
 		this.intvOfRqstParseState = undefined;
 		this.props.initialize();
+	}
+	insertDefault(){
+		let date = new Date();
+		this.props.onChange({
+			mode: 'merge',
+			value: update(this.props.fData.empty, {$merge: {
+				date: {year: date.getFullYear(), month: date.getMonth()+1},
+				name: this.props.userProfile.name,
+				class: this.props.userProfile.class,
+				email: this.props.userProfile.email,
+				phone: this.props.userProfile.phone
+			}})
+		});
 	}
 	rqstParseState(){
 		this.intvOfRqstParseState = setInterval(() => {
@@ -203,6 +221,7 @@ DocumentForm.propTypes = {
 	fData: PropTypes.object.isRequired,
 	doc: PropTypes.object.isRequired,
 	courts: PropTypes.array.isRequired,
+	userProfile: PropTypes.object.isRequired,
 	openDocs: PropTypes.object.isRequired,
 	focused: PropTypes.object.isRequired,
 	isSaving: PropTypes.bool,
@@ -221,6 +240,7 @@ DocumentForm.propTypes = {
 	renewFileStatus: PropTypes.func.isRequired,
 	onSearchMember: PropTypes.func.isRequired,
 	fetchCourts: PropTypes.func.isRequired,
+	fetchUserProfile: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

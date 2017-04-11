@@ -26,7 +26,7 @@ class UserProfile extends Component {
 			password: (slug) => !this.props.isPwShown,
 			confirmPw: (slug) => !this.props.isPwShown
 		},
-		/*beforeSubmitBtn: (
+		beforeSubmitBtn: (
 			<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
 				checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
 			>
@@ -35,7 +35,8 @@ class UserProfile extends Component {
 		),
 		afterSubmitBtn: (
 			<p>※ '회원정보 변경'을 클릭해야 변경한 정보가 저장됩니다.</p>
-		),*/
+		),
+		/*
 		rowsAfter: (this.props.window.width > SCREEN.small ?
 			[
 				<tr key="pw" className="form__field form__role">
@@ -53,6 +54,16 @@ class UserProfile extends Component {
 					<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
 				</td></tr>
 			]
+		)*/
+		rowsAfter: (this.props.window.width > SCREEN.small ?
+			<tr key="role" className="form__field form__role">
+				<td className="form__col0">권한</td>
+				<td className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</td>
+			</tr> :
+			<tr className="form__field form__role"><td>
+				<div className="form__col0">권한</div>
+				<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
+			</td></tr>
 		)
 	}}
 	handleChange(which, arg1st, arg2nd){

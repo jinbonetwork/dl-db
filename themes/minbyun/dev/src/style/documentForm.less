@@ -89,6 +89,13 @@
 	.scroll-box > .scroll-box__track > .scroll-box__handle {
 		background: transparent;
 	}
+	.form__slug-email .form__col0:after,
+	.form__slug-phone .form__col0:after {
+		content: '(필수아님)';
+		display: block;
+		font-size: 0.7em;
+		color: lighten(@font-color, 15%);
+	}
 }
 .docform .form {
 	width: 100%;
