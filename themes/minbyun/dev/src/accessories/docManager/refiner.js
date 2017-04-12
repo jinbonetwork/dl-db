@@ -100,7 +100,11 @@ const refineDoc = (origin, fData, refineDocBySlug = {}, refineDocByType = {}) =>
 				case 'char': case 'tag': case 'email': case 'phone': case 'password':
 					return originVal;
 				case 'date':
-					return {year: ''+parseInt(originVal.year), month: ''+parseInt(originVal.month)}
+					if(fProp.form != 'text'){
+						return {year: ''+parseInt(originVal.year), month: ''+parseInt(originVal.month)};
+					} else {
+						return originVal;
+					}
 				case 'taxonomy':
 					value = _mapO(originVal, (tid) => parseInt(tid));
 					return (fProp.multiple ? value : value[0]);
