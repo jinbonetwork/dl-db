@@ -21,6 +21,25 @@
 	.user-profile__table-margin {
 		width: 0;
 	}
+	.form__menu {
+		padding-bottom: 5%;
+	}
+	.form__menu a {
+		display: inline-block;
+		padding: 0.5em;
+		border: solid 1px @main-color;
+		margin-bottom: 1.5em;
+		color: @main-color;
+		cursor: pointer;
+	}
+	.form__menu a + a {
+		border-left: 0;
+	}
+	.form__menu a.form__menu-item--selected {
+		color: @minor-color-2;
+		background-color: @main-color;
+		cursor: auto;
+	}
 	.form__role .form__col1 {
 		line-height: 1.2em;
 		padding: 0.9em 0.5em;
@@ -44,7 +63,7 @@
 			padding: 0.2em;
 		}
 	}
-	.form__field:first-child td {
+	.form__field:nth-child(2) td {
 		border-top: solid 1px @main-color;
 	}
 	.form__slug-committee .field-content {
@@ -85,10 +104,8 @@
 		border-style: solid;
 		border-width: 1px;
 		border-color: @main-color;
-		//background-color: @main-color;
-		//color: @minor-color-2;
-		background-color: @minor-color-2;
-		color: @main-color;
+		background-color: @main-color;
+		color: @minor-color-2;
 		line-height: 2.5em;
 		width: 8em;
 		text-align: center;
@@ -99,7 +116,7 @@
 	.form__submit {
 		cursor: pointer;
 		&:focus {
-			background-color: @focus-color-1;
+			background-color: @focus-color-2;
 		}
 	}
 	.form__submit-wrap p {
@@ -127,6 +144,14 @@
 			display: inline;
 			margin-left: 0;
 		}
+	}
+	.form__required.form__slug-password .form__col0 span,
+	.form__required.form__slug-confirmPw .form__col0 span {
+		color: @font-color;
+	}
+	.form__required.form__slug-password .form__col0:after,
+	.form__required.form__slug-confirmPw .form__col0:after {
+		content: none;
 	}
 }
 .user-profile .form__submit-wrap .check {

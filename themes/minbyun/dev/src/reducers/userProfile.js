@@ -18,7 +18,7 @@ const userProfile = (state = initialState, action) => {
 	switch(action.type){
 		case INITIALIZE_USER_PROFILE:
 			return update(state, {$merge: {
-				focused: initialState.focused,
+				focused: {fSlug: 'name', index: undefined},
 				isSaving: initialState.isSaving,
 				isPwShown: initialState.isPwShown
 			}});

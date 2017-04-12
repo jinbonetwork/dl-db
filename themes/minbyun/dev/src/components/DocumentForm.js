@@ -17,20 +17,20 @@ class DocumentForm extends Component {
 		if(!_isCommon(this.props.role, ['administrator', 'write'])){
 			this.props.showMessage({
 				content: '권한이 없습니다.',
-				callback: () => this.props.router.goBack()
+				callback: this.props.router.goBack
 			});
 			return null;
 		}
 		this.initailize();
 	}
 	componentDidUpdate(prevProps){
-		if(prevProps.params.id != this.props.params.id){
+		if(this.props.params.id !== 'temp' && prevProps.params.id != this.props.params.id){
 			this.initailize();
 		}
 		if(!this.intvOfRqstParseState){
 			if(checkIfParsing(this.props.doc, this.props.fData)) this.rqstParseState();
 		}
-		if(!prevProps.params.id && !prevProps.userProfile.name && this.props.userProfile.name){
+		if((!prevProps.params.id || prevProps.params.id === '0') && !prevProps.userProfile.name && this.props.userProfile.name){
 			this.insertDefault();
 		}
 	}
@@ -41,7 +41,7 @@ class DocumentForm extends Component {
 	initailize(){
 		const id = this.props.params.id;
 		if(_isEmpty(this.props.courts)) this.props.fetchCourts();
-		if(id){
+		if(id > 0){
 			if(this.props.openDocs[id]){
 				this.props.onChange({mode: 'merge', value: this.props.openDocs[id]});
 			} else {
@@ -176,12 +176,12 @@ class DocumentForm extends Component {
 		} else {
 			window.onbeforeunload = () => ('파일업로드가 완료되지 않았습니다.');
 			const [paramId, doc, fData] = [this.props.params.id, this.props.doc, this.props.fData];
-			let oldDoc = (paramId ? this.props.openDocs[paramId] : fData.empty);
+			let oldDoc = (paramId > 0 ? this.props.openDocs[paramId] : fData.empty);
 			let files = extractFileData(doc, fData);
 			let oldFiles = extractFileData(oldDoc, fData);
 			let docFormData = makeDocFormData(doc, fData);
 			let fileFormData = makeFileFormData(doc, fData);
-			let isModification = (this.props.params.id > 0 || this.props.doc.id > 0);
+			let isModification = (paramId > 0 || this.props.doc.id > 0);
 			this.props.onSubmit({
 				doc,  oldDoc, files, oldFiles, docFormData, fileFormData,
 				isAdmin: _isCommon(this.props.role, ['administrator']),
@@ -196,11 +196,12 @@ class DocumentForm extends Component {
 					if(files) this.props.onChange({mode: 'merge', value: getFilesAfterUpload(files, this.props.doc, this.props.fData)});
 				}
 			});
+			if(!paramId || paramId === '0') this.props.router.push('/document/temp/edit');
 		}
 	}
 	render(){
 		let className = (this.props.doc.id > 0 ? 'docform--edit' : 'docform--new');
-		let title = (this.props.params.id > 0 ? '자료 수정하기' : '자료 입력하기');
+		let title = (this.props.doc.id > 0 ? '자료 수정하기' : '자료 입력하기');
 		let submitLabel = (this.props.doc.id > 0 ? '수정' : '등록');
 		return (
 			<div className={'docform '+className}>

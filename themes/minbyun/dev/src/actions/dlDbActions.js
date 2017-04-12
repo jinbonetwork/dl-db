@@ -97,8 +97,8 @@ const actionCreators = {
 		dispatch({type: SHOW_PROCESS});
 		api.logout(
 			() => {
-				dispatch({type: HIDE_PROCESS});
-				dispatch({type: LOGOUT});
+				//dispatch({type: HIDE_PROCESS});
+				//dispatch({type: LOGOUT});
 				if(afterLogout) afterLogout();
 			},
 			(error) => {

@@ -5,7 +5,7 @@ import CheckBox from '../accessories/CheckBox';
 import Check from '../accessories/Check';
 import {makeUserFormData} from '../fieldData/userFieldData';
 import {SCREEN, ROLE_MAP} from '../constants';
-import {_isEmpty} from '../accessories/functions';
+import {_isEmpty, _wrap} from '../accessories/functions';
 
 class UserProfile extends Component {
 	componentDidMount(){
@@ -24,8 +24,14 @@ class UserProfile extends Component {
 		},
 		checkHiddenBySlug: {
 			password: (slug) => !this.props.isPwShown,
-			confirmPw: (slug) => !this.props.isPwShown
+			confirmPw: (slug) => !this.props.isPwShown,
+			name: (slug) => this.props.isPwShown,
+			class: (slug) => this.props.isPwShown,
+			email: (slug) => this.props.isPwShown,
+			phone: (slug) => this.props.isPwShown,
+			committee: (slug) => this.props.isPwShown
 		},
+		/*
 		beforeSubmitBtn: (
 			<Check selected={(this.props.isPwShown ? ['checked'] : [])} onChange={this.handleChange.bind(this, 'show password')}
 				checkIcon={<i className="pe-7f-check pe-va"></i>} uncheckIcon={<i className="pe-7s-check pe-va"></i>}
@@ -33,32 +39,42 @@ class UserProfile extends Component {
 				<Item value="checked">비밀번호 변경</Item>
 			</Check>
 		),
-		afterSubmitBtn: (
-			<p>※ '회원정보 변경'을 클릭해야 변경한 정보가 저장됩니다.</p>
-		),
-		/*
-		rowsBefore: (
-			<tr className="form__switch"><td colSpan="2">
-				<a>회원정보</a><a>비밀번호</a>
-			</td></tr>
-		),
 		*/
-		rowsAfter: (this.props.window.width > SCREEN.small ?
-			<tr key="role" className="form__field form__role">
-				<td className="form__col0">권한</td>
-				<td className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</td>
-			</tr> :
-			<tr className="form__field form__role"><td>
-				<div className="form__col0">권한</div>
-				<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
-			</td></tr>
-		)
+		rowsBefore: _wrap(() => {
+			let classNames = [], handleClicks = [];
+			if(this.props.isPwShown){
+				classNames[1] = 'form__menu-item--selected'; handleClicks[0] = this.props.togglePassWordForm;
+			} else {
+				classNames[0] = 'form__menu-item--selected';
+				handleClicks[1] = () => {
+					this.props.onChange({mode: 'merge', value: this.props.openProfile});
+					this.props.togglePassWordForm();
+				}
+			}
+			return (
+				<tr className="form__menu"><td colSpan="2">
+					<a className={classNames[0]} onClick={handleClicks[0]}>회원정보</a>
+					<a className={classNames[1]} onClick={handleClicks[1]}>비밀번호</a>
+				</td></tr>
+			);
+		}),
+		rowsAfter: _wrap(() => {
+			if(!this.props.isPwShown){
+				return (this.props.window.width > SCREEN.small ?
+					<tr key="role" className="form__field form__role">
+						<td className="form__col0">권한</td>
+						<td className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</td>
+					</tr> :
+					<tr className="form__field form__role"><td>
+						<div className="form__col0">권한</div>
+						<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
+					</td></tr>
+				);
+			} else {
+				return null;
+			}
+		})
 	}}
-	handleChange(which, arg1st, arg2nd){
-		if(which == 'show password'){
-			this.props.togglePassWordForm();
-		}
-	}
 	handleSubmit(error){
 		if(error){
 			this.props.showMessage({content: error.message, callback: () => this.props.focusIn(error)});
@@ -84,7 +100,7 @@ class UserProfile extends Component {
 								fieldData={this.props.fData}
 								focused={this.props.focused}
 								isSaving={this.props.isSaving}
-								submitLabel="회원정보 수정"
+								submitLabel={(this.props.isPwShown ? '비밀번호 수정' : '회원정보 수정')}
 								submitSavingLabel="수정 중"
 								window={this.props.window}
 								widthToChangeOneCol={SCREEN.small}
@@ -111,6 +127,7 @@ UserProfile.propTypes = {
 	window: PropTypes.object.isRequired,
 	initialize: PropTypes.func.isRequired,
 	fetchUserProfile: PropTypes.func.isRequired,
+	focusIn: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onBlur: PropTypes.func.isRequired,
 	showMessage: PropTypes.func.isRequired,

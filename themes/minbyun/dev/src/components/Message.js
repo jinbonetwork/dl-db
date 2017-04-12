@@ -8,7 +8,7 @@ class Message extends Component {
 	}
 	handleClick(){
 		this.props.hideMessage();
-		if(this.callback) this.props.callback();
+		if(this.props.callback) this.props.callback();
 	}
 	render(){
 		return (

@@ -77,6 +77,7 @@ const dlDb = (state = initialState, action) => {
 			return update(state, {login: {agreement: {$set: action.agreement}}});
 		case AGREE_WITH_AGREEMENT:
 			return update(state, {login: {doAgree: {$set: true}}});
+		/*
 		case LOGOUT:
 			return update(state, {$apply: (curState) =>
 				update(initialState, {
@@ -85,6 +86,7 @@ const dlDb = (state = initialState, action) => {
 					login: {type: {$set: curState.login.type}}
 				})
 			});
+		*/
 		case CHANGE_SEARCHBAR_STATE:
 			return update(state, {searchBar: {$merge: action.value}});
 		case ADD_DOC_TO_OPEN_DOCS:
