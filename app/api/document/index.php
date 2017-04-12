@@ -7,7 +7,7 @@ class index extends \DLDB\Controller {
 	public function process() {
 		$this->params['output'] = 'json';
 		$context = \DLDB\Model\Context::instance();
-		                
+
 		$fields = \DLDB\Fields::getFields('documents');
 		foreach($fields as $fid => $field) {
 			$this->fields[] = array(
