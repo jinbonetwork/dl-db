@@ -21,7 +21,10 @@ const document = (state = initialState, action) => {
 		case SELECT_IMAGE:
 			return update(state, {selectedImage: {$set: action.index}});
 		case TOGGLE_REPORT_FORM:
-			return update(state, {isReportFormVisible: {$apply: (val) => (!val)}});
+			return update(state, {
+				isReportFormVisible: {$apply: (val) => (!val)},
+				report: {$set: initialState.report}
+			});
 		case CHANGE_REPORT:
 			return update(state, {report: {$set: action.report}});
 		default:
