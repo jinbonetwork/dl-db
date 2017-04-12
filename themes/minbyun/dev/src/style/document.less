@@ -4,6 +4,7 @@
 .document .document__buttons--only-icon
 .document .document__files
 .document .view
+.document__report-form
 -----------------------*/
 
 .document {
@@ -109,15 +110,15 @@
 		color: @minor-color-2;
 		background-color: @main-color;
 	}
-	.document__edit {
+	.document__edit,
+	.document__report {
 		color: @main-color;
 		text-decoration: none;
-	}
-	.document__edit {
 		display: inline-block;
 		line-height: 2em;
 		padding: 0 0.5em;
 		border: solid 1px @main-color;
+		cursor: pointer;
 	}
 	.document__delete {
 		display: inline-block;;
@@ -157,6 +158,10 @@
 	.document__edit {
 		position: relative;
 		top: -2px; left: 5px;
+		border: 0;
+		padding: 0;
+	}
+	.document__report {
 		border: 0;
 		padding: 0;
 	}
@@ -287,5 +292,59 @@
 	}
 	.view__inner-table td + td {
 		border-left-width: 1px;
+	}
+}
+.document__report-form {
+	position: fixed; z-index: 10000;
+	top: 0; left: 0;
+	width: 100vw; height: 100vh;
+	& > div {
+		max-width: 30em;
+		padding: 50vh 1em 0 1em;
+		margin: -10em auto;
+	}
+	& > div > div {
+		position: relative;
+		text-align: right;
+	}
+	.document__report-textarea {
+		background-color: @minor-color-2;
+		min-height: 10em;
+		width: 100%;
+		line-height: 1.5em;
+		padding: 0.5em;
+		border: solid 1px @main-color;
+	}
+	textarea {
+		color: @font-color;
+	}
+	.text-input__placeholder {
+		color: lighten(@font-color, 20%);
+	}
+	.scroll-box > .scroll-box__track > .scroll-box__handle {
+		background: transparent;
+	}
+	.document__close-report {
+		position: absolute;
+		top: -1em; right: -1em;
+		border-radius: 50%;
+		background-color: @main-color;
+		cursor: pointer;
+	}
+	.document__close-report i {
+		font-size: 2em;
+		color: @minor-color-2;
+	}
+	.document__send-report {
+		padding: 0.5em 2em;
+		display: inline-block;
+		border: solid 1px @main-color;
+		background-color: @main-color;
+		color: @minor-color-2;
+		margin-top: 0.5em;
+		cursor: pointer;
+		&:focus {
+			background-color: @focus-color-2;
+		}
 	}
 }

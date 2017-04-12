@@ -102,3 +102,5 @@ export const INITIALIZE_DOCFORM = 'initialize doc form';
 export const INITIALIZE_USER_PROFILE = 'initialize user profile';
 export const SELECT_IMAGE = 'select image';
 export const RECEIVE_COURTS = 'receive courts';
+export const TOGGLE_REPORT_FORM = 'toggle report form';
+export const CHANGE_REPORT = 'change report';

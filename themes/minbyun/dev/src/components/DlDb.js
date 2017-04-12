@@ -34,7 +34,10 @@ class DlDb extends Component {
 				<div></div>
 				<div><i className="pe-7f-config pe-va pe-spin"></i></div>
 			</div>
-		)
+		);
+		const overlay = this.props.showOverlay && (
+			<div className="overlay"></div>
+		);
 		const content = _wrap(() => {
 			if(this.props.docFieldData && this.props.login.doAgree){
 				const child = this.props.children;
@@ -75,6 +78,7 @@ class DlDb extends Component {
 				{content}
 				{message}
 				{process}
+				{overlay}
 			</div>
 		);
 	}
@@ -88,6 +92,7 @@ DlDb.propTypes = {
 		callback: PropTypes.func
 	}).isRequired,
 	showProc: PropTypes.bool,
+	showOverlay: PropTypes.bool,
 	window: PropTypes.object.isRequired,
 	login: PropTypes.object.isRequired,
 	searchBar: PropTypes.object.isRequired,

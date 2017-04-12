@@ -2,7 +2,7 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
 	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
-	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY
+	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, TOGGLE_REPORT_FORM
 } from '../constants';
 import {refineDocFData, refineDoc, refineFile, getFilesAfterUpload} from '../fieldData/docFieldData';
 import update from 'react-addons-update';
@@ -21,6 +21,7 @@ const initialState = {
 	history: [],
 	message: {content: '', callback: undefined, mode: undefined}, // mode: fadeout
 	showProc: false,
+	showOverlay: false,
 	window: {width: 0, height: 0},
 	login: {
 		type: '', id: '', password: '', didLogIn: false, doAgree: false, agreement: ''
@@ -148,6 +149,8 @@ const dlDb = (state = initialState, action) => {
 					params: item.query_string
 				};
 			})}});
+		case TOGGLE_REPORT_FORM:
+			return update(state, {showOverlay: {$apply: (val) => (!val)}});
 		default:
 			return state;
 	}

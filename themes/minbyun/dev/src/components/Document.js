@@ -3,6 +3,7 @@ import {withRouter} from 'react-router';
 import View from '../accessories/docManager/View';
 import ViewElem from '../accessories/docManager/ViewElem';
 import {checkIfParsing, doAfterReceiveParseState} from '../fieldData/docFieldData';
+import {TextArea} from 'react-text-input';
 import LinkIf from '../accessories/LinkIf';
 import {SCREEN} from '../constants';
 import {_isCommon, _mapAO, _mapOO, _wrap, _isEmpty, _interpolate} from '../accessories/functions';
@@ -43,8 +44,18 @@ class Document extends Component {
 			case 'delete-yes':
 				this.props.delelteDoc({docId, afterDelete: this.props.router.goBack}); break;
 			case 'image':
-				this.props.selectImage({index: (arg1st.command == 'select' ? arg1st.index : undefined)});
+				this.props.selectImage({index: (arg1st.command == 'select' ? arg1st.index : undefined)}); break;
+			case 'report':
+			case 'close report form':
+				this.props.toggleReportForm(); break;
+			case 'send report':
+				this.props.sendReport({report: this.props.report, did: docId}); break;
 			default:
+		}
+	}
+	handleChange(type, value){
+		if(type.which == 'write report'){
+			this.props.changeReport(value.target.value);
 		}
 	}
 	rqstParseState(){
@@ -141,7 +152,7 @@ class Document extends Component {
 				<span>수정하기</span>
 			</LinkIf>
 		);
-		const DelDocButton = ( document.owner && ( !this.props.dispBtnOfYesOrNo ?
+		const delDocButton = ( document.owner && ( !this.props.dispBtnOfYesOrNo ?
 			<div className="document__delete">
 				<button type="button" onClick={this.handleClick.bind(this, 'delete')}>
 					<i className="pe-7f-close pe-va"></i>
@@ -153,16 +164,41 @@ class Document extends Component {
 				<button type="button" onClick={this.handleClick.bind(this, 'delete-no')}></button>
 			</div>
 		));
+		const reportButton = ( !document.owner &&
+			<a className="document__report" onClick={this.handleClick.bind(this, 'report')}>
+				<i className="pe-7f-bell pe-va"></i><span>신고하기</span>
+			</a>
+		);
 		const buttons = (
 			<div key="button"
 				className={'document__buttons' + (this.props.window.width <= 500 ? ' document__buttons--only-icon' : '')}>
 				{bookmarkButton}
 				{editButton}
-				{DelDocButton}
+				{delDocButton}
+				{reportButton}
 			</div>
 		);
 		const inContent = _mapOO(document,
 			(fs, value) => value, (fs, value) => !_isCommon([fs], ['title', 'date', 'image', 'file']) && fs
+		);
+		const reportForm = ( this.props.isReportFormVisible &&
+			<div className="document__report-form">
+				<div>
+					<div>
+						<TextArea className="document__report-textarea"
+							placeholder="신고할 내용을 작성하세요"
+							value={this.props.report}
+							onChange={this.handleChange.bind(this, {which: 'write report'})}
+						/>
+						<a className="document__send-report" tabIndex="0" onClick={this.handleClick.bind(this, 'send report')}>
+							신고하기
+						</a>
+						<a className="document__close-report" onClick={this.handleClick.bind(this, 'close report form')}>
+							<i className="pe-7s-close pe-va"></i>
+						</a>
+					</div>
+				</div>
+			</div>
 		);
 		return (
 			<div className="document">
@@ -184,6 +220,7 @@ class Document extends Component {
 						window={this.props.window}
 					/>
 				</div>
+				{reportForm}
 			</div>
 		);
 	}
@@ -195,6 +232,8 @@ Document.propTypes = {
 	parseState: PropTypes.object.isRequired,
 	dispBtnOfYesOrNo: PropTypes.bool,
 	selectedImage: PropTypes.number,
+	isReportFormVisible: PropTypes.bool,
+	report: PropTypes.string,
 	window: PropTypes.object.isRequired,
 	initialize: PropTypes.func.isRequired,
 	fetchParseState: PropTypes.func.isRequired,
@@ -202,6 +241,9 @@ Document.propTypes = {
 	renewFileStatus: PropTypes.func.isRequired,
 	bookmark: PropTypes.func.isRequired,
 	selectImage: PropTypes.func.isRequired,
+	toggleReportForm: PropTypes.func.isRequired,
+	changeReport: PropTypes.func.isRequired,
+	sendReport: PropTypes.func.isRequired,
 	router: PropTypes.shape({
 		push: PropTypes.func.isRequired,
 		goBack: PropTypes.func.isRequired

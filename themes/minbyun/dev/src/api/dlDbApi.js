@@ -9,16 +9,16 @@ const fetch = (method, url, arg2, arg3, arg4) => {
 	axios({method: method, url: url, data: data, timeout: 60000}).then((response) => {
 		if(response.statusText == 'OK'){
 			if(!response.data.hasOwnProperty('error') || response.data.error == 0){
-				succeed(response.data);
+				if(succeed) succeed(response.data);
 			} else {
 				let message = (response.data.message ? response.data.message : response.data);
 				console.error(message);
-				fail({code: response.data.error, message: message});
+				if(fail) fail({code: response.data.error, message: message});
 			}
 		} else {
 			let message = 'Server response was not OK';
 			console.error(message);
-			fail({code: null, message: message});
+			if(fail) fail({code: null, message: message});
 		}
 	})/*
 	.catch((error) => {
@@ -115,6 +115,10 @@ const api = {
 	},
 	fetchCourts(succeed, fail){
 		fetch('get', '/api/taxonomy?cid=4', ({taxonomy}) => succeed(taxonomy[4]), fail);
+	},
+	sendReport(args, succeed, fail){
+		let {report, did} = args;
+		fetch('post', '/api/document/report?id='+did+'&memo='+report, null, succeed, fail);
 	}
 }
 

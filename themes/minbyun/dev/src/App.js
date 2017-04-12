@@ -24,6 +24,7 @@ const DlDbContainer = connect(
 		menuData: state.dlDb.menuData,
 		message: state.dlDb.message,
 		showProc: state.dlDb.showProc,
+		showOverlay: state.dlDb.showOverlay,
 		docFieldData: state.dlDb.docFieldData,
 		window: state.dlDb.window,
 		login: state.dlDb.login,
@@ -83,7 +84,9 @@ const DocContainer = connect(
 		window: state.dlDb.window,
 		dispBtnOfYesOrNo: state.document.dispBtnOfYesOrNo,
 		parseState: state.document.parseState,
-		selectedImage: state.document.selectedImage
+		selectedImage: state.document.selectedImage,
+		isReportFormVisible: state.document.isReportFormVisible,
+		report: state.document.report
 	}),
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeDoc()),
@@ -95,7 +98,10 @@ const DocContainer = connect(
 		bookmark: (args) => dispatch(dlDbActions.bookmark(args)),
 		toggleDelDocButton: (args) => dispatch(dlDbActions.toggleDelDocButton(args)),
 		delelteDoc: (args) => dispatch(dlDbActions.delelteDoc(args)),
-		selectImage: (args) => dispatch(dlDbActions.selectImage(args))
+		selectImage: (args) => dispatch(dlDbActions.selectImage(args)),
+		toggleReportForm: () => dispatch(dlDbActions.toggleReportForm()),
+		changeReport: (report) => dispatch(dlDbActions.changeReport(report)),
+		sendReport: (args) => dispatch(dlDbActions.sendReport(args))
 	})
 )(Document);
 
