@@ -28,6 +28,7 @@
 		display: inline-block;
 		padding: 0.5em;
 		border: solid 1px @main-color;
+		background-color: @minor-color-2;
 		margin-bottom: 1.5em;
 		color: @main-color;
 		cursor: pointer;
@@ -40,11 +41,6 @@
 		background-color: @main-color;
 		cursor: auto;
 	}
-	.form__role .form__col1 {
-		line-height: 1.2em;
-		padding: 0.9em 0.5em;
-		background-color: @minor-color-1;
-	}
 }
 .user-profile .form {
 	width: 100%;
@@ -55,6 +51,11 @@
 			border-top: 0;
 			background-color: @minor-color-2;
 		}
+	}
+	.form__role .form__col1 {
+		line-height: 1.2em;
+		padding: 0.9em 0.5em;
+		background-color: @minor-color-1;
 	}
 	.form__col0 {
 		border-right: solid 1px @main-color;
@@ -95,9 +96,6 @@
 	.form__submit-wrap td {
 		padding-top: 7%;
 		text-align: left;
-		@media screen and (max-width: @small-screen){
-			text-align: center;
-		}
 	}
 	.form__submit, .form__saving {
 		display: inline-block;
@@ -109,6 +107,9 @@
 		line-height: 2.5em;
 		width: 8em;
 		text-align: center;
+		@media screen and (max-width: @small-screen){
+			width: 100%;
+		}
 	}
 	.check + .form__submit, .check + .form__saving {
 		margin-left: 1em;
