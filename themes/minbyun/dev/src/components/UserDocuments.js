@@ -10,6 +10,14 @@ class UserDocuments extends Component {
 	componentDidMount(){
 		this.props.fetchUserDocs(this.props.params.page);
 	}
+	shouldComponentUpdate(nextProps){
+		if(nextProps.params.page > nextProps.lastPage){
+			this.props.router.push('/user/documents/page/'+nextProps.lastPage);
+			return false;
+		} else {
+			return true;
+		}
+	}
 	componentDidUpdate(prevProps){
 		if(prevProps.params.page != this.props.params.page){
 			this.props.fetchUserDocs(this.props.params.page);

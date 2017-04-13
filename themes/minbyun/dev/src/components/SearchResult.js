@@ -9,10 +9,19 @@ import {SCREEN} from '../constants';
 import update from 'react-addons-update';
 
 class SearchResult extends Component {
-	componentDidMount(){
+	componentDidMount(){ console.log();
 		if(!_isEmpty(this.props.location.query)){
 			this.updateSearchQueryAndFetchData();
 		};
+	}
+	shouldComponentUpdate(nextProps){
+		if(nextProps.location.query.page > nextProps.lastPage){
+			let query = update(nextProps.location.query, {page: {$set: nextProps.lastPage}});
+			this.props.router.push('/search'+this.params(query));
+			return false;
+		} else {
+			return true;
+		}
 	}
 	componentDidUpdate(prevProps){
 		if(JSON.stringify(prevProps.location.query) != JSON.stringify(this.props.location.query)){
