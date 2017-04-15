@@ -20,11 +20,11 @@ const fetch = (method, url, arg2, arg3, arg4) => {
 			console.error(message);
 			if(fail) fail({code: null, message: message});
 		}
-	})/*
+	})
 	.catch((error) => {
 		console.error(error.message);
-		fail({code: null, message: error.message});
-	})*/;
+		if(fail) fail({code: null, message: error.message});
+	});
 };
 
 const api = {

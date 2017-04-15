@@ -15,12 +15,14 @@ import {_isEmpty} from '../accessories/functions';
 
 const dispatchError = (dispatch, error) => {
 	if(error.code !== -9999){
-		dispatch({type: SHOW_MESSAGE, message: error.message});
+		dispatch({type: SHOW_MESSAGE, args: {content: error.message}});
 	} else {
 		dispatch({
 			type: SHOW_MESSAGE,
-			message: '서버와의 연결이 끊어졌습니다. 다시 로그인해주세요.',
-			callback: () => dispatch({type: SHOW_LOGIN})
+			args: {
+				content: '서버와의 연결이 끊어졌습니다. 다시 로그인해주세요.',
+				callback: () => dispatch({type: SHOW_LOGIN})
+			}
 		});
 	}
 };
@@ -68,8 +70,10 @@ const actionCreators = {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({
 					type: SHOW_MESSAGE,
-					message: '로그인 정보가 올바르지 않습니다.',
-					callback: failLogin
+					args: {
+						content: '로그인 정보가 올바르지 않습니다.',
+						callback: failLogin
+					}
 				});
 			}
 		}, (error) => dispatchError(dispatch, error));
