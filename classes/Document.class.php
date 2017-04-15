@@ -256,12 +256,8 @@ class Document extends \DLDB\Objects {
 
 		$dbm->execute($que,$q_args);
 
-		$update_parse = false;
 		if( is_array($del_files) ) {
 			foreach($del_files as $d_fd => $d_file) {
-				if(!preg_match("/^image/i",$d_file['mimetype'])) {
-					$update_parse = true;
-				}
 				\DLDB\Files::deleteFile($d_fd);
 				\DLDB\Files::unlinkFile(DLDB_DATA_PATH.$d_file['filepath']);
 			}
@@ -279,17 +275,14 @@ class Document extends \DLDB\Objects {
 				}
 			}
 		}
-		if( $update_parse && !$new_parse ) {
-			\DLDB\Parser::insert($args['id'],$args,$memo);
-		}
 
 		if( is_array($taxonomy_map) ) {
 			if( $fieldquery->reBuildTaxonomy('documents', $args['id'], $taxonomy_map, (!$new_parse ? $args : ''), (!$new_parse ? $memo : '')) < 0 ) {
 				return -1;
 			}
-			if( ( !$update_parse && !$new_parse ) && $fieldquery->requireIndex() ) {
-				\DLDB\Parser::insert($args['id'],$args,$memo);
-			}
+		}
+		if(!$new_parse || $fieldquery->requireIndex()) {
+			\DLDB\Parser::insert($args['id'],$args,$memo);
 		}
 
 		if( $new_parse ) {
