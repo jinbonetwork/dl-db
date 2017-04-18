@@ -260,6 +260,12 @@ class Elastic extends \DLDB\Objects {
 						'type' => $property_type,
 						'index' => 'not_analyzed'
 					);
+					if($field['sefield'] == 2) {
+						$default_properties['@timestamp'] = array(
+							'type' => 'date',
+							'format' => "yyyy-MM-dd"
+						);
+					}
 				}
 			}
 		}
@@ -385,6 +391,9 @@ class Elastic extends \DLDB\Objects {
 							$doc['f'.$fid] = $fieldquery->buildDate( $field, $args['f'.$fid] );
 						} else {
 							$doc['f'.$fid] = $args['f'.$fid];
+						}
+						if($field['sefield'] == 2) {
+							$doc['@timestamp'] = $fieldquery->formattedDate($args['f'.$fid]);
 						}
 						break;
 					default:

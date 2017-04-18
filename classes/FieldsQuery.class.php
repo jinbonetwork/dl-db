@@ -226,7 +226,7 @@ class FieldsQuery extends \DLDB\Objects {
 					if($value['day']) $out .= ($out ? "-" : "").sprintf("%02d",(int)$value['day']);
 					break;
 				case 'H':
-					if($value['month']) $out .= ($out ? " " : "").sprintf("%02d",(int)$value['month']);
+					if($value['month']) $out .= ($out ? " " : "").sprintf("%02d",(int)$value['hour']);
 					break;
 				case 'i':
 					if($value['minute']) $out .= ($out ? ":" : "").sprintf("%02d",(int)$value['minute']);
@@ -240,6 +240,15 @@ class FieldsQuery extends \DLDB\Objects {
 		}
 
 		return $out;
+	}
+
+	public function formattedDate($value) {
+		$date = sprintf("%04d-%02d-%02d",
+			($value['year'] ? (int)$value['year'] : 1970),
+			($value['month'] ? (int)$value['month'] : 1),
+			($value['day'] ? (int)$value['day'] : 1)
+		);
+		return $date;
 	}
 
 	public function reBuildTaxonomy($table, $id,$taxonomy_map) {
