@@ -243,6 +243,16 @@ class FieldsQuery extends \DLDB\Objects {
 	}
 
 	public function formattedDate($value) {
+		if(!is_array($value)) {
+			$_date = preg_split("/[ T]/i",$value);
+			$year = explode("-",$_date[0]);
+			unset($value);
+			$value['year'] = $year[0];
+			if(count($year) > 1)
+				$value['month'] = $year[1];
+			if(count($year) > 2)
+				$value['day'] = $year[2];
+		}
 		$date = sprintf("%04d-%02d-%02d",
 			($value['year'] ? (int)$value['year'] : 1970),
 			($value['month'] ? (int)$value['month'] : 1),
