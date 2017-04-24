@@ -1,7 +1,7 @@
 {
-  "name": "db-admin",
-  "version": "0.1.0",
-  "description": "db-admin",
+  "name": "dldb-admin",
+  "version": "1.0.0",
+  "description": "dldb-admin",
   "scripts": {
     "start": "webpack --watch",
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress"
@@ -10,7 +10,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/jinbonetwork/dl-db/tree/master/app/admin/dev"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
