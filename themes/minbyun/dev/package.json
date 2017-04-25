@@ -1,7 +1,7 @@
 {
-  "name": "dldb-client",
-  "version": "0.1.0",
-  "description": "dldb-client",
+  "name": "dldb-theme",
+  "version": "1.0.0",
+  "description": "dldb-theme",
   "scripts": {
     "start": "webpack --watch",
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress"
@@ -10,7 +10,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/jinbonetwork/dl-db/tree/master/themes/minbyun/dev"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
