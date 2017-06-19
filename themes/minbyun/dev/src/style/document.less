@@ -248,12 +248,14 @@
 	}
 }
 .document .view {
+	table-layout: fixed;
+	width: 100%;
 	line-height: 1.5em;
 	& > tbody > tr + tr > td {
 		padding-top: 1.5em;
 	}
 	& > tbody > tr > td:first-child {
-		min-width: 9em;
+		width: 9em;
 		font-weight: @font-bold;
 		text-align: right;
 		vertical-align: top;
@@ -292,6 +294,9 @@
 	}
 	.view__inner-table td + td {
 		border-left-width: 1px;
+	}
+	.view__col1 > div {
+		overflow: auto;
 	}
 }
 .document__report-form {
