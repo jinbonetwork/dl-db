@@ -132,7 +132,7 @@ $service['gs'] = '/usr/bin/gs';
 $service['tesseract'] = '/usr/bin/tesseract';
 ```
 
-8) pdfparser 설치
+9) pdfparser 설치
 -----------------
 PHP에서 popen등 shell 명령을 제한하는 경우. 대체제로 PDFParser 라이브러리를 사용합니다.  그럴 경우를 대비하여 pdfparser 설치
 ```bash
@@ -144,7 +144,7 @@ pdfparser를 사용할 경우 아래와 같이 config/settings.php 설정
 $service['pdfparser'] = 'pdfparser';
 ```
 
-9) File Parse Daemom
+10) File Parse Daemom
 --------------------
 * pdf 등 첨부파일 파싱을 문서작성과 동시에 할 수도 있고, 두개의 과정을 분리할 수도 있습니다. 분리여부는 theme 에서 결정합니다.
 * 파싱을 분리하는 경우 파일을 별도의 api로 업로드하도록 theme가 작성되어야 합니다. 사용할 api는 /api/file/upload 입니다. 이 api를 사용하기 위해서는 parsing하기 위해 별도의 parser daemon(parser.php)을 설정해야 합니다.
@@ -194,7 +194,7 @@ $service['parsing_server'] = '127.0.0.1'; /* xinetd 설정에 only_from 값.
 $service['parsing_port'] = '20010' /* services 에 설정한 port 번호 */
 ```
 
-10) Mecab-ko 설치
+11) Mecab-ko 설치
 ---------------
 * 공식 홈페이지: http://eunjeon.blogspot.kr/
 * mecab 설치
@@ -237,7 +237,7 @@ dicdir =  /usr/lib64/mecab/dic/mecab-ko-dic
 ; eos-format = EOS\n
 ```
 
-11) MySQL FullText로 검색할 경우
+12) MySQL FullText로 검색할 경우
 ------------------------------
 * 참고사이트: http://dev.mysql.com/doc/refman/5.7/en/fulltext-search-mecab.html
 ```bash
@@ -256,7 +256,7 @@ $ service mysqld restart
 mysql> INSTALL PLUGIN mecab SONAME 'libpluginmecab.so';
 ```
 
-12) ElasticSearch 을 사용할 경우
+13) ElasticSearch 을 사용할 경우
 ------------------------------
 * 현재는 Elastic 2.4.0 버젼을 사용합니다. 한국 형태소 분석기인 '은전한닢 프로젝트' mecab-ko가 지원하고, Elastic 5.0을 사용하기에는 아직 검증되지 않았기에 일단 2.4.0 버젼으로 시작합니다. 향후 ElasticSearch 프로젝트 진행상황에 따라 향후 업그레이드 할 예정입니다.
 * 참조: https://bitbucket.org/eunjeon/mecab-ko-lucene-analyzer/raw/master/elasticsearch-analysis-mecab-ko/
@@ -287,7 +287,7 @@ $ bin/plugin install org.bitbucket.eunjeon/elasticsearch-analysis-seunjeon/2.4.0
 $ ./bin/elasticsearch -Des.security.manager.enabled=false
 ```
 
-13) PHPMailer 설치
+14) PHPMailer 설치
 ------------------
 * 회원 아이디 발급이나, 자료업로드시 공지 메일을 주고받기 위해 PHPMailer 설치
 
