@@ -110,6 +110,28 @@ $service['pdfparser'] = 'xpdf';
 $service['pdftotext'] = '/usr/bin/pdftotext';
 ```
 
+8) Tesseract 설치
+----------------
+이미지로 만들어진 PDF에서 Text를 추출하여 검색 Indexing 하기위해 GhostScript와 Tesseract Library를 설치한다.
+```bash
+$ yum install ghostscript
+$ yum install tesseract
+```
+tesseart에서 사용할 한국어 Data 파일 추가
+```bash
+$ cd /usr/share/tesseract/tessdata
+$ wget https://github.com/tesseract-ocr/tessdata/raw/4.00/kor.traineddata
+$ tesseract --list-langs
+List of available languages (2):
+kor
+eng
+```
+config/settings.php 에 tesseract 경로 설정
+```vim
+$service['gs'] = '/usr/bin/gs';
+$service['tesseract'] = '/usr/bin/tesseract';
+```
+
 8) pdfparser 설치
 -----------------
 PHP에서 popen등 shell 명령을 제한하는 경우. 대체제로 PDFParser 라이브러리를 사용합니다.  그럴 경우를 대비하여 pdfparser 설치
