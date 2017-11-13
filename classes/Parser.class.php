@@ -174,7 +174,62 @@ class Parser extends \DLDB\Objects {
 			$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
 			$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 		}
+
+		if( !trim($text) &&
+			$context->getProperty('service.gs') &&
+			file_exists( $context->getProperty('service.gs') ) &&
+			$context->getProperty('service.tesseract') &&
+			file_exists( $context->getProperty('service.tesseract') )
+		) {
+			$text .= self::parseTesseract($file_info,$total_page);
+		}
+
 		return array('text'=>mb_convert_encoding(trim($text),"UTF-8","UTF-8"),'header'=>$header);
+	}
+
+	public static function parseTesseract($file_info,$total_page) {
+		$dbm = \DLDB\DBM::instance();
+
+		$context = \DLDB\Model\Context::instance();
+
+		$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
+		$dbm->execute($que, array("dd",0,$file_info['fid']) );
+
+		$filename = \DLDB\Files::getFilePath($file_info);
+
+		list($usec, $sec) = explode(" ",microtime());
+		$tmpdir = dirname($filename)."/".( $sec + $usec );
+		$text = '';
+
+		mkdir($tmpdir,0707);
+
+		$fp = popen($context->getProperty('service.gs').' -SDEVICE=tiffg4 -r300x300 -sOutputFile="'.$tmpdir.'/page-%04d.tiff" -dNOPAUSE -dBATCH -- "'.$filename.'"',"r");
+		while(!feof($fp)) {
+			$conv = fgets($fp, 4096);
+			if(preg_match("/Page ([0-9]+)/i",$conv,$matched)) {
+				$page = $matched[1];
+			}
+		}
+		pclose($fp);
+
+		for( $p = 1; $p <= $total_page; $p++ ) {
+			$file = $tmpdir."/page-".sprintf("%04d",$p).".tiff";
+			if(file_exists($file)) {
+				$fp = popen($context->getProperty('service.tesseract')." -l kor+eng ".$file." stdout quiet","r");
+				while (!feof($fp)) { 
+					$text .= fgets($fp, 4096);
+				}
+				pclose($fp);
+				unlink($file);
+
+				$progress = (int)( ( $p / $total_page ) * 100 );
+				$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
+				$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
+			}
+		}
+		rmdir($tmpdir);
+
+		return $text;
 	}
 
 	public static function parseDoc($file_info) {
