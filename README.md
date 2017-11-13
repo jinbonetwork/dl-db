@@ -112,7 +112,7 @@ $service['pdftotext'] = '/usr/bin/pdftotext';
 
 8) Tesseract 설치
 ----------------
-이미지로 만들어진 PDF에서 Text를 추출하여 검색 Indexing 하기위해 GhostScript와 Tesseract Library를 설치한다.
+이미지로 만들어진 PDF에서 Text를 추출하여 검색 Indexing 하기위해 GhostScript와 [Tesseract](https://github.com/tesseract-ocr/tesseract) Library를 설치한다.
 ```bash
 $ yum install ghostscript
 $ yum install tesseract
