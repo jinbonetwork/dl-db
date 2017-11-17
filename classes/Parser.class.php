@@ -111,7 +111,7 @@ class Parser extends \DLDB\Objects {
 				}
 			}
 
-			$errmsg = self::validPDF( $header );
+			$errmsg = self::validPDF( $header, 'pdfparser' );
 
 			if(!$errmsg) {
 				$pages = $pdf->getPages();
@@ -163,18 +163,20 @@ class Parser extends \DLDB\Objects {
 		$total_page = (int)$header['Pages'];
 
 		$text = '';
-		for($cnt=1; $cnt<= $total_page; $cnt++) {
-			$fp = popen($context->getProperty('service.pdftotext')." -raw -nopgbrk -f ".$cnt." -l ".$cnt." ".'"'.$filename.'"'." -","r");
-			while (!feof($fp)) { 
-				$text .= fgets($fp, 4096);
+		$errmsg = self::validPDF( $header, 'xpdf' );
+		if(!$errmsg) {
+			for($cnt=1; $cnt<= $total_page; $cnt++) {
+				$fp = popen($context->getProperty('service.pdftotext')." -raw -nopgbrk -f ".$cnt." -l ".$cnt." ".'"'.$filename.'"'." -","r");
+				while (!feof($fp)) { 
+					$text .= fgets($fp, 4096);
+				}
+				pclose($fp);
+
+				$progress = (int)( ( $cnt / $total_page ) * 100 );
+				$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
+				$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 			}
-			pclose($fp);
-
-			$progress = (int)( ( $cnt / $total_page ) * 100 );
-			$que = "UPDATE {files} SET `progress` = ? WHERE `fid` = ?";
-			$dbm->execute($que, array("dd",$progress,$file_info['fid']) );
 		}
-
 		if( !trim($text) &&
 			$context->getProperty('service.gs') &&
 			file_exists( $context->getProperty('service.gs') ) &&
@@ -249,11 +251,11 @@ class Parser extends \DLDB\Objects {
 		$dbm->execute($que,array('dsd', strlen(trim($text)), trim($text), $file_info['fid']) );
 	}
 
-	public static function validPDF($header) {
+	public static function validPDF($header,$options='xpdf') {
 		$filters = self::getFilter();
 		if( $filters['pdf'] && is_array($filters['pdf']) ) {
 			foreach( $filters['pdf'] as $fid => $filter ) {
-				if( preg_match($filter['pattern'], $header[$filter['field']] ) ) {
+				if( $filter['options'] == $options && preg_match($filter['pattern'], $header[$filter['field']] ) ) {
 					return $filter['message'];
 				}
 			}
