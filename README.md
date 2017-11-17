@@ -115,8 +115,12 @@ $service['pdftotext'] = '/usr/bin/pdftotext';
 이미지로 만들어진 PDF에서 Text를 추출하여 검색 Indexing 하기위해 GhostScript와 [Tesseract](https://github.com/tesseract-ocr/tesseract) Library를 설치한다.
 ```bash
 $ yum install ghostscript
+$ yum install cjkuni-fonts-ghostscript
+$ yum install baekmuk-ttf-fonts-ghostscript
 $ yum install tesseract
 ```
+GhostScript 한글 폰트 처리를 위해 cjk fonts와 ttf font도 추가로 설치해줘야 한다.
+
 tesseart에서 사용할 한국어 Data 파일 추가
 ```bash
 $ cd /usr/share/tesseract/tessdata
