@@ -7,9 +7,9 @@ class search extends \DLDB\Controller {
 	public function process() {
 		$this->params['output'] = 'json';
 
-		if(!$this->params['q']) {
-			\DLDB\RepondJson::ResultPage( array(-1,'검색어를 입력하세요') );
-		}
+//		if(!$this->params['q']) {
+//			\DLDB\RespondJson::ResultPage( array(-1,'검색어를 입력하세요') );
+//		}
 		$this->que = \DLDB\Search\ParseQue::parse($this->params['q']);
 
 		$context = \DLDB\Model\Context::instance();

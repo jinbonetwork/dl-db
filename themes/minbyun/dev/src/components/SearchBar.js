@@ -74,7 +74,12 @@ class SearchBar extends Component {
 	}
 	handleClick(which, arg){
 		if(which == 'search'){
-			if(!this.props.keyword){ this.props.showMessage('검색어를 입력하세요.', () => {this.refs.keyword.focus();}); return; }
+			if(!this.props.keyword){
+				if(this.props.doctypes === 'undefined' && this.props.doctypes.length < 1) {
+					this.props.showMessage({content: '검색어를 입력하세요.', callback: () => this.refs.keyword.focus()});
+					return;
+				}
+			}
 			let period = _period(this.props.from, this.props.to);
 			let from = (period[0] ? period[0] : '');
 			let to = (period[1] ? period[1] : '');

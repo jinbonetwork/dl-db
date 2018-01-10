@@ -3,7 +3,11 @@ namespace DLDB;
 /// Copyright (c) 2004-2010, Needlworks  / Tatter Network Foundation
 /// All rights reserved. Licensed under the GPL.
 /// See the GNU General Public License for more details. (/documents/LICENSE, /documents/COPYRIGHT)
-class RespondJson {
+class RespondJson extends \DLDB\Objects {
+	public static function instance() {
+		return self::_instance(__CLASS__);
+	}
+
 	public static function ResultPage($errorResult) {
 		if (is_array($errorResult) && count($errorResult) < 2) {
 			$errorResult = array_shift($errorResult);
