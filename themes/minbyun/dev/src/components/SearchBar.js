@@ -289,6 +289,9 @@ class SearchBar extends Component {
 								</div>
 							</div>
 						</div>
+						<div>
+							<div className="searchbar__helper-title"><a href="/doc/민변디지털도서관_매뉴얼.pdf" target="_blank"><span>※ 이용자 메뉴얼</span></a></div>
+						</div>
 					</div>
 				</div>
 			);
