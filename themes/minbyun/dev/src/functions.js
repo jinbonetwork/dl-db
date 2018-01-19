@@ -33,6 +33,7 @@ const _query = (sQuery, fID) => {
 		switch(prop){
 			case 'keyword': query.q = sQuery[prop]; break;
 			case 'doctypes': query[fID.doctype] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
+			case 'committees': query[fID.committee] = (sQuery[prop].length ? '['+sQuery[prop].join(',')+']' : ''); break;
 		}
 	}}
 	let period;
@@ -48,6 +49,7 @@ const _queryOf = (propOfSQuery, query, fID) => {
 	switch(propOfSQuery){
 		case 'keyword': return {q: query.q};
 		case 'doctypes': return {[fID.doctype]: query[fID.doctype]};
+		case 'committee': return {[fID.committee]: query[fID.committee]};
 		case 'period': return {[fID.date]: query[fID.date]};
 	}
 }
@@ -64,6 +66,13 @@ const _searchQuery = (query, fSlug, correct) => {
 				if(dt > 0) doctypes.push(dt);
 			});
 			if(doctypes.length) sQuery.doctypes = doctypes;
+		}
+		else if(fSlug[prop] == 'committee'){
+			let committees = []
+			value.replace('[', '').replace(']', '').split(',').forEach((dt) => {
+				if(dt > 0) committees.push(dt);
+			});
+			if(committees.length) sQuery.committees = committees;
 		}
 		else if(fSlug[prop] == 'date'){
 			let period = value.split('-');

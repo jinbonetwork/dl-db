@@ -298,6 +298,12 @@
 		text-align: left;
 		padding-left: 1.5em;
 	}
+	&.opendropdown .ddhead {
+		padding-left: 1.0em;
+	}
+	&.opendropdown.dropdown--unfolded .ddhead {
+		padding-left: 1.5em;
+	}
 	.ddarrow i {
 		color: @main-color;
 		font-weight: bold;
@@ -361,6 +367,7 @@
 	.ddhead {
 		@media screen and (max-width: @medium-screen){
 			padding: 0;
+			padding-left: 1.5em;
 			text-align: center;
 		}
 	}

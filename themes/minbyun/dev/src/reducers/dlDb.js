@@ -27,8 +27,9 @@ const initialState = {
 		type: '', id: '', password: '', didLogIn: false, doAgree: false, agreement: ''
 	},
 	searchBar: {
-		doctypes: [], keyword: '', from: '', to: '',
+		doctypes: [], committees: [], keyword: '', from: '', to: '',
 		keywordMarginLeft: null,
+		keywordMarginLeft2: null,
 		isPeriodVisible: false,
 		isPeriodFocused: false,
 		isHelperVisible: false,
@@ -144,6 +145,7 @@ const dlDb = (state = initialState, action) => {
 					searchDate: _displayDateOfMilliseconds(item.search_date*1000),
 					keyword: item.query,
 					doctypes: item.options[state.docFieldData.fID.doctype],
+					committees: item.options[state.docFieldData.fID.committee],
 					from: (period && period.from ? period.from : ''),
 					to: (period && period.to ? period.to : ''),
 					params: item.query_string

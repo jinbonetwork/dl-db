@@ -45,8 +45,9 @@ const custom = {
 const rearrangeDoc = (doc, fProps) => {
 	let required = {}, elective = {};
 	required.doctype = doc.doctype;
+	required.committee = doc.committee;
 	for(let fs in doc){
-		if(fs != 'doctype'){
+		if(fs != 'doctype' && fs != 'committee'){
 			if(fProps[fs].required) required[fs] = doc[fs];
 			else elective[fs] = doc[fs];
 		}

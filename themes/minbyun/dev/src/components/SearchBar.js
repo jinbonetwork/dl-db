@@ -54,6 +54,7 @@ class SearchBar extends Component {
 	handleChange(which, arg){
 		switch(which){
 			case 'doctypes': this.props.onChange({[which]: arg}); break;
+			case 'committees': this.props.onChange({[which]: arg}); break;
 			case 'keyword': this.props.onChange({[which]: arg.target.value}); break;
 			case 'from': case 'to':
 				let now = new Date();
@@ -75,7 +76,7 @@ class SearchBar extends Component {
 	handleClick(which, arg){
 		if(which == 'search'){
 			if(!this.props.keyword){
-				if(this.props.doctypes === 'undefined' && this.props.doctypes.length < 1) {
+				if( (this.props.doctypes === 'undefined' || this.props.doctypes.length < 1) && (this.props.committees === 'undefined' || this.props.committees.length < 1) ) {
 					this.props.showMessage({content: '검색어를 입력하세요.', callback: () => this.refs.keyword.focus()});
 					return;
 				}
@@ -85,7 +86,7 @@ class SearchBar extends Component {
 			let to = (period[1] ? period[1] : '');
 			this.props.onChange({from: from, to: to});
 
-			let query = this.query({keyword: this.props.keyword, doctypes: this.props.doctypes, from: from, to: to });
+			let query = this.query({keyword: this.props.keyword, doctypes: this.props.doctypes, committees: this.props.committees, from: from, to: to });
 			let params = this.params(query);
 			if(params) this.props.router.push('/search'+params);
 		}
@@ -108,6 +109,8 @@ class SearchBar extends Component {
 	handleResize(which, size){
 		if(which == 'doctypes'){
 			this.props.changeSearchBarState({keywordMarginLeft: size.width});
+		} else if(which == 'committees'){
+			this.props.changeSearchBarState({keywordMarginLeft2: size.width});
 		}
 	}
 	period(prsRsp){
@@ -208,11 +211,38 @@ class SearchBar extends Component {
 		);
 
 		return (
-			<DdSelect selected={this.props.doctypes} head={doctypeHead.head} arrow={doctypeHead.arrow} window={this.props.window}
+			<DdSelect selected={this.props.doctypes} head={doctypeHead.head} arrow={doctypeHead.arrow} window={this.props.window} initWidth={100}
 				onResize={this.handleResize.bind(this, 'doctypes')} onChange={this.handleChange.bind(this, 'doctypes')}
 				onFocus={this.handleFocus.bind(this, 'doctypes')}
 			>
 				{doctypeItems}
+			</DdSelect>
+		);
+	}
+	CommitteeSelect(){
+		let committeeHead;
+		if(this.props.mode != 'content' && this.props.window.width <= SCREEN.medium){
+			committeeHead = {
+				head: <span><i className="pe-7s-edit pe-va"></i></span>,
+				arrow: null
+			};
+		} else {
+			committeeHead = {
+				head: <span>{this.props.fData.fProps.committee.dispName}</span>,
+				arrow: <i className="pe-7s-angle-down pe-va"></i>
+			};
+		}
+
+		const committeeItems = this.props.fData.taxonomy.committee.map((tid) =>
+			<Item key={tid} value={tid}><span>{this.props.fData.terms[tid].name}</span></Item>
+		);
+
+		return (
+			<DdSelect selected={this.props.committees} head={committeeHead.head} arrow={committeeHead.arrow} window={this.props.window} initWidth={80}
+				onResize={this.handleResize.bind(this, 'committees')} onChange={this.handleChange.bind(this, 'committees')}
+				onFocus={this.handleFocus.bind(this, 'committees')}
+			>
+				{committeeItems}
 			</DdSelect>
 		);
 	}
@@ -229,12 +259,14 @@ class SearchBar extends Component {
 		const prsRsp = this.propsForResponsivity();
 		const className = (this.props.mode == 'content' ? 'searchbar searchbar--content' : 'searchbar');
 		const docTypeSelect = (fProps.doctype ? this.docTypeSelect() : null);
+		const CommitteeSelect = (fProps.committee ? this.CommitteeSelect() : null);
 		const period = (fProps.date ? this.period(prsRsp) : null);
 		let searchBar = (
 			<div className="searchbar__bar">
 				<div className={(!fProps.date ? 'searchbar__1st-part--no-period' : null)} style={prsRsp.style.firstPart}>
 					{docTypeSelect}
-					<div className={'searchbar__keyword'+(this.props.isKeywordFocused ? ' searchbar__keyword--focused' : '')} style={{marginLeft: this.props.keywordMarginLeft}}>
+					{CommitteeSelect}
+					<div className={'searchbar__keyword'+(this.props.isKeywordFocused ? ' searchbar__keyword--focused' : '')} style={{marginLeft: (this.props.keywordMarginLeft+this.props.keywordMarginLeft2)}}>
 						<div><i className="pe-7f-search pe-va"></i></div>
 						<div>
 							<input type="text" ref="keyword" value={this.props.keyword} placeholder="검색어를 입력하세요"

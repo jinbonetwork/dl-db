@@ -116,10 +116,15 @@ class Elastic extends \DLDB\Objects {
 									$types[] = 't'.$_t;
 								}
 								$taxonomy_exists = true;
+							} else if( $this->fields[$key]['sefield'] == 2 ) {
+								$filter["c".$key]['type'] = 'regexp';
+								if(!is_array($v)) $v = array($v);
+								$filter["c".$key]['terms'] = $v;
 							}
 							break;
 						case 'date':
 							$period = preg_split("/-/i",$v);
+							$filter[$k]['type'] = 'range';
 							if($period[0]) {
 								$filter[$k]['from'] = str_replace(".","-",$period[0]);
 							}
@@ -130,7 +135,33 @@ class Elastic extends \DLDB\Objects {
 						default:
 							break;
 					} /* end of switch */
-				} /* end of if($t=='f') */
+				} else if ($t=='c') {
+					switch( $this->fields[$key]['type'] ) {
+						case 'taxonomy':
+							if( $this->fields[$key]['sefield'] == 2 ) {
+								$filter[$k]['type'] = 'regexp';
+								if(!is_array($v)) $v = array($v);
+								$filter[$k]['terms'] = $v;
+							}
+							break;
+						case 'date':
+							$period = preg_split("/-/i",$v);
+							$filter[$k]['type'] = 'range';
+							if($period[0]) {
+								$filter[$k]['from'] = str_replace(".","-",$period[0]);
+							}
+							if($period[1]) {
+								$filter[$k]['to'] = str_replace(".","-",$period[1]);
+							}
+							break;
+						default:
+							if( $this->fields[$key]['sefield'] == 2 ) {
+								$filter[$k]['type'] = 'term';
+								$filter[$k]['term'] = $v;
+							}
+							break;
+					} /* end of switch */
+				}
 			} /* end of foreach */
 		}
 		if(!$taxonomy_exists) {
@@ -195,12 +226,28 @@ class Elastic extends \DLDB\Objects {
 			$f_params = array(
 				"and" => array(
 					"filters" => array(
-						array("range" => array())
+//						array("range" => array())
 					)
 				)
 			);
+			$f_cnt = 0;
 			foreach($filter as $fk => $_v) {
-				$f_params['and']['filters'][0]['range'][$fk] = $_v;
+				switch($_v['type']) {
+					case 'range':
+						$f_params['and']['filters'][$f_cnt++]['range'][$fk] = array('from'=>$_v['from'],'to'=>$_v['to']);
+						break;
+					case 'term':
+						$f_params['and']['filters'][$f_cnt++]['term'][$fk] = $_v['term'];
+						break;
+					case 'terms':
+						$f_params['and']['filters'][$f_cnt++]['terms'][$fk] = $_v['terms'];
+						break;
+					case 'regexp':
+						$f_params['and']['filters'][$f_cnt++]['regexp'][$fk] = ".*(%".implode("%|%",$_v['terms'])."%).*";
+						break;
+					default:
+						break;
+				}
 			}
 		}
 
@@ -255,6 +302,12 @@ class Elastic extends \DLDB\Objects {
 						'analyzer' => 'korean',
 						'term_vector' => 'yes'
 					);
+					if((int)$field['sefield'] == 2 && $field['type'] != 'int') {
+						$default_properties['c'.$fid] = array(
+							'type' => $property_type,
+							'index' => 'not_analyzed'
+						);
+					}
 				} else {
 					$default_properties['f'.$fid] = array(
 						'type' => $property_type,
@@ -374,14 +427,21 @@ class Elastic extends \DLDB\Objects {
 							$v = $args['f'.$fid];
 						}
 						$c = 0;
+						$cc = 0;
 						foreach($v as $t => $vv) {
 							if(is_array($vv)) {
 								if($this->taxonomy_terms[$field['cid']][$t]) {
 									$doc['f'.$fid] .= ($c++ ? "," : "").$this->taxonomy_terms[$field['cid']][$t]['name'];
+									if( $field['sefield'] == 2) {
+										$doc['c'.$fid] .= ($cc++ ? "," : "")."%".$t."%";
+									}
 								}
 							} else {
 								if($this->taxonomy_terms[$field['cid']][$vv]) {
 									$doc['f'.$fid] .= ($c++ ? "," : "").$this->taxonomy_terms[$field['cid']][$vv]['name'];
+									if( $field['sefield'] == 2) {
+										$doc['c'.$fid] .= ($cc++ ? "," : "")."%".$vv."%";
+									}
 								}
 							}
 						}
@@ -398,6 +458,9 @@ class Elastic extends \DLDB\Objects {
 						break;
 					default:
 						$doc['f'.$fid] = $args['f'.$fid];
+						if((int)$field['sefield'] == 2 && $field['type'] != 'int') {
+							$doc['c'.$fid] = $args['f'.$fid];
+						}
 						break;
 				}
 			}

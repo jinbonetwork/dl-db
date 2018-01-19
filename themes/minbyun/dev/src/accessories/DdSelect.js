@@ -1,5 +1,5 @@
 import React, {Component, PropTypes, Children, cloneElement} from 'react';
-import Dropdown from './Dropdown';
+import OpenDropdown from './OpenDropdown';
 import Item from './Item';
 import {_isCommon, _pushpull} from './functions';
 
@@ -42,12 +42,12 @@ class DdSelect extends Component {
 			return cloneElement(child, {className: className, children: children});
 		}});
 		return (
-			<Dropdown className="ddselect" head={this.props.head} arrow={this.props.arrow} multiple={true} window={this.props.window}
+			<OpenDropdown className="ddselect" head={this.props.head} arrow={this.props.arrow} multiple={true} window={this.props.window} initWidth={this.props.initWidth}
 				onClick={this.handleClick.bind(this)} onFocus={this.handleFocus.bind(this)}
 				onResize={this.props.onResize}
 			>
 				{children}
-			</Dropdown>
+			</OpenDropdown>
 		);
 	}
 }
@@ -55,6 +55,7 @@ DdSelect.propTypes = {
 	selected: PropTypes.array,
 	head: PropTypes.element,
 	arrow: PropTypes.element,
+	initWidth: PropTypes.number,
 	window: PropTypes.shape({width: PropTypes.number, height: PropTypes.number}),
 	onChange: PropTypes.func,
 	onResize: PropTypes.func,
