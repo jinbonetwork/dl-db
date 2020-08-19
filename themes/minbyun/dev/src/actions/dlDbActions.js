@@ -381,11 +381,27 @@ const actionCreators = {
 			}
 		);
 	}},
+	submitUserRegist(args){ return (dispatch) => {
+		const {pfFormData, afterSave} = args;
+		dispatch({type: COMPLETE_USER_REGIST});
+		api.submitUserRegist( pfFormData,
+			() => {
+				dispatch({type: SUBMIT_USER_REGIST});
+				afterSave();
+			},
+			(error) => {
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 	togglePassWordForm(){
 		return {type: TOGGLE_PASSWORD_FORM};
 	},
 	initializeUserProfile(){
 		return {type: INITIALIZE_USER_PROFILE};
+	},
+	initializeUserRegist(){
+		return {type: INITIALIZE_USER_REGIST};
 	},
 	selectImage({index}){
 		return {type: SELECT_IMAGE, index}

@@ -110,8 +110,14 @@ const api = {
 	fetchUserProfile(succeed, fail){
 		fetch('get', '/api/user/profile', ({fields, taxonomy, profile}) => succeed({fields, taxonomy, profile}), fail);
 	},
+	fetchUserRegistForm(succeed, fail) {
+		fetch('get', '/api/user/regist', ({fields, taxonomy, profile}) => succeed({fields, taxonomy, profile}), fail);
+	},
 	submitUserProfile(formData, succeed, fail){
 		fetch('post', '/api/user/profile?mode=modify', formData, succeed, fail);
+	},
+	submitUserRegist(formData, succeed, fail){
+		fetch('post', '/api/user/regist?mode=regist', formData, succeed, fail);
 	},
 	fetchCourts(succeed, fail){
 		fetch('get', '/api/taxonomy?cid=4', ({taxonomy}) => succeed(taxonomy[4]), fail);

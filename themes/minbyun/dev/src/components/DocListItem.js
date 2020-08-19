@@ -27,7 +27,7 @@ class DocListItem extends Component {
 			let side = [];
 			_forIn(sideDispNames, (fn, dispName) => { if(dispName && document[fn]){
 				side.push(
-					<li key={fn}>
+					<li key={fn} className={'sidename-'+fn}>
 						<span>{dispName}: </span>
 						<span>{this.tagged(document[fn])}</span>
 					</li>
@@ -62,13 +62,17 @@ class DocListItem extends Component {
 		return (
 			<div className="doclist-item">
 				<div className="doclist-item__header">
+					{(this.props.idx || side) &&
+					<div className="doclist-item__meta">
+						{this.props.idx && <span className="doclist-item__number">{this.props.idx}</span>}
+						{side && <ul className="doclist-item__side">{side}</ul>}
+					</div>}
 					{doctype}
 					<span className={'doclist-item__title'} onClick={this.handleClick.bind(this)}>
 						{title}
 					</span>
 				</div>
 				<div className="doclist-item__content">
-					{side && <ul className="doclist-item__side">{side}</ul>}
 					<p>{content}</p>
 				</div>
 			</div>
@@ -78,6 +82,7 @@ class DocListItem extends Component {
 DocListItem.propTypes = {
 	document: PropTypes.object.isRequired,
 	role: PropTypes.array.isRequired,
+	idx: PropTypes.number,
 	fData: PropTypes.object.isRequired,
 	keywords: PropTypes.string,
 	onClickTitle: PropTypes.func.isRequired,

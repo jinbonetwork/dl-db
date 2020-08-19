@@ -63,7 +63,7 @@ class ViewElem extends Component {
 					<ol className={className} style={style}>{ value.map((val, index) => (!_isEmpty(val)) &&
 						<li key={index}>
 							{(owner || (role.indexOf('download') >= 0 && val.anonymity) ?
-								<a className="view__filename" href={val.fileuri} target="_blank">{val.filename}</a> :
+								<a className="view__filename" href={val.downuri} target="_blank">{val.filename}</a> :
 								<span className="view__filename">{val.filename}</span>)
 							}
 							{val.status == 'unparsed' &&

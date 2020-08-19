@@ -154,7 +154,7 @@ class DocumentForm extends Component {
 			file: (fs, index, value, formElem) => cloneElement(formElem, {accept: '.pdf, .doc, .docx, .hwp'})
 		},
 		fieldFooterBySlug: {
-			tag: <div className="docform__field-footer"><span>쉼표로 구분해주세요.</span></div>,
+			tags: <div className="docform__field-footer"><span>쉼표로 구분해주세요.</span></div>,
 			image: <div className="docform__field-footer"><span>파일형식: jpg, png</span></div>,
 			file: (
 				<div className="docform__field-footer">

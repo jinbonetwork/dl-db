@@ -8,8 +8,15 @@ $Acl = "download";
 class index extends \DLDB\Controller {
 	public function process() {
 		$acl = \DLDB\Acl::instance();
-		$file = DLDB_DATA_PATH."/".rawurldecode($this->params['attachement']);
-		$fileinfo = \DLDB\Files::getFileByPath("/".rawurldecode($this->params['attachement']));
+		if( $this->params['fid'] && is_numeric($this->params['fid']) ) {
+			$fileinfo = \DLDB\Files::getFile($this->params['fid']);
+			if($fileinfo['filepath']) {
+				$file = \DLDB\Files::getFilePath($fileinfo);
+			}
+		} else if($this->params['attachement']) {
+			$file = DLDB_DATA_PATH."/".rawurldecode($this->params['attachement']);
+			$fileinfo = \DLDB\Files::getFileByPath("/".rawurldecode($this->params['attachement']));
+		}
 		if(!$fileinfo) {
 			header("HTTP/1.0 404 Not Found");
 			exit;
@@ -20,6 +27,7 @@ class index extends \DLDB\Controller {
 			}
 		}
 		if(file_exists($file)) {
+			\DLDB\Files::updateDownload($fileinfo['fid']);
 			\DLDB\Lib\dumpWithEtag($file);
 			exit;
 		} else {

@@ -80,6 +80,7 @@ index
 	.login__body input[type=text],
 	.login__body input[type=email],
 	.login__body input[type=password],
+	.login__body a,
 	.login__body button {
 		height: 100%;
 		line-height: 1em;
@@ -92,7 +93,18 @@ index
 		font-weight: @font-bold;
 		border-bottom: solid 1px @main-color;
 	}
-	.login__body button:focus {
+	.login__body a {
+		display: flex;
+		text-align: center;
+		flex-direction: column;
+		justify-content: center;
+		background-color: @minor-color-2;
+		color: @main-color;
+		font-weight: @font-bold;
+		border-bottom: solid 1px @main-color;
+	}
+	.login__body button:focus,
+	.login__body a:focus {
 		background-color: @focus-color-2;
 	}
 	.login__contact p {

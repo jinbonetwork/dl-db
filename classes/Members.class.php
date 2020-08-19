@@ -74,6 +74,21 @@ class Members extends \DLDB\Objects {
 		return $member;
 	}
 
+	public static function memberfield() {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "SHOW COLUMNS FROM {members}";
+		$member = array();
+		while( $row = $dbm->getFetchArray($que) ) {
+			if( preg_match("/^int/i",$row['Type']) ) {
+				$member[$row['Field']] = 0;
+			} else {
+				$member[$row['Field']] = '';
+			}
+		}
+		return $member;
+	}
+
 	public static function modify($member,$args) {
 		$dbm = \DLDB\DBM::instance();
 

@@ -82,6 +82,7 @@ class FieldsQuery extends \DLDB\Objects {
 									$file = \DLDB\Files::getFile($f);
 									$custom[$key][$f] = array(
 										'fileuri' => \DLDB\Files::getFileUrl($file),
+										'downuri' => \DLDB\Files::getDownUrl($file),
 										'filepath' => $file['filepath'],
 										'filename' => $file['filename'],
 										'mimetype' => $file['mimetype']
@@ -183,6 +184,7 @@ class FieldsQuery extends \DLDB\Objects {
 									$file = \DLDB\Files::getFile($f);
 									$custom[$key][$f] = array(
 										'fileuri' => \DLDB\Files::getFileUrl($file),
+										'downuri' => \DLDB\Files::getDownUrl($file),
 										'filepath' => $file['filepath'],
 										'filename' => $file['filename'],
 										'mimetype' => $file['mimetype']

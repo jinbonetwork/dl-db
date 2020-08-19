@@ -163,6 +163,7 @@ function dumpWithEtag($path) {
 
 	if( !\DLDB\Lib\headerEtag($etag,$length,$lastmodified) ) {
 		header('Content-type: '.\DLDB\Lib\getMIMEType(null,$path)); 
+		header("Content-Disposition: inline; filename=\"".rawurlencode(basename($path))."\"");
 		$f =  fopen($path,"r");
 		if( !$f ) {
 			header("HTTP/1.0 404 Not found");

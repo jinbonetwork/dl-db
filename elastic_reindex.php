@@ -10,8 +10,12 @@ if($shell_uid != $posix_uid) {
 
 $reindex_mode = 'refresh';
 if($argc > 1) {
-	$argv[1] == '--init';
-	$reindex_mode = 'init';
+	if($argv[1] == '--init')
+		$reindex_mode = 'init';
+	else if($argv[1] == '--continue') {
+		$reindex_mode = 'continue';
+		$start = $argv[2];
+	}
 }
 
 define('__DLDB__',true);
@@ -72,13 +76,16 @@ try {
 			}
 		}
 	}
-	syslog(LOG_INFO, "create elastic index [".$index."]");
-	print "create elastic index [".$index."]\n";
-	$else->create($types);
+	if($reindex_mode != 'continue') {
+		syslog(LOG_INFO, "create elastic index [".$index."]");
+		print "create elastic index [".$index."]\n";
+		$else->create($types);
+	}
 
 	$documents = \DLDB\Search\Documents::getAllList();
 	if($documents) {
 		foreach($documents as $document) {
+			if($reindex_mode == 'continue' && $start && $document['id'] < $start) continue;
 			print "insert document[".$document['id']."] into index [".$index."]\n";
 			$else->update($document['id'],$document,$document['memo']);
 		}

@@ -172,7 +172,7 @@ class Elastic extends \DLDB\Objects {
 		$q_params['should'] = [];
 		$q_params['must_not'] = [];
 
-		$multi_field = array("subject","content","memo");
+		$multi_field = array("subject","tags","content","memo");
 		foreach($this->fields as $fid => $field) {
 			if($field['sefield'] && $field['type'] != 'date') {
 				$multi_field[] = "f".$fid;
@@ -271,6 +271,11 @@ class Elastic extends \DLDB\Objects {
 
 		$default_properties = array(
 			'subject' => array(
+				'type' => 'string',
+				'analyzer' => 'korean',
+				'term_vector' => 'yes'
+			),
+			'tags' => array(
 				'type' => 'string',
 				'analyzer' => 'korean',
 				'term_vector' => 'yes'
@@ -396,8 +401,9 @@ class Elastic extends \DLDB\Objects {
 		$index = $context->getProperty('service.elastic_index');
 
 		$doc['subject'] = $args['subject'];
+		$doc['tags'] = $args['tags'];
 		$doc['content'] = $args['content'];
-		$doc['memo'] = $memo;
+		$doc['memo'] = str_replace("￿","",$memo);
 
 		$fieldquery = \DLDB\FieldsQuery::instance();
 		$types = array();

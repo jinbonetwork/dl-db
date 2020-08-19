@@ -22,6 +22,11 @@
 			font-size: 1.2em;
 		}
 	}
+	.doclist-item__number {
+		padding: 0.5em 1em;
+		background-color: @main-color;
+		color: @minor-color-2;
+	}
 	.doclist-item__side {
 		float: left;
 		width: 13em;
@@ -91,25 +96,21 @@
 	padding: 0 1em;
 
 	.search-result__item + .search-result__item {
-		margin-top: 3em;
+		margin-top: 1.5em;
 		@media screen and (max-width: @s-medium-screen){
 			margin-top: 1em;
 		}
 	}
 	.search-result__number {
-		float: left;
-		width: @search-result-number-width;
-		text-align: right;
-		@media screen and (max-width: @s-medium-screen){
-			display: none;
-		}
+		display: none;
 	}
 	.search-result__number span {
 		font-size: 3em;
 	}
 	.search-result__number + div {
-		margin-left: @search-result-number-width + 1em;
-		padding: 3%;
+		//margin-left: @search-result-number-width + 1em;
+		margin-left: 0;
+		padding: 0;
 		background-color: @minor-color-2;
 		@media screen and (max-width: @s-medium-screen){
 			margin-left: 0;
@@ -119,7 +120,34 @@
 		}
 	}
 	.doclist-item {
-		padding: 1em;
+		padding: 0;
+		background-color: @minor-color-1;
+		.doclist-item__header {
+			padding-bottom: 0.3em;
+		}
+		.doclist-item__meta {
+			background-color: @main-color * 1.5;
+			margin-bottom: 0.5em;
+		}
+		.doclist-item__title {
+			font-size: 1.2em;
+			padding-left: 0.2em;
+		}
+		.doclist-item__side {
+			display: inline-block;
+			float: none;
+			width: auto;
+			margin: 0;
+			padding: 0.5em;
+		}
+		.doclist-item__side li {
+			display: inline;
+			padding-left: 0.5em;
+		}
+		.doclist-item__side li.sidename-date,
+		.doclist-item__side li.sidename-name {
+			display: none;
+		}
 	}
 	.doclist-item + .doclist-item {
 		margin-top: 2em;
@@ -130,7 +158,8 @@
 }
 
 .doclisthead {
-	margin-left: @search-result-number-width + 1em;
+//	margin-left: @search-result-number-width + 1em;
+	margin-left: 0;
 	@media screen and (max-width: @s-medium-screen){
 		margin-left: 0;
 	}

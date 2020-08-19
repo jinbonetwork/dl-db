@@ -39,7 +39,7 @@ class DlDb extends Component {
 			<div className="overlay"></div>
 		);
 		const content = _wrap(() => {
-			if(this.props.docFieldData && this.props.login.doAgree){
+			if( ( this.props.docFieldData && this.props.login.doAgree ) || window.location.pathname.match('/user/regist') ) {
 				const child = this.props.children;
 				const searchBar = (
 					<SearchBar mode={(child ? null : 'content')} {...this.props.searchBar} fData={this.props.docFieldData}

@@ -15,6 +15,7 @@ import SearchResult from './components/SearchResult';
 import Bookmarks from './components/Bookmarks';
 import History from './components/History';
 import UserProfile from './components/UserProfile';
+import UserRegist from './components/UserRegist';
 
 import './style/index.less';
 
@@ -182,6 +183,26 @@ const HistoryContainer = connect(
 	})
 )(History);
 
+const UserRegistContainer = connect(
+	(state) => ({
+		window: state.dlDb.window,
+		role: state.dlDb.role,
+		fData: state.userRegist.fData,
+		profile: state.userRegist.profile,
+		focused: state.userRegist.focused,
+		isSaving: state.userRegist.isSaving,
+	}),
+	(dispatch) => ({
+		initialize: () => dispatch(dlDbActions.initializeUserRegist()),
+		fetchUserRegistForm: () => dispatch(dlDbActions.fetchUserRegistForm()),
+		onChange: (args) => dispatch(dlDbActions.changeUserProfile(args)),
+		onBlur: () => dispatch(dlDbActions.focusOutUserProfile()),
+		focusIn: (args) => dispatch(dlDbActions.focusInUserProfile(args)),
+		showMessage: (args) => dispatch(dlDbActions.showMessage(args)),
+		onSubmit: (args) => dispatch(dlDbActions.submitUserRegist(args))
+	})
+)(UserRegist);
+
 const UserProfileContainer = connect(
 	(state) => ({
 		window: state.dlDb.window,
@@ -214,6 +235,7 @@ render(
 				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:docId/text/:fileId" component={FileTextContainer} />
 				<Route path="user" component={User}>
+					<Route path="regist" component={UserRegistContainer} />
 					<Route path="profile" component={UserProfileContainer} />
 					<Route path="bookmarks(/page/:page)" component={BookmarksContainer} />
 					<Route path="history(/page/:page)" component={HistoryContainer} />

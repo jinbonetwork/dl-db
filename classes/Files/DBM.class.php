@@ -76,6 +76,7 @@ class DBM extends \DLDB\Objects {
 			}
 		}
 		$file['fileuri'] = \DLDB\Files::getFileUrl($file);
+		$file['downuri'] = \DLDB\Files::getDownUrl($file);
 		return $file;
 	}
 }

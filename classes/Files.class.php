@@ -68,6 +68,11 @@ class Files extends \DLDB\Objects {
 		return $file_uri;
 	}
 
+	public static function getDownUrl($file) {
+		$file_uri = DLDB_URI."download/?fid=".$file['fid'];
+		return $file_uri;
+	}
+
 	public static function uploadFile($file_info,$permit='') {
 		$context = \DLDB\Model\Context::instance();
 		if(!$permit) $permit = $context->getProperty('service.permit');
@@ -178,6 +183,15 @@ class Files extends \DLDB\Objects {
 
 		$que = "UPDATE {files} SET `anonymity` = ? WHERE fid = ?";
 		$dbm->execute( $que, array("dd", $anonymity, $fid ) );
+
+		return 0;
+	}
+
+	public static function updateDownload($fid) {
+		$dbm = \DLDB\DBM::instance();
+
+		$que = "UPDATE {files} SET `download` = `download`+1 WHERE fid = ?";
+		$dbm->execute( $que, array("d", $fid ) );
 
 		return 0;
 	}

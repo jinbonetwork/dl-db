@@ -68,6 +68,7 @@ class Document extends \DLDB\Objects {
 					if( is_array($document['f'.$fid]) ) {
 						foreach( $document['f'.$fid] as $fd => $file ) {
 							$_file = \DLDB\Files::getFile($fd);
+							$document['f'.$fid][$fd]['downuri'] = \DLDB\Files::getDownUrl($_file);
 							$document['f'.$fid][$fd]['status'] = $_file['status'];
 							$document['f'.$fid][$fd]['anonymity'] = $_file['anonymity'];
 							$document['f'.$fid][$fd]['textsize'] = $_file['textsize'];
@@ -178,10 +179,10 @@ class Document extends \DLDB\Objects {
 		$fields = self::getFields();
 		$uid = $_SESSION['user']['uid'];
 
-		$que = "INSERT INTO {documents} (`subject`,`content`,`custom`,`uid`,`created`";
-		$que2 .= ") VALUES (?,?,?,?,?";
-		$array1 = 'array("sssdd';
-		$array2 = '$'."args['subject'], ".'$'."args['content'], serialize(".'$'."custom), ".'$'."uid, time()";
+		$que = "INSERT INTO {documents} (`subject`,`tags`,`content`,`custom`,`uid`,`created`";
+		$que2 .= ") VALUES (?,?,?,?,?,?";
+		$array1 = 'array("ssssdd';
+		$array2 = '$'."args['subject'], ".'$'."args['tags'], ".'$'."args['content'], serialize(".'$'."custom), ".'$'."uid, time()";
 
 		$fieldquery = \DLDB\FieldsQuery::instance();
 		$fieldquery->setFields($fields);
@@ -236,9 +237,9 @@ class Document extends \DLDB\Objects {
 
 		$fields = self::getFields();
 
-		$que = "UPDATE {documents} SET `subject`=?, `content`=?, `custom`=?";
-		$array1 = 'array("sss';
-		$array2 = '$'."args['subject'], ".'$'."args['content'], serialize(".'$'."custom)";
+		$que = "UPDATE {documents} SET `subject`=?, `tags` = ?, `content`=?, `custom`=?";
+		$array1 = 'array("ssss';
+		$array2 = '$'."args['subject'], ".'$'."args['tags'], ".'$'."args['content'], serialize(".'$'."custom)";
 
 		$fieldquery = \DLDB\FieldsQuery::instance();
 		$fieldquery->setFields($fields);

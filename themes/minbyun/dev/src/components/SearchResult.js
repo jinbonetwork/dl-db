@@ -82,7 +82,7 @@ class SearchResult extends Component {
 			<div key={index} className="search-result__item">
 				<div className="search-result__number"><span>{index+1}</span></div>
 				<div>
-					<DocListItem key={index} fData={this.props.fData} role={this.props.role} document={doc} keywords={keywords}
+					<DocListItem key={index} idx={index+1} fData={this.props.fData} role={this.props.role} document={doc} keywords={keywords}
 						onClickTitle={() => this.props.router.push('/document/'+doc.id)} showMessage={this.props.showMessage}
 					/>
 				</div>

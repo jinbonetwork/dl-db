@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {withRouter} from 'react-router';
+import {Link,withRouter} from 'react-router';
 import Item from '../accessories/Item';
 import {SCREEN} from '../constants';
 import {_interpolate} from '../accessories/functions';
@@ -100,6 +100,10 @@ class Login extends Component {
 				<div className="table__row">
 					<div className="table__col"></div>
 					<div className="table__col"><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></div>
+				</div>
+				<div className="table__row">
+					<div className="table__col"></div>
+					<div className="table__col"><Link to={'/user/regist'} className="button">회원가입</Link></div>
 				</div>
 				<div className="table__row">
 					<div className="table__col"></div>
