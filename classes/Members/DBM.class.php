@@ -352,6 +352,12 @@ class DBM extends \DLDB\Objects {
 
 			return $out;
 		}
+		if(!$member['uid']) {
+			self::setErrorMsg('사용자로 등록되지 않는 아이디입니다');
+			$out['success'] = -1;
+
+			return $out;
+		}
 
 		switch($session_type) {
 			case 'gnu5':

@@ -228,7 +228,8 @@ class User extends \DLDB\Objects {
 		if($row['member_srl']) {
 			$pre_regdate = strtotime(substr($row['regdate'],0,4)."-".substr($row['regdate'],4,2)."-".substr($row['regdate'],6,2)." ".substr($row['regdate'],8,2).":".substr($row['regdate'],10,2).":".substr($row['regdate'],12,2));
 			if($pre_regdate - time() < 3600) {
-				$return = array('success'=>-2,'message'=>'1시간내에 이미 임시비빌번호 인증 메일이 발송되었습니다. 메일함을 확인하세요');
+				$retry = (int)((time() - $pre_regdate) / 60);
+				$return = array('success'=>-2,'message'=>'1시간내에 이미 임시비빌번호 인증 메일이 발송되었습니다. 메일함을 확인하세요. 다시하고 싶으시면, '.$retry.'분 후에 다시 하실수 있습니다.');
 				return $return;
 			} else {
 				$que = "DELETE FROM `".$prefix."member_auth_mail` WHERE member_srl = ?";
