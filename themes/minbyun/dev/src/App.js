@@ -38,6 +38,7 @@ const DlDbContainer = connect(
 		onResize: (size) => dispatch(dlDbActions.resize(size)),
 		onChangeLogin: (which, value) => dispatch(dlDbActions.changeLogin(which, value)),
 		onLogin: (loginUrl, formData, failLogin) => dispatch(dlDbActions.login(loginUrl, formData, failLogin)),
+		findPassword: (formData) => dispatch(dlDbActions.findPassword(formData)),
 		fetchAgreement: () => dispatch(dlDbActions.fetchAgreement()),
 		onAgree: (afterAgree) => dispatch(dlDbActions.agreeWithAgreement(afterAgree)),
 		onLogOut: (args) => dispatch(dlDbActions.logout(args)),

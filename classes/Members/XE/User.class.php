@@ -218,6 +218,38 @@ class User extends \DLDB\Objects {
 		return $member_srl;
 	}
 
+	public static function createFindAuthKey($email,$member_srl) {
+		$dbm = \DLDB\DBM::instance();
+
+		$prefix = self::getPrefix();
+
+		$que = "SELECT * FROM `".$prefix."member_auth_mail` WHERE member_srl = ".$member_srl;
+		$row = $dbm->getFetchArray($que);
+		if($row['member_srl']) {
+			$pre_regdate = strtotime(substr($row['regdate'],0,4)."-".substr($row['regdate'],4,2)."-".substr($row['regdate'],6,2)." ".substr($row['regdate'],8,2).":".substr($row['regdate'],10,2).":".substr($row['regdate'],12,2));
+			if($pre_regdate - time() < 3600) {
+				$return = array('success'=>-2,'message'=>'1시간내에 이미 임시비빌번호 인증 메일이 발송되었습니다. 메일함을 확인하세요');
+				return $return;
+			} else {
+				$que = "DELETE FROM `".$prefix."member_auth_mail` WHERE member_srl = ?";
+				$dbm->execute($que,array("d",$member_srl));
+			}
+		}
+
+		$_user_id = preg_split("/@/i",$email);
+		$user_id = $_user_id[0];
+		$new_password = self::createTemporaryPassword(10);
+		$auth_key = self::createSecureSalt(40);
+		$regdate = date("YmdHis");
+		$auth_link = "/index.php?module=member&act=procMemberAuthAccount&member_srl=".$member_srl."&auth_key=".$auth_key;
+
+		$que = "INSERT INTO `".$prefix."member_auth_mail` (`auth_key`,`member_srl`,`user_id`,`new_password`,`is_register`,`regdate`) VALUES (?,?,?,?,?,?)";
+		$dbm->execute($que,array("sdssss",$auth_key,$member_srl,$user_id,$new_password,'N',$regdate));
+
+		$return = array('success'=>1, 'auth_link'=>$auth_link,'password'=>$new_password);
+		return $return;
+	}
+
 	public static function delete($member_srl) {
 		$dbm = \DLDB\DBM::instance();
 
@@ -302,6 +334,21 @@ class User extends \DLDB\Objects {
 			$work_factor = 8;  // Reasonable default
 		}
 		return $work_factor;
+	}
+
+	private static function createTemporaryPassword($length = 16) {
+		while(true) {
+			$source = base64_encode(self::createSecureSalt(64, 'binary'));
+			$source = strtr($source, 'iIoOjl10/', '@#$%&*-!?');
+			$source_length = strlen($source);
+			for($i = 0; $i < $source_length - $length; $i++) {
+				$candidate = substr($source, $i, $length);
+				if( preg_match('/[a-z]/', $candidate) && preg_match('/[A-Z]/', $candidate) &&
+					preg_match('/[0-9]/', $candidate) && preg_match('/[^a-zA-Z0-9]/', $candidate)) {
+					return $candidate;
+				}
+			}
+		}
 	}
 
 	private static function createSecureSalt($length, $format = 'hex') {

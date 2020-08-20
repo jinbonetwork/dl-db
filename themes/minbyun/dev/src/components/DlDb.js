@@ -66,7 +66,7 @@ class DlDb extends Component {
 			else if(this.props.login.type && !this.props.login.doAgree){
 				return (
 					<Login {...this.props.login} window={this.props.window}
-						onChange={this.props.onChangeLogin} onLogin={this.props.onLogin} fetchAgreement={this.props.fetchAgreement}
+						onChange={this.props.onChangeLogin} onLogin={this.props.onLogin} findPassword={this.props.findPassword} fetchAgreement={this.props.fetchAgreement}
 						onAgree={this.props.onAgree}
 					/>
 				);
@@ -100,6 +100,7 @@ DlDb.propTypes = {
 	hideMessage: PropTypes.func.isRequired,
 	onResize: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
+	findPassword: PropTypes.func.isRequired,
 	fetchAgreement: PropTypes.func.isRequired,
 	onAgree: PropTypes.func.isRequired,
 	onLogOut: PropTypes.func.isRequired,

@@ -76,6 +76,19 @@ class DBM extends \DLDB\Objects {
 		return $members;
 	}
 
+	public static function getMemberByEmail($email) {
+		$dbm = \DLDB\DBM::instance();
+
+		if($email) {
+			$que = "SELECT * FROM {members} WHERE `email` = '".$email."'";
+			$row = $dbm->getFetchArray($que);
+			if($row['id']) {
+				$member = self::fetchMember($row);;
+			}
+		}
+		return $member;
+	}
+
 	public static function insert($args) {
 		$dbm = \DLDB\DBM::instance();
 
@@ -324,6 +337,41 @@ class DBM extends \DLDB\Objects {
 			$dbm->execute($que,array("ds",$uid,serialize($roles)));
 		}
 		return 0;
+	}
+
+	public static function createFindAuthKey($email) {
+		$context = \DLDB\Model\Context::instance();
+		$session_type = $context->getProperty('session.type');
+		$domain = $context->getProperty('service.domain');
+		$ssl = $context->getProperty('service.ssl');
+
+		$member = self::getMemberByEmail($email);
+		if(!$member['id']) {
+			self::setErrorMsg('존재하지 않는 아이디입니다');
+			$out['success'] = -1;
+
+			return $out;
+		}
+
+		switch($session_type) {
+			case 'gnu5':
+				$out['success'] = 0;
+				break;
+			case 'xe':
+			default:
+				$out = \DLDB\Members\XE\User::createFindAuthKey($email,$member['uid']);
+				if($out['success'] == -2) {
+					self::setErrorMsg($out['message']);
+					return $out;
+				}
+				$out['success'] = 1;
+				$out['auth_link'] = 'http'.($ssl ? 's' : '')."://".$domain."/xe".$out['auth_link'];
+				$out['name'] = $member['name'];
+				$out['user_id'] = $email;
+				break;
+		}
+
+		return $out;
 	}
 
 	public static function getAdminID() {

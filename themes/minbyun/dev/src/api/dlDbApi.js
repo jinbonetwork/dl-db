@@ -45,6 +45,9 @@ const api = {
 			}, fail)
 		}, fail);
 	},
+	findPassword(formData, succeed, fail) {
+		fetch('post', '/api/user/authmail', formData, succeed, fail);
+	},
 	fetchAgreement(succeed, fail){
 		fetch('get', '/api/agreement', ({agreement}) => succeed(agreement), fail);
 	},

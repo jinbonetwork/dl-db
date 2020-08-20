@@ -78,6 +78,19 @@ const actionCreators = {
 			}
 		}, (error) => dispatchError(dispatch, error));
 	}},
+	findPassword(formData) { return(dispatch) => {
+		dispatch({type: SHOW_PROCESS});
+		api.findPassword(formData,
+			() => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			},
+			(error) => {
+				dispatch({type: HIDE_PROCESS});
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 	fetchAgreement(){ return (dispatch) => {
 		dispatch({type: SHOW_PROCESS});
 		api.fetchAgreement(

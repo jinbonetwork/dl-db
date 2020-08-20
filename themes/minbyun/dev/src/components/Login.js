@@ -22,10 +22,12 @@ class Login extends Component {
 	}
 	handleClick(which, event){
 		if(which == 'submit'){
-			this.submit()
+			this.submit();
 		}
 		else if(which == 'agree'){
 			this.props.onAgree(() => {this.props.router.push('/user/profile')});
+		} else if(which == 'find_password') {
+			this.findPassword();
 		}
 	}
 	handleKeyDown(which, event){
@@ -57,6 +59,17 @@ class Login extends Component {
 			formData.append(prop, data[prop]);
 		}
 		this.props.onLogin(loginUrl, formData, () => {this.refs.id.focus()});
+	}
+	findPassword() {
+		let data;
+		data = {
+			email: this.props.id
+		}
+		let formData = new FormData;
+		for(let prop in data){
+			formData.append(prop, data[prop]);
+		}
+		this.props.findPassword(formData);
 	}
 	propsForResponsivity(){
 		const window = this.props.window;
@@ -101,7 +114,11 @@ class Login extends Component {
 					<div className="table__col"></div>
 					<div className="table__col"><button type="button" onClick={this.handleClick.bind(this, 'submit')}>로그인</button></div>
 				</div>
-				<div className="table__row">
+				<div className="table__row find__password">
+					<div className="table__col"></div>
+					<div className="table__col"><button type="button" onClick={this.handleClick.bind(this, 'find_password')}>비번찾기</button></div>
+				</div>
+				<div className="table__row user__regist">
 					<div className="table__col"></div>
 					<div className="table__col"><Link to={'/user/regist'} className="button">회원가입</Link></div>
 				</div>
@@ -164,6 +181,7 @@ Login.propTypes = {
 	window: PropTypes.object.isRequired,
 	onChange: PropTypes.func.isRequired,
 	onLogin: PropTypes.func.isRequired,
+	findPassword: PropTypes.func.isRequired,
 	fetchAgreement: PropTypes.func.isRequired,
 	onAgree: PropTypes.func.isRequired,
 	router: PropTypes.shape({
