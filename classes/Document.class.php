@@ -178,6 +178,7 @@ class Document extends \DLDB\Objects {
 
 		$fields = self::getFields();
 		$uid = $_SESSION['user']['uid'];
+		$args['tags'] = str_replace("#",$args['tags']);
 
 		$que = "INSERT INTO {documents} (`subject`,`tags`,`content`,`custom`,`uid`,`created`";
 		$que2 .= ") VALUES (?,?,?,?,?,?";
@@ -236,6 +237,8 @@ class Document extends \DLDB\Objects {
 		$dbm = \DLDB\DBM::instance();
 
 		$fields = self::getFields();
+
+		$args['tags'] = str_replace("#",$args['tags']);
 
 		$que = "UPDATE {documents} SET `subject`=?, `tags` = ?, `content`=?, `custom`=?";
 		$array1 = 'array("ssss';

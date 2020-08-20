@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {withRouter} from 'react-router';
+import {withRouter,Link} from 'react-router';
 import DdSelect from '../accessories/DdSelect';
 import Item from '../accessories/Item';
 import update from 'react-addons-update';
@@ -254,6 +254,15 @@ class SearchBar extends Component {
 			</div>
 		));
 	}
+	docTypeCount(){
+		const doctypeCount = this.props.fData.taxonomy.doctype.map((tid) =>
+			<Link className="type__counter" key={tid} to={'/search?f1='+tid}>
+				<span className="type__label">{this.props.fData.terms[tid].name}</span>
+				<span className="type__digit">{this.props.fData.numOfTaxonomy[tid]}</span>
+			</Link>
+		);
+		return doctypeCount;
+	}
 	render(){
 		const fProps = this.props.fData.fProps;
 		const prsRsp = this.propsForResponsivity();
@@ -283,6 +292,7 @@ class SearchBar extends Component {
 			</div>
 		);
 		if(this.props.mode == 'content'){
+			let typecounterClassName = (this.props.isHelperVisible ? 'searchbar__typecounter searchbar__typecounter--visible' : 'searchbar__typecounter');
 			let helperClassName = (this.props.isHelperVisible ? 'searchbar__helper searchbar__helper--visible' : 'searchbar__helper');
 			let counterClassName = (!this.props.isHelperVisible ? 'counter counter--visible' : 'counter');
 			return(
@@ -296,33 +306,12 @@ class SearchBar extends Component {
 							<div>{this.displayCount()}</div>
 						</div>
 					</div>
+					<div className={typecounterClassName}>
+						<div>{this.docTypeCount()}</div>
+					</div>
 					<div className={helperClassName}>
 						<div>
-							<div className="searchbar__helper-title"><span>※ 검색 연산자 안내</span></div>
-							<div className="table">
-								<div className="table__row">
-									<div className="table__col"><span>AND 검색</span></div>
-									<div className="table__col"><span>이사회 & 감사</span></div>
-								</div>
-								<div className="table__row">
-									<div className="table__col"><span>OR 검색</span></div>
-									<div className="table__col"><span>이사회 + 감사</span></div>
-								</div>
-								<div className="table__row">
-									<div className="table__col"><span>NOT 검색</span></div>
-									<div className="table__col">
-										<div><span>이사회 ! 감사</span></div>
-										<div><span>(* 검색어는 '이사회', 제외어는 '감사'일 경우)</span></div>
-									</div>
-								</div>
-								<div className="table__row">
-									<div className="table__col">EQUAL 검색</div>
-									<div className="table__col"><span>"이사와 감사의 선출"</span></div>
-								</div>
-							</div>
-						</div>
-						<div>
-							<div className="searchbar__helper-title"><a href="/doc/민변디지털도서관_매뉴얼.pdf" target="_blank"><span>※ 이용자 메뉴얼</span></a></div>
+							<div className="searchbar__helper-title"><a href="/doc/민변디지털도서관_매뉴얼.pdf" target="_blank"><span><i className="pe-7s-download pe-va"></i> 이용자 메뉴얼</span></a></div>
 						</div>
 					</div>
 				</div>

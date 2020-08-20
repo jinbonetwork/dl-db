@@ -27,6 +27,10 @@ const custom = {
 		total_cnt: (value) => ({
 			propName: 'numOfDocs',
 			propValue: (value > 99999 ? 99999 : parseInt(value))
+		}),
+		taxonomy_cnt: (value) => ({
+			propName: 'numOfTaxonomy',
+			propValue: value
 		})
 	}/*,
 	refineDocBySlug: {

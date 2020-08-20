@@ -26,6 +26,7 @@ if(!defined('ROOT'))
  * @brief 필요한 설정 파일들 include
  **/
 require_once(ROOT.'/config/config.php');
+ini_set('memory_limit','-1');
 define('__DLDB_LOADED_CLASS__',true);
 
 global $context, $config;
