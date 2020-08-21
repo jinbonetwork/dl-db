@@ -238,7 +238,7 @@ class Document extends \DLDB\Objects {
 
 		$fields = self::getFields();
 
-		$args['tags'] = str_replace("#",$args['tags']);
+		$args['tags'] = str_replace("#",'',$args['tags']);
 
 		$que = "UPDATE {documents} SET `subject`=?, `tags` = ?, `content`=?, `custom`=?";
 		$array1 = 'array("ssss';
