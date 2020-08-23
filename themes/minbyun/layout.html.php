@@ -13,7 +13,7 @@
 <?php  print $this->header(); ?>
 
 </head>
-<body class="<?php print $breadcrumbs_class; ?>">
+<body class="app <?php print $breadcrumbs_class; ?>">
 <?php print $content; ?>
 <?php print $this->footer(); ?>
 <script>

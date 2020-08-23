@@ -89,6 +89,19 @@ class DBM extends \DLDB\Objects {
 		return $member;
 	}
 
+	public static function getMemberAuth($email,$auth) {
+		$dbm = \DLDB\DBM::instance();
+
+		if($email && $auth) {
+			$que = "SELECT * FROM {member_auth} WHERE `email` = '".$email."' AND `auth` = '".$auth."'";
+			$row = $dbm->getFetchArray($que);
+			if($row['id']) {
+				$member = unserialize(stripslashes($row['data']));
+			}
+		}
+		return $member;
+	}
+
 	public static function insert($args) {
 		$dbm = \DLDB\DBM::instance();
 
@@ -393,6 +406,19 @@ class DBM extends \DLDB\Objects {
 				break;
 		}
 		return $admins;
+	}
+
+	public static function getAuthKey() {
+		$context = \DLDB\Model\Context::instance();
+		$session_type = $context->getProperty('session.type');
+		switch($session_type) {
+			case 'gnu5':
+			case 'xe':
+			default:
+				$auth = \DLDB\Members\XE\User::getAuthKey(40);
+				break;
+		}
+		return $auth;
 	}
 
 	public static function getErrorMsg() {

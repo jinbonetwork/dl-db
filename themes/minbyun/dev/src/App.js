@@ -191,14 +191,16 @@ const UserRegistContainer = connect(
 		fData: state.userRegist.fData,
 		profile: state.userRegist.profile,
 		focused: state.userRegist.focused,
+		isDuplicate: state.userRegist.isDuplicate,
 		isSaving: state.userRegist.isSaving,
+		isComplete: state.userRegist.isComplete
 	}),
 	(dispatch) => ({
 		initialize: () => dispatch(dlDbActions.initializeUserRegist()),
-		fetchUserRegistForm: () => dispatch(dlDbActions.fetchUserRegistForm()),
-		onChange: (args) => dispatch(dlDbActions.changeUserProfile(args)),
-		onBlur: () => dispatch(dlDbActions.focusOutUserProfile()),
-		focusIn: (args) => dispatch(dlDbActions.focusInUserProfile(args)),
+		fetchForm: () => dispatch(dlDbActions.fetchUserRegistForm()),
+		onChange: (args) => dispatch(dlDbActions.changeUserRegist(args)),
+		onBlur: () => dispatch(dlDbActions.focusOutUserRegist()),
+		focusIn: (args) => dispatch(dlDbActions.focusInUserRegist(args)),
 		showMessage: (args) => dispatch(dlDbActions.showMessage(args)),
 		onSubmit: (args) => dispatch(dlDbActions.submitUserRegist(args))
 	})
@@ -236,12 +238,12 @@ render(
 				<Route path="document/:id" component={DocContainer} />
 				<Route path="document/:docId/text/:fileId" component={FileTextContainer} />
 				<Route path="user" component={User}>
-					<Route path="regist" component={UserRegistContainer} />
 					<Route path="profile" component={UserProfileContainer} />
 					<Route path="bookmarks(/page/:page)" component={BookmarksContainer} />
 					<Route path="history(/page/:page)" component={HistoryContainer} />
 					<Route path="documents(/page/:page)" component={UserDocsContainer} />
 				</Route>
+				<Route path="regist" component={UserRegistContainer} />
 				<Route path="/search**" component={SearchResultContainer} />
 			</Route>
 		</Router>

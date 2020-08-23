@@ -120,7 +120,7 @@ class Login extends Component {
 				</div>
 				<div className="table__row user__regist">
 					<div className="table__col"></div>
-					<div className="table__col"><Link to={'/user/regist'} className="button">회원가입</Link></div>
+					<div className="table__col"><Link to={'/regist'} className="button">회원가입</Link></div>
 				</div>
 				<div className="table__row">
 					<div className="table__col"></div>

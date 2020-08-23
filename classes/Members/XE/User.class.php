@@ -328,6 +328,11 @@ class User extends \DLDB\Objects {
 		return true;
 	}
 
+	public static function getAuthKey($length, $format = 'hex') {
+		$auth = self::createSecureSalt($length, $format);
+		return $auth;
+	}
+
 	private static function getWorkFactor() {
 		$config = self::getXeMemberConfig();
 		$work_factor = $config->password_hashing_work_factor;

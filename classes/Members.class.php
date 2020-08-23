@@ -143,6 +143,41 @@ class Members extends \DLDB\Objects {
 		$dbm->execute($que, array("dd",1,$uid));
 	}
 
+	public static function registAuth($args) {
+		$dbm = \DLDB\DBM::instance();
+
+		$pre_member = \DLDB\Members\DBM::getMemberByEmail($args['email']);
+		if($pre_member['id']) {
+			self::setErrorMsg( '이미 회원가입된 이메일입니다.' );
+			return -1;
+		}
+
+		$regdate = time();
+
+		$que = "SELECT * FROM {member_auth} WHERE email = '".$args['email']."'";
+		$row = $dbm->getFetchArray($que);
+		if($row['id']) {
+			if( ( $regdate - $row['regdate'] ) < 3600 ) {
+				$retry = (int)(($regdate - $row['regdate']) / 60);
+				self::setErrorMsg( '1시간 이내에 회원가입 신청하셨습니다. 이메일을 확인해보세요. 다시 신청하시려면 '.$retry."분후에 다시 신청해주세요" );
+				return -2;
+			} else {
+				$que = "DELETE FROM {member_auth} WHERE email = ?";
+				$dbm->execute($que,array("s",$args['email']));
+			}
+		}
+
+		$auth = $args['auth'];
+		unset($args['auth']);
+		$data = serialize($args);
+
+		$que = "INSERT {member_auth} (`email`,`auth`,`data`,`regdate`) VALUES (?,?,?,?)";
+		$dbm->execute($que,array("sssd",$args['email'],$auth,$data,$regdate));
+		$id = $dbm->getLastInsertId();
+
+		return $auth;
+	}
+
 	private static function fetchMember($row) {
 		if(!$row) return null;
 		$member = array();
@@ -162,6 +197,14 @@ class Members extends \DLDB\Objects {
 		}
 
 		return $member;
+	}
+
+	public static function getErrorMsg() {
+		return self::$errmsg;
+	}
+
+	private static function setErrorMsg($msg) {
+		self::$errmsg = $msg;
 	}
 }
 ?>

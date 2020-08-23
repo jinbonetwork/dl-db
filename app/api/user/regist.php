@@ -53,6 +53,12 @@ class regist extends \DLDB\Controller {
 		}
 
 		switch($this->params['mode']) {
+			case 'check_dup':
+				$m = \DLDB\Members\DBM::getMemberByEmail($this->params['email']);
+				if($m['id']) {
+					\DLDB\RespondJson::ResultPage( array( -3, '이미 회원가입된 이메일입니다.' ) );
+				}
+				break;
 			case 'regist':
 				if(!$this->params['member']['name']) {
 					\DLDB\RespondJson::ResultPage( array( -2, '이름을 입력하세요' ) );
@@ -69,16 +75,40 @@ class regist extends \DLDB\Controller {
 				if($this->params['member']['password'] != $this->params['member']['password_confirm']) {
 					\DLDB\RespondJson::ResultPage( array( -5, '비밀번호가 서로 일치하지 않습니다.' ) );
 				}
-				$this->params['member']['role'] = array(BITWISE_WRITE,BITWISE_DOWNLOAD,BITWISE_VIEW);
+				$this->params['member']['role'] = array(BITWISE_DOWNLOAD,BITWISE_VIEW);
 
-				$ret = \DLDB\Members\DBM::insert($this->params['member']);
+				$auth = \DLDB\Members\DBM::getAuthKey();
+				$this->params['member']['auth'] = $auth;
+				$ret = \DLDB\Members::registAuth($this->params['member']);
 				if($ret < 0) {
-					\DLDB\RespondJson::ResultPage( array( -6, \DLDB\Members::getErrorMsg() ) );
+					\DLDB\RespondJson::ResultPage( array( $ret, \DLDB\Members::getErrorMsg() ) );
 				}
-				$this->result = array(
-					'error' => 0,
-					'member' => $this->member
-				);
+				$context = \DLDB\Model\Context::instance();
+				$domain = $context->getProperty('service.domain');
+				$ssl = $context->getProperty('service.ssl');
+
+				$args['site_title'] = ($site_title ? $site_title : $context->getProperty('service.title'));
+				$args['subject'] = $args['site_title']." 회원가입 인증 안내";
+				$args['name'] = $this->params['member']['name'];
+				$args['user_id'] = $this->params['member']['email'];
+				$args['password'] = $this->params['member']['password'];
+				$args['link_title'] = '회원가입 인증하기';
+				$args['link'] = 'http'.($ssl ? 's' : '')."://".$domain."/api/user/registAuth/?email=".$this->params['member']['email']."&auth_key=".$auth;
+				$recievers = array();
+				$recievers[] = array( 'email'=> $this->params['member']['email'], 'name'=> $this->params['member']['name'] );
+
+				$result = \DLDB\Mailer::sendMail("registauth",$recievers,$args,0);
+
+				if(!$result[0]) {
+					\DLDB\RespondJson::ResultPage( array( -6, $result[1]) );
+				} else {
+					unset($this->params['member']['auth']);
+					$this->result = array(
+						'error' => 0,
+						'message' => $this->params['member']['email'].'로 회원가입 인증 메일을 보냈습니다. 메일을 확인한 후, 링크를 따라 회원가입인증을 하신후, 로그인하시면 됩니다.',
+						'member' => $this->params['member']
+					);
+				}
 				break;
 			default:
 				$this->member = \DLDB\Members::memberfield();

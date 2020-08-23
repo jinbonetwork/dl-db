@@ -188,6 +188,20 @@ CREATE TABLE `dldb_members` (
 	KEY `CLASS` (`class`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `dldb_member_auth`;
+CREATE TABLE `dldb_member_auth` (
+	`id`		int(10) PRIMARY KEY AUTO_INCREMENT,
+	`email`		char(255) NOT NULL DEFAULT '',
+	`auth`		char(255) NOT NULL DEFAULT '',
+	`data`		text,
+	`regdate`	int(10) NOT NULL DEFAULT 0,
+
+	KEY `AUTH` (`auth`),
+	KEY `EMAIL` (`email`),
+	KEY `EMAIL_AUTH` (`email`,`auth`),
+	KEY `REGDATE` (`regdate`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `dldb_file_filter`;
 CREATE TABLE `dldb_file_filter` (
 	`id`		int(10) PRIMARY KEY AUTO_INCREMENT,

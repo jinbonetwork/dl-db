@@ -5,7 +5,8 @@ import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_
 	DELETE_DOC_IN_OPEN_DOCS, CHANGE_FILETEXT, RECEIVE_FILETEXT, COMPLETE_FILETEXT, SUBMIT_FILETEXT, REQUEST_TOGGLING_PARSED_OF_FILE,
 	TOGGLE_PARSED_OF_FILE, RECEIVE_USER_DOCS, RECEIVE_SEARCH_RESULT, RECEIVE_BOOKMARKS, RECEIVE_HISTORY, RECEIVE_USER_PROFILE,
 	CHANGE_USER_PROFILE, FOCUSOUT_USER_PROFILE, FOCUSIN_USER_PROFILE, COMPLETE_USER_PROFILE, SUBMIT_USER_PROFILE,
-	TOGGLE_PASSWORD_FORM, INITIALIZE_DOC, INITIALIZE_USER_PROFILE, INITIALIZE_DOCFORM, SELECT_IMAGE, RECEIVE_COURTS,
+	TOGGLE_PASSWORD_FORM, INITIALIZE_DOC, INITIALIZE_USER_PROFILE, INITIALIZE_USER_REGIST, INITIALIZE_USER_REGIST_FIELD,
+	CHANGE_USER_REGIST, FOCUSOUT_USER_REGIST, FOCUSIN_USER_REGIST, COMPLETE_USER_REGIST, USER_DUPLICATE, SUBMIT_USER_REGIST, INITIALIZE_DOCFORM, SELECT_IMAGE, RECEIVE_COURTS,
 	TOGGLE_REPORT_FORM, CHANGE_REPORT
 } from '../constants';
 import api from '../api/dlDbApi';
@@ -394,6 +395,15 @@ const actionCreators = {
 			}
 		);
 	}},
+	changeUserRegist(args){
+		return {type: CHANGE_USER_REGIST, args};
+	},
+	focusOutUserRegist(){
+		return {type: FOCUSOUT_USER_REGIST};
+	},
+	focusInUserRegist({fSlug, index}){
+		return {type: FOCUSIN_USER_REGIST, fSlug, index};
+	},
 	submitUserRegist(args){ return (dispatch) => {
 		const {pfFormData, afterSave} = args;
 		dispatch({type: COMPLETE_USER_REGIST});
@@ -416,6 +426,16 @@ const actionCreators = {
 	initializeUserRegist(){
 		return {type: INITIALIZE_USER_REGIST};
 	},
+	fetchUserRegistForm() { return (dispatch) => {
+		api.fetchUserRegistForm(
+			({fields, taxonomy, profile}) => {
+				dispatch({type: INITIALIZE_USER_REGIST_FIELD, fields, taxonomy, profile});
+			},
+			(error) => {
+				dispatchError(dispatch, error);
+			}
+		);
+	}},
 	selectImage({index}){
 		return {type: SELECT_IMAGE, index}
 	},
