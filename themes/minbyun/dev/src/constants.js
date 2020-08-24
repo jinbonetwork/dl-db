@@ -102,6 +102,7 @@ export const CHANGE_USER_REGIST = 'change user regist profile';
 export const FOCUSOUT_USER_REGIST = 'focusout user regist profile';
 export const FOCUSIN_USER_REGIST = 'focusin user regist profile';
 export const COMPLETE_USER_REGIST = 'complete user regist profile';
+export const DECOMPLETE_USER_REGIST = 'decomplete user regist profile';
 export const USER_DUPLICATE = 'check user duplicate';
 export const SUBMIT_USER_REGIST = 'submit user regist';
 export const TOGGLE_PASSWORD_FORM = 'toggle password form';

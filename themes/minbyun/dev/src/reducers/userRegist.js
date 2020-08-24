@@ -1,4 +1,4 @@
-import {INITIALIZE_USER_REGIST, INITIALIZE_USER_REGIST_FIELD, CHANGE_USER_REGIST, FOCUSOUT_USER_REGIST, FOCUSIN_USER_REGIST, COMPLETE_USER_REGIST, USER_DUPLICATE, SUBMIT_USER_REGIST
+import {INITIALIZE_USER_REGIST, INITIALIZE_USER_REGIST_FIELD, CHANGE_USER_REGIST, FOCUSOUT_USER_REGIST, FOCUSIN_USER_REGIST, COMPLETE_USER_REGIST, DECOMPLETE_USER_REGIST, USER_DUPLICATE, SUBMIT_USER_REGIST
 } from '../constants';
 import {refineUserFData, refineUser} from '../fieldData/userFieldData';
 import update from 'react-addons-update';
@@ -56,6 +56,10 @@ const userRegist = (state = initialState, action) => {
 		case COMPLETE_USER_REGIST:
 			return update(state, {
 				isSaving: {$set: true}
+			});
+		case DECOMPLETE_USER_REGIST:
+			return update(state, {
+				isSaving: {$set: false}
 			});
 		case SUBMIT_USER_REGIST:
 			return update(state, {

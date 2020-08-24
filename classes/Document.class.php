@@ -178,7 +178,7 @@ class Document extends \DLDB\Objects {
 
 		$fields = self::getFields();
 		$uid = $_SESSION['user']['uid'];
-		$args['tags'] = str_replace("#",$args['tags']);
+		$args['tags'] = str_replace("#",'',$args['tags']);
 
 		$que = "INSERT INTO {documents} (`subject`,`tags`,`content`,`custom`,`uid`,`created`";
 		$que2 .= ") VALUES (?,?,?,?,?,?";
