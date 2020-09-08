@@ -75,7 +75,7 @@ class regist extends \DLDB\Controller {
 				if($this->params['member']['password'] != $this->params['member']['password_confirm']) {
 					\DLDB\RespondJson::ResultPage( array( -5, '비밀번호가 서로 일치하지 않습니다.' ) );
 				}
-				$this->params['member']['role'] = array(BITWISE_DOWNLOAD,BITWISE_VIEW);
+				//$this->params['member']['role'] = array(BITWISE_DOWNLOAD,BITWISE_VIEW);
 
 				$auth = \DLDB\Members\DBM::getAuthKey();
 				$this->params['member']['auth'] = $auth;

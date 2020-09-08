@@ -20,6 +20,9 @@ class index extends \DLDB\Controller {
 			} else {
 				if($member['uid']) {
 					$member['role'] = \DLDB\Members\DBM::getRole($member['uid']);
+					if(!$member['role']) {
+						$member['role'] = array();
+					}
 				} else {
 					$member['role'] = array();
 				}

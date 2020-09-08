@@ -8,7 +8,7 @@ class DocListItem extends Component {
 		if(_isCommon(['administrator', 'view'], this.props.role)){
 			this.props.onClickTitle();
 		} else {
-			this.props.showMessage('권한이 없습니다.');
+			this.props.showMessage({content: '권한이 없습니다.', mode: 'fadeout'});
 		}
 	}
 	sideDispNames(){

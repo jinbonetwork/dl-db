@@ -49,7 +49,7 @@ class DBM extends \DLDB\Objects {
 		$dbm = \DLDB\DBM::instance();
 
 		if(!$page) $page = 1;
-		$que = "SELECT * FROM {members} AS m LEFT JOIN {user_roles} AS r ON m.uid = r.uid";
+		$que = "SELECT m.*,r.role FROM {members} AS m LEFT JOIN {user_roles} AS r ON m.uid = r.uid";
 		if($s_mode && $s_arg) {
 			$que .= " WHERE `".$s_mode."` LIKE '%".$s_arg."%'";
 		}
@@ -58,7 +58,7 @@ class DBM extends \DLDB\Objects {
 
 		$members = array();
 		while($row = $dbm->getFetchArray($que)) {
-			$members[] = self::fetchMember($row);
+			$members[] = self::fetchMember($row,1);
 		}
 		return $members;
 	}
@@ -223,7 +223,7 @@ class DBM extends \DLDB\Objects {
 		$dbm->execute($que,array("sd",'members',$member['id']));
 
 		$que = "DELETE FROM {user_roles} WHERE `uid` = ?";
-		$dbm->execute($que,array("d",$member['id']));
+		$dbm->execute($que,array("d",$member['uid']));
 
 		return 0;
 	}
@@ -429,7 +429,7 @@ class DBM extends \DLDB\Objects {
 		self::$errmsg = $msg;
 	}
 
-	public static function fetchMember($row) {
+	public static function fetchMember($row,$role_check=0) {
 		if(!$row) return null;
 		$member = array();
 		foreach($row as $k => $v) {
@@ -445,6 +445,9 @@ class DBM extends \DLDB\Objects {
 			foreach( $member['custom'] as $k => $v ) {
 				$member['f'.$k] = $v;
 			}
+		}
+		if($role_check && $member && !$member['role']) {
+			$member['role'] = array();
 		}
 
 		return $member;

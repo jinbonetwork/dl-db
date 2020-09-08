@@ -14,6 +14,9 @@ class index extends \DLDB\Controller {
 		$this->agreement = $member['license'];
 		$acl = \DLDB\Acl::instance();
 		$this->role = $acl->getAcl();
+		if(!$this->role && $member) {
+			$this->role = array(BITWISE_AUTHENTICATED);
+		}
 		$this->roles = array();
 		foreach($AclPreDefinedRole as $name => $bitwise) {
 			$this->roles[$bitwise] = $name;

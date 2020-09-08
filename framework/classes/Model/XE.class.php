@@ -14,12 +14,11 @@ class XE extends \DLDB\Objects {
 	}
 
 	public function getAcl($domain) {
-		if( $_SESSION['member_srl'] && !$_SESSION['user']['uid'] ) {
+		if( $_SESSION['member_srl'] && ( !$_SESSION['user']['uid'] || ( $_SESSION['member_srl'] != $_SESSION['user']['uid'] ) ) ) {
 			$dbm = \DLDB\DBM::instance();
 
 			if($_SESSION['member_srl']) {
 				$que = "SELECT * FROM `".$this->prefix."member` WHERE `member_srl` = ".$_SESSION['member_srl'];
-				echo $que;
 				$row = $dbm->getFetchArray($que);
 				if($row['member_srl']) {
 					$_SESSION['user'] = array(

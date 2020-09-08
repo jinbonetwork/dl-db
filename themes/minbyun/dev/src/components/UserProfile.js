@@ -63,11 +63,11 @@ class UserProfile extends Component {
 				return (this.props.window.width > SCREEN.small ?
 					<tr key="role" className="form__field form__role">
 						<td className="form__col0">권한</td>
-						<td className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</td>
+						<td className="form__col1">{(this.props.role && this.props.role.length && this.props.role[0] != 'authenticated') ? this.props.role.map((r) => ROLE_MAP[r]).join(', ') : '권한없음'}</td>
 					</tr> :
 					<tr className="form__field form__role"><td>
 						<div className="form__col0">권한</div>
-						<div className="form__col1">{this.props.role.map((r) => ROLE_MAP[r]).join(', ')}</div>
+						<div className="form__col1">{(this.props.role && this.props.role.length && this.props.role[0] != 'authenticated') ? this.props.role.map((r) => ROLE_MAP[r]).join(', ') : '권한없음'}</div>
 					</td></tr>
 				);
 			} else {

@@ -38,7 +38,8 @@ class UserRegist extends Component {
 		rowsBefore: _wrap(() => {
 			return (
 				<tr className="form__menu"><td colSpan="2">
-					<span>회원 가입하기</span>
+					<span className="form_menu_title">회원 가입하기</span>
+					<p className="form__intro">이 사이트는 민변회원 전용 사이트입니다. 민변회원임을 확인할 수 있도록, 정확한 정보를 입력해주세요. 회원가입 신청후, 인증메일을 통해 인증해십시오. 이후 운영자가 확인을 거쳐 최종 사용권한을 부여해 드립니다.</p>
 				</td></tr>
 			);
 		}),
@@ -46,11 +47,11 @@ class UserRegist extends Component {
 			return (this.props.window.width > SCREEN.small ?
 				<tr key="role" className="form__field form__role">
 					<td className="form__col0">권한</td>
-					<td className="form__col1">다운로드, 읽기</td>
+					<td className="form__col1">가입후 운영자가 확인후 권한을 부여합니다.</td>
 				</tr> :
 				<tr className="form__field form__role"><td>
 					<div className="form__col0">권한</div>
-					<div className="form__col1">다운로드, 읽기</div>
+					<div className="form__col1">가입후 운영자가 확인후 권한을 부여합니다.</div>
 				</td></tr>
 			);
 		})
@@ -119,7 +120,8 @@ class UserRegist extends Component {
 									{this.props.isComplete && (
 										<div className="user-profile-regist-complte">
 											<p>아이디 개설 신청이 완료되었습니다.</p>
-											<p>그리고, 입력하신 이메일로 인증메일이 발송되었습니다. 인증메일을 통해 인증작업을 마무리 하셔야, 이용하실수 있습니다.</p>
+											<p>그리고, 입력하신 이메일로 인증메일이 발송되었습니다. 인증메일을 통해 인증작업을 마무리 해주세요.</p>
+											<p>운영자가 확인해, 서비스가 활성화되는데 시간이 걸릴 수 있습니다.</p>
 											<p><Link to="/">확인</Link></p>
 										</div>
 									)}

@@ -50,7 +50,7 @@ class Acl extends \DLDB\Objects {
 
 		$domain = $context->getProperty('service.domain');
 		$session_type = $context->getProperty('session.type');
-		if($session_type == 'xe' && $_SESSION['member_srl'] && !$_SESSION['user']['uid']) {
+		if($session_type == 'xe' && $_SESSION['member_srl'] && ( !$_SESSION['user']['uid'] || ( $_SESSION['member_srl'] != $_SESSION['user']['uid'] ) ) ) {
 			$_SESSION['user']['uid'] = $_SESSION['member_srl'];
 		}
 		if( !isset( $this->acl ) ) {

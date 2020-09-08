@@ -68,6 +68,10 @@ $service['elastic_tokenizer'] = 'seunjeon_tokenizer';
 ----------
 * xe 폴더에 files 폴더 생성. 웹서버가 접근할 수 있도록 707 권한 부여.
 * http://domain/xe 에 접속하여 XE 설치
+* xe/modules/board/board.view.php 640줄 수정
+```vim
+if(!$this->grant->write_document || !$_SESSION['acl'][$_SERVER['SERVER_NAME']])
+```
 
 5) React 코드 설정
 -----------------

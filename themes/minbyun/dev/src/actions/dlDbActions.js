@@ -43,7 +43,7 @@ const actionCreators = {
 	fetchRootData(){ return (dispatch) => {
 		api.fetchRootData((rootData) => {
 			dispatch({type: RECEIVE_ROOT_DATA, rootData});
-			if(rootData.role){
+			if(rootData.role && rootData.role.length){
 				dispatchDocFieldData(dispatch);
 			}
 		}, (error) => dispatchError(dispatch, error));
