@@ -25,8 +25,8 @@ class ViewElem extends Component {
 					return (
 						<div className={className} style={style}>{
 							value.map((text, i) => (
-								<div key={i} className="view__section">{text.split(/\n+/).map((t, j) => (
-									<div key={j} className="view__paragraph"><span>{t}</span></div>
+								<div key={i} className="view__section">{text.split(/\n/).map((t, j) => (
+									<div key={j} className="view__paragraph"><span className={(!t ? 'empty__paragraph' : '')}>{t}</span></div>
 								))}</div>
 							))
 						}</div>

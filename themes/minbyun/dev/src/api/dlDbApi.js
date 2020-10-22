@@ -37,6 +37,9 @@ const api = {
 	fetchDocFieldData(succeed, fail){
 		fetch('get', '/api/fields', succeed, fail);
 	},
+	fetchRecentDoc(succeed, fail) {
+		fetch('get', '/api/recent', succeed, fail);
+	},
 	login(loginUrl, formData, succeed, fail){
 		fetch('post', loginUrl, formData, () => {
 			fetch('get', '/api', ({role, roles, agreement}) => {

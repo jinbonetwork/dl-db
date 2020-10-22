@@ -254,6 +254,18 @@ class SearchBar extends Component {
 			</div>
 		));
 	}
+	RecentDocs() {
+		const recentDoc = this.props.recentDocs.map((doc) =>
+			<li key={doc['id']}>
+				<Link className="recent__doc" to={'/document/'+doc['id']}>
+					<span className="recent__taxo">[{doc['f1']}]</span>
+					<span className="recent__subject">{doc['subject']}</span>
+					<span className="recent__date">({doc['created']})</span>
+				</Link>
+			</li>
+		);
+		return recentDoc;
+	}
 	docTypeCount(){
 		const doctypeCount = this.props.fData.taxonomy.doctype.map((tid) =>
 			<Link className="type__counter" key={tid} to={'/search?f1='+tid}>
@@ -295,10 +307,17 @@ class SearchBar extends Component {
 			let typecounterClassName = (this.props.isHelperVisible ? 'searchbar__typecounter searchbar__typecounter--visible' : 'searchbar__typecounter');
 			let helperClassName = (this.props.isHelperVisible ? 'searchbar__helper searchbar__helper--visible' : 'searchbar__helper');
 			let counterClassName = (!this.props.isHelperVisible ? 'counter counter--visible' : 'counter');
+			let recentClassName = (!this.props.isHelperVisible ? 'recentDoc recent--visible' : 'recentDoc');
 			return(
 				<div className={className} style={prsRsp.style.wrap}>
 					<div className="searchbar__header"><span style={prsRsp.style.header}>민변 디지털 도서관</span></div>
 					{searchBar}
+					<div className={recentClassName}>
+						<div className="recent__head"><span><i className="pe-7s-note2 pe-va"></i> 최신 자료</span></div>
+						<div className="recent__body">
+							<ul className="recent__docs">{this.RecentDocs()}</ul>
+						</div>
+					</div>
 					<div className={counterClassName}>
 						<div className="counter__head">{/*<span>총 자료 건수</span>*/}</div>
 						<div className="counter__body">

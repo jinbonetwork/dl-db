@@ -50,6 +50,19 @@ class Document extends \DLDB\Objects {
 		return self::$taxonomy_terms;
 	}
 
+	public static function recent($cnt=5) {
+		$dbm = \DLDB\DBM::instance();
+
+		$fields = self::getFields();
+		$que = "SELECT * FROM {documents} ORDER BY id DESC LIMIT ".$cnt;
+		$documents = array();
+		while($document = $dbm->getFetchArray($que)) {
+			$documents[] = self::fetchDocument($document,'view');
+		}
+
+		return $documents;
+	}
+
 	public static function get($id,$mode='') {
 		$dbm = \DLDB\DBM::instance();
 

@@ -1,4 +1,4 @@
-import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
+import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_RECENT_DOCS, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, CHANGE_DOCFORM, FOCUSIN_DOCFORM, FOCUSOUT_DOCFORM, COMPLETE_DOCFORM, SUBMIT_DOCFORM,
 	ADD_DOC_TO_OPEN_DOCS, UPLOAD, RECEIVE_PARSE_STATE, RENEW_FILE_STATUS, BOOKMARK, TOGGLE_DEL_DOC_BUTTON,
@@ -39,12 +39,19 @@ const dispatchDocFieldData = (dispatch) => {
 		(error) => dispatchError(dispatch, error)
 	);
 };
+const dispatchRecentDoc = (dispatch) => {
+	api.fetchRecentDoc(
+		(originRecentDocsData) => dispatch({type: RECEIVE_RECENT_DOCS, originRecentDocsData}),
+		(error) => dispatchError(dispatch, error)
+	);
+};
 const actionCreators = {
 	fetchRootData(){ return (dispatch) => {
 		api.fetchRootData((rootData) => {
 			dispatch({type: RECEIVE_ROOT_DATA, rootData});
 			if(rootData.role && rootData.role.length){
 				dispatchDocFieldData(dispatch);
+				dispatchRecentDoc(dispatch);
 			}
 		}, (error) => dispatchError(dispatch, error));
 	}},
@@ -67,6 +74,7 @@ const actionCreators = {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({type: SUCCEED_LOGIN, role, roles, agreement});
 				dispatchDocFieldData(dispatch);
+				dispatchRecentDoc(dispatch);
 			} else {
 				dispatch({type: HIDE_PROCESS});
 				dispatch({

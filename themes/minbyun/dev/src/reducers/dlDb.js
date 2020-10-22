@@ -1,4 +1,4 @@
-import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_ROOT_DATA,
+import { SHOW_MESSAGE, HIDE_MESSAGE, RECEIVE_USER_FIELD_DATA, RECEIVE_DOC_FIELD_DATA, RECEIVE_RECENT_DOCS, RECEIVE_ROOT_DATA,
 	SHOW_PROCESS, HIDE_PROCESS, CHANGE_LOGIN, RESIZE, SUCCEED_LOGIN, RECEIVE_AGREEMENT, AGREE_WITH_AGREEMENT,
 	LOGOUT, CHANGE_SEARCHBAR_STATE, ADD_DOC_TO_OPEN_DOCS, COMPLETE_DOCFORM, UPLOAD, RENEW_FILE_STATUS,
 	BOOKMARK, DELETE_DOC_IN_OPEN_DOCS, RECEIVE_FILETEXT, ADD_FILE_TO_OPEN_FILETEXTS, COMPLETE_FILETEXT, SUBMIT_FILETEXT,
@@ -34,7 +34,8 @@ const initialState = {
 		isPeriodFocused: false,
 		isHelperVisible: false,
 		isKeywordFocused: false,
-		count: '00000'
+		count: '00000',
+		recentDocs: []
 	}
 };
 
@@ -58,6 +59,11 @@ const dlDb = (state = initialState, action) => {
 			});
 		case RECEIVE_DOC_FIELD_DATA:
 			return update(state, {docFieldData: {$set: refineDocFData(action.originDocFData)}});
+		case RECEIVE_RECENT_DOCS:
+/*			return update(state, {recentDocs: {$set:
+				action.originRecentDocsData.documents.map((doc) => refineDoc(doc, state.docFieldData))
+			}}); */
+			return update(state, {searchBar: {recentDocs: {$set: action.originRecentDocsData.documents}}});
 		case SHOW_MESSAGE:
 			return update(state, {message: {$set: update(initialState.message, {$merge: action.args})}});
 		case HIDE_MESSAGE:

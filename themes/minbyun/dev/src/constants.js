@@ -59,6 +59,7 @@ export const SHOW_PROCESS = 'show process';
 export const HIDE_PROCESS = 'hide process';
 export const RECEIVE_USER_FIELD_DATA = 'receive user field data';
 export const RECEIVE_DOC_FIELD_DATA = 'receive doc filed data';
+export const RECEIVE_RECENT_DOCS = 'receive recent documents';
 export const SUCCEED_LOGIN = 'succeed login';
 export const RECEIVE_ROOT_DATA = 'receive root data';
 export const CHANGE_LOGIN = 'change login';

@@ -4,6 +4,7 @@ import MainMenu from './MainMenu';
 import Login from './Login';
 import SearchBar from './SearchBar';
 import Message from './Message';
+import Footer from './Footer';
 import {SCREEN} from '../constants';
 import jQ from 'jquery';
 import {_wrap} from '../accessories/functions';
@@ -60,6 +61,15 @@ class DlDb extends Component {
 					</div>,
 					<div key="content" className="digital-library__content">
 						{child || searchBar}
+					</div>,
+					<div key="footer" className="digital-library__footer">
+						<ul className="footer__list">
+							<li><a href="http://lib2.jinbo.net/doc/민변디지털도서관_매뉴얼.pdf"><span><i className="pe-7s-download pe-va"></i>이용자 메뉴얼</span></a></li>
+							<li><a href="/xe/qna"><span><i className="pe-7s-news-paper pe-va"></i>Q&A</span></a></li>
+							<li><a href="/xe/weekly"><span><i className="pe-7s-news-paper pe-va"></i>월간변론</span></a></li>
+							<li><a href="/xe/manual"><span><i className="pe-7s-news-paper pe-va"></i>변론메뉴얼</span></a></li>
+							<li><a href="/xe/inthr"><span><i className="pe-7s-news-paper pe-va"></i>국제인권</span></a></li>
+						</ul>
 					</div>
 				];
 			}
